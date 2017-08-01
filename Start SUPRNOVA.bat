@@ -33,7 +33,7 @@ IF %M%==2 .\Bin\NVIDIA-skunk\ccminerskunk.exe -a skein -o stratum+tcp://dgbs.sup
 IF %M%==3 .\Bin\NVIDIA-EWBF\zminer --server zdash.suprnova.cc --user %USERNAME%.%WORKERNAME% --pass x --port 4048 
 IF %M%==4 .\Bin\NVIDIA-Alexis78\ccminer.exe -a LBRY -o stratum+tcp://lbry.suprnova.cc:6256 -u %USERNAME%.%WORKERNAME% -p x   
 IF %M%==5 .\Bin\NVIDIA-Alexis78\ccminer.exe -a lyra2v2 -o stratum+tcp://mona.suprnova.cc:2995 -u %USERNAME%.%WORKERNAME% -p x   
-IF %M%==6 .\Bin\NVIDIA-skunk\ccminerskunk.exe -a skunk -o stratum+tcp://sigt.suprnova.cc:7106 -u %USERNAME%.%WORKERNAME% -p x   
+IF %M%==6 .\Bin\NVIDIA-palginkunk\ccminer.exe -a skunk -o stratum+tcp://sigt.suprnova.cc:7106 -u %USERNAME%.%WORKERNAME% -p x   
 IF %M%==7 .\Bin\NVIDIA-Alexis78\ccminer.exe -a veltor -o stratum+tcp://veltor.suprnova.cc:8897 -u %USERNAME%.%WORKERNAME% -p x   
 IF %M%==8 .\Bin\NVIDIA-EWBF\zminer --server zen.suprnova.cc --user %USERNAME%.%WORKERNAME% --pass x --port 4048 
 
