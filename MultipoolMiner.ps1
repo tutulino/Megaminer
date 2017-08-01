@@ -59,7 +59,7 @@ if (Test-Path "Stats") {Get-ChildItemContent "Stats" | ForEach-Object {Set-Stat 
 $LastDonated = (Get-Date).AddDays(-1).AddHours(1)
 $WalletDonate = "1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM"
 $UserNameDonate = "tutulino"
-$WorkerNameDonate = "multipoolminer"
+$WorkerNameDonate = "Megaminer"
 $WalletBackup = $Wallet
 $UserNameBackup = $UserName
 $WorkerNameBackup = $WorkerName

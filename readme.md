@@ -1,5 +1,6 @@
 ﻿I'm user of NemosMiner and Multipoolminer also I'm user of diferents pools, manteinance of diferent software updates are painfull,  I have merged this softwares and added some features. I hope you enjoy it.
 
+
 Based 90% on aaronsace, 9% on Nemos software, 1% is mine (aprox.)
 
 Donations to
@@ -16,8 +17,6 @@ My Address - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 Only tested on nvidia pascal (10X) -- sorry I haven't AMD card for testing purposes.
 If you are interesting in try this software with AMD cards you can get Multipoolminer miner folder files and copy into same folder, change type on config.txt to AMD
-
-
 
 -------NEW FEATURES OVER NEMO AND AARONSACE ---------------
 
