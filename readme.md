@@ -1,5 +1,3 @@
-MEGAMINER 1.0
-
 I'm user of NemosMiner and Multipoolminer also I'm user of diferents pools, manteinance of diferent software updates are painfull,  I have merged this softwares and added some features. I hope you enjoy it.
 
 Based 90% on aaronsace, 9% on Nemos software, 1% is mine (aprox.)
