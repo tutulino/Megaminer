@@ -119,6 +119,7 @@ COMMAND LINE OPTIONS:
 
 -di 	GPU indexes, default is all available GPUs. For example, if you have four GPUs "-di 02" will enable only first and third GPUs (#0 and #2).
 	You can also turn on/off cards in runtime with "0"..."9" keys and check current statistics with "s" key.
+	For systems with more than 10 GPUs: use letters to specify indexes more than 9, for example, "a" means index 10, "b" means index 11, etc.
 
 -gser	this setting can improve stability on multi-GPU systems if miner hangs during startup. It serializes GPUs initalization routines. Use "-gser 1" to serailize some of routines and "-gser 2" to serialize all routines.
 	Default value is "0" (no serialization, fast initialization).
@@ -126,6 +127,7 @@ COMMAND LINE OPTIONS:
 -mode	Select mining mode:
 	"-mode 0" (default) means dual Ethereum + Decred/Siacoin/Lbry mining mode.
 	"-mode 1" means Ethereum-only mining mode. You can set this mode for every card individually, for example, "-mode 1-02" will set mode "1" for first and third GPUs (#0 and #2).
+	For systems with more than 10 GPUs: use letters to specify indexes more than 9, for example, "a" means index 10, "b" means index 11, etc.
 
 -dcoin	select second coin to mine in dual mode. Possible options are "-dcoin dcr", "-dcoin sc", "-dcoin lbc", "-dcoin pasc". Default value is "dcr".
 
@@ -205,11 +207,13 @@ COMMAND LINE OPTIONS:
 	Note: for NVIDIA cards this option is not supported.
 
 -cclock	set target GPU core clock speed, in MHz. If not specified or zero, miner will not change current clock speed. You can also specify values for every card, for example "-cclock 1000,1050,1100,0".
-	Unfortunately, AMD blocked underclocking for some reason, you can overclock only.
+	Note: for some drivers versions AMD blocked underclocking for some reason, you can overclock only.
+	Note: this option changes clocks for all power states, so check voltage for all power states in WattMan or use -cvddc option.  
+	By default, low power states have low voltage, setting high GPU clock for low power states without increasing voltage can cause driver crash.
 	Note: for NVIDIA cards this option is not supported.
 
 -mclock	set target GPU memory clock speed, in MHz. If not specified or zero, miner will not change current clock speed. You can also specify values for every card, for example "-mclock 1200,1250,1200,0".
-	Unfortunately, AMD blocked underclocking for some reason, you can overclock only.
+	Note: for some drivers versions AMD blocked underclocking for some reason, you can overclock only.
 	Note: for NVIDIA cards this option is not supported.
 
 -powlim set power limit, from -50 to 50. If not specified, miner will not change power limit. You can also specify values for every card, for example "-powlim 20,-20,0,10".
