@@ -22,9 +22,12 @@ ECHO.
 
  
 
-:LOOP
+
 
 SET /P M=Type number, then press ENTER:
+
+:LOOP
+
 IF %M%==1 .\Bin\NVIDIA-skunk\ccminerskunk.exe -a DECRED -o stratum+tcp://dcr.suprnova.cc:3252 -u %USERNAME%.%WORKERNAME% -p x  
 IF %M%==2 .\Bin\NVIDIA-skunk\ccminerskunk.exe -a skein -o stratum+tcp://dgbs.suprnova.cc:5226 -u %USERNAME%.%WORKERNAME% -p x 
 IF %M%==3 .\Bin\NVIDIA-EWBF\zminer --server zdash.suprnova.cc --user %USERNAME%.%WORKERNAME% --pass x --port 4048 
