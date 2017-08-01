@@ -1,0 +1,28 @@
+
+--ID for each rig you have
+
+WORKERNAME=HAB
+
+--BTC wallet, wallet acts as username in zpool and hashrefinery
+
+WALLET=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+
+--Pool username for sprnova and mph
+
+USERNAME=tutulino
+
+-- Time in seconds each restarting of algo, let it at 100 second for testing, after that is recommended bigger value. 
+
+INTERVAL=100
+
+-- only NVIDIA suported at this moment, you can copy Multipoolminer Miners folder content to Minerts folder and try with AMD
+
+TYPE=NVIDIA
+
+-- Only MPH supports not US location 
+
+LOCATION=EU 
+
+-- Number of minutes for each days (NOT PERCENT)
+
+DONATE=5
