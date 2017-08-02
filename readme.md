@@ -13,13 +13,14 @@ Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 
 
------ DISCLAIMER -------------------------------------
+----- DISCLAIMER ---- ---------------------------------------------------------------------------
 
 Only tested on nvidia pascal (10X0) , sorry I haven't AMD card for testing purposes.
 If you are interesting in try this software with AMD cards you can get Multipoolminer miner folder files and copy into same folder, change type on config.txt to AMD
 
 
--------NEW FEATURES OVER NEMO AND AARONSACE ---------------
+
+-------NEW FEATURES OVER NEMO AND AARONSACE ------- --------------------------------------------
 
 -Can mine on one of this pools (or all at same time): Zpool, hashrefinery, MPH
 
@@ -33,14 +34,14 @@ If you are interesting in try this software with AMD cards you can get Multipool
 
 -Enabled yescript algo
 
---Skunk algo is faster on ccminerSkunk, but is very unestable, you can try ccminerPalginSkunk by comment/uncomment(with # before)  "skunk" = "" line on ps1 file on miner folder
+-Skunk algo is faster on ccminerSkunk, but is very unestable, you can try ccminerPalginSkunk by comment/uncomment(with # before)  "skunk" = "" line on ps1 file on miner folder
 
 -multiple drci test for eth/sia dual mining on MPH
 
 
 
 
----- INSTRUCTIONS ------
+---- INSTRUCTIONS -----------------------------------------------------------------------------
 
 1.Edit CONFIG.TXT file before mining
 
@@ -51,12 +52,13 @@ If you are interesting in try this software with AMD cards you can get Multipool
 Default donation is 5 minutes each day, you can change it at config.txt.
 
 
----- UPGRADE PROCEDURE ------
+---- UPGRADE PROCEDURE ----------------------------------------------------------------------------
 
 Safest way is download new software and copy from old version stats folders and config.txt file.
 If there is a new version on some miner is recomended delete hasrate.txt files of this miner on miners folder to force benchmark again.
 
----- POOLS SUPORTED ---
+
+---- POOLS SUPORTED ---------------------------------------------------------------------------
 
 ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 
@@ -70,7 +72,7 @@ BLOCKSFACTORY -- registration required, one registration for all pools, no autoe
 
 
 
----- ALGOS/COINS SUPORTED (must be suported by pool, only MPH, ZPOOL and HASHREFINERY ------
+---- ALGOS/COINS SUPORTED (must be suported by pool, only MPH, ZPOOL and HASHREFINERY -------------------------------
 
 	**MPH, ZPOOL and HASHREFINERY (must be suported by pool)--
 		skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, MyriadGroestl, Lyra2RE2, Keccak, blake2s, 		x11evos,sia, vanilla, timetravel, tribus, Qubit, decred ,X11, x17, lyra2z, hmq1725, pascal, bitcore, ethash, cryptonight, Nist5
@@ -83,7 +85,7 @@ BLOCKSFACTORY -- registration required, one registration for all pools, no autoe
 		DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
 	
 
----- NO SCAM WARRANTY ----
+---- NO SCAM WARRANTY -------------------------------------------------------------------------------------------------
 
 You can see .ps1 files, are source code, miners are downloaded from github, can see address on miners folder files (except no github available, included)
 
