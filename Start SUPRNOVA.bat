@@ -8,13 +8,13 @@ for /f "delims== tokens=1,2" %%G in (config.txt) do set %%G=%%H
 
 ECHO.
 ECHO ...............................................
-ECHO ....SELECT COIN TO MINE ON SPRNVA POOLS........
+ECHO ....SELECT COIN TO MINE ON SUPRNOVA POOLS........
 ECHO ...............................................
 ECHO.
 ECHO  1 - DECRED (DCR)
 ECHO  2 - DIGIBYTE-SKEIN (DGB)
 ECHO  3 - HUSH (HUSH)
-ECHO  4 - LIBRARY CREDITS (LBRY)
+ECHO  4 - LIBRARY (LBRY)
 ECHO  5 - MONACOIN (MONA)
 ECHO  6 - SIGNATUM (SIGT)
 ECHO  7 - VELTOR (VLT)
@@ -23,7 +23,14 @@ ECHO  9 - ZCASH (ZEC)
 ECHO 10 - ZCOIN (XZC)
 ECHO 11 - DASHCOIN (DASH)
 ECHO 12 - ZCLASSIC (ZCL)
-ECHO 13 - BITCOIN CASH (BCH)
+ECHO 13 - BITCOIN CASH (BCC)
+ECHO 14 - KOMODO (KMD)
+ECHO 15 - MONERO (XMR)
+ECHO 16 - CHAINCOIN (CHC)
+REM ECHO 17 - ETHEREUM + DECRED (ETH+DCR)
+REM ECHO 18 - ETHEREUM + LIBRARY (ETH+LBRY)
+
+
 ECHO.
 
 
@@ -64,8 +71,17 @@ IF !M!==12 (
 			)
 
 IF !M!==13 .\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe -a sha256d -o stratum+tcp://bcc.suprnova.cc:3333 -u !USERNAME!.!WORKERNAME! -p x   
+IF !M!==14 .\Bin\NVIDIA-EWBF\zminer.exe --server kmd.suprnova.cc --user !USERNAME!.!WORKERNAME! --pass x --port 6250
+IF !M!==15 .\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe -a cryptonight -o stratum+tcp://xmr-eu.suprnova.cc:5222 -u !USERNAME!.!WORKERNAME! -p x 
+IF !M!==16 .\Bin\NVIDIA-SP-mod\ccminer.exe -a C11 -o stratum+tcp://chc.suprnova.cc:5888 -u !USERNAME!.!WORKERNAME! -p x 
 
+REM IF !M!==17 .\Bin\Ethash-Claymore\EthDcrMiner64.exe -r -1 -epool us-east.ethash-hub.miningpoolhub.com:17020 -ewal !USERNAME!.!WORKERNAME! -epsw x -esm 3 -allpools 1 -dpool dcr.suprnova.cc:3252 -dwal !USERNAME!.!WORKERNAME! -dpsw x -dcoin dcr -dcri 60
+			
+
+		 
+	
 GOTO LOOP
 
 
 
+ 
