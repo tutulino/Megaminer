@@ -44,7 +44,7 @@ If you are interesting in try this software with AMD cards you can get Multipool
 
 1.Edit CONFIG.TXT file before mining
 
-2.If you want to use suprnova must run any other pools batches to download software, is not necesary wait for mining test ending.
+2.If you want to use suprnova or BlocksFactory must run any other pools batches to download software, is not necesary wait for mining test ending.
 
 3.Exec bat file of desired pool
 
