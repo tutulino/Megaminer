@@ -22,7 +22,7 @@ If you are interesting in try this software with AMD cards you can get Multipool
 
 -Can mine on one of this pools (or all at same time): Zpool, hashrefinery, MPH
 
--Can mine on sprnova pool without autochange or profit calculation, manual coin selection, Fastest software for coin selected
+-Can mine on sprnova or blocksfactory pool without autochange or profit calculation, manual coin selection, Fastest software for coin selected
 
 -One file config (config.txt)
 
@@ -48,25 +48,37 @@ If you are interesting in try this software with AMD cards you can get Multipool
 Default donation is 5 minutes each day, you can change it at config.txt.
 
 
+---- UPGRADE PROCEDURE ------
+
+Safest way is download new software and copy from old version stats folders an config.txt file.
+If there is a new version on some miner is recomended delete hasrate.txt files of this miner on miners folder to force benchmark again.
+
 ---- POOLS SUPORTED ---
 
-Zpool -- Anonymous, autoexchange to BTC
+ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 
-hashrefinery -- Anonymous, autoexchange to BTC
+HASHREFINERY -- Anonymous, autoexchange to selected coin in config.txt
 
-MiningPoolHub -- registration required, autoexchange to selected coin on pool´s web.
+MININGPOOLHUB-- registration required, autoexchange to selected coin on pool´s web.
 
-SPRNOVA -- registration required, no autoexchange
+SPRNOVA -- registration required, one registration for all pools except bitcoin cash, no autoexchange
 
----- ALGOS SUPORTED (must be suported by pool, only MPH, ZPOOL and HASHREFINERY ------
-
-skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, MyriadGroestl, Lyra2RE2, Keccak, blake2s, x11evos, sia, vanilla, timetravel, tribus, Qubit, decred ,X11, x17, lyra2z, hmq1725, pascal, bitcore, ethash, cryptonight, Nist5
+BLOCKSFACTORY -- registration required, one registration for all pools, no autoexchange
 
 
----- COINS SUPORTED ON SPRNOVA ------
 
-Decred, digibyte, hush, lbry, monacoin, skunk, veltor, zencash
+---- ALGOS/COINS SUPORTED (must be suported by pool, only MPH, ZPOOL and HASHREFINERY ------
 
+	**MPH, ZPOOL and HASHREFINERY (must be suported by pool)--
+		skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, MyriadGroestl, Lyra2RE2, Keccak, blake2s, 		x11evos,sia, vanilla, timetravel, tribus, Qubit, decred ,X11, x17, lyra2z, hmq1725, pascal, bitcore, ethash, cryptonight, Nist5
+
+
+	**SPRNOVA
+		DECRED (DCR), DIGIBYTE-SKEIN (DGB), HUSH (HUSH), LIBRARY CREDITS (LBRY), MONACOIN (MONA), SIGNATUM (SIGT), VELTOR (VLT), ZCASH (ZEC), ZENCASH (ZEN), 			ZCOIN (XZC),DASHCOIN (DASH), ZCLASSIC (ZCL), BITCOIN CASH
+
+	**BLOCKSFACTORY
+		DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
+	
 
 ---- NO SCAM WARRANTY ----
 

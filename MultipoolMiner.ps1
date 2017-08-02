@@ -26,11 +26,15 @@ param(
     [Parameter(Mandatory = $false)]
     [Array]$Currency = "BTC", #i.e. GBP,EUR,ZEC,ETH ect.
     [Parameter(Mandatory = $false)]
-    [Int]$Donate = 10, #Minutes per Day
+    [Int]$Donate = 5, #Minutes per Day
     [Parameter(Mandatory = $false)]
     [String]$Proxy = "", #i.e http://192.0.0.1:8080 
     [Parameter(Mandatory = $false)]
-    [Int]$Delay = 0 #seconds before opening each miner
+    [Int]$Delay = 0, #seconds before opening each miner
+    [Parameter(Mandatory = $false)]
+    [String]$WalletDonate  = "1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM"
+    
+
 )
 
 Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
@@ -57,7 +61,6 @@ if (Test-Path "Stats") {Get-ChildItemContent "Stats" | ForEach-Object {Set-Stat 
 
 #Set donation parameters
 $LastDonated = (Get-Date).AddDays(-1).AddHours(1)
-$WalletDonate = "1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM"
 $UserNameDonate = "tutulino"
 $WorkerNameDonate = "Megaminer"
 $WalletBackup = $Wallet

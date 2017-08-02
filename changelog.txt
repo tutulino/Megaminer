@@ -1,28 +1,19 @@
 
---ID for each rig you have
+1.1 
+Initial version
+----------------------------------------------
+1.3 
+Fixed no relaunch on sprnova fail
+----------------------------------------------
+1.4
+removed ngsminer
+Upgrade to Claymore 9.8
+Added to spnova: ZCOIN (XZC), ZCLASSIC (ZCL), BITCOIN CASH, BITCOIN CASH (login not unified with other sprnova pool, requires registration again)
+Added new pool BlocksFactory, suported coins: DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
+Added option in config.txt to donate AARONSACE as creator of 90% source code.
 
-WORKERNAME=HAB
 
---BTC wallet, wallet acts as username in zpool and hashrefinery
 
-WALLET=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+ 
 
---Pool username for sprnova and mph
-
-USERNAME=tutulino
-
--- Time in seconds each restarting of algo, let it at 100 second for testing, after that is recommended bigger value. 
-
-INTERVAL=100
-
--- only NVIDIA suported at this moment, you can copy Multipoolminer Miners folder content to Minerts folder and try with AMD
-
-TYPE=NVIDIA
-
--- Only MPH supports not US location 
-
-LOCATION=EU 
-
--- Number of minutes for each days (NOT PERCENT)
-
-DONATE=5
+ 

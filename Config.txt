@@ -1,7 +1,10 @@
-
 --ID for each rig you have
 
 WORKERNAME=HAB
+
+--Currency pool for autoexchange, must be a coin pool have, only affect to zpool and hashrefinery, on MPH you must use web interface to set coin.
+
+CURRENCY=BTC
 
 --BTC wallet, wallet acts as username in zpool and hashrefinery
 
@@ -23,6 +26,10 @@ TYPE=NVIDIA
 
 LOCATION=EU 
 
--- Number of minutes for each days (NOT PERCENT)
+-- Number of minutes for each days (NOT PERCENT) of donation, only on MPH,HASH and ZPOOL
 
 DONATE=5
+
+-- Destination of donation (BTC) AARONSACE:1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH, ME:1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM 
+
+WALLETDONATE=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
