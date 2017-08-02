@@ -2,15 +2,15 @@
 
 WORKERNAME=HAB
 
---Currency pool for autoexchange, must be a coin pool have, only affect to zpool and hashrefinery, on MPH you must use web interface to set coin.
+--Currency you will be pay, only for pools with autoexchange, must be a coin pool have, only affect to zpool and hashrefinery, on MPH you must use web interface to set coin.
 
 CURRENCY=BTC
 
---BTC wallet, wallet acts as username in zpool and hashrefinery
+--BTC wallet, wallet acts as username in zpool and HashRefinery, must be of CURRENCY type.
 
 WALLET=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
---Pool username for sprnova and mph
+--Pool username for SprNova, BlocksFactory and MiningPoolHub
 
 USERNAME=tutulino
 
@@ -18,13 +18,13 @@ USERNAME=tutulino
 
 INTERVAL=100
 
--- only NVIDIA suported at this moment, you can copy Multipoolminer Miners folder content to Minerts folder and try with AMD
+-- Only NVIDIA suported at this moment, you can copy Multipoolminer Miners folder content to Minerts folder and try with AMD
 
 TYPE=NVIDIA
 
--- Only MPH supports not US location 
+-- Location of your rig: EUROPE/US/ASIA (some pool may have no location)
 
-LOCATION=EU 
+LOCATION=EUROPE
 
 -- Number of minutes for each days (NOT PERCENT) of donation, only on MPH,HASH and ZPOOL
 

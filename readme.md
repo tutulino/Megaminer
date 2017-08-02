@@ -15,7 +15,7 @@ Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 ----- DISCLAIMER -------------------------------------
 
-Only tested on nvidia pascal (10X) -- sorry I haven't AMD card for testing purposes.
+Only tested on nvidia pascal (10X0) , sorry I haven't AMD card for testing purposes.
 If you are interesting in try this software with AMD cards you can get Multipoolminer miner folder files and copy into same folder, change type on config.txt to AMD
 
 
