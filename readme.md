@@ -19,24 +19,25 @@ Only tested on nvidia pascal (10X0) , sorry I haven't AMD card for testing purpo
 If you are interesting in try this software with AMD cards you can get Multipoolminer miner folder files and copy into same folder, change type on config.txt to AMD
 
 
+Skunk algo is faster on ccminerSkunk, but is very unestable, you can try ccminerPalginSkunk by comment/uncomment(with # before)  "skunk" = "" line on ps1 file on miner folder
 
--------NEW FEATURES OVER NEMO AND AARONSACE ------- --------------------------------------------
 
--Can mine on one of this pools (or all at same time): Zpool, hashrefinery, MPH
+-------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -------------------------------------------------
 
--Can mine on sprnova or blocksfactory pool without autochange or profit calculation, manual coin selection, Fastest software for coin selected
+-Can mine on any of this pools (or all at same time): Zpool, HashRefinery, MPH with auto change based on pool profit for each aglo
 
--One file config (config.txt)
+-Can mine on Sprnova or BlocksFactory pool without autochange or profit calculation, manual coin selection, Fastest software for coin selected
 
--Fastest miner for each algo preselected for Nvidia Pascal (08/01/2017)
+-One file config for all pools (config.txt)
 
--AutoRelaunch Powershell on main file fail
+-Fastest miner for each algo/coin preselected for Nvidia Pascal (08/01/2017)
+
+-AutoRelaunch on fail
 
 -Enabled yescript algo
 
--Skunk algo is faster on ccminerSkunk, but is very unestable, you can try ccminerPalginSkunk by comment/uncomment(with # before)  "skunk" = "" line on ps1 file on miner folder
+-Multiple drci test for eth/sia dual mining on MPH
 
--multiple drci test for eth/sia dual mining on MPH
 
 
 
@@ -49,13 +50,14 @@ If you are interesting in try this software with AMD cards you can get Multipool
 
 3.Exec bat file of desired pool
 
+
 Default donation is 5 minutes each day, you can change it at config.txt.
 
 
 ---- UPGRADE PROCEDURE ----------------------------------------------------------------------------
 
 Safest way is download new software and copy from old version stats folders and config.txt file.
-If there is a new version on some miner is recomended delete hasrate.txt files of this miner on miners folder to force benchmark again.
+If there is a new version on some miner is recomended delete hasrate.txt files of that miner on miners folder to force benchmark again.
 
 
 ---- POOLS SUPORTED ---------------------------------------------------------------------------
@@ -64,7 +66,7 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 
 HASHREFINERY -- Anonymous, autoexchange to selected coin in config.txt
 
-MININGPOOLHUB-- registration required, autoexchange to selected coin on pool´s web.
+MININGPOOLHUB -- registration required, autoexchange to selected coin on pool´s web.
 
 SPRNOVA -- registration required, one registration for all pools except bitcoin cash, no autoexchange
 
@@ -81,7 +83,8 @@ BLOCKSFACTORY -- registration required, one registration for all pools, no autoe
 
 	**SPRNOVA
 		DECRED (DCR), DIGIBYTE-SKEIN (DGB), HUSH (HUSH), LIBRARY CREDITS (LBRY), MONACOIN (MONA), SIGNATUM (SIGT), VELTOR (VLT), ZCASH (ZEC),
-		ZENCASH (ZEN), ZCOIN (XZC),DASHCOIN (DASH), ZCLASSIC (ZCL), BITCOIN CASH
+		ZENCASH (ZEN), ZCOIN (XZC),DASHCOIN (DASH), ZCLASSIC (ZCL), BITCOIN CASH (BCC),KOMODO (KMD), MONERO (XMR), CHAINCOIN (CHC)
+
 
 	**BLOCKSFACTORY
 		DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)

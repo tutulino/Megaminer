@@ -12,8 +12,8 @@ Added to spnova: ZCOIN (XZC), ZCLASSIC (ZCL), BITCOIN CASH, BITCOIN CASH (login 
 Added new pool BlocksFactory, suported coins: DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
 Added option in config.txt to donate AARONSACE as creator of 90% source code.
 
-
-
- 
-
+----------------------------------------------
+1.5
+Added to spnova: Komodo(KMD), monero (XMR), CHAINCOIN (CHC)
+Fixed equihash not working on Miningpoolhub
  
