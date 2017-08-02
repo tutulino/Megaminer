@@ -75,11 +75,13 @@ BLOCKSFACTORY -- registration required, one registration for all pools, no autoe
 ---- ALGOS/COINS SUPORTED (must be suported by pool, only MPH, ZPOOL and HASHREFINERY -------------------------------
 
 	**MPH, ZPOOL and HASHREFINERY (must be suported by pool)--
-		skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, MyriadGroestl, Lyra2RE2, Keccak, blake2s, 		x11evos,sia, vanilla, timetravel, tribus, Qubit, decred ,X11, x17, lyra2z, hmq1725, pascal, bitcore, ethash, cryptonight, Nist5
-
+		skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, MyriadGroestl, Lyra2RE2, 
+		Keccak, blake2s,x11evos,sia, vanilla, timetravel, tribus, Qubit, decred ,X11, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
+		cryptonight, Nist5
 
 	**SPRNOVA
-		DECRED (DCR), DIGIBYTE-SKEIN (DGB), HUSH (HUSH), LIBRARY CREDITS (LBRY), MONACOIN (MONA), SIGNATUM (SIGT), VELTOR (VLT), ZCASH (ZEC), ZENCASH (ZEN), 			ZCOIN (XZC),DASHCOIN (DASH), ZCLASSIC (ZCL), BITCOIN CASH
+		DECRED (DCR), DIGIBYTE-SKEIN (DGB), HUSH (HUSH), LIBRARY CREDITS (LBRY), MONACOIN (MONA), SIGNATUM (SIGT), VELTOR (VLT), ZCASH (ZEC),
+		ZENCASH (ZEN), ZCOIN (XZC),DASHCOIN (DASH), ZCLASSIC (ZCL), BITCOIN CASH
 
 	**BLOCKSFACTORY
 		DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
