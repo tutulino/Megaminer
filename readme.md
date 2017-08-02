@@ -9,7 +9,7 @@ Aaronsace - 1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH
 
 Nemos - 1QGADhdMRpp9Pk5u5zG1TrHKRrdK5R81TE
 
-My Address - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 
 
@@ -17,6 +17,7 @@ My Address - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 Only tested on nvidia pascal (10X) -- sorry I haven't AMD card for testing purposes.
 If you are interesting in try this software with AMD cards you can get Multipoolminer miner folder files and copy into same folder, change type on config.txt to AMD
+
 
 -------NEW FEATURES OVER NEMO AND AARONSACE ---------------
 
@@ -29,6 +30,7 @@ If you are interesting in try this software with AMD cards you can get Multipool
 -Fastest miner for each algo preselected for Nvidia Pascal (08/01/2017)
 
 -AutoRelaunch Powershell on main file fail
+
 -Enabled yescript algo
 
 --Skunk algo is faster on ccminerSkunk, but is very unestable, you can try ccminerPalginSkunk by comment/uncomment(with # before)  "skunk" = "" line on ps1 file on miner folder
@@ -39,6 +41,7 @@ If you are interesting in try this software with AMD cards you can get Multipool
 
 
 ---- INSTRUCTIONS ------
+
 1.Edit CONFIG.TXT file before mining
 
 2.If you want to use suprnova must run any other pools batches to download software, is not necesary wait for mining test ending.
@@ -50,7 +53,7 @@ Default donation is 5 minutes each day, you can change it at config.txt.
 
 ---- UPGRADE PROCEDURE ------
 
-Safest way is download new software and copy from old version stats folders an config.txt file.
+Safest way is download new software and copy from old version stats folders and config.txt file.
 If there is a new version on some miner is recomended delete hasrate.txt files of this miner on miners folder to force benchmark again.
 
 ---- POOLS SUPORTED ---
