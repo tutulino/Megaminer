@@ -5,6 +5,7 @@
 for /f "delims== tokens=1,2" %%G in (config.txt) do set %%G=%%H
 
 
+REM ----------------------------------SUPRNOVA START------------------------------------------------------------------------
 
 ECHO.
 ECHO ...............................................
@@ -23,21 +24,35 @@ ECHO  9 - ZCASH (ZEC)
 ECHO 10 - ZCOIN (XZC)
 ECHO 11 - DASHCOIN (DASH)
 ECHO 12 - ZCLASSIC (ZCL)
-ECHO 13 - BITCOIN CASH (BCC)
-ECHO 14 - KOMODO (KMD)
-ECHO 15 - MONERO (XMR)
-ECHO 16 - CHAINCOIN (CHC)
-REM ECHO 17 - ETHEREUM + DECRED (ETH+DCR)
-REM ECHO 18 - ETHEREUM + LIBRARY (ETH+LBRY)
-
-
+ECHO 13 - KOMODO (KMD)
+ECHO 14 - MONERO (XMR)
+ECHO 15 - CHAINCOIN (CHC)
+ECHO 16 - ETHEREUM + DECRED (ETH+DCR)
+ECHO 17 - ETHEREUM + LIBRARY (ETH+LBRY)
 ECHO.
-
 
 
 SET /P M=Type number, then press ENTER:
 
-:LOOP
+REM --------Ask for DRCI in dual mode, must be outside loop
+IF !M!==16 set DUALMODE=TRUE
+IF !M!==17 set DUALMODE=TRUE
+
+IF !DUALMODE!==TRUE (
+					ECHO.	
+					ECHO.	
+					ECHO.	
+					ECHO -----------------------SELECT INITIAL DCRI --------------------------
+					ECHO You can change DCRI intensity in runtime with "+" and "-" keys and check current statistics with "s" key
+					ECHO.	
+					SET DCRI=NULL
+					SET /P DCRI=Type DCRI -default 60-, then press ENTER:
+					IF !DCRI!==NULL SET DCRI=60
+					)
+REM --------End ask DRCI
+
+
+:LOOPSUPRNOVA
 
 IF !M!==1 .\Bin\NVIDIA-skunk\ccminerskunk.exe -a DECRED -o stratum+tcp://dcr.suprnova.cc:3252 -u !USERNAME!.!WORKERNAME! -p x  
 IF !M!==2 .\Bin\NVIDIA-skunk\ccminerskunk.exe -a skein -o stratum+tcp://dgbs.suprnova.cc:5226 -u !USERNAME!.!WORKERNAME! -p x 
@@ -70,18 +85,28 @@ IF !M!==12 (
 			.\Bin\NVIDIA-EWBF\zminer.exe --server !SERVER! --user !USERNAME!.!WORKERNAME! --pass x --port 4042
 			)
 
-IF !M!==13 .\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe -a sha256d -o stratum+tcp://bcc.suprnova.cc:3333 -u !USERNAME!.!WORKERNAME! -p x   
-IF !M!==14 .\Bin\NVIDIA-EWBF\zminer.exe --server kmd.suprnova.cc --user !USERNAME!.!WORKERNAME! --pass x --port 6250
-IF !M!==15 .\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe -a cryptonight -o stratum+tcp://xmr-eu.suprnova.cc:5222 -u !USERNAME!.!WORKERNAME! -p x 
-IF !M!==16 .\Bin\NVIDIA-SP-mod\ccminer.exe -a C11 -o stratum+tcp://chc.suprnova.cc:5888 -u !USERNAME!.!WORKERNAME! -p x 
-
-REM IF !M!==17 .\Bin\Ethash-Claymore\EthDcrMiner64.exe -r -1 -epool us-east.ethash-hub.miningpoolhub.com:17020 -ewal !USERNAME!.!WORKERNAME! -epsw x -esm 3 -allpools 1 -dpool dcr.suprnova.cc:3252 -dwal !USERNAME!.!WORKERNAME! -dpsw x -dcoin dcr -dcri 60
+REM Bitcoin cash --> IF !M!==13 .\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe -a sha256d -o stratum+tcp://bcc.suprnova.cc:3333 -u !USERNAME!.!WORKERNAME! -p x   
+IF !M!==13 .\Bin\NVIDIA-EWBF\zminer.exe --server kmd.suprnova.cc --user !USERNAME!.!WORKERNAME! --pass x --port 6250
+IF !M!==14 .\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe -a cryptonight -o stratum+tcp://xmr-eu.suprnova.cc:5222 -u !USERNAME!.!WORKERNAME! -p x 
+IF !M!==15 .\Bin\NVIDIA-SP-mod\ccminer.exe -a C11 -o stratum+tcp://chc.suprnova.cc:5888 -u !USERNAME!.!WORKERNAME! -p x
+IF !M!==16 .\Bin\Ethash-Claymore\EthDcrMiner64.exe -r -1 -epool eth.suprnova.cc:5000 -ewal !USERNAME!.!WORKERNAME! -epsw x -esm 3 -allpools 1 -dpool dcr.suprnova.cc:3252 -dwal !USERNAME!.!WORKERNAME! -dpsw x -dcoin dcr -dcri !DCRI!
 			
-
-		 
+IF !M!==17 .\Bin\Ethash-Claymore\EthDcrMiner64.exe -r -1 -epool eth.suprnova.cc:5000 -ewal !USERNAME!.!WORKERNAME! -epsw x -esm 3 -allpools 1 -dpool lbry.suprnova.cc:6256 -dwal !USERNAME!.!WORKERNAME! -dpsw x -dcoin lbry -dcri !DCRI!
 	
-GOTO LOOP
 
+GOTO LOOPSUPRNOVA
+GOTO END
+REM ----------------------------------SUPRNOVA END------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+:END
 
 
  

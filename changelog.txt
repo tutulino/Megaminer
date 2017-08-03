@@ -14,6 +14,7 @@ Added option in config.txt to donate AARONSACE as creator of 90% source code.
 
 ----------------------------------------------
 1.5
-Added to spnova: Komodo(KMD), monero (XMR), CHAINCOIN (CHC)
+Added to spnova: Komodo(KMD), monero (XMR), CHAINCOIN (CHC), ETHEREUM+DECRED (ETH+DCR), ETHEREUM+LIBRARY (ETH+LBRY)
+Removed from spnova: Bitcoin Cash (BCC), reason not viable mine with GPU
 Fixed equihash not working on Miningpoolhub
  
