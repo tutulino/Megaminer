@@ -22,7 +22,14 @@
 			{"coin": "CHAINCOIN","server":"chc.suprnova.cc", "port": "5888","location":"EU"},
 			{"coin": "ETHEREUM","server":"eth.suprnova.cc", "port": "5000","location":"US"},
 			{"coin": "ETHEREUM | LBRY","server":"", "port": "","location":""},
-			{"coin": "ETHEREUM | DECRED","server":"", "port": "","location":""}
-	    ]
+			{"coin": "ETHEREUM | DECRED","server":"", "port": "","location":""},
+			{"coin": "SPREADCOIN","server":"spr.suprnova.cc", "port": "6666","location":"US"}
+
+
+	
+		]
+,"Disclaimer": "Must register and set wallet for each coin on web"
+,"UseAsLogin": "#CONFIGUSERNAME#.#WORKERNAME#"	
+,"UseAsPassword": "x"			
 }
 

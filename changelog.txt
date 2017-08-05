@@ -27,3 +27,14 @@ Unified all start batches without lost no user action boot (see examples.bat)
 Added to Suprnova: Bitcore(BTX)
 Added basic info from Whattomine, Bittrex and Cryptopia as help for manual coin selection on Suprnova.
 Changed from ccminerskunk to ccminerAlexis for skein algo. Ccminerskunk not working.
+
+----------------------------------------------
+1.7
+Added spreadminer for spreadcoin
+upgrade sceen instructions of use for each pool
+Added to Suprnova: SPREADCOIN (SPR)
+Added Yiimp pool (requires individual wallet for each coin in config.txt): DENARIUS (DNR), DECRED (DCR), SIGNATUM (SIGT), BITCORE (BTX), VERGE (VRG), SIBCOIN (SIB), VERTCOIN(VRC) 
+Software donwload for first execution was independent of selected pool
+
+THIS VERSION REQUIRES NEW CONFIG.TXT FILE, YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
+

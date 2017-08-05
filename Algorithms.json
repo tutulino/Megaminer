@@ -1,20 +1,33 @@
 [
-{"name": "SKUNK","DUAL":"FALSE","MINER":".!Bin!NVIDIA-palginkunk!ccminer.exe -a skunk -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x "},
-{"name": "TIMETRAVEL10","DUAL":"FALSE","MINER":".!Bin!NVIDIA-ccminer-2.2!ccminer-x64.exe -a bitcore -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x "},
-{"name": "BLAKE14R","DUAL":"FALSE","MINER":".!Bin!NVIDIA-skunk!ccminerskunk.exe -a DECRED -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x "},
-{"name": "SKEIN","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a skein -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x "},
-{"name": "EQUIHASH","DUAL":"FALSE","MINER":".!Bin!NVIDIA-EWBF!zminer.exe --server #SERVER# --user #USERNAME#.#WORKERNAME# --pass x --port #Port#"},
-{"name": "LBRY","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a LBRY -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x "},
-{"name": "LYRA2REV2","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a lyra2v2 -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x"},
-{"name": "VELTOR","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a veltor -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x "},
-{"name": "LYRA2Z","DUAL":"FALSE","MINER":".!Bin!NVIDIA-ccminer-2.2!ccminer-x64.exe -a lyra2z -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x"},
-{"name": "X11","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a x11 -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x "},
-{"name": "CRYPTONIGHT","DUAL":"FALSE","MINER":".!Bin!NVIDIA-ccminer-2.2!ccminer-x64.exe -a cryptonight -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x"},
-{"name": "HASHIMOTO","DUAL":"FALSE","MINER":".!Bin!Ethash-Claymore!EthDcrMiner64.exe -r -1 -epool #SERVER#:#PORT# -ewal #USERNAME#.#WORKERNAME# -epsw x -esm 3 -allpools 1"},
-{"name": "NEOSCRYPT","DUAL":"FALSE","MINER":".!Bin!NVIDIA-ccminer-2.2!ccminer-x64.exe -a neoscrypt -o stratum+tcp://#SERVER#:#PORT# -u #USERNAME#.#WORKERNAME# -p x"},
-{"name": "HASHIMOTO | DECRED","DUAL":"TRUE","MINER":".!Bin!Ethash-Claymore!EthDcrMiner64.exe -r -1 -epool #SERVER#:#PORT# -ewal #USERNAME#.#WORKERNAME# -epsw x -esm 3 -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #USERNAME#.#WORKERNAME# -dpsw x -dcoin dcr -dcri #DCRI#"},
-{"name": "HASHIMOTO | LIBRARY","DUAL":"TRUE","MINER":".!Bin!Ethash-Claymore!EthDcrMiner64.exe -r -1 -epool #SERVER#:#PORT# -ewal #USERNAME#.#WORKERNAME# -epsw x -esm 3 -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #USERNAME#.#WORKERNAME# -dpsw x -dcoin lbry -dcri #DCRI#"},
+{"name": "SKUNK","DUAL":"FALSE","MINER":".!Bin!NVIDIA-palginkunk!ccminer.exe -a skunk -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# "},
+{"name": "TIMETRAVEL10","DUAL":"FALSE","MINER":".!Bin!NVIDIA-ccminer-2.2!ccminer-x64.exe -a bitcore -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# "},
+{"name": "BLAKE14R","DUAL":"FALSE","MINER":".!Bin!NVIDIA-skunk!ccminerskunk.exe -a DECRED -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# "},
+{"name": "SKEIN","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a skein -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# "},
+{"name": "EQUIHASH","DUAL":"FALSE","MINER":".!Bin!NVIDIA-EWBF!zminer.exe --server #SERVER# --user #LOGIN# --pass x --port #Port#"},
+{"name": "LBRY","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a LBRY -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# "},
+{"name": "LYRA2REV2","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a lyra2v2 -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#"},
+{"name": "VELTOR","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a veltor -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# "},
+{"name": "LYRA2Z","DUAL":"FALSE","MINER":".!Bin!NVIDIA-ccminer-2.2!ccminer-x64.exe -a lyra2z -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#"},
+{"name": "X11","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a x11 -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# "},
+{"name": "CRYPTONIGHT","DUAL":"FALSE","MINER":".!Bin!NVIDIA-ccminer-2.2!ccminer-x64.exe -a cryptonight -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#"},
+{"name": "HASHIMOTO","DUAL":"FALSE","MINER":".!Bin!Ethash-Claymore!EthDcrMiner64.exe -r -1 -epool #SERVER#:#PORT# -ewal #LOGIN# -epsw x -esm 3 -allpools 1"},
+{"name": "NEOSCRYPT","DUAL":"FALSE","MINER":".!Bin!NVIDIA-ccminer-2.2!ccminer-x64.exe -a neoscrypt -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#"},
+{"name": "HASHIMOTO | DECRED","DUAL":"TRUE","MINER":".!Bin!Ethash-Claymore!EthDcrMiner64.exe -r -1 -epool #SERVER#:#PORT# -ewal #LOGIN# -epsw x -esm 3 -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGIN#-dpsw x -dcoin dcr -dcri #DCRI#"},
+{"name": "HASHIMOTO | LIBRARY","DUAL":"TRUE","MINER":".!Bin!Ethash-Claymore!EthDcrMiner64.exe -r -1 -epool #SERVER#:#PORT# -ewal #LOGIN# -epsw x -esm 3 -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGIN#-dpsw x -dcoin lbry -dcri #DCRI#"},
+{"name": "TRIBUS","DUAL":"FALSE","MINER":".!Bin!NVIDIA-ccminer-2.2!ccminer-x64.exe -a tribus -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#"},
+{"name": "X17","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a x17 -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# "},
+{"name": "SPREADX11","DUAL":"FALSE","MINER":".!Bin!NVIDIA-SPREADMINER!spreadminer.exe -o stratum+tcp://#SERVER#:#PORT# -u  #LOGIN# -p #PASSWORD#"},
+{"name": "X11-GHOST","DUAL":"FALSE","MINER":".!Bin!NVIDIA-Alexis78!ccminer.exe -a sib -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# "},
+
+
+{"name": "XEVAN","DUAL":"FALSE","MINER":""},
 {"name": "BLAKE2B","DUAL":"FALSE","MINER":""}
+
+
+
+
+
+
 ]
 
 

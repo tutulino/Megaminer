@@ -5,7 +5,10 @@
 			{"coin": "ORBITCOIN","server":"s1.theblocksfactory.com", "port": "3334","location":"US"},
 			{"coin": "GUNCOIN","server":"s1.theblocksfactory.com", "port": "3330","location":"US"}
 		
-	    ]
+		]
+,"Disclaimer": "Must register and set wallet for each coin on web, set login on config.txt file"
+,"UseAsLogin":	"#CONFIGUSERNAME#.#WORKERNAME#"	
+,"UseAsPassword": "x"			
 }
 
   

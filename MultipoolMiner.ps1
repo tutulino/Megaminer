@@ -22,7 +22,7 @@ param(
     [Parameter(Mandatory = $false)]
     [Array]$MinerName = $null, 
     [Parameter(Mandatory = $false)]
-    [Array]$PoolName = "hash", 
+    [Array]$PoolName = "hash_refinery", 
     [Parameter(Mandatory = $false)]
     [Array]$Currency = "BTC", #i.e. GBP,EUR,ZEC,ETH ect.
     [Parameter(Mandatory = $false)]

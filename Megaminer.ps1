@@ -1,4 +1,5 @@
 
+
 #--------------optional parameters...to allow direct launch without prompt to user
 param(
     [Parameter(Mandatory = $false)]
@@ -13,23 +14,29 @@ param(
 
 )
 
+. .\Include.ps1
 
-#Parameter backup
+#--------------Parameter backup
 $ParameterPoolName=$PoolName
 $ParameterCoinName=$CoinName
 $ParameterDcri=$Dcri
 
 
+
+#--------------Checks if software exists 
+   Invoke-Expression "./Downloader.ps1" | Out-Null    
+
+
 #--------------Load config.txt file
-$ConfigLocation=(Get-Content config.txt | Where-Object {$_ -like '*@@LOCATION=*'} )-replace '@@LOCATION=',''
-$ConfigDonate=(Get-Content config.txt | Where-Object {$_ -like '*@@DONATE=*'} )-replace '@@DONATE=',''
-$ConfigWalletDonate=(Get-Content config.txt | Where-Object {$_ -like '*@@WALLETDONATE=*'} )-replace '@@WALLETDONATE=',''
-$ConfigWallet=(Get-Content config.txt | Where-Object {$_ -like '*@@WALLET=*'} ) -replace '@@WALLET=',''
-$ConfigUsername=(Get-Content config.txt | Where-Object {$_ -like '*@@USERNAME=*'} )-replace '@@USERNAME=',''
-$ConfigType=(Get-Content config.txt | Where-Object {$_ -like '*@@TYPE=*'}) -replace '@@TYPE=',''
-$ConfigInterval=(Get-Content config.txt | Where-Object {$_ -like '*@@INTERVAL=*'}) -replace '@@INTERVAL=',''
-$ConfigWorkerName=(Get-Content config.txt | Where-Object {$_ -like '*@@WORKERNAME=*'} )-replace '@@WORKERNAME=',''
-$ConfigCurrency=(Get-Content config.txt | Where-Object {$_ -like '*@@CURRENCY=*'} )-replace '@@CURRENCY=',''
+$ConfigLocation=(Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} )-replace '@@LOCATION=',''
+$ConfigDonate=(Get-Content config.txt | Where-Object {$_ -like '@@DONATE=*'} )-replace '@@DONATE=',''
+$ConfigWalletDonate=(Get-Content config.txt | Where-Object {$_ -like '@@WALLETDONATE=*'} )-replace '@@WALLETDONATE=',''
+$ConfigWallet=(Get-Content config.txt | Where-Object {$_ -like '@@WALLET=*'} ) -replace '@@WALLET=',''
+$ConfigUsername=(Get-Content config.txt | Where-Object {$_ -like '@@USERNAME=*'} )-replace '@@USERNAME=',''
+$ConfigType=(Get-Content config.txt | Where-Object {$_ -like '@@TYPE=*'}) -replace '@@TYPE=',''
+$ConfigInterval=(Get-Content config.txt | Where-Object {$_ -like '@@INTERVAL=*'}) -replace '@@INTERVAL=',''
+$ConfigWorkerName=(Get-Content config.txt | Where-Object {$_ -like '@@WORKERNAME=*'} )-replace '@@WORKERNAME=',''
+$ConfigCurrency=(Get-Content config.txt | Where-Object {$_ -like '@@CURRENCY=*'} )-replace '@@CURRENCY=',''
 
 
 $pools= if(Test-Path 'Pools'){Get-ChildItem 'Pools' | Sort-Object}
@@ -42,19 +49,26 @@ Clear-Host
 $Position=0
 $SelectedPoolIndex=-1
 $AutomaticPoolsString='#'
-write-host ...............................................
-write-host ..........SELECT POOL/S  TO MINE...............
-write-host ...............................................
+write-host ..............................................................................................
+write-host ...................SELECT POOL/S  TO MINE.....................................................
+write-host ..............................................................................................
  
 Foreach ($pool in $pools)
 {
     $PoolName=$pool.basename -replace '_',' '
     if ($pool.extension -eq ".ps1") {
-            $PoolType='(Automatic Coin Selection)'
+            if ($pool.basename -eq "Mining Pool Hub") {$PoolType='---------Automatic Coin Selection, must register, set login on config.txt file'}
+            else {$PoolType=' ---------Automatic Coin Selection, Autoexchange to config.txt wallet'}
+            
             #Also Use loop for generation of All automatic pools string
             $AutomaticPoolsString=$AutomaticPoolsString+','+$Pool.basename
         }
-         else {$PoolType=''}
+         else {
+                #Load pool information
+                $PoolFilePath=".\pools\"+$Pool.name
+                $DestinationPool = ConvertFrom-Json "$(get-content $PoolFilePath)"
+                $PoolType='---------'+$DestinationPool.Disclaimer
+               }
     write-host   $Position - $PoolName $PoolType
     #Search for pool selected in parameter
     If ($ParameterPoolName -eq $pool.basename) {$SelectedPoolIndex=$Position}
@@ -62,9 +76,9 @@ Foreach ($pool in $pools)
 }
 
 If ($ParameterPoolName -eq "All") {$SelectedPoolIndex=99}
-write-host 99. All "automatic coin" pools
-write-host ...............................................
-write-host ...............................................
+write-host 99. ALL "AUTOMATIC COIN" POOLS
+write-host ..............................................................................................
+write-host ..............................................................................................
 
 If ($SelectedPoolIndex -eq -1)  
     {$SelectedPoolIndex = Read-Host -Prompt 'Input pool number and press Enter:'}
@@ -86,7 +100,7 @@ else
    $SelectedPoolExtension=$Pools[$SelectedPoolIndex].Extension
 }
 
-$PoolFilePath=".\pools\"+$SelectedPoolName+$SelectedPoolExtension
+
 
 if ($SelectedPoolExtension -eq '.ps1') #Pools from AAronsace Multipool
     {
@@ -110,7 +124,7 @@ else #Other Pools no automatics
 
             catch {}
             #wait for invoke ends
-            Start-Sleep 1
+ #          Start-Sleep 1
 
             #Load coins information
             $CoinsColection = (get-content "Coins.json" | ConvertFrom-Json) |sort name
@@ -118,14 +132,15 @@ else #Other Pools no automatics
             $CoinsColection | Add-Member BTC ""
             $CoinsColection | Add-Member BtcCh24h ""
             $CoinsColection | Add-Member USD ""
-            $CoinsColection | Add-Member DiffOver24 ""
+            $CoinsColection | Add-Member DiffOver24h ""
             $CoinsColection | Add-Member EUR ""
             $CoinsColection | Add-Member profitability ""
 
 
-            #Load pool information
-            $PoolInfo = ConvertFrom-Json "$(get-content $PoolFilePath)"
-
+            #Load pool informattion   
+            $PoolFilePath=".\pools\"+$SelectedPoolName+$SelectedPoolExtension
+            $DestinationPool = ConvertFrom-Json "$(get-content $PoolFilePath)"
+         
             #Load algo informattion
             $AlgoColection = (get-content "Algorithms.json" | ConvertFrom-Json)  
 
@@ -139,7 +154,7 @@ else #Other Pools no automatics
             Foreach ($Coin in $CoinsColection)
                     {
                         #only shows if pool have this coin
-                        if (($PoolInfo.pools | where-object coin -eq $Coin.name) -ne $null)
+                        if (($DestinationPool.pools | where-object coin -eq $Coin.name) -ne $null)
                             {
                                 
                                 #Add info from cryptopia
@@ -177,7 +192,7 @@ else #Other Pools no automatics
                                         $CoinWTMinfo=$WTMResponse |Select-Object -ExpandProperty Coins | Select-Object -ExpandProperty $WTMCoin.name
                                         If ($CoinWTMinfo.tag -eq $coin.symbol) 
                                                 {
-                                                $Coin.DiffOver24=[math]::Round((($CoinWTMinfo.Difficulty/$CoinWTMinfo.Difficulty24)-1)*100,1)
+                                                $Coin.DiffOver24h=[math]::Round((($CoinWTMinfo.Difficulty/$CoinWTMinfo.Difficulty24)-1)*100,1)
                                                 $Coin.profitability=$CoinWTMinfo.estimated_rewards
                                                 
                                                 }
@@ -191,8 +206,8 @@ else #Other Pools no automatics
                         
                 }
 
-                If ($ConfigLocation -eq "EUROPE") {$CoinsColection | where option -ne -1| Sort-Object -Property name | Format-Table Option,name,symbol,algo,BTC,EUR,BtcCh24h,DiffOver24  | out-host}
-                    else {$CoinsColection | where option -ne -1| Sort-Object -Property name | Format-Table Option,name,symbol,algo,BTC,USD,BtcCh24h,DiffOver24 | out-host}
+                If ($ConfigLocation -eq "EUROPE") {$CoinsColection | where option -ne -1| Sort-Object -Property name | Format-Table Option,name,symbol,algo,BTC,EUR,BtcCh24h,DiffOver24h  | out-host}
+                    else {$CoinsColection | where option -ne -1| Sort-Object -Property name | Format-Table Option,name,symbol,algo,BTC,USD,BtcCh24h,DiffOver24h | out-host}
 
         
                 
@@ -214,9 +229,9 @@ else #Other Pools no automatics
                         $DestinationCoinDual= $CoinsColection | Where-Object name -eq $Split[2]
 
                         #Search Server for dual coin
-                        $DestinationServerDual=$PoolInfo.pools | where-object Location -eq $ConfigLocation  | where-object Coin -eq $DestinationCoinDual.name
-                        if ($DestinationServerDual -eq $null) {$DestinationServerDual=$PoolInfo.pools | where-object Location -eq US |where-object Coin -eq $DestinationCoinDual.name}
-                        if ($DestinationServerDual -eq $null) {$DestinationServerDual=$PoolInfo.pools | where-object Coin -eq $DestinationCoinDual.name}
+                        $DestinationServerDual=$DestinationPool.pools | where-object Location -eq $ConfigLocation  | where-object Coin -eq $DestinationCoinDual.name
+                        if ($DestinationServerDual -eq $null) {$DestinationServerDual=$DestinationPool.pools | where-object Location -eq US |where-object Coin -eq $DestinationCoinDual.name}
+                        if ($DestinationServerDual -eq $null) {$DestinationServerDual=$DestinationPool.pools | where-object Coin -eq $DestinationCoinDual.name}
                         
                         #Promt user for dcri
                             If ($ParameterDCRI -eq $null) {Clear-Host}
@@ -232,22 +247,32 @@ else #Other Pools no automatics
                     }
 
                 #search servers for location for indicated coin
-                $DestinationServer=$PoolInfo.pools | where-object Location -eq $ConfigLocation  | where-object Coin -eq $DestinationCoin.name
-                if ($DestinationServer -eq $null) {$DestinationServer=$PoolInfo.pools | where-object Location -eq US |where-object Coin -eq $DestinationCoin.name}
-                if ($DestinationServer -eq $null) {$DestinationServer=$PoolInfo.pools | where-object Coin -eq $DestinationCoin.name}
+                $DestinationServer=$DestinationPool.pools | where-object Location -eq $ConfigLocation  | where-object Coin -eq $DestinationCoin.name
+                if ($DestinationServer -eq $null) {$DestinationServer=$DestinationPool.pools | where-object Location -eq US |where-object Coin -eq $DestinationCoin.name}
+                if ($DestinationServer -eq $null) {$DestinationServer=$DestinationPool.pools | where-object Coin -eq $DestinationCoin.name}
             
                 #Launch command
 
-                $Command=$DestinationAlgo.Miner  -replace '!','\' -replace '#server#',$DestinationServer.server -replace '#serverdual#',$DestinationServerDual.server
-                $Command=$Command  -replace '#Port#',$DestinationServer.port -replace '#portdual#',$DestinationServerDual.port
-                $Command=$Command  -replace '#UserName#',$ConfigUsername -replace '#workername#',$ConfigWorkerName  -replace '#dcri#',$SelectedDcri
-                write-host ............LAUNCHED COMMAND...................
-                write-host $Command
-                write-host ...............................................
 
-                #Call into loop for fail relaunch
-                while (1 -eq 1) {Invoke-Expression $Command }
+                $StringtoSearch='@@WALLET_'+$DestinationCoin.symbol+'=*'
+                $DestinationCoinWallet=(Get-Content config.txt | Where-Object {$_ -like $StringtoSearch} )-replace $StringtoSearch,'' 
+                if (($DestinationCoinWallet -eq "") -and ($DestinationPool.UseAsLogin -ccontains '#COINWALLET#'))  
+                    {write-host .........NO WALLET CONFIGURED FOR THIS COIN IN CONFIG.TXT.................}
+                else 
+                    {
 
+                        $Command=$DestinationAlgo.Miner  -replace '!','\' -replace '#login#',$DestinationPool.UseAsLogin -replace '#password#',$DestinationPool.UseAsPassword 
+                        $Command=$Command -replace '#server#',$DestinationServer.server -replace '#serverdual#',$DestinationServerDual.server -replace '#COINWALLET#',$DestinationCoinWallet -replace '#ConfigUsername#',$ConfigUsername
+                        $Command=$Command -replace '#Port#',$DestinationServer.port -replace '#portdual#',$DestinationServerDual.port -replace '#workername#',$ConfigWorkerName  -replace '#dcri#',$SelectedDcri -replace '#MINEDCOINSYMBOL#',$DestinationCoin.symbol
+                    
+                        
+                        write-host ............LAUNCHED COMMAND...................
+                        write-host $Command
+                        write-host ...............................................
+
+                        #Call into loop for fail relaunch
+                        while (1 -eq 1) {Invoke-Expression $Command }
+                    }
                 
             
 

@@ -6,11 +6,11 @@
 
 @@CURRENCY=BTC
 
---BTC wallet, wallet acts as username in zpool and HashRefinery, must be of CURRENCY type.
+--Wallet for anonymous autoexchange pools like Zpool or Hash Refinery
 
 @@WALLET=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
---Pool username for SprNova, BlocksFactory and MiningPoolHub
+--Pool username for not anonymous pools like SprNova, BlocksFactory or MiningPoolHub
 
 @@USERNAME=tutulino
 
@@ -33,3 +33,14 @@
 -- Destination of donation (BTC) AARONSACE:1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH, ME:1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM 
 
 @@WALLETDONATE=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+
+
+-- INDIVIDUAL COIN WALLETS, will be used if pool need as login a wallet of same coin you are mining (ex.Yiimp)
+
+@@WALLET_DNR=DMBdpDVrtj6DBEcE6t9wRbujw7NM7ziLYp
+@@WALLET_DCR=DshK6VgbzwJjaAXmvrmMEYq3bqZJLrQbwzS
+@@WALLET_BTX=1EqS1VZ1A5qZF6x72DRgLs4oULLsMcVDJd
+@@WALLET_SIGT=BJupFgEmjzE3U6VvH3vmNSBL6AkdxQjoAn
+@@WALLET_XVG=DMpSQmLpitKrdnaHomJSnMP3Q77ZJ9f2aF
+@@WALLET_SIB=SgxUftvp7zm66yCoHiKzJCzvopzn7cUmhw
+@@WALLET_VTC=

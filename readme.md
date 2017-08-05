@@ -1,7 +1,7 @@
 ﻿I'm user of NemosMiner and Multipoolminer also I'm user of diferents pools, manteinance of diferent software updates are painfull,  I have merged this softwares and added some features. I hope you enjoy it.
 
 
-Based 90% on aaronsace, 9% on Nemos software, 1% is mine (aprox.)
+Based 70% on aaronsace, 10% on Nemos software, 20% is mine (aprox.)
 
 Donations to
 
@@ -28,13 +28,16 @@ Core for auto change pools is based on AaronSace MultipoolMiner, you can read in
 
 -------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -----------
 
--Can mine on any of this pools (or all at same time): Zpool, HashRefinery, MPH with auto change based on pool profit for each aglo
+In this software you can get same features than Nemosminer (Zpool) and Multipoolminer (MiningPoolHub), and also:
 
--Can mine on Sprnova or BlocksFactory pool without autochange or profit calculation, manual coin selection, Fastest software for coin selected
 
--One file config for all pools (config.txt)
+-Can mine on any of this pools (or all at same time): Zpool, HashRefinery, MPH with auto coin change based on pool profit for each algorithm
 
--Fastest miner for each algo/coin preselected for Nvidia Pascal (08/01/2017)
+-Can mine on Suprnova,YIIMP or BlocksFactory pool without autochange or profit calculation, manual coin selection, Fastest software for each coin preselected
+
+-One file config
+
+-Fastest miner for each algo/coin preselected for Nvidia Pascal (08/01/2017) on all pools.
 
 -AutoRelaunch on fail
 
@@ -42,8 +45,9 @@ Core for auto change pools is based on AaronSace MultipoolMiner, you can read in
 
 -Multiple drci test for eth/sia dual mining on MPH
 
--Basic info from Whattomine, Bittrex and Cryptopia for manual pools like Suprnova
+-Basic info from Whattomine, Bittrex and Cryptopia for no automatic coin selection pools
 
+-Unified software repository for all pools
 
 
 ---- INSTRUCTIONS ----------------------------------------------
@@ -52,12 +56,12 @@ Core for auto change pools is based on AaronSace MultipoolMiner, you can read in
 
 1. Edit CONFIG.TXT file before mining
 
-2. If you want to use suprnova or BlocksFactory must run any other pools batches to download software, is not necesary wait for mining test ending.
+2. Firt time, software will be donwloaded from miners github repositories.
 
 3. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt
 
 
-Default donation is 5 minutes each day, you can change it at config.txt.
+Default donation is 5 minutes each day on automatic pools, manual pools has no donation percent, you can change it at config.txt or donate manually ;-)
 
 
 ---- UPGRADE PROCEDURE ------------------------------------
@@ -79,6 +83,8 @@ SPRNOVA -- registration required, one registration for all pools except bitcoin 
 
 BLOCKSFACTORY -- registration required, one registration for all pools, no autoexchange
 
+YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
+
 
 
 ---- ALGOS/COINS SUPORTED -------------------------------
@@ -89,14 +95,19 @@ BLOCKSFACTORY -- registration required, one registration for all pools, no autoe
 	cryptonight, Nist5
 
 **SPRNOVA
-	DECRED (DCR), DIGIBYTE-SKEIN (DGB), HUSH (HUSH), LIBRARY CREDITS (LBRY), MONACOIN (MONA), SIGNATUM (SIGT), VELTOR (VLT), ZCASH (ZEC),
-	ZENCASH (ZEN), ZCOIN (XZC),DASHCOIN (DASH), ZCLASSIC (ZCL), KOMODO (KMD), MONERO (XMR), CHAINCOIN (CHC), ETHEREUM+DECRED (ETH+DCR),
-	ETHEREUM+LIBRARY (ETH+LBRY),BITCORE (BTX)
+	DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), VELTOR(VLT), ZCASH(ZEC),
+	ZENCASH (ZEN), ZCOIN(XZC), DASHCOIN(DASH), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), CHAINCOIN(CHC), ETHEREUM+DECRED(ETH+DCR),
+	ETHEREUM+LIBRARY(ETH+LBRY),BITCORE(BTX)
 
 
 **BLOCKSFACTORY
-	DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
+	DIGIBYTE-SKEIN(DGB), FEATHERCOIN(FTC), PHOENIXCOIN(PXC), ORBITCOIN(ORB), GUNCOIN(GUN)
 	
+
+**YIIMP
+	DENARIUS(DNR), DECRED(DCR), SIGNATUM(SIGT), BITCORE(BTX), VERGE(VRG), SIBCOIN(SIB), VERTCOIN(VRC) 
+
+
 
 ---- NO SCAM WARRANTY --------------------------------------------
 

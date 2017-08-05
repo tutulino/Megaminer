@@ -1,4 +1,5 @@
 [
+{"name": "DENARIUS", "algo":"TRIBUS", "symbol": "DNR"},
 {"name": "DECRED", "algo":"BLAKE14R", "symbol": "DCR"},
 {"name": "BITCORE", "algo":"TIMETRAVEL10", "symbol": "BTX"},
 {"name": "DIGIBYTE-SKEIN","algo":"SKEIN", "symbol": "DGB"},
@@ -22,7 +23,12 @@
 {"name": "SIACOIN","algo":"BLAKE2B", "symbol": "SC"},
 {"name": "PASCALCOIN","algo":"PASCAL", "symbol": "PASC"},
 {"name": "ETHEREUM | LBRY","algo":"HASHIMOTO | LIBRARY", "symbol": "ETH | LBRY"},
-{"name": "ETHEREUM | DECRED","algo":"HASHIMOTO | DECRED", "symbol": "ETH | DCR"}
+{"name": "ETHEREUM | DECRED","algo":"HASHIMOTO | DECRED", "symbol": "ETH | DCR"},
+{"name": "VERGE","algo":"x17", "symbol": "XVG"},
+{"name": "SIBCOIN","algo":"X11-GHOST", "symbol": "SIB"},
+{"name": "VERTCOIN","algo":"LYRA2REV2", "symbol": "VTC"},
+{"name": "SPREADCOIN","algo":"SPREADX11", "symbol": "SPR"},
+{"name": "BITSEND","algo":"XEVAN", "symbol": "BSD"}
 ]
 
 
