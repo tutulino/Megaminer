@@ -1,0 +1,11 @@
+{"Pools": [
+			{"coin": "DIGIBYTE-SKEIN","server":"s1.theblocksfactory.com", "port": "9002","location":"US"},
+			{"coin": "FEATHERCOIN","server":"s1.theblocksfactory.com", "port": "3333","location":"US"},
+			{"coin": "PHOENIXCOIN","server":"s1.theblocksfactory.com", "port": "3332","location":"US"},
+			{"coin": "ORBITCOIN","server":"s1.theblocksfactory.com", "port": "3334","location":"US"},
+			{"coin": "GUNCOIN","server":"s1.theblocksfactory.com", "port": "3330","location":"US"}
+		
+	    ]
+}
+
+  

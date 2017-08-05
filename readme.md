@@ -21,6 +21,8 @@ If you are interesting in try this software with AMD cards you can get Multipool
 
 Skunk algo is faster on ccminerSkunk, but is very unestable, you can try ccminerPalginSkunk by comment/uncomment(with # before)  "skunk" = "" line on ps1 file on miner folder
 
+Core for auto change pools is based on AaronSace MultipoolMiner, you can read info at https://github.com/aaronsace/MultiPoolMiner
+
 
 -------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -------------------------------------------------
 
@@ -38,7 +40,7 @@ Skunk algo is faster on ccminerSkunk, but is very unestable, you can try ccminer
 
 -Multiple drci test for eth/sia dual mining on MPH
 
-
+-Basic info from Whattomine, Bittrex and Cryptopia for manual pools like Suprnova
 
 
 
@@ -84,7 +86,7 @@ BLOCKSFACTORY -- registration required, one registration for all pools, no autoe
 	**SPRNOVA
 		DECRED (DCR), DIGIBYTE-SKEIN (DGB), HUSH (HUSH), LIBRARY CREDITS (LBRY), MONACOIN (MONA), SIGNATUM (SIGT), VELTOR (VLT), ZCASH (ZEC),
 		ZENCASH (ZEN), ZCOIN (XZC),DASHCOIN (DASH), ZCLASSIC (ZCL), KOMODO (KMD), MONERO (XMR), CHAINCOIN (CHC), ETHEREUM+DECRED (ETH+DCR),
-		ETHEREUM+LIBRARY (ETH+LBRY)
+		ETHEREUM+LIBRARY (ETH+LBRY),BITCORE (BTX)
 
 
 	**BLOCKSFACTORY

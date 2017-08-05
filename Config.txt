@@ -1,35 +1,35 @@
 --ID for each rig you have
 
-WORKERNAME=HAB
+@@WORKERNAME=HAB
 
 --Currency you will be pay, only for pools with autoexchange, must be a coin pool have, only affect to zpool and hashrefinery, on MPH you must use web interface to set coin.
 
-CURRENCY=BTC
+@@CURRENCY=BTC
 
 --BTC wallet, wallet acts as username in zpool and HashRefinery, must be of CURRENCY type.
 
-WALLET=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+@@WALLET=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 --Pool username for SprNova, BlocksFactory and MiningPoolHub
 
-USERNAME=tutulino
+@@USERNAME=tutulino
 
 -- Time in seconds each restarting of algo, let it at 100 second for testing, after that is recommended bigger value. 
 
-INTERVAL=100
+@@INTERVAL=600
 
 -- Only NVIDIA suported at this moment, you can copy Multipoolminer Miners folder content to Minerts folder and try with AMD
 
-TYPE=NVIDIA
+@@TYPE=NVIDIA
 
 -- Location of your rig: EUROPE/US/ASIA (some pool may have no location)
 
-LOCATION=EUROPE
+@@LOCATION=EUROPE
 
 -- Number of minutes for each days (NOT PERCENT) of donation, only on MPH,HASH and ZPOOL
 
-DONATE=5
+@@DONATE=5
 
 -- Destination of donation (BTC) AARONSACE:1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH, ME:1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM 
 
-WALLETDONATE=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+@@WALLETDONATE=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM

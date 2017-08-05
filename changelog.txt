@@ -17,4 +17,13 @@ Added option in config.txt to donate AARONSACE as creator of 90% source code.
 Added to spnova: Komodo(KMD), monero (XMR), CHAINCOIN (CHC), ETHEREUM+DECRED (ETH+DCR), ETHEREUM+LIBRARY (ETH+LBRY)
 Removed from spnova: Bitcoin Cash (BCC), reason not viable mine with GPU
 Fixed equihash not working on Miningpoolhub
- 
+
+----------------------------------------------
+1.6
+Fixed Interval from config.txt has no effect on runtime.
+Changed core from Batch to Powershell (open new posibilities)
+Now you can add coins, pools and algo editing json files
+Unified all start batches without lost no user action boot (see examples.bat)
+Added to spnova: Bitcore(BTX)
+Added basic info from Whattomine, Bittrex and Cryptopia as help for manual coin selection on Suprnova.
+Changed from ccminerskunk to ccminerAlexis for skein algo. Ccminerskunk not working.

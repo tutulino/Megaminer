@@ -8,9 +8,10 @@ $Commands = [PSCustomObject]@{
     "scrypt" = "" 
     "blakecoin" = "" #Blakecoin
     "decred" = ""
+    "tribus" = "" # -i 20
     "hmq1725" = "" #hmq1725
     "X15" =""
-   
+    "yescrypt" = ""
 }
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName

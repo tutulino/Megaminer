@@ -9,7 +9,7 @@ $Commands = [PSCustomObject]@{
     "timetravel" = "" # -i 19
     "x15" = "" # -i 19
     "x17" = "" # -i 19
-    "tribus" =""
+
 }
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName

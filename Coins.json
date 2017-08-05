@@ -1,0 +1,29 @@
+[
+{"name": "DECRED", "algo":"BLAKE14R", "symbol": "DCR"},
+{"name": "BITCORE", "algo":"TIMETRAVEL10", "symbol": "BTX"},
+{"name": "DIGIBYTE-SKEIN","algo":"SKEIN", "symbol": "DGB"},
+{"name": "HUSH","algo":"EQUIHASH", "symbol": "HUSH"},
+{"name": "LBRY","algo":"LBRY", "symbol": "LBC"},
+{"name": "MONACOIN","algo":"LYRA2REV2", "symbol": "MONA"},
+{"name": "SIGNATUM","algo":"SKUNK", "symbol": "SIGT"},
+{"name": "VELTOR","algo":"VELTOR", "symbol": "VLT"},
+{"name": "ZENCASH","algo":"EQUIHASH", "symbol": "ZEN"},
+{"name": "ZCASH","algo":"EQUIHASH", "symbol": "ZEC"},
+{"name": "ZCOIN","algo":"LYRA2Z", "symbol": "XZC"},
+{"name": "DASHCOIN","algo":"X11", "symbol": "DASH"},
+{"name": "ZCLASSIC","algo":"EQUIHASH", "symbol": "ZCL"},
+{"name": "KOMODO","algo":"EQUIHASH", "symbol": "KMD"},
+{"name": "MONERO","algo":"CRYPTONIGHT", "symbol": "XMR"},
+{"name": "ETHEREUM","algo":"HASHIMOTO", "symbol": "ETH"},
+{"name": "FEATHERCOIN","algo":"NEOSCRYPT", "symbol": "FTC"},
+{"name": "PHOENIXCOIN","algo":"NEOSCRYPT", "symbol": "PXC"},
+{"name": "ORBITCOIN","algo":"NEOSCRYPT", "symbol": "ORB"},
+{"name": "GUNCOIN","algo":"NEOSCRYPT", "symbol": "GUN"},
+{"name": "SIACOIN","algo":"BLAKE2B", "symbol": "SC"},
+{"name": "PASCALCOIN","algo":"PASCAL", "symbol": "PASC"},
+{"name": "ETHEREUM | LBRY","algo":"HASHIMOTO | LIBRARY", "symbol": "ETH | LBRY"},
+{"name": "ETHEREUM | DECRED","algo":"HASHIMOTO | DECRED", "symbol": "ETH | DCR"}
+]
+
+
+ 
