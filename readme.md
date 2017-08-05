@@ -13,10 +13,12 @@ Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 
 
------ DISCLAIMER ---- ---------------------------------------------------------------------------
+----- DISCLAIMER ---- ------------------------------------------
 
 Only tested on nvidia pascal (10X0) , sorry I haven't AMD card for testing purposes.
-If you are interesting in try this software with AMD cards you can get Multipoolminer miner folder files and copy into same folder, change type on config.txt to AMD
+If you are interesting in try this software with AMD it´s really easy
+	For Automatic pools like (MPH,Zpool...): you mus get Multipoolminer "miner" folder files and copy into same folder, change type on config.txt to AMD
+	For Manual Pools like (BlocksFactory, Suprnova...): you must edit algorithms.json file
 
 
 Skunk algo is faster on ccminerSkunk, but is very unestable, you can try ccminerPalginSkunk by comment/uncomment(with # before)  "skunk" = "" line on ps1 file on miner folder
@@ -24,7 +26,7 @@ Skunk algo is faster on ccminerSkunk, but is very unestable, you can try ccminer
 Core for auto change pools is based on AaronSace MultipoolMiner, you can read info at https://github.com/aaronsace/MultiPoolMiner
 
 
--------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -------------------------------------------------
+-------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -----------
 
 -Can mine on any of this pools (or all at same time): Zpool, HashRefinery, MPH with auto change based on pool profit for each aglo
 
@@ -44,25 +46,28 @@ Core for auto change pools is based on AaronSace MultipoolMiner, you can read in
 
 
 
----- INSTRUCTIONS -----------------------------------------------------------------------------
+---- INSTRUCTIONS ----------------------------------------------
 
-1.Edit CONFIG.TXT file before mining
+0. Download latest Release from github
 
-2.If you want to use suprnova or BlocksFactory must run any other pools batches to download software, is not necesary wait for mining test ending.
+1. Edit CONFIG.TXT file before mining
 
-3.Exec bat file of desired pool
+2. If you want to use suprnova or BlocksFactory must run any other pools batches to download software, is not necesary wait for mining test ending.
+
+3. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt
 
 
 Default donation is 5 minutes each day, you can change it at config.txt.
 
 
----- UPGRADE PROCEDURE ----------------------------------------------------------------------------
+---- UPGRADE PROCEDURE ------------------------------------
 
-Safest way is download new software and copy from old version stats folders and config.txt file.
+Safest way is download new software and copy from old version "stats" folders and "config.txt" file.
+If new verson haven´t miners update you can copy "bin" folder
 If there is a new version on some miner is recomended delete hasrate.txt files of that miner on miners folder to force benchmark again.
 
 
----- POOLS SUPORTED ---------------------------------------------------------------------------
+---- POOLS SUPORTED ---------------------------------------
 
 ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 
@@ -76,24 +81,24 @@ BLOCKSFACTORY -- registration required, one registration for all pools, no autoe
 
 
 
----- ALGOS/COINS SUPORTED (must be suported by pool, only MPH, ZPOOL and HASHREFINERY -------------------------------
+---- ALGOS/COINS SUPORTED -------------------------------
 
-	**MPH, ZPOOL and HASHREFINERY (must be suported by pool)--
-		skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, MyriadGroestl, Lyra2RE2, 
-		Keccak, blake2s,x11evos,sia, vanilla, timetravel, tribus, Qubit, decred ,X11, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
-		cryptonight, Nist5
+**MPH, ZPOOL and HASHREFINERY (must be suported by pool)--
+	skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, MyriadGroestl, Lyra2RE2, 
+	Keccak, blake2s,x11evos,sia, vanilla, timetravel, tribus, Qubit, decred ,X11, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
+	cryptonight, Nist5
 
-	**SPRNOVA
-		DECRED (DCR), DIGIBYTE-SKEIN (DGB), HUSH (HUSH), LIBRARY CREDITS (LBRY), MONACOIN (MONA), SIGNATUM (SIGT), VELTOR (VLT), ZCASH (ZEC),
-		ZENCASH (ZEN), ZCOIN (XZC),DASHCOIN (DASH), ZCLASSIC (ZCL), KOMODO (KMD), MONERO (XMR), CHAINCOIN (CHC), ETHEREUM+DECRED (ETH+DCR),
-		ETHEREUM+LIBRARY (ETH+LBRY),BITCORE (BTX)
+**SPRNOVA
+	DECRED (DCR), DIGIBYTE-SKEIN (DGB), HUSH (HUSH), LIBRARY CREDITS (LBRY), MONACOIN (MONA), SIGNATUM (SIGT), VELTOR (VLT), ZCASH (ZEC),
+	ZENCASH (ZEN), ZCOIN (XZC),DASHCOIN (DASH), ZCLASSIC (ZCL), KOMODO (KMD), MONERO (XMR), CHAINCOIN (CHC), ETHEREUM+DECRED (ETH+DCR),
+	ETHEREUM+LIBRARY (ETH+LBRY),BITCORE (BTX)
 
 
-	**BLOCKSFACTORY
-		DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
+**BLOCKSFACTORY
+	DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
 	
 
----- NO SCAM WARRANTY -------------------------------------------------------------------------------------------------
+---- NO SCAM WARRANTY --------------------------------------------
 
 You can see .ps1 files, are source code, miners are downloaded from github, can see address on miners folder files (except no github available, included)
 
