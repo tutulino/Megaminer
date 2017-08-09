@@ -57,3 +57,9 @@ Removed Whattomine info
 Fixed: MPH always choose US Location.
 
 THIS VERSION CHANGE ALL CONFIG FILES STRUCTURES (CONFIG,POOLS, MINERS, etc)
+
+----------------------------------------------
+2.0.2
+
+Fixed: Zpool login is wrong but no error received
+Fixed: MM download all software, not only type on config.txt

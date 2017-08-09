@@ -1,9 +1,8 @@
+$DownloadList = $args
 
+if ($script:MyInvocation.MyCommand.Path) {Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)}
 
 . .\Include.ps1
-
-#this line is added for megaminer replacing "$DownloadList=$args"
-$DownloadList = if (Test-Path "Miners") {Get-ChildItemContent "Miners" |  Select-Object -ExpandProperty content | Select-Object URI, Path, @{name = "Searchable"; expression = {$Miner = $_; ($Miners | Where-Object {(Split-Path $_.Path -Leaf) -eq (Split-Path $Miner.Path -Leaf) -and $_.URI -ne $Miner.URI}).Count -eq 0}} -Unique } 
 
 $Progress = 0
 
