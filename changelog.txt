@@ -52,6 +52,8 @@ Added API integration with Yiimp and suprnova for manual mining (optional on con
 Donation (optional) now applies on manual pools too
 Removed duplicities between config files (deleted coins.json and algorithms.json)
 Removed Whattomine info 
+*Removed CCMINER-Skunk
+*Added CCMINER-SkunkKrnlx
 Fixed: MPH always choose US Location.
 
 THIS VERSION CHANGE ALL CONFIG FILES STRUCTURES (CONFIG,POOLS, MINERS, etc)
