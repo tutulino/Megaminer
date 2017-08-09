@@ -14,25 +14,21 @@
 
 @@USERNAME=tutulino
 
--- Time in seconds each restarting of algo, let it at 100 second for testing, after that is recommended bigger value. 
+-- Time in seconds each restarting of algo, let it at 200 second for testing, after that is recommended bigger value. 
 
-@@INTERVAL=600
+@@INTERVAL=200
 
--- Only NVIDIA suported at this moment, you can copy Multipoolminer Miners folder content to Minerts folder and try with AMD
+-- Only NVIDIA tested, AMD must work, but not tested (for mixed rig set AMD,NVIDIA)
 
 @@TYPE=NVIDIA
 
--- Location of your rig: EUROPE/US/ASIA (some pool may have no location)
+-- Location of your rig: EUROPE/US/ASIA (some pool may have no desired location, US will be selected then)
 
 @@LOCATION=EUROPE
 
--- Number of minutes for each days (NOT PERCENT) of donation, only on MPH,HASH and ZPOOL
+-- Enabled or disabled call to apis (pools and traders) to help on manual coin selection, some pools has slow response and must delay show prompt to user
 
-@@DONATE=5
-
--- Destination of donation (BTC) AARONSACE:1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH, ME:1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM 
-
-@@WALLETDONATE=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+@@MANUALMININGAPIUSE=FALSE
 
 
 -- INDIVIDUAL COIN WALLETS, will be used if pool need as login a wallet of same coin you are mining (ex.Yiimp)
@@ -43,4 +39,23 @@
 @@WALLET_SIGT=BJupFgEmjzE3U6VvH3vmNSBL6AkdxQjoAn
 @@WALLET_XVG=DMpSQmLpitKrdnaHomJSnMP3Q77ZJ9f2aF
 @@WALLET_SIB=SgxUftvp7zm66yCoHiKzJCzvopzn7cUmhw
-@@WALLET_VTC=
+@@WALLET_EXP=0x678167c192c6b40d913a2ffcc92887575db56d56
+@@WALLET_ZEC=t1RbZBWXx6K9cbFogePSJPNg6Bjfryrdzpx
+
+-- Number of minutes for each days (NOT PERCENT) of donation, only on MPH,HASH and ZPOOL
+
+@@DONATE=5
+
+-- Destination of donation (BTC) AARONSACE:1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH, ME:1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM 
+
+@@WALLETDONATE_BTC=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+@@WALLETDONATE_DNR=DMBdpDVrtj6DBEcE6t9wRbujw7NM7ziLYp
+@@WALLETDONATE_DCR=DshK6VgbzwJjaAXmvrmMEYq3bqZJLrQbwzS
+@@WALLETDONATE_BTX=1EqS1VZ1A5qZF6x72DRgLs4oULLsMcVDJd
+@@WALLETDONATE_SIGT=BJupFgEmjzE3U6VvH3vmNSBL6AkdxQjoAn
+@@WALLETDONATE_XVG=DMpSQmLpitKrdnaHomJSnMP3Q77ZJ9f2aF
+@@WALLETDONATE_SIB=SgxUftvp7zm66yCoHiKzJCzvopzn7cUmhw
+@@WALLETDONATE_EXP=0x678167c192c6b40d913a2ffcc92887575db56d56
+@@WALLETDONATE_ZEC=t1RbZBWXx6K9cbFogePSJPNg6Bjfryrdzpx
+
+

@@ -1,0 +1,14 @@
+{
+"Path" : ".\\Bin\\Ethash-Claymore\\EthDcrMiner64.exe",
+"Uri" : "",
+"Types" : ["NVIDIA"],
+"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 ",
+"API" : "Claymore",
+"APIPort" : 3333,
+"Wrap" : false,
+"DualMining": false,
+"Algorithms": [
+                {"Ethash":""}
+              ]
+
+}

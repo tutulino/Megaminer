@@ -1,0 +1,18 @@
+{
+"Path" : ".\\Bin\\Ethash-Claymore\\EthDcrMiner64.exe",
+"Uri" : "",
+"Types" : ["NVIDIA","AMD"],
+"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL#  -dcri 120",
+"API" : "Claymore",
+"APIPort" : 3333,
+"Wrap" : false,
+"DualMining": true,
+"Algorithms": [
+                {"Ethash_Sia":" -dcoin sc"},
+                {"Ethash_Decred":" -dcoin dcr"},
+                {"Ethash_Pascal":" -dcoin pasc"},
+                {"Ethash_Lbry":" -dcoin lbc"}
+              ]
+
+}
+

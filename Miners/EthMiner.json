@@ -1,0 +1,15 @@
+{
+  
+    "Path": ".\\Bin\\NVIDIA-ETHMINER\\BIN\\ETHMINER.exe",
+    "Uri" : "https://github.com/ethereum-mining/ethminer/releases/download/v0.11.0/ethminer-0.11.0-Windows.zip",
+    "Types":  ["NVIDIA"],
+    "Arguments":  "",
+    "API":  "",
+    "APIPort":  "",
+    "Wrap":  true,
+    "Dualmining":false,
+    "Algorithms": [
+                {"ETH":"sdasdsadasddas"}
+                  ]
+}
+

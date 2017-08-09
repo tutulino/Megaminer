@@ -1,7 +1,8 @@
-﻿I'm user of NemosMiner and Multipoolminer also I'm user of diferents pools, manteinance of diferent software updates are painfull,  I have merged this softwares and added some features. I hope you enjoy it.
+﻿
+I'm user of NemosMiner and Multipoolminer also I'm user of diferents pools, manteinance of diferent software updates are painfull,  I have merged this softwares and added some features. I hope you enjoy it.
 
 
-Based 70% on aaronsace, 10% on Nemos software, 20% is mine (aprox.)
+Based 75% on aaronsace, 5% on Nemos software, 20% is mine (aprox.)
 
 Donations to
 
@@ -9,21 +10,19 @@ Aaronsace - 1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH
 
 Nemos - 1QGADhdMRpp9Pk5u5zG1TrHKRrdK5R81TE
 
-Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TMN
 
 
 
 ----- DISCLAIMER ---- ------------------------------------------
 
 Only tested on nvidia pascal (10X0) , sorry I haven't AMD card for testing purposes.
-If you are interesting in try this software with AMD it´s really easy
-	For Automatic pools like (MPH,Zpool...): you mus get Multipoolminer "miner" folder files and copy into same folder, change type on config.txt to AMD
-	For Manual Pools like (BlocksFactory, Suprnova...): you must edit algorithms.json file
 
+Only for Windows (at this moment)
 
-Skunk algo is faster on ccminerSkunk, but is very unestable, you can try ccminerPalginSkunk by comment/uncomment(with # before)  "skunk" = "" line on ps1 file on miner folder
+Miners for AMD are included but not tested , ¡¡¡ AMD TESTERS NEEDED !!!
 
-Core for auto change pools is based on AaronSace MultipoolMiner, you can read info at https://github.com/aaronsace/MultiPoolMiner
+Core for auto change pools is forked from AaronSace MultipoolMiner, you can read info at https://github.com/aaronsace/MultiPoolMiner
 
 
 -------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -----------
@@ -31,23 +30,27 @@ Core for auto change pools is based on AaronSace MultipoolMiner, you can read in
 In this software you can get same features than Nemosminer (Zpool) and Multipoolminer (MiningPoolHub), and also:
 
 
--Can mine on any of this pools (or all at same time): Zpool, HashRefinery, MPH with auto coin change based on pool profit for each algorithm
+-Can mine on any of this pools (or all at same time): Zpool, HashRefinery, MPH or Yiimp with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
 
--Can mine on Suprnova,YIIMP or BlocksFactory pool without autochange or profit calculation, manual coin selection, Fastest software for each coin preselected
+-Can mine on Suprnova,YIIMP or BlocksFactory pool without autochange or profit calculation, manual coin selection
 
 -One file config
 
 -Fastest miner for each algo/coin preselected for Nvidia Pascal (08/01/2017) on all pools.
 
--AutoRelaunch on fail
-
 -Enabled yescript algo
 
 -Multiple drci test for eth/sia dual mining on MPH
 
--Basic info from Whattomine, Bittrex and Cryptopia for no automatic coin selection pools
+-Dual Mining between different pools (ex. Eth on MPH and lbry on Zpool)
+
+-Basic info from Bittrex and Cryptopia for no automatic coin selection pools
 
 -Unified software repository for all pools
+
+-Start to mine without commands or downloads only select pool and coin
+
+
 
 
 ---- INSTRUCTIONS ----------------------------------------------
@@ -106,6 +109,9 @@ YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
 
 **YIIMP
 	DENARIUS(DNR), DECRED(DCR), SIGNATUM(SIGT), BITCORE(BTX), VERGE(VRG), SIBCOIN(SIB), VERTCOIN(VRC) 
+
+**CROSSED POOLS
+	ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LIBRARY(ETH+LBRY),ETHEREUM+PASCAL(ETH+PSC),ETHEREUM+SIA(ETH+SC),
 
 
 

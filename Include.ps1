@@ -528,3 +528,94 @@ function Get-Algorithm {
     if ($Algorithms.$Algorithm) {$Algorithms.$Algorithm}
     else {$Algorithm}
 }
+
+
+function Get-Pools {
+    param(
+        [Parameter(Mandatory = $false)]
+        [String]$Querymode = 'core', 
+        [Parameter(Mandatory = $false)]
+        [array]$PoolsFilterList=$null,
+        #[array]$PoolsFilterList='Mining_pool_hub',
+        [Parameter(Mandatory = $false)]
+        [array]$CoinFilterList = $null,
+        #[array]$CoinFilterList = ('GroestlCoin','Feathercoin','zclassic'),
+        [Parameter(Mandatory = $false)]
+        [string]$Location=$null
+        #[string]$Location='EUROPE'
+        
+        )
+        #in detail mode returns a line for each pool/algo/coin combination, in info mode returns a line for pool
+
+
+   
+        $PoolsFolderContent= Get-ChildItem "Pools" | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure).Count -gt 0}
+
+            $ChildItems = $PoolsFolderContent | ForEach-Object {
+                $Name = $_.BaseName
+                $Content = @()
+                $Content = &$_.FullName -Querymode $Querymode
+                $Content | ForEach-Object {[PSCustomObject]@{Name = $Name; Content = $_}}
+                }
+            
+
+            $ChildItems | ForEach-Object {
+                $Item = $_.content
+                $ItemKeys = $Item.PSObject.Properties.Name.Clone()
+                
+
+                $ItemKeys | ForEach-Object {
+                    if ($Item.$_ -is [String]) {
+                        $Item.$_ = Invoke-Expression "`"$($Item.$_)`""
+                    }
+                    elseif ($Item.$_ -is [PSCustomObject]) {
+                        $Property = $Item.$_
+                        $PropertyKeys = $Property.PSObject.Properties.Name
+                        $PropertyKeys | ForEach-Object {
+                            if ($Property.$_ -is [String]) {
+                                $Property.$_ = Invoke-Expression "`"$($Property.$_)`""
+                                }
+                            }
+                        }
+                    }
+                }
+                    
+            
+            $AllPools=$ChildItems | ForEach {$_.Content | Add-Member @{Name = $_.Name} -PassThru}
+
+            $AllPools | Add-Member LocationPriority 9999
+
+            #Apply filters
+            $AllPools2=@()
+            if ($Querymode -ne "info"){
+                        foreach ($Pool in $AllPools){
+                                #must have wallet
+                                if ($Pool.user -ne $null) {
+                                      if ($CoinFilterList -ne $null) {$Coinfilter = compare-object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
+                                      #must be in filter list or no list
+                                      if (($CoinFilterList.count -eq 0) -or ($Coinfilter -ne $null)){
+                                          if ($pool.location -eq $Location) {$Pool.LocationPriority=1}
+                                          if (($pool.location -eq 'EU') -and ($location -eq 'US')) {$Pool.LocationPriority=2}
+                                          if (($pool.location -eq 'EUROPE') -and ($location -eq 'US')) {$Pool.LocationPriority=2}
+                                          if ($pool.location -eq 'US' -and $location -eq 'EUROPE') {$Pool.LocationPriority=2}
+                                          if ($pool.location -eq 'US' -and $location -eq 'EU') {$Pool.LocationPriority=2}
+                                          $AllPools2+=$Pool
+                                          }
+                                      }
+                        }
+                
+
+                        #Insert by priority of location
+                        $Return=@()
+                        $AllPools2 | Sort-Object Info,Algorithm,LocationPriority | ForEach-Object {
+                            $Ex = $Return | Where-Object Info -eq $_.Info | Where-Object Algorithm -eq $_.Algorithm
+                            if ($Ex.count -eq 0) {$Return += $_}
+                            }
+                }
+            else 
+             { $Return= $AllPools }
+
+
+    $Return     
+
+ }

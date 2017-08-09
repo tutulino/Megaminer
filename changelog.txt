@@ -1,4 +1,3 @@
-
 1.1 
 Initial version
 ----------------------------------------------
@@ -31,10 +30,28 @@ Changed from ccminerskunk to ccminerAlexis for skein algo. Ccminerskunk not work
 ----------------------------------------------
 1.7
 Added spreadminer for spreadcoin
-upgrade sceen instructions of use for each pool
+upgrade screen instructions of use for each pool
 Added to Suprnova: SPREADCOIN (SPR)
 Added Yiimp pool (requires individual wallet for each coin in config.txt): DENARIUS (DNR), DECRED (DCR), SIGNATUM (SIGT), BITCORE (BTX), VERGE (VRG), SIBCOIN (SIB), VERTCOIN(VRC) 
-Software donwload for first execution was independent of selected pool
+Software donwload for first execution is now independent of selected pool
 
 THIS VERSION REQUIRES NEW CONFIG.TXT FILE, YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
 
+----------------------------------------------
+2.0
+
+Included Miners for AMD platform, I haven´t AMD card, not tested. ¡¡¡ AMD TESTERS NEEDED !!!
+Automatic dual mining between pools (ex. Eth on MPH and lbry on Zpool), choosing more profitable pool for each coin
+Yiimp now support automatic profit based coin change, this pool has autoexchange off, you must set individual coins wallet on config.txt to mine
+Manual mining now choose best benchmarked software for each algo.
+New Miners files format, no more ".ps1" files only ".json" files. Easier to configure.
+Changed default interval to 200 seconds for acurate benchmarks
+Automatic profit files deletion on start
+Pools Multiselection allowed on menus and autoexecution batchs
+Added API integration with Yiimp and suprnova for manual mining (optional on config.txt)
+Donation (optional) now applies on manual pools too
+Removed duplicities between config files (deleted coins.json and algorithms.json)
+Removed Whattomine info 
+Fixed: MPH always choose US Location.
+
+THIS VERSION CHANGE ALL CONFIG FILES STRUCTURES (CONFIG,POOLS, MINERS, etc)

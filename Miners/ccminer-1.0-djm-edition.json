@@ -1,0 +1,14 @@
+{
+"Path" : ".\\Bin\\ccminer-1.0-djm-edition\\ccminer.exe",
+"Uri" : "http://cryptomining-blog.com/wp-content/download/ccminer-1.0-djm-edition.zip",
+"Types" : ["NVIDIA"],
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#",
+"API" : "Ccminer",
+"APIPort" : 4068,
+"Wrap" : false,
+"Dualmining":false,
+"Algorithms": [
+                {"yescrypt":"-a yescrypt"}
+              ]
+
+}

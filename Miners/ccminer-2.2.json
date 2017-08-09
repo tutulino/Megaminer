@@ -1,0 +1,20 @@
+{
+"Path" : ".\\Bin\\NVIDIA-ccminer-2.2\\ccminer-x64.exe",
+"Uri" : "http://ccminer.org/preview/ccminer-2.2-skunk.7z",
+"Types" : ["NVIDIA"],
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#",
+"API" : "Ccminer",
+"APIPort" : 4068,
+"Wrap" : false,
+"Dualmining":false,
+"Algorithms": [
+                {"Keccak":"-a keccak"},
+                {"x13":"-a x13"},
+                {"Neoscrypt":"-a Neoscrypt"},
+                {"Tribus":"-a tribus"},
+                {"blake14r":"-a decred"},
+                {"bitcore":"-a bitcore"},
+                {"cryptonight":"-a cryptonight"}
+              ]
+
+}

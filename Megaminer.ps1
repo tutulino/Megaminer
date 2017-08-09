@@ -1,279 +1,243 @@
-
-
 #--------------optional parameters...to allow direct launch without prompt to user
 param(
     [Parameter(Mandatory = $false)]
-    [String]$PoolName #= "SUPRNOVA"
+    [String]$MiningMode = $null#= "AUTOMATIC/MANUAL"
+    #[String]$MiningMode = "MANUAL"
     ,
     [Parameter(Mandatory = $false)]
-    [String]$CoinName  #= "KOMODO"
+    [string]$PoolsName =$null
+    #[array]$PoolsName = "SUPRNOVA"
+    #[array]$PoolsName = "YIIMP"
     ,
     [Parameter(Mandatory = $false)]
-    [String]$Dcri  #= "KOMODO"
-
-
+    [string]$CoinsName =$null
 )
 
 . .\Include.ps1
 
-#--------------Parameter backup
-$ParameterPoolName=$PoolName
-$ParameterCoinName=$CoinName
-$ParameterDcri=$Dcri
+#check parameters
 
-
-
-#--------------Checks if software exists 
-   Invoke-Expression "./Downloader.ps1" | Out-Null    
+if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY ONE POOL CAN BE SELECTED ON MANUAL MODE}
 
 
 #--------------Load config.txt file
-$ConfigLocation=(Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} )-replace '@@LOCATION=',''
-$ConfigDonate=(Get-Content config.txt | Where-Object {$_ -like '@@DONATE=*'} )-replace '@@DONATE=',''
-$ConfigWalletDonate=(Get-Content config.txt | Where-Object {$_ -like '@@WALLETDONATE=*'} )-replace '@@WALLETDONATE=',''
-$ConfigWallet=(Get-Content config.txt | Where-Object {$_ -like '@@WALLET=*'} ) -replace '@@WALLET=',''
-$ConfigUsername=(Get-Content config.txt | Where-Object {$_ -like '@@USERNAME=*'} )-replace '@@USERNAME=',''
-$ConfigType=(Get-Content config.txt | Where-Object {$_ -like '@@TYPE=*'}) -replace '@@TYPE=',''
-$ConfigInterval=(Get-Content config.txt | Where-Object {$_ -like '@@INTERVAL=*'}) -replace '@@INTERVAL=',''
-$ConfigWorkerName=(Get-Content config.txt | Where-Object {$_ -like '@@WORKERNAME=*'} )-replace '@@WORKERNAME=',''
-$ConfigCurrency=(Get-Content config.txt | Where-Object {$_ -like '@@CURRENCY=*'} )-replace '@@CURRENCY=',''
+$location=@()
+$Location=(Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} )-replace '@@LOCATION=',''
+$CoinsWallets=@{} #needed for anonymous pools load
+     (Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','' | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
 
 
-$pools= if(Test-Path 'Pools'){Get-ChildItem 'Pools' | Sort-Object}
+$SelectedOption=""
 
-#|Foreach-Object {$_.basename -replace '_',' '}
-
-#-----------------Ask user for pool to use, if a pool is indicated in parameters no prompt
+#-----------------Ask user for mode to mining AUTO/MANUAL to use, if a pool is indicated in parameters no prompt
 
 Clear-Host
-$Position=0
-$SelectedPoolIndex=-1
-$AutomaticPoolsString='#'
+write-host ..............................................................................................
+write-host ...................SELECT MODE TO MINE.....................................................
+write-host ..............................................................................................
+
+$Modes=@()
+$Modes += [pscustomobject]@{"Option"=0;"Mode"='AUTOMATIC';"Explanation"='Not necesary choose coin to mine, program choose more profitable coin based on pool´s statistics'}
+$Modes += [pscustomobject]@{"Option"=1;"Mode"='MANUAL';"Explanation"='You select coin to mine'}
+
+$Modes | Format-Table Option,Mode,Explanation  | out-host
+
+
+If ($MiningMode -eq "")  
+    {
+     $SelectedOption = Read-Host -Prompt 'SELECT ONE OPTION:'
+     $MiningMode=$Modes[$SelectedOption].Mode
+     write-host SELECTED OPTION::$MiningMode
+    }
+    else 
+    {write-host SELECTED BY PARAMETER OPTION::$MiningMode}
+
+
+    
+
+#-----------------Ask user for pool/s to use, if a pool is indicated in parameters no prompt
+
+if ($MiningMode -eq "automatic"){
+        $Pools=Get-Pools -Querymode "Info" | Where-Object ActiveOnAutomaticMode -eq $true | sort name }
+    else 
+        {$Pools=Get-Pools -Querymode "Info" | Where-Object ActiveOnManualMode -eq $true | sort name  }
+ 
+
+$Pools | Add-Member Option "0"
+$counter=0
+$Pools | ForEach-Object {
+        $_.Option=$counter
+        $counter++}
+
+
+if ($MiningMode -eq "automatic"){
+        $Pools += [pscustomobject]@{"Disclaimer"="";"ActiveOnManualMode"=$false;"ActiveOnAutomaticMode"=$true;"name"='ALL POOLS';"option"=99}}
+
+
+#Clear-Host
 write-host ..............................................................................................
 write-host ...................SELECT POOL/S  TO MINE.....................................................
 write-host ..............................................................................................
- 
-Foreach ($pool in $pools)
-{
-    $PoolName=$pool.basename -replace '_',' '
-    if ($pool.extension -eq ".ps1") {
-            if ($pool.basename -eq "Mining Pool Hub") {$PoolType='---------Automatic Coin Selection, must register, set login on config.txt file'}
-            else {$PoolType=' ---------Automatic Coin Selection, Autoexchange to config.txt wallet'}
+
+$Pools | Format-Table Option,name,disclaimer | out-host
+
+
+
+If (($PoolsName -eq "") -or ($PoolsName -eq $null))
+    {
+    if ($MiningMode -eq "manual"){
+           $SelectedOption = Read-Host -Prompt 'SELECT ONE OPTION:'
+           while ($SelectedOption -like '*,*') {
+                    $SelectedOption = Read-Host -Prompt 'SELECT ONLY ONE OPTION:'
+                    }
+           }
+    if ($MiningMode -eq "automatic"){
+            $SelectedOption = Read-Host -Prompt 'SELECT OPTION/S (separated by comma):'
+            if ($SelectedOption -eq "99") {
+                  $SelectedOption=""
+                  $Pools | Where-Object Option -ne 99 | ForEach-Object {
+                        if  ($SelectedOption -eq "") {$comma=''} else {$comma=','}
+                        $SelectedOption += $comma+$_.Option
+                        }
+                         } 
             
-            #Also Use loop for generation of All automatic pools string
-            $AutomaticPoolsString=$AutomaticPoolsString+','+$Pool.basename
-        }
-         else {
-                #Load pool information
-                $PoolFilePath=".\pools\"+$Pool.name
-                $DestinationPool = ConvertFrom-Json "$(get-content $PoolFilePath)"
-                $PoolType='---------'+$DestinationPool.Disclaimer
-               }
-    write-host   $Position - $PoolName $PoolType
-    #Search for pool selected in parameter
-    If ($ParameterPoolName -eq $pool.basename) {$SelectedPoolIndex=$Position}
-    $Position++
-}
-
-If ($ParameterPoolName -eq "All") {$SelectedPoolIndex=99}
-write-host 99. ALL "AUTOMATIC COIN" POOLS
-write-host ..............................................................................................
-write-host ..............................................................................................
-
-If ($SelectedPoolIndex -eq -1)  
-    {$SelectedPoolIndex = Read-Host -Prompt 'Input pool number and press Enter:'}
-    else 
-    {write-host Selected option $SelectedPoolIndex on parameters}
-        
-
-##Ejecutamos el pool seleccionado
-
-If ($SelectedPoolIndex -eq 99)   #All Automatic pools
-{
- $SelectedPoolName=$AutomaticPoolsString -replace '#,',''
- $SelectedPoolExtension='.ps1'
-
-}
-else 
-{
-   $SelectedPoolName=$Pools[$SelectedPoolIndex].BaseName
-   $SelectedPoolExtension=$Pools[$SelectedPoolIndex].Extension
-}
-
-
-
-if ($SelectedPoolExtension -eq '.ps1') #Pools from AAronsace Multipool
-    {
-        
-         #Load information about the Pools to check if it has location
-        if ($SelectedPoolIndex -ne 99) {$PoolLocations=(Get-Content $PoolFilePath | Where-Object {$_ -like '*$Location*=*'} )}
-        If ($PoolLocations -match $ConfigLocation) {$LaunchLocation=$ConfigLocation} else {$LaunchLocation="US"}
-        Invoke-Expression "./MultiPoolMiner.ps1 -Interval $ConfigInterval -Wallet $ConfigWallet -Username $ConfigUserName -Workername $ConfigWorkerName -Location $LaunchLocation -PoolName $SelectedPoolName -Type $ConfigType  -Donate $ConfigDonate -WalletDonate $ConfigWalletDonate -currency $ConfigCurrency" 
-    }
-else #Other Pools no automatics
-    {
-
-            try {
-
-                $WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing  | ConvertFrom-Json
-                $CTPResponse = Invoke-WebRequest "https://www.cryptopia.co.nz/api/GetMarkets/BTC" -UseBasicParsing | ConvertFrom-Json | Select-Object -ExpandProperty Data
-                $BTXResponse = Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -UseBasicParsing | ConvertFrom-Json | Select-Object -ExpandProperty result
-                $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing  | ConvertFrom-Json | Select-Object -ExpandProperty BPI
-               
+            }
+    $SelectedOptions = $SelectedOption -split ','        
+    $PoolsName=""            
+    $SelectedOptions |ForEach-Object {
+            if  ($PoolsName -eq "") {$comma=''} else {$comma=','}
+            $PoolsName+=$comma+$Pools[$_].name
             } 
+    
+    $PoolsName=('#'+$PoolsName) -replace '# ,','' -replace ' ','' -replace '#','' #In test mode this is not necesary, in real execution yes...??????
 
-            catch {}
-            #wait for invoke ends
- #          Start-Sleep 1
-
-            #Load coins information
-            $CoinsColection = (get-content "Coins.json" | ConvertFrom-Json) |sort name
-            $CoinsColection | Add-Member option -1
-            $CoinsColection | Add-Member BTC ""
-            $CoinsColection | Add-Member BtcCh24h ""
-            $CoinsColection | Add-Member USD ""
-            $CoinsColection | Add-Member DiffOver24h ""
-            $CoinsColection | Add-Member EUR ""
-            $CoinsColection | Add-Member profitability ""
-
-
-            #Load pool informattion   
-            $PoolFilePath=".\pools\"+$SelectedPoolName+$SelectedPoolExtension
-            $DestinationPool = ConvertFrom-Json "$(get-content $PoolFilePath)"
-         
-            #Load algo informattion
-            $AlgoColection = (get-content "Algorithms.json" | ConvertFrom-Json)  
-
-
-            If ($ParameterCoinName -eq $null) {Clear-Host}
-            write-host .........................................................................................
-            write-host ...........................SELECT COIN TO MINE...........................................
-            write-host .........................................................................................
-
-            $Position=0
-            Foreach ($Coin in $CoinsColection)
-                    {
-                        #only shows if pool have this coin
-                        if (($DestinationPool.pools | where-object coin -eq $Coin.name) -ne $null)
-                            {
-                                
-                                #Add info from cryptopia
-                                if ($CTPResponse -ne $null)
-                                {
-                                    $CTPMarket=$coin.symbol+"/BTC"
-                                    $CoinCTPinfo=$CTPResponse | where label -eq $CTPMarket
-                                    If ($CoinCTPinfo -ne $null) 
-                                        {
-                                        $Coin.BTC=$CoinCTPinfo.lastprice
-                                        $Coin.BtcCh24h=$CoinCTPinfo.change
-                                        $Coin.USD=[math]::Round($CoinCTPinfo.lastprice*$CDKResponse.usd.rate,2)
-                                        $Coin.EUR=[math]::Round($CoinCTPinfo.lastprice*$CDKResponse.eur.rate,2)
-                                        }
-                                }   
-
-                                 #Add info from bittrex if haven´t from cryptopia
-                                if (($BTXResponse -ne $null) -and ($CoinCTPinfo -eq $null))
-                                {
-                                    $BTXMarket="BTC-"+$coin.symbol
-                                    $CoinBTXinfo=$BTXResponse | where marketname -eq $BTXMarket
-                                    If ($CoinBTXinfo -ne $null) 
-                                        {
-                                        $Coin.BTC=$CoinBTXinfo.last
-                                        if ($CoinBTXinfo.PrevDay -ne 0) {$Coin.BtcCh24h=[math]::Round((($CoinBTXinfo.last/$CoinBTXinfo.PrevDay)-1)*100,2)}
-                                        $Coin.USD=[math]::Round($CoinBTXinfo.lastprice*$CDKResponse.usd.rate,2)
-                                        $Coin.EUR=[math]::Round($CoinBTXinfo.lastprice*$CDKResponse.eur.rate,2)
-                                        }
-                                }   
-
-                                #Add info from Whattomine, search by coin symbol
-                                if ($WTMResponse -ne $null)
-                                    {foreach ($WTMCoin in ($WTMResponse.coins | get-member  -MemberType NoteProperty))
-                                        {
-                                        $CoinWTMinfo=$WTMResponse |Select-Object -ExpandProperty Coins | Select-Object -ExpandProperty $WTMCoin.name
-                                        If ($CoinWTMinfo.tag -eq $coin.symbol) 
-                                                {
-                                                $Coin.DiffOver24h=[math]::Round((($CoinWTMinfo.Difficulty/$CoinWTMinfo.Difficulty24)-1)*100,1)
-                                                $Coin.profitability=$CoinWTMinfo.estimated_rewards
-                                                
-                                                }
-                                        }
-                                    }
-                                #Search for coin selected in parameter
-                                If ($ParameterCoinName -eq $Coin.name) {$SelectedCoinIndex=$Position}
-                                $coin.option=$Position
-                                $Position++
-                            }       
-                        
-                }
-
-                If ($ConfigLocation -eq "EUROPE") {$CoinsColection | where option -ne -1| Sort-Object -Property name | Format-Table Option,name,symbol,algo,BTC,EUR,BtcCh24h,DiffOver24h  | out-host}
-                    else {$CoinsColection | where option -ne -1| Sort-Object -Property name | Format-Table Option,name,symbol,algo,BTC,USD,BtcCh24h,DiffOver24h | out-host}
-
-        
-                
-                If ($ParameterCoinName -eq "")  
-                    {$SelectedCoinIndex = Read-Host -Prompt 'Input coin number and press Enter:'}
-                    else 
-                    {write-host Selected option $SelectedCoinIndex on parameters}
-                
-                $DestinationCoin= $CoinsColection | Where-Object option -eq $SelectedCoinIndex
-                
-                #Load algo for this coin
-                $DestinationAlgo = $AlgoColection  | Where-Object name -eq $DestinationCoin.Algo 
-                
-                #If dual must recalculate all properties and ask prompt for DCRI
-                if ($DestinationAlgo.Dual -eq "TRUE") 
-                    {
-                        $Split= $DestinationCoin.name -split(" | ")
-                        $DestinationCoin= $CoinsColection | Where-Object name -eq $Split[0]
-                        $DestinationCoinDual= $CoinsColection | Where-Object name -eq $Split[2]
-
-                        #Search Server for dual coin
-                        $DestinationServerDual=$DestinationPool.pools | where-object Location -eq $ConfigLocation  | where-object Coin -eq $DestinationCoinDual.name
-                        if ($DestinationServerDual -eq $null) {$DestinationServerDual=$DestinationPool.pools | where-object Location -eq US |where-object Coin -eq $DestinationCoinDual.name}
-                        if ($DestinationServerDual -eq $null) {$DestinationServerDual=$DestinationPool.pools | where-object Coin -eq $DestinationCoinDual.name}
-                        
-                        #Promt user for dcri
-                            If ($ParameterDCRI -eq $null) {Clear-Host}
-                            write-host ...............................................
-                            write-host You can change DCRI intensity in runtime with "+" and "-" keys and check current statistics with "s" key    
-                            If ($ParameterDcri -eq "")  
-                                {
-                                
-                                    $SelectedDcri = Read-Host -Prompt 'Input initial DCRI (default 30) and press Enter:'}
-                            else 
-                                {write-host Selected option $ParameterDcri on parameters}
-                        
-                    }
-
-                #search servers for location for indicated coin
-                $DestinationServer=$DestinationPool.pools | where-object Location -eq $ConfigLocation  | where-object Coin -eq $DestinationCoin.name
-                if ($DestinationServer -eq $null) {$DestinationServer=$DestinationPool.pools | where-object Location -eq US |where-object Coin -eq $DestinationCoin.name}
-                if ($DestinationServer -eq $null) {$DestinationServer=$DestinationPool.pools | where-object Coin -eq $DestinationCoin.name}
-            
-                #Launch command
-
-
-                $StringtoSearch='@@WALLET_'+$DestinationCoin.symbol+'=*'
-                $DestinationCoinWallet=(Get-Content config.txt | Where-Object {$_ -like $StringtoSearch} )-replace $StringtoSearch,'' 
-                if (($DestinationCoinWallet -eq "") -and ($DestinationPool.UseAsLogin -ccontains '#COINWALLET#'))  
-                    {write-host .........NO WALLET CONFIGURED FOR THIS COIN IN CONFIG.TXT.................}
-                else 
-                    {
-
-                        $Command=$DestinationAlgo.Miner  -replace '!','\' -replace '#login#',$DestinationPool.UseAsLogin -replace '#password#',$DestinationPool.UseAsPassword 
-                        $Command=$Command -replace '#server#',$DestinationServer.server -replace '#serverdual#',$DestinationServerDual.server -replace '#COINWALLET#',$DestinationCoinWallet -replace '#ConfigUsername#',$ConfigUsername
-                        $Command=$Command -replace '#Port#',$DestinationServer.port -replace '#portdual#',$DestinationServerDual.port -replace '#workername#',$ConfigWorkerName  -replace '#dcri#',$SelectedDcri -replace '#MINEDCOINSYMBOL#',$DestinationCoin.symbol
-                    
-                        
-                        write-host ............LAUNCHED COMMAND...................
-                        write-host $Command
-                        write-host ...............................................
-
-                        #Call into loop for fail relaunch
-                        while (1 -eq 1) {Invoke-Expression $Command }
-                    }
-                
-            
-
+     write-host SELECTED OPTION:: $PoolsName
     }
+    else 
+        {
+            write-host SELECTED BY PARAMETER ::$PoolsName
+        }
+
+
+
+#-----------------Ask user for coins----------------------------------------------------
+
+
+if ($MiningMode -eq "manual"){
+
+            If ($CoinsName -eq "")  
+                {
+
+                    #Load coins for pool´s file
+                    if ($SelectedPool.ApiData -eq $false)  
+                        {write-host        POOL API NOT EXISTS, SOME DATA NOT AVAILABLE!!!!!}
+                    else 
+                        {write-host CALLING POOL API........}
+
+                    $CoinsPool=Get-Pools -Querymode "Menu" -PoolsFilterList $PoolsName |Select-Object info,symbol,algorithm,Workers,PoolHashRate,Blocks_24h -unique | Sort-Object info
+
+                    $CoinsPool | Add-Member Option "0"
+                    $CoinsPool | Add-Member BTCPrice 0
+                    $CoinsPool | Add-Member BTCChange24h ([Double]0.0)
+                    $CoinsPool | Add-Member DifficultyChange ([Double]0.0)
+                    $CoinsPool | Add-Member Profitability24h 0
+                    
+                    $ManualMiningApiUse=(Get-Content config.txt | Where-Object {$_ -like '@@MANUALMININGAPIUSE=*'} )-replace '@@MANUALMININGAPIUSE=',''    
+
+
+                    if ($ManualMiningApiUse -eq $true){
+                                        try {
+                                                #$WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing  | ConvertFrom-Json | Select-Object -ExpandProperty coins
+                                                #write-host CALLING WHATTOMINE API........
+                                                $BTCEuroPrice=(Invoke-WebRequest "https://api.cryptonator.com/api/ticker/btc-eur" -UseBasicParsing -TimeoutSec 2 | ConvertFrom-Json).ticker.price
+                                                write-host CALLING CRYPTONATOR API........BTC_EUR
+                                                $BTCDollarPrice=(Invoke-WebRequest "https://api.cryptonator.com/api/ticker/btc-usd" -UseBasicParsing  -TimeoutSec 2| ConvertFrom-Json).ticker.price
+                                                write-host CALLING CRYPTONATOR API........BTC_USD
+                                            } catch{}
+                                } 
+
+                    $Counter = 0
+                    $CoinsPool | ForEach-Object {
+
+                                                if ($ManualMiningApiUse -eq $true){
+                                                                "CALLING BITTREX API........"+$_.symbol+"_BTC" | write-host
+                                                                try {
+                                                                    $Apicall="https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-"+$_.symbol
+                                                                    $ApiResponse=(Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 2| ConvertFrom-Json|Select-Object -ExpandProperty result)
+                                                                    } 
+                                                                catch{}
+                                                                if ($ApiResponse -ne $null) {
+                                                                                            $_.BTCPrice=$ApiResponse.Last
+                                                                                            #$_.BTCChange24h=(1-($ApiResponse.Last/$ApiResponse.prevday))*100
+                                                                                            }
+
+                                                                if ($_.BTCPrice -eq 0){
+                                                                                        "CALLING CRYPTOPIA API........"+$_.symbol+"_BTC" |Write-Host
+                                                                                        try {
+                                                                                                $Apicall="https://www.cryptopia.co.nz/api/GetMarket/"+$_.symbol+'_BTC'
+                                                                                                $ApiResponse=(Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 2| ConvertFrom-Json|Select-Object -ExpandProperty data)
+                                                                                            } catch{}
+                                                                                        
+                                                                                        if ($ApiResponse -ne $null) {
+                                                                                                                    $_.BTCPrice=$ApiResponse.LastPrice
+                                                                                                                    #$_.BTCChange24h=$ApiResponse.Change
+                                                                                                                    }
+                                                                                    }
+                                                                }
+                                                $_.Option=$Counter                                                                
+                                                $counter++
+                                             }
+                    
+                    Clear-Host
+                    write-host ....................................................................................................
+                    write-host ............................SELECT COIN TO MINE.....................................................
+                    write-host ....................................................................................................
+
+                    #Only one pool is allowed in manual mode at this point
+                    $SelectedPool=$Pools | where name -eq $PoolsName
+                    
+                    if ($SelectedPool.ApiData -eq $false)  {write-host        ----POOL API NOT EXISTS, SOME DATA NOT AVAILABLE---}
+
+                    if ($Location -eq 'Europe') {$LabelPrice="EurPrice"} else {$LabelPrice="DollarPrice"}
+
+                    $CoinsPool  | Format-Table -Wrap (
+                                @{Label = "Option"; Expression = {$_.Option}; Align = 'right'},  
+                                @{Label = "Name"; Expression = {$_.info.toupper()}; Align = 'left'} ,
+                                @{Label = "Symbol"; Expression = {$_.symbol}; Align = 'left'},   
+                                @{Label = "Algorithm"; Expression = {$_.algorithm.tolower()}; Align = 'left'},
+                                @{Label = "Workers"; Expression = {$_.Workers}; Align = 'right'},   
+                                @{Label = "PoolHashRate"; Expression = {"$($_.PoolHashRate | ConvertTo-Hash)/s"}; Align = 'right'},   
+                                @{Label = "Blocks_24h"; Expression = {$_.Blocks_24h}; Align = 'right'},
+                                @{Label = "BTCPrice"; Expression = {[math]::Round($_.BTCPrice,6)}; Align = 'right'},
+                                #@{Label = "BTCChange24h"; Expression = {([math]::Round($_.BTCChange24h,1)).ToString()+'%'}; Align = 'right'},
+                                @{Label = $LabelPrice; Expression = { if ($Location -eq 'Europe') {[math]::Round($_.BTCPrice*$BTCEuroPrice,2)} else {[math]::Round($_.BTCPrice*$BTCDollarPrice,2)}}; Align = 'right'}
+                               
+                                
+                                )  | out-host        
+            
+
+                    $SelectedOption = Read-Host -Prompt 'SELECT ONE OPTION:'
+                    while ($SelectedOption -like '*,*') {
+                                                        $SelectedOption = Read-Host -Prompt 'SELECT ONLY ONE OPTION:'
+                                                        }
+                    $CoinsName = $CoinsPool[$SelectedOption].Info -replace '_',',' #for dual mining
+
+                    write-host SELECTED OPTION:: $CoinsName 
+                }
+            else 
+                {
+
+                    write-host SELECTED BY PARAMETER :: $CoinsName
+                }                    
+
+           
+            }
+
+            
+#-----------------Launch Command
+            $command="./core.ps1 -MiningMode $MiningMode -PoolsName $PoolsName"
+            if ($MiningMode -eq "manual"){$command+=" -Coins $CoinsName" } 
+
+            #write-host $command
+            Invoke-Expression $command
+

@@ -1,0 +1,26 @@
+{
+"Path" : ".\\Bin\\NVIDIA-Alexis78\\ccminer.exe",
+"Uri" : "https://github.com/nemosminer/ccminer-Alexis78/releases/download/ccminer-alexis78/ccminer-alexis78-ms2013-cuda7.5.7z",
+"Types" : ["NVIDIA"],
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#",
+"API" : "Ccminer",
+"APIPort" : 4068,
+"Wrap" : false,
+"Dualmining":false,
+"Algorithms": [
+                {"blake2s" : "-a blake2s"},
+                {"lbry" : "-a lbry" },
+                {"lyra2v2" : "-a lyra2v2" },
+                {"myriadgroestl" : "-a myr-gr"},
+                {"nist5" : "-a nist5"},
+                {"quark" : "-a quark"},
+                {"sib" : "-a sib"},
+                {"skein" : "-a skein"},
+                {"veltor" : "-a veltor"},
+                {"x11" : "-a x11" },
+                {"x14" : "-a x14" },
+                {"x11evo" : "-a x11evo"},
+                {"x17" : "-x17" }
+              ]
+
+}

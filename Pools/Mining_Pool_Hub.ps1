@@ -1,59 +1,81 @@
-﻿. .\Include.ps1
+﻿param(
+    [Parameter(Mandatory = $false)]
+    [String]$Querymode = $null #Info/detail"
+    )
 
-try
-{
-    $MiningPoolHub_Request = Invoke-WebRequest "https://miningpoolhub.com/index.php?page=api&action=getautoswitchingandprofitsstatistics" -UseBasicParsing | ConvertFrom-Json
-}
-catch
-{
-    return
-}
-
-if(-not $MiningPoolHub_Request.success)
-{
-    return
-}
+#. .\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
+$ActiveOnManualMode    = $false
+$ActiveOnAutomaticMode = $true
 
-$Locations = 'Europe', 'US', 'Asia'
 
-$Locations | ForEach {
-    $Location = $_
 
-    $MiningPoolHub_Request.return | ForEach {
-        $Algorithm = $_.algo -replace "-"
-        $Coin = (Get-Culture).TextInfo.ToTitleCase(($_.current_mining_coin -replace "-", " ")) -replace " "
-
-        $Stat = Set-Stat -Name "$($Name)_$($Algorithm)_Profit" -Value ([decimal]$_.profit/1000000000)
-        $Price = (($Stat.Live*(1-[Math]::Min($Stat.Day_Fluctuation,1)))+($Stat.Day*(0+[Math]::Min($Stat.Day_Fluctuation,1))))
-        
+if ($Querymode -eq "info"){
         [PSCustomObject]@{
-            Algorithm = $Algorithm
-            Info = $Coin
-            Price = $Price
-            StablePrice = $Stat.Week
-            Protocol = 'stratum+tcp'
-            Host = $_.all_host_list.split(";") | Sort -Descending {$_ -ilike "$Location*"} | Select -First 1
-            Port = $_.algo_switch_port
-            User = '$UserName.$WorkerName'
-            Pass = 'x'
-            Location = $Location
-            SSL = $false
-        }
-        
-        [PSCustomObject]@{
-            Algorithm = $Algorithm
-            Info = $Coin
-            Price = $Price
-            StablePrice = $Stat.Week
-            Protocol = 'stratum+ssl'
-            Host = $_.all_host_list.split(";") | Sort -Descending {$_ -ilike "$Location*"} | Select -First 1
-            Port = $_.algo_switch_port
-            User = '$UserName.$WorkerName'
-            Pass = 'x'
-            Location = $Location
-            SSL = $true
-        }
+                    Disclaimer = "Registration required, set username/workername in config.txt file"
+                    ActiveOnManualMode=$ActiveOnManualMode  
+                    ActiveOnAutomaticMode=$ActiveOnAutomaticMode
+                         }
     }
+
+
+
+
+    
+if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
+
+
+            try {
+                $MiningPoolHub_Request = Invoke-WebRequest "http://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing | ConvertFrom-Json
+            }
+            catch {
+                    WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'
+                    EXIT
+            }
+            
+            if (-not $MiningPoolHub_Request.success) {return}
+
+
+            $Locations = "Europe", "US", "Asia"
+
+            $MiningPoolHub_Request.return | ForEach-Object {
+                $MiningPoolHub_Hosts = $_.host_list.split(";")
+                $MiningPoolHub_Port = $_.port
+                $MiningPoolHub_Algorithm = Get-Algorithm $_.algo
+                $MiningPoolHub_Coin = (Get-Culture).TextInfo.ToTitleCase(($_.coin_name -replace "-", " " -replace "_", " ")) -replace " "
+                
+
+                $Divisor = 1000000000
+
+                if ((Get-Stat -Name "MiningPoolHub_$($MiningPoolHub_Coin)_Profit") -eq $null) {$Stat = Set-Stat -Name "MiningPoolHub_$($MiningPoolHub_Coin)_Profit" -Value ([Double]$_.profit / $Divisor * (1 - 0.05))}
+                else {$Stat = Set-Stat -Name "$($Name)_$($MiningPoolHub_Coin)_Profit" -Value ([Double]$_.profit / $Divisor)}
+
+
+                $Locations | ForEach-Object {
+                    $Location = $_
+                    
+                    [PSCustomObject]@{
+                            Algorithm     = $MiningPoolHub_Algorithm
+                            Info          = $MiningPoolHub_Coin
+                            Price         = $Stat.Live
+                            StablePrice   = $Stat.Week
+                            MarginOfError = $Stat.Week_Fluctuation
+                            Protocol      = "stratum+tcp"
+                            Host          = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
+                            Port          = $MiningPoolHub_Port
+                            User          = "$UserName.$WorkerName"
+                            Pass          = "x"
+                            Location      = $Location
+                            SSL           = $false
+                            Symbol        = ""
+                            AbbName       = "MPH"
+                            ActiveOnManualMode    = $ActiveOnManualMode
+                            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+
+                            }
+                }
+
+            }
 }
+
