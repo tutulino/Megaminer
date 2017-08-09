@@ -4,7 +4,7 @@ param(
     
     [Parameter(Mandatory = $false)]
     #[Array]$PoolsName = ("zpool","hash_refinery","mining_pool_hub"),
-    [Array]$PoolsName = "hash_refinery",
+    [Array]$PoolsName = "Mining_pool_hub",
 
     [Parameter(Mandatory = $false)]
     [array]$CoinsName= $null,
@@ -116,7 +116,7 @@ while ($true) {
 
     #Load information about the Pools, only must read parameter passed files (not all as mph do)
 
-    $AllPools=Get-Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName
+    $AllPools=Get-Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location
 
             
     
@@ -208,6 +208,7 @@ while ($true) {
     if (-not (Get-Job -State Running)) {
         Start-Job -InitializationScript ([scriptblock]::Create("Set-Location('$(Get-Location)')")) -ArgumentList ($Miners | Select-Object URI, Path, @{name = "Searchable"; expression = {$Miner = $_; ($Miners | Where-Object {(Split-Path $_.Path -Leaf) -eq (Split-Path $Miner.Path -Leaf) -and $_.URI -ne $Miner.URI}).Count -eq 0}} -Unique) -FilePath .\Downloader.ps1 | Out-Null
     }
+    
     $Miners = $Miners | Where-Object {Test-Path $_.Path}
     if ($Miners.Count -eq 0) {"No Miners!" | Out-Host; Start-Sleep $Interval; continue}
     $Miners | ForEach-Object {
