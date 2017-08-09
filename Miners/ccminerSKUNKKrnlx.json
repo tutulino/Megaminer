@@ -1,6 +1,6 @@
 {
-"Path" : ".\\Bin\\NVIDIA-skunk\\ccminerskunk.exe",
-"Uri" : "https://github.com/nemosminer/ccminer-skunk-jha/releases/download/ccminerskunk/ccminerskunk.7z",
+"Path" : ".\\Bin\\NVIDIA-skunkkrnlx\\ccminer-x64-80.exe",
+"Uri" : "http://ccminer.org/preview/ccminer-skunk-krnlx-80.7z",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#",
 "API" : "Ccminer",
@@ -10,7 +10,8 @@
 "Algorithms": [
                 {"timetravel":"-a timetravel"},
                 {"x15":"-a x15"},
-                {"x17":"-a x17"}
+                {"skunk":"-a skunk"}
+                
               ]
 
 }
