@@ -63,3 +63,9 @@ THIS VERSION CHANGE ALL CONFIG FILES STRUCTURES (CONFIG,POOLS, MINERS, etc)
 
 Fixed: Zpool login is wrong but no error received
 Fixed: MM download all software, not only type on config.txt
+
+----------------------------------------------
+2.0.3
+
+Fixed: Sometimes incorrect location choosed
+
