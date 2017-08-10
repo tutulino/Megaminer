@@ -106,8 +106,10 @@ function Get-Stat {
     )
     
     if (-not (Test-Path "Stats")) {New-Item "Stats" -ItemType "directory"}
-    Get-ChildItem "Stats" | Where-Object Extension -NE ".ps1" | Where-Object BaseName -EQ $Name | Get-Content | ConvertFrom-Json
+    Get-ChildItem "Stats" | Where-Object Extension -NE ".ps1" | Where-Object BaseName -eq $Name | Get-Content | ConvertFrom-Json
 }
+
+
 
 function Get-ChildItemContent {
     param(
@@ -541,15 +543,15 @@ function Get-Pools {
         [array]$CoinFilterList = $null,
         #[array]$CoinFilterList = ('GroestlCoin','Feathercoin','zclassic'),
         [Parameter(Mandatory = $false)]
-        [string]$Location=$null
+        [string]$Location=$null,
         #[string]$Location='EUROPE'
-        
-        )
+        [Parameter(Mandatory = $false)]
+        [array]$AlgoFilterList=$null
+         )
         #in detail mode returns a line for each pool/algo/coin combination, in info mode returns a line for pool
 
 
-   
-        $PoolsFolderContent= Get-ChildItem "Pools" | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure).Count -gt 0}
+            $PoolsFolderContent= Get-ChildItem "Pools" | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure).Count -gt 0}
 
             $ChildItems = $PoolsFolderContent | ForEach-Object {
                 $Name = $_.BaseName
@@ -591,20 +593,26 @@ function Get-Pools {
                         foreach ($Pool in $AllPools){
                                 #must have wallet
                                 if ($Pool.user -ne $null) {
-                                      if ($CoinFilterList -ne $null) {$Coinfilter = compare-object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
-                                      #must be in filter list or no list
-                                      if (($CoinFilterList.count -eq 0) -or ($Coinfilter -ne $null)){
-                                          if ($pool.location -eq $Location) {$Pool.LocationPriority=1}
-                                          if (($pool.location -eq 'EU') -and ($location -eq 'US')) {$Pool.LocationPriority=2}
-                                          if (($pool.location -eq 'EUROPE') -and ($location -eq 'US')) {$Pool.LocationPriority=2}
-                                          if ($pool.location -eq 'US' -and $location -eq 'EUROPE') {$Pool.LocationPriority=2}
-                                          if ($pool.location -eq 'US' -and $location -eq 'EU') {$Pool.LocationPriority=2}
-                                          $AllPools2+=$Pool
-                                          }
-                                      }
+                                    
+                                    #must be in algo filter list or no list
+                                    if ($AlgoFilterList -ne $null) {$Algofilter = compare-object $AlgoFilterList $Pool.Algorithm -IncludeEqual -ExcludeDifferent}
+                                    if (($AlgoFilterList.count -eq 0) -or ($Algofilter -ne $null)){
+                                       
+                                            #must be in coin filter list or no list
+                                            if ($CoinFilterList -ne $null) {$Coinfilter = compare-object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
+                                            if (($CoinFilterList.count -eq 0) -or ($Coinfilter -ne $null)){
+                                                if ($pool.location -eq $Location) {$Pool.LocationPriority=1}
+                                                if (($pool.location -eq 'EU') -and ($location -eq 'US')) {$Pool.LocationPriority=2}
+                                                if (($pool.location -eq 'EUROPE') -and ($location -eq 'US')) {$Pool.LocationPriority=2}
+                                                if ($pool.location -eq 'US' -and $location -eq 'EUROPE') {$Pool.LocationPriority=2}
+                                                if ($pool.location -eq 'US' -and $location -eq 'EU') {$Pool.LocationPriority=2}
+                                                $AllPools2+=$Pool
+                                                }
+                                        
+                                    }
                         }
-                
-
+                        
+                        }
                         #Insert by priority of location
                         $Return=@()
                         $AllPools2 | Sort-Object Info,Algorithm,LocationPriority | ForEach-Object {
@@ -617,5 +625,58 @@ function Get-Pools {
 
 
     $Return     
+    
 
  }
+
+
+
+
+
+ 
+function Get-Best-Hashrate-Algo {
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]$Algo
+    )
+
+
+    $Pattern="*_"+$Algo+"_HashRate.txt"
+
+    $Besthashrate=0
+    Get-ChildItem "Stats"  | Where-Object pschildname -like $Pattern | foreach {
+              $Content= $_ | Get-Content | ConvertFrom-Json
+              if ($Content.week -gt $Besthashrate) {
+                      $Besthashrate=$Content.week
+                      $Miner= ($_.pschildname -split '_')[0]
+                      }
+            $Return=[pscustomobject]@{
+                            Hashrate=$Besthashrate
+                            Miner=$Miner
+                          }
+
+      }
+
+    $Return
+}
+
+
+function Get-Algo-Divisor {
+      param(
+        [Parameter(Mandatory = $true)]
+        [String]$Algo
+            )
+
+                    $Divisor = 1000000000
+                    
+                    switch($Algo)
+                    {
+                        "skein"{$Divisor *= 10}
+                        "equihash"{$Divisor /= 1000}
+                        "blake2s"{$Divisor *= 1000}
+                        "blakecoin"{$Divisor *= 1000}
+                        "decred"{$Divisor *= 1000}
+                    }
+
+    $Divisor
+     }

@@ -2,7 +2,7 @@
 "Path" : ".\\Bin\\NVIDIA-CcminerKlaust\\ccminer.exe",
 "Uri" : "https://github.com/KlausT/ccminer/releases/download/8.09/ccminer-809-x64.zip",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10",
 "API" : "Ccminer",
 "APIPort" : 4068,
 "Wrap" : false,

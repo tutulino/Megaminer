@@ -50,15 +50,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
             
             
 
-            $Divisor = 1000000000
+            $Divisor = Get-Algo-Divisor $Yiimp_Algorithm
             
-            switch($Yiimp_Algorithm)
-            {
-                "equihash"{$Divisor /= 1000}
-                "blake2s"{$Divisor *= 1000}
-                "blakecoin"{$Divisor *= 1000}
-                "decred"{$Divisor *= 1000}
-            }
+           
+
             if ((Get-Stat -Name "Yiimp_$($Yiimp_Coin)_Profit") -eq $null) {$Stat = Set-Stat -Name "Yiimp_$($Yiimp_Coin)_Profit" -Value ([Double]$coin.estimate / $Divisor * (1 - 0.05))}
             else {$Stat = Set-Stat -Name "$($Name)_$($Yiimp_Coin)_Profit" -Value ([Double]$coin.estimate / $Divisor)}
 
@@ -85,9 +80,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                         AbbName       = "YI"
                         ActiveOnManualMode    = $ActiveOnManualMode
                         ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                        Workers       = $Yiimp_Workers
-                        PoolHashRate  = $Yiimp_PoolHashRate
-                        Blocks_24h    = $Yiimp_24h_blocks
+                        Workers       = [int]$Yiimp_Workers
+                        PoolHashRate  = [double]$Yiimp_PoolHashRate
+                        Blocks_24h    = [int]$Yiimp_24h_blocks
                         }
                  
             }

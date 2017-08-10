@@ -21,9 +21,10 @@ if ($Querymode -eq "info"){
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Pools=@()
-        $Pools +=[pscustomobject]@{"coin" = "DECRED"; "algo"="BLAKE14R"; "symbol"= "DCR"; "server"="dcr.suprnova.cc";"port"="3252";"location"="US"}
+        $Pools +=[pscustomobject]@{"coin" = "DECRED"; "algo"="decred"; "symbol"= "DCR"; "server"="dcr.suprnova.cc";"port"="3252";"location"="US"}
         $Pools +=[pscustomobject]@{"coin" = "BITCORE"; "algo"="BITCORE"; "symbol"= "BTX"; "server"="btx.suprnova.cc";"port"="3629";"location"="US"}
         $Pools +=[pscustomobject]@{"coin" = "DIGIBYTE";"algo"="SKEIN"; "symbol"= "DGB";"server"="dgbs.suprnova.cc"; "port"= "5226";"location"="US"};
+        $Pools +=[pscustomobject]@{"coin" = "DIGIBYTE";"algo"="myriadgroestl"; "symbol"= "DGB";"server"="dgbg.suprnova.cc"; "port"= "7978";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "HUSH";"algo"="Equihash"; "symbol"= "HUSH";"server"="zdash.suprnova.cc"; "port"= "4048";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "LBRY";"algo"="LBRY"; "symbol"= "LBC";"server"="lbry.suprnova.cc"; "port"= "6256";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "MONACOIN";"algo"="lyra2v2"; "symbol"= "MONA";"server"="mona.suprnova.cc"; "port"= "2995";"location"="US"};
@@ -88,8 +89,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     AbbName       = "SPV"
                                     ActiveOnManualMode    = $ActiveOnManualMode
                                     ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                    Workers       = $ApiResponse.Workers
-                                    PoolHashRate  = $ApiResponse.hashrate
+                                    Workers       = [int]$ApiResponse.Workers
+                                    PoolHashRate  = [double]$ApiResponse.hashrate
 
                                 }
 

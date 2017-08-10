@@ -66,8 +66,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     AbbName       = "SPV"
                                     ActiveOnManualMode    = $ActiveOnManualMode
                                     ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                    Workers       = 0
-                                    PoolHashRate  = 0
 
                                 }
 

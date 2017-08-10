@@ -39,7 +39,6 @@ THIS VERSION REQUIRES NEW CONFIG.TXT FILE, YOU MUST DOWNLOAD AND CONFIGURE AGAIN
 
 ----------------------------------------------
 2.0
-
 Included Miners for AMD platform, I haven´t AMD card, not tested. ¡¡¡ AMD TESTERS NEEDED !!!
 Automatic dual mining between pools (ex. Eth on MPH and lbry on Zpool), choosing more profitable pool for each coin
 Yiimp now support automatic profit based coin change, this pool has autoexchange off, you must set individual coins wallet on config.txt to mine
@@ -60,12 +59,34 @@ THIS VERSION CHANGE ALL CONFIG FILES STRUCTURES (CONFIG,POOLS, MINERS, etc)
 
 ----------------------------------------------
 2.0.2
-
 Fixed: Zpool login is wrong but no error received
 Fixed: MM download all software, not only type on config.txt
 
 ----------------------------------------------
 2.0.3
-
 Fixed: Sometimes incorrect location choosed
 
+----------------------------------------------
+2.1
+
+Added info from Whattomine (profit) in manual mode menus, only for Whattomine available coins....
+Added Digibyte-groestl (DGB) to Suprnova
+Best menu load speed in manual mode with api info enabled
+Now miners with cero hashrate are shown on screen (it allows see bad benchmarks)
+Mayor changes on sgminer miner file
+Added stat option on password for allow statistics to Zpool,Yiimp and HR
+All ccminer has now 10sec error retry time (30sec before)
+Added ZecMiner for equihash on AMD platform
+
+Fixed: Deleted tribus algo from ccminer tpruvot miner file
+Fixed: Zpool API is returning bad data (too high profit) for X11 coin Hiro, this makes always select X11 algo
+Fixed: X17 Algo (Verge)  not working
+Fixed: decred on manual mode not working on Suprnova
+Fixed: Algorithm filter (parameter or via algorithm.txt) not working 
+
+
+
+
+
+
+ 

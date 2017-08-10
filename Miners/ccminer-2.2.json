@@ -2,7 +2,7 @@
 "Path" : ".\\Bin\\NVIDIA-ccminer-2.2\\ccminer-x64.exe",
 "Uri" : "http://ccminer.org/preview/ccminer-2.2-skunk.7z",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10",
 "API" : "Ccminer",
 "APIPort" : 4068,
 "Wrap" : false,

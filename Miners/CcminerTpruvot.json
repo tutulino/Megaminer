@@ -2,7 +2,7 @@
 "Path" : ".\\Bin\\NVIDIA-TPruvot\\ccminer-x64.exe",
 "Uri" : "https://github.com/tpruvot/ccminer/releases/download/v2.0-tpruvot/ccminer-2.0-release-x64-cuda-8.0.7z",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10",
 "API" : "Ccminer",
 "APIPort" : 4068,
 "Wrap" : false,
@@ -13,8 +13,7 @@
                 {"blakecoin":"-a blakecoin"},
                 {"decred":"-a decred"},
                 {"hmq1725":"-a hmq1725"},
-                {"X15":"-a X15"},
-                {"yescrypt":"-a yescrypt"}
+                {"X15":"-a X15"}
               ]
 
 }

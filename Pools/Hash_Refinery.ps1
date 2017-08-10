@@ -26,50 +26,45 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         try
         {
-            $Zpool_Request = Invoke-WebRequest "http://pool.hashrefinery.com/api/status" -UseBasicParsing | ConvertFrom-Json
+            $HR_Request = Invoke-WebRequest "http://pool.hashrefinery.com/api/status" -UseBasicParsing | ConvertFrom-Json
         }
         catch
         {
             return
         }
 
-        if(-not $Zpool_Request){return}
+        if(-not $HR_Request){return}
 
        
         $Location = "US"
 
-        $Zpool_Request | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name | foreach {
-            $Zpool_Host = "$_.us.hashrefinery.com"
-            $Zpool_Port = $Zpool_Request.$_.port
-            $Zpool_Algorithm = Get-Algorithm $Zpool_Request.$_.name
-            $Zpool_Coin = "Unknown"
+        $HR_Request | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name | foreach {
+            $HR_Host = "$_.us.hashrefinery.com"
+            $HR_Port = $HR_Request.$_.port
+            $HR_Algorithm = Get-Algorithm $HR_Request.$_.name
+            $HR_Coin = "Unknown"
 
-            $Divisor = 1000000
-            
-            switch($Zpool_Algorithm)
-            {
-                "equihash"{$Divisor /= 1000}
-                "blake2s"{$Divisor *= 1000}
-                "blakecoin"{$Divisor *= 1000}
-                "decred"{$Divisor *= 1000}
-            }
 
-            if((Get-Stat -Name "$($Name)_$($Zpool_Algorithm)_Profit") -eq $null){$Stat = Set-Stat -Name "$($Name)_$($Zpool_Algorithm)_Profit" -Value ([Double]$Zpool_Request.$_.estimate_last24h/$Divisor)}
-            else{$Stat = Set-Stat -Name "$($Name)_$($Zpool_Algorithm)_Profit" -Value ([Double]$Zpool_Request.$_.estimate_current/$Divisor)}
+
+            $Divisor = Get-Algo-Divisor $HR_Algorithm
+          
+
+            if((Get-Stat -Name "$($Name)_$($HR_Algorithm)_Profit") -eq $null){$Stat = Set-Stat -Name "$($Name)_$($HR_Algorithm)_Profit" -Value ([Double]$HR_Request.$_.estimate_last24h/$Divisor)}
+            else{$Stat = Set-Stat -Name "$($Name)_$($HR_Algorithm)_Profit" -Value ([Double]$HR_Request.$_.estimate_current/$Divisor)}
             
             if($Wallet)
             {
                 [PSCustomObject]@{
-                    Algorithm = $Zpool_Algorithm
-                    Info = $Zpool
+                    Algorithm = $HR_Algorithm
+                    Info = $HR
                     Price = $Stat.Live
                     StablePrice = $Stat.Week
                     MarginOfError = $Stat.Fluctuation
                     Protocol = "stratum+tcp"
-                    Host = $Zpool_Host
-                    Port = $Zpool_Port
+                    Host = $HR_Host
+                    Port = $HR_Port
                     User = $Wallet
-                    Pass = "c=$Currency"
+                    Pass = "c=$Currency,$WorkerName,stats"
                     Location = $Location
                     SSL = $false
                     AbbName       = "HF"

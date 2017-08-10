@@ -6,11 +6,11 @@ param(
     ,
     [Parameter(Mandatory = $false)]
     [string]$PoolsName =$null
-    #[array]$PoolsName = "SUPRNOVA"
-    #[array]$PoolsName = "YIIMP"
+    #[string]$PoolsName = "YIIMP"
     ,
     [Parameter(Mandatory = $false)]
     [string]$CoinsName =$null
+    #[string]$CoinsName ="decred"
 )
 
 . .\Include.ps1
@@ -85,6 +85,8 @@ $Pools | Format-Table Option,name,disclaimer | out-host
 
 If (($PoolsName -eq "") -or ($PoolsName -eq $null))
     {
+
+
     if ($MiningMode -eq "manual"){
            $SelectedOption = Read-Host -Prompt 'SELECT ONE OPTION:'
            while ($SelectedOption -like '*,*') {
@@ -137,41 +139,53 @@ if ($MiningMode -eq "manual"){
                     $CoinsPool=Get-Pools -Querymode "Menu" -PoolsFilterList $PoolsName |Select-Object info,symbol,algorithm,Workers,PoolHashRate,Blocks_24h -unique | Sort-Object info
 
                     $CoinsPool | Add-Member Option "0"
-                    $CoinsPool | Add-Member BTCPrice 0
+                    $CoinsPool | Add-Member YourHashRate ([Double]0.0)
+                    $CoinsPool | Add-Member BTCPrice ([Double]0.0)
                     $CoinsPool | Add-Member BTCChange24h ([Double]0.0)
-                    $CoinsPool | Add-Member DifficultyChange ([Double]0.0)
-                    $CoinsPool | Add-Member Profitability24h 0
+                    $CoinsPool | Add-Member DiffChange24h ([Double]0.0)
+                    $CoinsPool | Add-Member Reward ([Double]0.0)
+                    $CoinsPool | Add-Member BtcProfit ([Double]0.0)
+                    $CoinsPool | Add-Member EurProfit ([Double]0.0)
+                    $CoinsPool | Add-Member DollarProfit ([Double]0.0)
+                    
                     
                     $ManualMiningApiUse=(Get-Content config.txt | Where-Object {$_ -like '@@MANUALMININGAPIUSE=*'} )-replace '@@MANUALMININGAPIUSE=',''    
-
+                
+                
+                    
 
                     if ($ManualMiningApiUse -eq $true){
                                         try {
-                                                #$WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing  | ConvertFrom-Json | Select-Object -ExpandProperty coins
-                                                #write-host CALLING WHATTOMINE API........
-                                                $BTCEuroPrice=(Invoke-WebRequest "https://api.cryptonator.com/api/ticker/btc-eur" -UseBasicParsing -TimeoutSec 2 | ConvertFrom-Json).ticker.price
-                                                write-host CALLING CRYPTONATOR API........BTC_EUR
-                                                $BTCDollarPrice=(Invoke-WebRequest "https://api.cryptonator.com/api/ticker/btc-usd" -UseBasicParsing  -TimeoutSec 2| ConvertFrom-Json).ticker.price
-                                                write-host CALLING CRYPTONATOR API........BTC_USD
+                                                write-host CALLING WHATTOMINE API.........    
+                                                $WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing  | ConvertFrom-Json | Select-Object -ExpandProperty coins
+                                                write-host CALLING BITTREX API............
+                                                $BTXResponse = (Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -TimeoutSec 5| ConvertFrom-Json|Select-Object -ExpandProperty result)  
+                                                write-host CALLING COINDESK API............
+                                                $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing  | ConvertFrom-Json | Select-Object -ExpandProperty BPI
                                             } catch{}
                                 } 
+
+                                
 
                     $Counter = 0
                     $CoinsPool | ForEach-Object {
 
+                                                $_.Option=$Counter                                                                
+                                                $counter++
+                                                $_.YourHashRate=(Get-Best-Hashrate-Algo $_.Algorithm).hashrate
+
                                                 if ($ManualMiningApiUse -eq $true){
-                                                                "CALLING BITTREX API........"+$_.symbol+"_BTC" | write-host
-                                                                try {
-                                                                    $Apicall="https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-"+$_.symbol
-                                                                    $ApiResponse=(Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 2| ConvertFrom-Json|Select-Object -ExpandProperty result)
-                                                                    } 
-                                                                catch{}
-                                                                if ($ApiResponse -ne $null) {
-                                                                                            $_.BTCPrice=$ApiResponse.Last
-                                                                                            #$_.BTCChange24h=(1-($ApiResponse.Last/$ApiResponse.prevday))*100
+
+                                                                #Get data from bittrex global api call
+                                                                if ($BTXResponse -ne $null) {
+                                                                                            foreach ($BtxCoin in $BTXResponse)
+                                                                                                     {if ($BtxCoin.marketname -eq ("btc-"+$_.symbol)) {  $_.BTCPrice=$BtxCoin.Last}}
                                                                                             }
 
+                                                               
+                                                                #If no data try with CRYPTOPIA                                    
                                                                 if ($_.BTCPrice -eq 0){
+                                                                                        $ApiResponse = $null
                                                                                         "CALLING CRYPTOPIA API........"+$_.symbol+"_BTC" |Write-Host
                                                                                         try {
                                                                                                 $Apicall="https://www.cryptopia.co.nz/api/GetMarket/"+$_.symbol+'_BTC'
@@ -183,9 +197,50 @@ if ($MiningMode -eq "manual"){
                                                                                                                     #$_.BTCChange24h=$ApiResponse.Change
                                                                                                                     }
                                                                                     }
+                                                                
+                                                                
+                                                                #Data from WTM
+                                                                    if ($WTMResponse -ne $null) {
+                                                                                $WtmCoin=$WTMResponse.($_.Info)
+                                                                                if ($WtmCoin -ne $null)
+                                                                                    {
+                                                                                   
+                                                                                    if ($WtmCoin.difficulty24 -ne 0)  {$_.DiffChange24h=(1-($WtmCoin.difficulty/$WtmCoin.difficulty24))*100}
+                                                                                    #WTM returns default data as 3x480 hashrates
+                                                                                    $WTMFactor=$null
+                                                                                    switch ($_.Algorithm)
+                                                                                                {
+                                                                                                        "Ethash"{$WTMFactor=84000000}
+                                                                                                        "Groestl"{$WTMFactor=630900000 }
+                                                                                                        "X11Gost"{$WTMFactor=20100000}
+                                                                                                        "Cryptonight"{$WTMFactor=2190}
+                                                                                                        "equihash"{$WTMFactor=870}
+                                                                                                        "lyra2v2"{$WTMFactor=14700000}
+                                                                                                        "Neoscrypt"{$WTMFactor=1950000}
+                                                                                                        "Lbry"{$WTMFactor=315000000}
+                                                                                                        "sia"{$WTMFactor=3450000000} #Blake2b
+                                                                                                        "decred"{$WTMFactor=5910000000} #Blake14r
+                                                                                                        "Pascal"{$WTMFactor=2100000000}
+                                                                                                }
+
+                                                                                    if ($WTMFactor -ne $null) {
+                                                                                                    $_.Reward=[double]([double]$WtmCoin.estimated_rewards * ([double]$_.YourHashRate/[double]$WTMFactor))
+                                                                                                    $_.BtcProfit= $_.Reward*$_.BTCPrice
+                                                                                                    }
+
+                                                                                    }
+
+                                                                                }
+                                                                 
+                                                                                
+                                                                 $_.EurProfit = [double]$CDKResponse.eur.rate * [double]$_.BtcProfit
+                                                                 $_.DollarProfit = [double]$CDKResponse.usd.rate * [double]$_.BtcProfit
+
                                                                 }
-                                                $_.Option=$Counter                                                                
-                                                $counter++
+                                                                     
+                                                                
+
+                                              
                                              }
                     
                     Clear-Host
@@ -198,21 +253,30 @@ if ($MiningMode -eq "manual"){
                     
                     if ($SelectedPool.ApiData -eq $false)  {write-host        ----POOL API NOT EXISTS, SOME DATA NOT AVAILABLE---}
 
-                    if ($Location -eq 'Europe') {$LabelPrice="EurPrice"} else {$LabelPrice="DollarPrice"}
+                    if ($Location -eq 'Europe') {
+                                 $LabelPrice="EurPrice"
+                                 $LabelProfit="EurProfit"
+                                } 
+                    else {
+                           $LabelPrice="UsdPrice"
+                           $LabelProfit="UsdProfit"
+                          }
 
                     $CoinsPool  | Format-Table -Wrap (
-                                @{Label = "Option"; Expression = {$_.Option}; Align = 'right'},  
+                                @{Label = "Opt."; Expression = {$_.Option}; Align = 'right'} ,
                                 @{Label = "Name"; Expression = {$_.info.toupper()}; Align = 'left'} ,
                                 @{Label = "Symbol"; Expression = {$_.symbol}; Align = 'left'},   
                                 @{Label = "Algorithm"; Expression = {$_.algorithm.tolower()}; Align = 'left'},
                                 @{Label = "Workers"; Expression = {$_.Workers}; Align = 'right'},   
-                                @{Label = "PoolHashRate"; Expression = {"$($_.PoolHashRate | ConvertTo-Hash)/s"}; Align = 'right'},   
-                                @{Label = "Blocks_24h"; Expression = {$_.Blocks_24h}; Align = 'right'},
+                                #@{Label = "PoolHash"; Expression = {"$($_.PoolHashRate | ConvertTo-Hash)/s"}; Align = 'right'},   
+                                @{Label = "HashRate"; Expression = {"$($_.YourHashRate | ConvertTo-Hash)/s"}; Align = 'right'},   
+                                #@{Label = "Blocks_24h"; Expression = {$_.Blocks_24h}; Align = 'right'},
                                 @{Label = "BTCPrice"; Expression = {[math]::Round($_.BTCPrice,6)}; Align = 'right'},
-                                #@{Label = "BTCChange24h"; Expression = {([math]::Round($_.BTCChange24h,1)).ToString()+'%'}; Align = 'right'},
-                                @{Label = $LabelPrice; Expression = { if ($Location -eq 'Europe') {[math]::Round($_.BTCPrice*$BTCEuroPrice,2)} else {[math]::Round($_.BTCPrice*$BTCDollarPrice,2)}}; Align = 'right'}
-                               
-                                
+                                @{Label = $LabelPrice; Expression = { if ($Location -eq 'Europe') {[string][math]::Round($_.EurProfit,2)} else {[math]::Round($_.DollarProfit,2)}}; Align = 'right'},
+                                #@{Label = "DiffChange24h"; Expression = {([math]::Round($_.DiffChange24h,1)).ToString()+'%'}; Align = 'right'},
+                                @{Label = "Reward"; Expression = {([math]::Round($_.Reward,3))}; Align = 'right'},
+                                @{Label = "BtcProfit"; Expression = {([math]::Round($_.BtcProfit,6))}; Align = 'right'},
+                                @{Label = $LabelProfit; Expression = { if ($Location -eq 'Europe') {[math]::Round($_.EurProfit,2)} else {[math]::Round($_.DollarProfit,2)}}; Align = 'right'}
                                 )  | out-host        
             
 
@@ -221,8 +285,9 @@ if ($MiningMode -eq "manual"){
                                                         $SelectedOption = Read-Host -Prompt 'SELECT ONLY ONE OPTION:'
                                                         }
                     $CoinsName = $CoinsPool[$SelectedOption].Info -replace '_',',' #for dual mining
+                    $AlgosName = $CoinsPool[$SelectedOption].Algorithm -replace '_',',' #for dual mining
 
-                    write-host SELECTED OPTION:: $CoinsName 
+                    write-host SELECTED OPTION:: $CoinsName - $AlgosName
                 }
             else 
                 {
@@ -236,7 +301,7 @@ if ($MiningMode -eq "manual"){
             
 #-----------------Launch Command
             $command="./core.ps1 -MiningMode $MiningMode -PoolsName $PoolsName"
-            if ($MiningMode -eq "manual"){$command+=" -Coins $CoinsName" } 
+            if ($MiningMode -eq "manual"){$command+=" -Coinsname $CoinsName -Algorithm $AlgosName"} 
 
             #write-host $command
             Invoke-Expression $command

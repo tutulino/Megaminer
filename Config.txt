@@ -16,7 +16,8 @@
 
 -- Time in seconds each restarting of algo, let it at 200 second for testing, after that is recommended bigger value. 
 
-@@INTERVAL=200
+@@INTERVAL=150
+
 
 -- Only NVIDIA tested, AMD must work, but not tested (for mixed rig set AMD,NVIDIA)
 
@@ -24,11 +25,11 @@
 
 -- Location of your rig: EUROPE/US/ASIA (some pool may have no desired location, US will be selected then)
 
-@@LOCATION=EUROPE
+@@LOCATION=USA
 
 -- Enabled or disabled call to apis (pools and traders) to help on manual coin selection, some pools has slow response and must delay show prompt to user
 
-@@MANUALMININGAPIUSE=FALSE
+@@MANUALMININGAPIUSE=TRUE
 
 
 -- INDIVIDUAL COIN WALLETS, will be used if pool need as login a wallet of same coin you are mining (ex.Yiimp)

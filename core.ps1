@@ -1,15 +1,12 @@
 param(
     [Parameter(Mandatory = $false)]
-    [Array]$Algorithm = $null, #i.e. Ethash,Equihash,Cryptonight ect.
-    
+    [Array]$Algorithm = $null,
+
     [Parameter(Mandatory = $false)]
-    #[Array]$PoolsName = ("zpool","hash_refinery","mining_pool_hub"),
-    [Array]$PoolsName = "yiimp",
+    [Array]$PoolsName = $null,
 
     [Parameter(Mandatory = $false)]
     [array]$CoinsName= $null,
-    #[array]$CoinsName= "SIGNATUM",
-
 
     [Parameter(Mandatory = $false)]
     [String]$Proxy = "", #i.e http://192.0.0.1:8080 
@@ -18,12 +15,12 @@ param(
     [Int]$Delay = 0, #seconds before opening each miner
 
     [Parameter(Mandatory = $false)]
-    [String]$MiningMode = "AUTOMATIC"  #AUTOMATIC/MANUAL
-    #[String]$MiningMode = "AUTOMATIC"  #AUTOMATIC/MANUAL
+    [String]$MiningMode = $null
 
 )
 
 . .\Include.ps1
+
 
 
 
@@ -116,9 +113,7 @@ while ($true) {
 
     #Load information about the Pools, only must read parameter passed files (not all as mph do)
 
-    $AllPools=Get-Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location
-
-            
+    $AllPools=Get-Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm
     
     if ($AllPools.Count -eq 0) {"No Pools!" | Out-Host; Start-Sleep $Interval; continue}
     $Pools = [PSCustomObject]@{}

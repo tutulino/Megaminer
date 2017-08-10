@@ -44,11 +44,12 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Dual Mining between different pools (ex. Eth on MPH and lbry on Zpool)
 
--Basic info from Bittrex and Cryptopia for no automatic coin selection pools
+-Profit info from Whattomine,Bittrex and Cryptopia (based on your real hashrate) for manual coin selection
 
 -Unified software repository for all pools
 
 -Start to mine without commands or downloads only select pool and coin
+
 
 
 
@@ -100,7 +101,7 @@ YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
 **SPRNOVA
 	DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), VELTOR(VLT), ZCASH(ZEC),
 	ZENCASH (ZEN), ZCOIN(XZC), DASHCOIN(DASH), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), CHAINCOIN(CHC), ETHEREUM+DECRED(ETH+DCR),
-	ETHEREUM+LIBRARY(ETH+LBRY),BITCORE(BTX)
+	ETHEREUM+LIBRARY(ETH+LBRY),BITCORE(BTX), DIGIBYTE-GROESTL(DGB)
 
 
 **BLOCKSFACTORY
@@ -119,7 +120,7 @@ YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
 
 You can see .ps1 files, are source code, miners are downloaded from github, can see address on miners folder files (except no github available, included)
 
-
+Due to technical issues, two miners are included (claymore and ccminer-djm), is possible antivirus detect this miners as "suspect", you can delete this miners if you want and use yours, no more .exe inside.
 
 
 
