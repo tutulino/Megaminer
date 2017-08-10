@@ -67,8 +67,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Protocol      = "stratum+tcp"
                                 Host          = $Zpool_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
                                 Port          = $Zpool_Port
-                                User          = $wallet
-                                Pass          = "x"
+                                User          = $Wallet
+                                Pass          = "c=$Currency,$WorkerName,stats"
                                 Location      = $Location
                                 SSL           = $false
                                 Symbol        = $Zpool_currency
