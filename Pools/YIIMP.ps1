@@ -78,7 +78,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                         Host          = $Yiimp_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
                         Port          = $Yiimp_Port
                         User          = $User
-                        Pass          = "c=$Yiimp_currency,ID=$WorkerName"
+                        Pass          = "c=$Yiimp_currency,ID=$WorkerName,stats"
                         Location      = $Location
                         SSL           = $false
                         Symbol        = $Yiimp_currency
