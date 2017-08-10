@@ -29,6 +29,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                 try {
                     $Zpool_Request = Invoke-WebRequest "http://www.zpool.ca/api/currencies" -UseBasicParsing | ConvertFrom-Json 
+                    #$Zpool_Request = Invoke-WebRequest "http://www.zpool.ca/api/status" -UseBasicParsing | ConvertFrom-Json 
                     #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
                 }
                 catch {
@@ -48,21 +49,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     $Zpool_Coin = $coin.name
                 
 
-                    $Divisor = 1000000000
+                    $Divisor = Get-Algo-Divisor $Zpool_Algorithm
                     
-                    switch($Zpool_Algorithm)
-                    {
-                        "skein"{$Divisor *= 10}
-                        "equihash"{$Divisor /= 1000}
-                        "blake2s"{$Divisor *= 1000}
-                        "blakecoin"{$Divisor *= 1000}
-                        "decred"{$Divisor *= 1000}
-                    }
+                    
                     if ((Get-Stat -Name "Zpool_$($Zpool_Coin)_Profit") -eq $null) {$Stat = Set-Stat -Name "Zpool_$($Zpool_Coin)_Profit" -Value ([Double]$coin.estimate / $Divisor * (1 - 0.05))}
                     else {$Stat = Set-Stat -Name "$($Name)_$($Zpool_Coin)_Profit" -Value ([Double]$coin.estimate / $Divisor)}
 
                     $Locations | ForEach-Object {
                         $Location = $_
+                        if ($Zpool_Coin -ne 'hiro') { #This coin is returning bad data from api.
                             [PSCustomObject]@{
                                 Algorithm     = $Zpool_Algorithm
                                 Info          = $Zpool_Coin
@@ -72,16 +67,17 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Protocol      = "stratum+tcp"
                                 Host          = $Zpool_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
                                 Port          = $Zpool_Port
-                                User          = $Wallet
-                                Pass          = "c=$Currency,$WorkerName"
+                                User          = $wallet
+                                Pass          = "x"
                                 Location      = $Location
                                 SSL           = $false
                                 Symbol        = $Zpool_currency
                                 AbbName       = "ZP"
                                 ActiveOnManualMode    = $ActiveOnManualMode
                                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-
                                 }
+
+                        }       
                     }
                 }
 }

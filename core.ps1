@@ -4,7 +4,7 @@ param(
     
     [Parameter(Mandatory = $false)]
     #[Array]$PoolsName = ("zpool","hash_refinery","mining_pool_hub"),
-    [Array]$PoolsName = "Mining_pool_hub",
+    [Array]$PoolsName = "yiimp",
 
     [Parameter(Mandatory = $false)]
     [array]$CoinsName= $null,
@@ -132,7 +132,8 @@ while ($true) {
 
     $Miners= @()
     $Hashrates= @()
-    $GpuPlatform= $([array]::IndexOf((Get-WmiObject -class CIM_VideoController | Select-Object -ExpandProperty AdapterCompatibility), 'Advanced Micro Devices, Inc.'))    
+    $GpuPlatform= $([array]::IndexOf((Get-WmiObject -class CIM_VideoController | Select-Object -ExpandProperty AdapterCompatibility), 'Advanced Micro Devices, Inc.')) 
+    if ($GpuPlatform -eq -1) {$GpuPlatform=1} #For testing amd miners on nvidia
 
     foreach ($MinerFile in (Get-ChildItem "Miners" | Where-Object extension -eq '.json'))  
         {
@@ -449,11 +450,12 @@ while ($true) {
     
     #Display mining information
 
-    
+
+
     Clear-Host
     if ($MiningMode -eq 'AUTOMATIC')
         {
-        $Miners | Where-Object {$_.Profit -ge 1E-5 -or $_.Profit -eq $null} | Sort-Object -Descending Type, Profit | Format-Table -GroupBy Type (
+        $Miners <#| Where-Object {$_.Profit -ge 1E-5 -or $_.Profit -eq $null}#> | Sort-Object -Descending Type, Profit | Format-Table -GroupBy Type (
             @{Label = "Miner"; Expression = {$_.Name}}, 
             @{Label = "Algorithm"; Expression = {$_.HashRates.PSObject.Properties.Name}}, 
             @{Label = "Speed"; Expression = {$_.HashRates.PSObject.Properties.Value | ForEach-Object {if ($_ -ne $null) {"$($_ | ConvertTo-Hash)/s"}else {"Benchmarking"}}}; Align = 'right'}, 

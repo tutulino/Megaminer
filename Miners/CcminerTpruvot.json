@@ -12,7 +12,6 @@
                 {"scrypt":"-a scrypt"},
                 {"blakecoin":"-a blakecoin"},
                 {"decred":"-a decred"},
-                {"tribus":"-a tribus"},
                 {"hmq1725":"-a hmq1725"},
                 {"X15":"-a X15"},
                 {"yescrypt":"-a yescrypt"}

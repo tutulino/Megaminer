@@ -8,7 +8,8 @@
 "Wrap" : false,
 "Dualmining":false,
 "Algorithms": [
-                {"lyra2z-gr":"-k lyra2z --worksize 32 --intensity 18"}
+                {"lyra2z-gr":"-k lyra2z --worksize 32 --intensity 18"},
+                {"lyra2z":"-k lyra2z --worksize 32 --intensity 18"}
               ]
 
 }

@@ -8,10 +8,7 @@
 "Wrap" : false,
 "Dualmining":false,
 "Algorithms": [
-                {"timetravel":"-a timetravel"},
-                {"x15":"-a x15"},
-                {"skunk":"-a skunk"}
-                
+                {"timetravel":"-a timetravel"}
               ]
 
 }
