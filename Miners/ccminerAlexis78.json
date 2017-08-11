@@ -23,7 +23,8 @@
                 {"x14" : "-a x14" },
                 {"x11evo" : "-a x11evo"},
                 {"x17" : "-a x17" },
-                {"x13":"-a x13"}
+                {"x13":"-a x13"},
+                {"blakecoin":"-a blakecoin"}
               ]
 
 }
