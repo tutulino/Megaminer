@@ -32,10 +32,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         }
         catch
         {
-            return
+            EXIT
         }
 
-        if(-not $HR_Request){return}
 
 
         $HR_Request | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name | ForEach-Object {

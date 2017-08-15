@@ -34,7 +34,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     EXIT
                 }
 
-        $Locations = "US"
+        
 
         $Yiimp_Request | Get-Member -MemberType properties| ForEach-Object {
 
@@ -65,7 +65,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Port          = $coin.port
                                 User          = $CoinsWallets.get_item($Yiimp_Simbol)
                                 Pass          = "c=$Yiimp_symbol,ID=$WorkerName,stats"
-                                Location      = $Location
+                                Location      = 'US'
                                 SSL           = $false
                                 Symbol        = $Yiimp_Simbol
                                 AbbName       = $AbbName

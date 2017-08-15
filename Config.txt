@@ -12,7 +12,7 @@
 
 -- Time in seconds each restarting of algo, Benchmarks run at 200 seconds on automatic way, not need to change
 
-@@INTERVAL=600
+@@INTERVAL=60
 
 -- Only NVIDIA tested, AMD must work, but not tested (for mixed rig set AMD,NVIDIA)
 
@@ -20,7 +20,7 @@
 
 -- Location of your rig: EUROPE/US/ASIA (some pool may have no desired location, US will be selected then)
 
-@@LOCATION=US
+@@LOCATION=EUROPE
 
 -- Enabled or disabled call to apis (pools and traders) to help on manual coin selection, some pools has slow response and must delay show prompt to user
 
@@ -39,6 +39,7 @@
 @@WALLET_SIB=SgxUftvp7zm66yCoHiKzJCzvopzn7cUmhw
 @@WALLET_SIGT=BJupFgEmjzE3U6VvH3vmNSBL6AkdxQjoAn
 @@WALLET_VTC=VrBVPv2PKLv6RrgKnoh71SzdFjmX5Ly8Dq
+@@WALLET_XLR=sc51ZBVNJoaZ3gWNbN62QdYgmcFTVRVg4W
 @@WALLET_XVG=DMpSQmLpitKrdnaHomJSnMP3Q77ZJ9f2aF
 @@WALLET_ZEC=t1RbZBWXx6K9cbFogePSJPNg6Bjfryrdzpx
 @@WALLET_UBQ=0xcd11aa1fec676c0d17ce5d88d13fec2dcf0f0cfd
@@ -63,3 +64,5 @@
 @@WALLETDONATE_ORB=oewLAyLNSQR6uRu5WjY1cHSWnQ1oPLXsCs
 @@WALLETDONATE_GRS=FmjEgiAziz5L5a3674cWQRwj2eSCbSrMYn
 @@WALLETDONATE_UBQ=0xcd11aa1fec676c0d17ce5d88d13fec2dcf0f0cfd
+@@WALLETDONATE_XLR=sc51ZBVNJoaZ3gWNbN62QdYgmcFTVRVg4W
+

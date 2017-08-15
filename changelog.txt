@@ -86,7 +86,7 @@ THIS VERSION CHANGE ALL CONFIG FILES STRUCTURES (CONFIG,POOLS, MINERS, etc)
 
 ------------------------------------------------
 3.0
-*New "Virtual" Pool Whattomine, based in whattomine statistics, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. See supported coins on readme.md file
+*New "Virtual" Pool Whattomine, based in whattomine statistics, it uses MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. See supported coins on readme.md file
 *Now if miner screen is closed (manually or error) MM don´t need to wait interval defined time, in less than 15 sec it will detect error and continue execution
 *Benchmark auto-interval, MM automatic set interval to 200 seconds for benchmarks, other executions are based on config.txt defined interval
 *Added info on main screen of time left to next interval and local currency conversion, removed BTC/GH/day
@@ -111,4 +111,13 @@ THIS VERSION CHANGE CONFIG FILES STRUCTURES (CONFIG.txt and some POOLS)
 RECOMENDED CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 
 
+------------------------------------------------
+3.1
+*Added New Pool Nicehash for manual and auto mode
+*Added GatelessGate for AMD (thxs to Imaminer)
+*Removed some duplicated algos
+*Moved HMQ1725 from ccminer tpruvot to ccminer 2.2 (slower but a lot of reject less)
+*Fixed: Dual mining problems
+*Fixed: screen resize error
+*Fixed: benchmark not ending for AMD plattform
  

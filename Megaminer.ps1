@@ -174,7 +174,7 @@ if ($MiningMode -eq "manual"){
                                                 $counter++
                                                 $_.YourHashRate=(Get-Best-Hashrate-Algo $_.Algorithm).hashrate
 
-                                                if ($ManualMiningApiUse -eq $true -and $_.symbol -ne ""){
+                                                if ($ManualMiningApiUse -eq $true -and $_.symbol -ne "" -and $_symbol -ne $null){
 
                                                                 #Get data from bittrex global api call
                                                                 if ($BTXResponse -ne $null) {

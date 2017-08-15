@@ -12,15 +12,17 @@ BLOCKSFACTORY -- registration required, one registration for all pools, no autoe
 
 YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
 
+NICEHASH-- Anonymous, autoexchange to BTC
+
 WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to us
 
 
----- ALGOS/COINS SUPORTED -------------------------------
+---- ALGOS/COINS SUPORTED (NVIDIA) -------------------------------
 
-**MPH, YIIMP, ZPOOL and HASHREFINERY (must be suported by pool)
-   skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, MyriadGroestl, Lyra2RE2, 
-   Keccak, blake2s,x11evos,sia, vanilla, timetravel, tribus, Qubit, decred ,X11, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
-   cryptonight, Nist5
+**Mining Pool Hub, Yiimp, ZPOOL, Nicehash and Hashh Refinery (must be suported by pool)
+   skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, Myriad-Groestl, Lyra2v2, 
+   Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, Qubit ,X11, X13, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
+   cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r
 
 **SPRNOVA
    DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), ZCASH(ZEC),
@@ -34,11 +36,11 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and S
 **WHATTOMINE (virtual)
    DECRED(DCR),  HUSH(HUSH), LBRY(LBRY), MONACOIN (MONA), ZCASH(ZEC), ZENCASH (ZEN), ZCOIN(XZC), ZCLASSIC(ZCL), VERTCOIN (VTC)
    KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB),SIBCOIN (SIB),UBIQ (UBQ), EXPANSE (EXP), ETHEREUM CLASSIC (ETC), MYRIAD-GROESTL (XMY), MUSICOIN (MUSIC),
-   ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LIBRARY(ETH+LBRY)
+   ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LBRY(ETH+LBRY)
+
 
 **CROSSED BETWEEN POOLS
-   ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LIBRARY(ETH+LBRY),ETHEREUM+PASCAL(ETH+PSC),ETHEREUM+SIA(ETH+SC),
-
+    ETHEREUM+DECRED, ETHEREUM+LBRY, ETHEREUM+PASCAL, ETHEREUM+SIACOIN
 
 
 
@@ -65,7 +67,7 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -On fail no wait for interval ends, instant relaunch.
 
--Auto Inteval time for benchmarks, no need to change interval more.
+-Auto Interval time for benchmarks, no need to change interval more.
 
 -Local currency info on main screen
 

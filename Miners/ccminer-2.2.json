@@ -9,6 +9,7 @@
 "Dualmining":false,
 "Algorithms": [
                 {"bitcore":"-a bitcore"},
+                {"hmq1725":"-a hmq1725"},
                 {"cryptonight":"-a cryptonight"}
               ]
 

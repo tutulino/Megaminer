@@ -12,14 +12,13 @@
                 {"blakecoin":"-a blakecoin"},
                 {"Blake14r":"-a decred"},
                 {"Tribus":"-a tribus"},
-                {"hmq1725":"-a hmq1725"},
                 {"lyra2z" : "-a lyra2z" },
                 {"Skunk" : "-a skunk" },
                 {"Keccak":"-a keccak"},
                 {"Neoscrypt":"-a Neoscrypt"},
-                {"timetravel":"-a bitcore"},                
                 {"X15":"-a X15"},
                 {"whirpool":"-a whirl"}
+
               ]
 
 }

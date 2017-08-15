@@ -602,7 +602,7 @@ function Get-Pools {
                                                 if (($pool.location -eq 'EUROPE') -and ($location -eq 'US')) {$Pool.LocationPriority=2}
                                                 if ($pool.location -eq 'US' -and $location -eq 'EUROPE') {$Pool.LocationPriority=2}
                                                 if ($pool.location -eq 'US' -and $location -eq 'EU') {$Pool.LocationPriority=2}
-                                                if ($Pool.Info -eq $null) {$Pool.info='?'}
+                                                if ($Pool.Info -eq $null) {$Pool.info=''}
                                                 $AllPools2+=$Pool
                                                 }
                                         
@@ -730,11 +730,15 @@ function get-algo-unified-name ([string]$Algo) {
             "Blake (14r)" {$Result="Blake14r"} 
             "Blake (2b)" {$Result="Blake2b"} 
             "decred" {$Result="Blake14r"}
+            "Lyra2re" {$Result="lyra2v2"}
             "Lyra2RE2" {$Result="lyra2v2"}
             "Lyra2REv2" {$Result="lyra2v2"}
             "sia" {$Result="Blake2b"}
             "myr-gr" {$Result="Myriad-Groestl"}
             "myriadgroestl" {$Result="Myriad-Groestl"}
+            "daggerhashimoto" {$Result="Ethash"}
+            "dagger" {$Result="Ethash"}
+            "hashimoto" {$Result="Ethash"}
             }        
      $Result       
 

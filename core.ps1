@@ -28,7 +28,7 @@ param(
 #$MiningMode='Manual'
 
 #$PoolsName='whattomine_virtual'
-#$PoolsName='hash_refinery'
+#$PoolsName='nicehash'
 #$PoolsName='yiimp'
 #$PoolsName=('hash_refinery','yiimp')
 #$PoolsName='mining_pool_hub'
@@ -187,9 +187,9 @@ while ($true) {
 
                             #Only want algos pools has  
 
-                                $Pools | ForEach-Object {
+                                $Pools | where-object Algorithm -eq $AlgoName | ForEach-Object {
                                     
-                                        if (($_.Algorithm -eq $AlgoName)  -and ((($Pools | Where-Object Algorithm -eq $AlgoNameDual) -ne  $null) -or ($Miner.Dualmining -eq $false))){
+                                        if ((($Pools | Where-Object Algorithm -eq $AlgoNameDual) -ne  $null) -or ($Miner.Dualmining -eq $false)){
 
                                            if ($_.info -eq $Miner.DualMiningMainCoin -or $Miner.Dualmining -eq $false) {  #not allow dualmining if main coin not coincide
                                            
@@ -247,7 +247,7 @@ while ($true) {
                                                                 }
                             
                                             }                       
-                                         }            
+                                         }   #         
      
                             }            
                         }
@@ -272,12 +272,20 @@ while ($true) {
     #Update the active miners list which is alive for  all execution time
     $ActiveMiners | ForEach-Object {
                     #Search miner to update data
-                    $Miner = $miners | Where-Object Name -eq $_.Name | Where-Object Coin -eq $_.Coin | Where-Object Algorithm -eq $_.Algorithm | Where-Object PoolAbbName -eq $_.PoolAbbName | Where-Object Port -eq $_.Port
-                                
+                
+                     $Miner = $miners | Where-Object Name -eq $_.Name | 
+                            Where-Object Coin -eq $_.Coin | 
+                            Where-Object Algorithm -eq $_.Algorithm | 
+                            Where-Object CoinDual -eq $_.CoinDual | 
+                            Where-Object AlgorithmDual -eq $_.AlgorithmDual | 
+                            Where-Object PoolAbbName -eq $_.PoolAbbName 
+
                     $_.Best = $false
                     $_.NeedBenchmark = $false
                     #Mark as cancelled if more than 3 fails and running less than 180 secs, if no other alternative option, try forerever
-                    if (($_.FailedTimes -gt 3) -and ($_.ActiveTime.Toseconds() -lt 180) -and (($ActiveMiners | Measure-Object).count -gt 1)){
+
+                    $TimeActive=($_.ActiveTime.Hours*3600)+($_.ActiveTime.Minutes*60)+$_.ActiveTime.Seconds
+                    if (($_.FailedTimes -gt 3) -and ($TimeActive -lt 180) -and (($ActiveMiners | Measure-Object).count -gt 1)){
                             $_.IsValid=$False 
                             $_.Status='Cancelled'
                         }
@@ -304,7 +312,13 @@ while ($true) {
     ##Add new miners to list
     $Miners | ForEach-Object {
                 
-                    $ActiveMiner = $ActiveMiners | Where-Object Name -eq $_.Name | Where-Object Coin -eq $_.Coin | Where-Object Algorithm -eq $_.Algorithm | Where-Object PoolAbbName -eq $_.PoolAbbName | Where-Object Port -eq $_.Port
+                    $ActiveMiner = $ActiveMiners | Where-Object Name -eq $_.Name | 
+                            Where-Object Coin -eq $_.Coin | 
+                            Where-Object Algorithm -eq $_.Algorithm | 
+                            Where-Object CoinDual -eq $_.CoinDual | 
+                            Where-Object AlgorithmDual -eq $_.AlgorithmDual | 
+                            Where-Object PoolAbbName -eq $_.PoolAbbName 
+
                 
                     if ($ActiveMiner -eq $null) {
                         $ActiveMiners += [PSCustomObject]@{
@@ -312,8 +326,8 @@ while ($true) {
                             Algorithm            = $_.Algorithm
                             AlgorithmDual        = $_.AlgorithmDual
                             Name                 = $_.Name
-                            Coin                 = if ($_.Coin -eq '?') {''} else {$_.coin}
-                            CoinDual             = if ($_.CoinDual -eq '?') {''} else {$_.CoinDual}
+                            Coin                 = $_.coin
+                            CoinDual             = $_.CoinDual
                             Path                 = Convert-Path $_.Path
                             Arguments            = $_.Arguments
                             Wrap                 = $_.Wrap
@@ -366,7 +380,7 @@ while ($true) {
 
 
     #Stop miners running if they arent best now
-    $ActiveMiners | Where-Object ActivatedTimes -GT 0 | Where-Object Best -EQ $false | ForEach-Object {
+    $ActiveMiners | Where-Object ActivatedTimes -GT 0 | Where-Object Best -EQ $false | Where-Object IsValid | ForEach-Object {
         if ($_.Process -eq $null) {
             $_.Status = "Failed"
         }
@@ -492,6 +506,8 @@ while ($true) {
                                                         $_.FailedTimes++
                                                         $ExitLoop = $true
                                                         }
+                                            else
+                                               { $ExitLoop = $true}         
                                             }
 
                                     else {
@@ -542,9 +558,10 @@ while ($true) {
                     $Xsize=[ref]0
                     $Ysize=[ref]0
                     Get-ConsolePosition ([ref]$Xsize) ([ref]$Ysize)     
-                    if ($Ysize -gt 75) {$Ysize=75}
-                    set-WindowSize 0 ($Ysize+5)     
-                    Set-ConsolePosition 0 0
+
+                    if ($Ysize -gt ((get-host).UI.RawUI.MaxWindowSize.Height)-5) {$Ysize=(get-host).UI.RawUI.MaxWindowSize.Height-5}
+                    set-WindowSize 0 ($Ysize)     
+                    #Set-ConsolePosition 0 0
                  
                     $FirstLoopExecution=$False
                     
