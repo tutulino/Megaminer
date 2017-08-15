@@ -8,7 +8,8 @@
         [DateTime]$Date = (Get-Date)
     )
 
-    $Path = "Stats\$Name.txt"
+
+    $Path = "$PSScriptRoot\Stats\$Name.txt"
     $Date = $Date.ToUniversalTime()
     $SmallestValue = 1E-20
 
@@ -105,8 +106,11 @@ function Get-Stat {
         [String]$Name
     )
     
-    if (-not (Test-Path "Stats")) {New-Item "Stats" -ItemType "directory"}
-    Get-ChildItem "Stats" | Where-Object Extension -NE ".ps1" | Where-Object BaseName -eq $Name | Get-Content | ConvertFrom-Json
+        
+    $Path = "$PSScriptRoot\Stats\"
+
+    if (-not (Test-Path $Path)) {New-Item $Path -ItemType "directory"}
+    Get-ChildItem $Path | Where-Object Extension -NE ".ps1" | Where-Object BaseName -eq $Name | Get-Content | ConvertFrom-Json
 }
 
 
@@ -402,16 +406,22 @@ function Get-HashRate {
     }
 }
 
-filter ConvertTo-Hash { 
-    $Hash = $_
-    switch ([math]::truncate([math]::log($Hash, [Math]::Pow(1000, 1)))) {
-        0 {"{0:n2}  H" -f ($Hash / [Math]::Pow(1000, 0))}
-        1 {"{0:n2} KH" -f ($Hash / [Math]::Pow(1000, 1))}
-        2 {"{0:n2} MH" -f ($Hash / [Math]::Pow(1000, 2))}
-        3 {"{0:n2} GH" -f ($Hash / [Math]::Pow(1000, 3))}
-        4 {"{0:n2} TH" -f ($Hash / [Math]::Pow(1000, 4))}
-        Default {"{0:n2} PH" -f ($Hash / [Math]::Pow(1000, 5))}
-    }
+function ConvertTo-Hash { 
+    param(
+        [Parameter(Mandatory = $true)]
+        [double]$Hash
+         )
+
+    
+    $Return=switch ([math]::truncate([math]::log($Hash, [Math]::Pow(1000, 1)))) {
+                0 {"{0:n2}  H" -f ($Hash / [Math]::Pow(1000, 0))}
+                1 {"{0:n2} KH" -f ($Hash / [Math]::Pow(1000, 1))}
+                2 {"{0:n2} MH" -f ($Hash / [Math]::Pow(1000, 2))}
+                3 {"{0:n2} GH" -f ($Hash / [Math]::Pow(1000, 3))}
+                4 {"{0:n2} TH" -f ($Hash / [Math]::Pow(1000, 4))}
+                Default {"{0:n2} PH" -f ($Hash / [Math]::Pow(1000, 5))}
+        }
+    $Return
 }
 
 function Get-Combination {
@@ -517,24 +527,10 @@ function Expand-WebRequest {
     }
 }
 
-function Get-Algorithm {
-    param(
-        [Parameter(Mandatory = $true)]
-        [String]$Algorithm
-    )
-    
-    $Algorithms = Get-Content "Algorithms.txt" | ConvertFrom-Json
-
-    $Algorithm = (Get-Culture).TextInfo.ToTitleCase(($Algorithm -replace "-", " " -replace "_", " ")) -replace " "
-
-    if ($Algorithms.$Algorithm) {$Algorithms.$Algorithm}
-    else {$Algorithm}
-}
-
 
 function Get-Pools {
     param(
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $true)]
         [String]$Querymode = 'core', 
         [Parameter(Mandatory = $false)]
         [array]$PoolsFilterList=$null,
@@ -551,7 +547,7 @@ function Get-Pools {
         #in detail mode returns a line for each pool/algo/coin combination, in info mode returns a line for pool
 
 
-            $PoolsFolderContent= Get-ChildItem "Pools" | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure).Count -gt 0}
+            $PoolsFolderContent= Get-ChildItem ($PSScriptRoot+'\pools') | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure).Count -gt 0}
 
             $ChildItems = $PoolsFolderContent | ForEach-Object {
                 $Name = $_.BaseName
@@ -562,20 +558,20 @@ function Get-Pools {
             
 
             $ChildItems | ForEach-Object {
-                $Item = $_.content
-                $ItemKeys = $Item.PSObject.Properties.Name.Clone()
-                
+                            $Item = $_.content
+                            $ItemKeys = $Item.PSObject.Properties.Name.Clone()
+                            
 
-                $ItemKeys | ForEach-Object {
-                    if ($Item.$_ -is [String]) {
-                        $Item.$_ = Invoke-Expression "`"$($Item.$_)`""
-                    }
-                    elseif ($Item.$_ -is [PSCustomObject]) {
-                        $Property = $Item.$_
-                        $PropertyKeys = $Property.PSObject.Properties.Name
-                        $PropertyKeys | ForEach-Object {
-                            if ($Property.$_ -is [String]) {
-                                $Property.$_ = Invoke-Expression "`"$($Property.$_)`""
+                            $ItemKeys | ForEach-Object {
+                                if ($Item.$_ -is [String]) {
+                                    $Item.$_ = Invoke-Expression "`"$($Item.$_)`""
+                                }
+                                elseif ($Item.$_ -is [PSCustomObject]) {
+                                    $Property = $Item.$_
+                                    $PropertyKeys = $Property.PSObject.Properties.Name
+                                    $PropertyKeys | ForEach-Object {
+                                        if ($Property.$_ -is [String]) {
+                                            $Property.$_ = Invoke-Expression "`"$($Property.$_)`""
                                 }
                             }
                         }
@@ -606,6 +602,7 @@ function Get-Pools {
                                                 if (($pool.location -eq 'EUROPE') -and ($location -eq 'US')) {$Pool.LocationPriority=2}
                                                 if ($pool.location -eq 'US' -and $location -eq 'EUROPE') {$Pool.LocationPriority=2}
                                                 if ($pool.location -eq 'US' -and $location -eq 'EU') {$Pool.LocationPriority=2}
+                                                if ($Pool.Info -eq $null) {$Pool.info='?'}
                                                 $AllPools2+=$Pool
                                                 }
                                         
@@ -614,10 +611,15 @@ function Get-Pools {
                         
                         }
                         #Insert by priority of location
-                        $Return=@()
-                        $AllPools2 | Sort-Object Info,Algorithm,LocationPriority | ForEach-Object {
-                            $Ex = $Return | Where-Object Info -eq $_.Info | Where-Object Algorithm -eq $_.Algorithm
-                            if ($Ex.count -eq 0) {$Return += $_}
+                        if ($Location -ne "") {
+                                $Return=@()
+                                $AllPools2 | Sort-Object Info,Algorithm,LocationPriority | ForEach-Object {
+                                    $Ex = $Return | Where-Object Info -eq $_.Info | Where-Object Algorithm -eq $_.Algorithm
+                                    if ($Ex.count -eq 0) {$Return += $_}
+                                    }
+                            }
+                        else {
+                             $Return=$AllPools2
                             }
                 }
             else 
@@ -644,7 +646,8 @@ function Get-Best-Hashrate-Algo {
     $Pattern="*_"+$Algo+"_HashRate.txt"
 
     $Besthashrate=0
-    Get-ChildItem "Stats"  | Where-Object pschildname -like $Pattern | foreach {
+
+    Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -like $Pattern | foreach {
               $Content= $_ | Get-Content | ConvertFrom-Json
               if ($Content.week -gt $Besthashrate) {
                       $Besthashrate=$Content.week
@@ -676,7 +679,81 @@ function Get-Algo-Divisor {
                         "blake2s"{$Divisor *= 1000}
                         "blakecoin"{$Divisor *= 1000}
                         "decred"{$Divisor *= 1000}
+                        "blake14r"{$Divisor *= 1000}
                     }
 
     $Divisor
      }
+
+
+
+function set-ConsolePosition ([int]$x,[int]$y) { 
+        # Get current cursor position and store away 
+        $position=$host.ui.rawui.cursorposition 
+        # Store new X Co-ordinate away 
+        $position.x=$x
+        $position.y=$y
+        # Place modified location back to $HOST 
+        $host.ui.rawui.cursorposition=$position 
+        }
+
+
+function Get-ConsolePosition ([ref]$x,[ref]$y) { 
+
+    $position=$host.ui.rawui.cursorposition 
+    $x.value=$position.x
+    $y.value=$position.y
+
+    #write-host $position $x.value $y.value
+
+}
+        
+
+   
+
+function set-WindowSize ([int]$Width,[int]$Height) { 
+    #zero not change this axis
+    $pshost = Get-Host
+    $psWindow = $pshost.UI.RawUI
+    $newSize = $psWindow.WindowSize
+    if ($Width -ne 0) {$newSize.Width =$Width}
+    if ($Height -ne 0) {$newSize.Height =$Height}
+    $psWindow.WindowSize= $newSize
+}
+
+
+function get-algo-unified-name ([string]$Algo) {
+
+    $Result=$Algo
+    switch ($Algo){
+            "sib" {$Result="x11gost"}
+            "Blake (14r)" {$Result="Blake14r"} 
+            "Blake (2b)" {$Result="Blake2b"} 
+            "decred" {$Result="Blake14r"}
+            "Lyra2RE2" {$Result="lyra2v2"}
+            "Lyra2REv2" {$Result="lyra2v2"}
+            "sia" {$Result="Blake2b"}
+            "myr-gr" {$Result="Myriad-Groestl"}
+            "myriadgroestl" {$Result="Myriad-Groestl"}
+            }        
+     $Result       
+
+}
+
+ 
+                    
+function get-coin-unified-name ([string]$Coin) {
+
+    $Result = $Coin
+    switch –wildcard  ($Coin){
+            "Myriadcoin-*" {$Result="Myriad"}
+            "Myriad-*" {$Result="Myriad"}
+            "Dgb-*" {$Result="Digibyte"}
+            "Digibyte-*" {$Result="Digibyte"}
+            "Verge-*" {$Result="Verge"}
+            "EthereumClassic" {$Result="Ethereum-Classic"}
+            }      
+          
+     $Result       
+
+}

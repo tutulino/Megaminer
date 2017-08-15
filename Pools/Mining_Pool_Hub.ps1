@@ -1,12 +1,12 @@
 ﻿param(
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $true)]
     [String]$Querymode = $null #Info/detail"
     )
 
 #. .\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
-$ActiveOnManualMode    = $false
+$ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $true
 
 
@@ -21,6 +21,8 @@ if ($Querymode -eq "info"){
 
 
 
+    
+
 
     
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
@@ -34,16 +36,20 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     EXIT
             }
             
-            if (-not $MiningPoolHub_Request.success) {return}
+            if (-not $MiningPoolHub_Request.success) { WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'; EXIT}
 
 
             $Locations = "Europe", "US", "Asia"
 
             $MiningPoolHub_Request.return | ForEach-Object {
+
+                $MiningPoolHub_Algorithm= get-algo-unified-name $_.algo
+                $MiningPoolHub_Coin =  get-coin-unified-name $_.coin_name
+
+
                 $MiningPoolHub_Hosts = $_.host_list.split(";")
                 $MiningPoolHub_Port = $_.port
-                $MiningPoolHub_Algorithm = Get-Algorithm $_.algo
-                $MiningPoolHub_Coin = (Get-Culture).TextInfo.ToTitleCase(($_.coin_name -replace "-", " " -replace "_", " ")) -replace " "
+                
                 
 
                 $Divisor = 1000000000

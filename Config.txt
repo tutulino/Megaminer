@@ -2,22 +2,17 @@
 
 @@WORKERNAME=HAB
 
---Currency you will be pay, only for pools with autoexchange, must be a coin pool have, only affect to zpool and hashrefinery, on MPH you must use web interface to set coin.
+--Prefered Currency you will be pay, only for anonymous pools with autoexchange (Zpool, HR...), must set wallet for this currency on "Wallets Section"
 
 @@CURRENCY=BTC
-
---Wallet for anonymous autoexchange pools like Zpool or Hash Refinery
-
-@@WALLET=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 --Pool username for not anonymous pools like SprNova, BlocksFactory or MiningPoolHub
 
 @@USERNAME=tutulino
 
--- Time in seconds each restarting of algo, let it at 200 second for testing, after that is recommended bigger value. 
+-- Time in seconds each restarting of algo, Benchmarks run at 200 seconds on automatic way, not need to change
 
-@@INTERVAL=150
-
+@@INTERVAL=600
 
 -- Only NVIDIA tested, AMD must work, but not tested (for mixed rig set AMD,NVIDIA)
 
@@ -25,25 +20,30 @@
 
 -- Location of your rig: EUROPE/US/ASIA (some pool may have no desired location, US will be selected then)
 
-@@LOCATION=USA
+@@LOCATION=US
 
 -- Enabled or disabled call to apis (pools and traders) to help on manual coin selection, some pools has slow response and must delay show prompt to user
 
 @@MANUALMININGAPIUSE=TRUE
 
+-- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining
 
--- INDIVIDUAL COIN WALLETS, will be used if pool need as login a wallet of same coin you are mining (ex.Yiimp)
-
-@@WALLET_DNR=DMBdpDVrtj6DBEcE6t9wRbujw7NM7ziLYp
-@@WALLET_DCR=DshK6VgbzwJjaAXmvrmMEYq3bqZJLrQbwzS
+@@WALLET_BTC=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 @@WALLET_BTX=1EqS1VZ1A5qZF6x72DRgLs4oULLsMcVDJd
-@@WALLET_SIGT=BJupFgEmjzE3U6VvH3vmNSBL6AkdxQjoAn
-@@WALLET_XVG=DMpSQmLpitKrdnaHomJSnMP3Q77ZJ9f2aF
-@@WALLET_SIB=SgxUftvp7zm66yCoHiKzJCzvopzn7cUmhw
+@@WALLET_DCR=DshK6VgbzwJjaAXmvrmMEYq3bqZJLrQbwzS
+@@WALLET_DNR=DMBdpDVrtj6DBEcE6t9wRbujw7NM7ziLYp
 @@WALLET_EXP=0x678167c192c6b40d913a2ffcc92887575db56d56
+@@WALLET_FTC=6oVvPeadc99vchwaL9jThPyvDCQointDdQ
+@@WALLET_GRS=FmjEgiAziz5L5a3674cWQRwj2eSCbSrMYn
+@@WALLET_ORB=oewLAyLNSQR6uRu5WjY1cHSWnQ1oPLXsCs
+@@WALLET_SIB=SgxUftvp7zm66yCoHiKzJCzvopzn7cUmhw
+@@WALLET_SIGT=BJupFgEmjzE3U6VvH3vmNSBL6AkdxQjoAn
+@@WALLET_VTC=VrBVPv2PKLv6RrgKnoh71SzdFjmX5Ly8Dq
+@@WALLET_XVG=DMpSQmLpitKrdnaHomJSnMP3Q77ZJ9f2aF
 @@WALLET_ZEC=t1RbZBWXx6K9cbFogePSJPNg6Bjfryrdzpx
+@@WALLET_UBQ=0xcd11aa1fec676c0d17ce5d88d13fec2dcf0f0cfd
 
--- Number of minutes for each days (NOT PERCENT) of donation, only on MPH,HASH and ZPOOL
+-- Number of minutes each day (NOT PERCENT) of donation
 
 @@DONATE=5
 
@@ -58,5 +58,8 @@
 @@WALLETDONATE_SIB=SgxUftvp7zm66yCoHiKzJCzvopzn7cUmhw
 @@WALLETDONATE_EXP=0x678167c192c6b40d913a2ffcc92887575db56d56
 @@WALLETDONATE_ZEC=t1RbZBWXx6K9cbFogePSJPNg6Bjfryrdzpx
-
-
+@@WALLETDONATE_FTC=6oVvPeadc99vchwaL9jThPyvDCQointDdQ
+@@WALLETDONATE_VTC=VrBVPv2PKLv6RrgKnoh71SzdFjmX5Ly8Dq
+@@WALLETDONATE_ORB=oewLAyLNSQR6uRu5WjY1cHSWnQ1oPLXsCs
+@@WALLETDONATE_GRS=FmjEgiAziz5L5a3674cWQRwj2eSCbSrMYn
+@@WALLETDONATE_UBQ=0xcd11aa1fec676c0d17ce5d88d13fec2dcf0f0cfd

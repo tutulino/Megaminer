@@ -157,11 +157,11 @@ if ($MiningMode -eq "manual"){
                     if ($ManualMiningApiUse -eq $true){
                                         try {
                                                 write-host CALLING WHATTOMINE API.........    
-                                                $WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing  | ConvertFrom-Json | Select-Object -ExpandProperty coins
+                                                $WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing -TimeoutSec 3 | ConvertFrom-Json | Select-Object -ExpandProperty coins
                                                 write-host CALLING BITTREX API............
                                                 $BTXResponse = (Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -TimeoutSec 5| ConvertFrom-Json|Select-Object -ExpandProperty result)  
                                                 write-host CALLING COINDESK API............
-                                                $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing  | ConvertFrom-Json | Select-Object -ExpandProperty BPI
+                                                $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing -TimeoutSec 3 | ConvertFrom-Json | Select-Object -ExpandProperty BPI
                                             } catch{}
                                 } 
 
@@ -174,7 +174,7 @@ if ($MiningMode -eq "manual"){
                                                 $counter++
                                                 $_.YourHashRate=(Get-Best-Hashrate-Algo $_.Algorithm).hashrate
 
-                                                if ($ManualMiningApiUse -eq $true){
+                                                if ($ManualMiningApiUse -eq $true -and $_.symbol -ne ""){
 
                                                                 #Get data from bittrex global api call
                                                                 if ($BTXResponse -ne $null) {
@@ -225,7 +225,7 @@ if ($MiningMode -eq "manual"){
 
                                                                                     if ($WTMFactor -ne $null) {
                                                                                                     $_.Reward=[double]([double]$WtmCoin.estimated_rewards * ([double]$_.YourHashRate/[double]$WTMFactor))
-                                                                                                    $_.BtcProfit= $_.Reward*$_.BTCPrice
+                                                                                                    $_.BtcProfit=[double]([double]$WtmCoin.Btc_revenue * ([double]$_.YourHashRate/[double]$WTMFactor))
                                                                                                     }
 
                                                                                     }
@@ -269,7 +269,7 @@ if ($MiningMode -eq "manual"){
                                 @{Label = "Algorithm"; Expression = {$_.algorithm.tolower()}; Align = 'left'},
                                 @{Label = "Workers"; Expression = {$_.Workers}; Align = 'right'},   
                                 #@{Label = "PoolHash"; Expression = {"$($_.PoolHashRate | ConvertTo-Hash)/s"}; Align = 'right'},   
-                                @{Label = "HashRate"; Expression = {"$($_.YourHashRate | ConvertTo-Hash)/s"}; Align = 'right'},   
+                                @{Label = "HashRate"; Expression = {(ConvertTo-Hash ($_.YourHashRate))+"/s"}; Align = 'right'},   
                                 #@{Label = "Blocks_24h"; Expression = {$_.Blocks_24h}; Align = 'right'},
                                 @{Label = "BTCPrice"; Expression = {[math]::Round($_.BTCPrice,6)}; Align = 'right'},
                                 @{Label = $LabelPrice; Expression = { if ($Location -eq 'Europe') {[string][math]::Round($_.EurProfit,2)} else {[math]::Round($_.DollarProfit,2)}}; Align = 'right'},

@@ -1,19 +1,25 @@
 {
-"Path" : ".\\Bin\\NVIDIA-TPruvot\\ccminer-x64.exe",
-"Uri" : "https://github.com/tpruvot/ccminer/releases/download/v2.0-tpruvot/ccminer-2.0-release-x64-cuda-8.0.7z",
+"Path" : ".\\Bin\\NVIDIA-TPruvot\\ccminer.exe",
+"Uri" : "https://github.com/tpruvot/ccminer/releases/download/v2.2-tpruvot/ccminer-x86-2.2.7z",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4",
 "API" : "Ccminer",
 "APIPort" : 4068,
 "Wrap" : false,
 "Dualmining":false,
 "Algorithms": [
                 {"jha":"-a jha"},
-                {"scrypt":"-a scrypt"},
                 {"blakecoin":"-a blakecoin"},
-                {"decred":"-a decred"},
+                {"Blake14r":"-a decred"},
+                {"Tribus":"-a tribus"},
                 {"hmq1725":"-a hmq1725"},
-                {"X15":"-a X15"}
+                {"lyra2z" : "-a lyra2z" },
+                {"Skunk" : "-a skunk" },
+                {"Keccak":"-a keccak"},
+                {"Neoscrypt":"-a Neoscrypt"},
+                {"timetravel":"-a bitcore"},                
+                {"X15":"-a X15"},
+                {"whirpool":"-a whirl"}
               ]
 
 }

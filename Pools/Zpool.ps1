@@ -1,5 +1,5 @@
 ﻿param(
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $true)]
     [String]$Querymode = $null #Info/detail"
     )
 
@@ -8,77 +8,70 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $false
 $ActiveOnAutomaticMode = $true
-
-
+$AbbName ='ZPOOL'
 
 if ($Querymode -eq "info"){
         [PSCustomObject]@{
                     Disclaimer = "Autoexchange to config.txt wallet, no registration required"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
+                    AbbName=$AbbName
                          }
     }
-
-
 
 
     
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
-             
-
-                try {
-                    $Zpool_Request = Invoke-WebRequest "http://www.zpool.ca/api/currencies" -UseBasicParsing | ConvertFrom-Json 
-                    #$Zpool_Request = Invoke-WebRequest "http://www.zpool.ca/api/status" -UseBasicParsing | ConvertFrom-Json 
-                    #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
-                }
-                catch {
-                    WRITE-HOST 'ZPOOL API NOT RESPONDING...ABORTING'
-                    EXIT
-                }
-
-
-                $Locations = "US"
+                $retries=1
+                do {
+                        try {
+                            $Zpool_Request = Invoke-WebRequest "http://www.zpool.ca/api/status" -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+                            #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
+                        }
+                        catch {}
+                        $retries++
+                    } while ($Zpool_Request -eq $null -and $retries -le 3)
+                
+                if ($retries -gt 3) {
+                                    WRITE-HOST 'ZPOOL API NOT RESPONDING...ABORTING'
+                                    EXIT
+                                    }
+            
 
                 $Zpool_Request | Get-Member -MemberType properties| ForEach-Object {
-                    $coin=$Zpool_Request | select -ExpandProperty $_.name
-                    $Zpool_currency=$_.name
-                    $Zpool_Hosts = "mine.zpool.ca"
-                    $Zpool_Port = $coin.port
-                    $Zpool_Algorithm = $coin.algo
-                    $Zpool_Coin = $coin.name
-                
+                                
+                                $coin=$Zpool_Request | select -ExpandProperty $_.name
 
-                    $Divisor = Get-Algo-Divisor $Zpool_Algorithm
-                    
-                    
-                    if ((Get-Stat -Name "Zpool_$($Zpool_Coin)_Profit") -eq $null) {$Stat = Set-Stat -Name "Zpool_$($Zpool_Coin)_Profit" -Value ([Double]$coin.estimate / $Divisor * (1 - 0.05))}
-                    else {$Stat = Set-Stat -Name "$($Name)_$($Zpool_Coin)_Profit" -Value ([Double]$coin.estimate / $Divisor)}
+                                $Zpool_Algo =  get-algo-unified-name ($_.name)
 
-                    $Locations | ForEach-Object {
-                        $Location = $_
-                        if ($Zpool_Coin -ne 'hiro') { #This coin is returning bad data from api.
-                            [PSCustomObject]@{
-                                Algorithm     = $Zpool_Algorithm
-                                Info          = $Zpool_Coin
-                                Price         = $Stat.Live
-                                StablePrice   = $Stat.Week
-                                MarginOfError = $Stat.Week_Fluctuation
-                                Protocol      = "stratum+tcp"
-                                Host          = $Zpool_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
-                                Port          = $Zpool_Port
-                                User          = $wallet
-                                Pass          = "c=$Currency,$WorkerName,stats"
-                                Location      = $Location
-                                SSL           = $false
-                                Symbol        = $Zpool_currency
-                                AbbName       = "ZP"
-                                ActiveOnManualMode    = $ActiveOnManualMode
-                                ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                }
+                            
+                                $Divisor = (Get-Algo-Divisor $_.name) / 1000
+                                
+                                
+                                if ((Get-Stat -Name "Zpool_$($Zpool_Algo)_Profit") -eq $null) {$Stat = Set-Stat -Name "Zpool_$($Zpool_Algo)_Profit" -Value ([Double]$coin.estimate_current / $Divisor * (1 - 0.05))}
+                                else {$Stat = Set-Stat -Name "$($Name)_$($Zpool_Algo)_Profit" -Value ([Double]$coin.estimate_current / $Divisor)}
 
-                        }       
-                    }
-                }
-}
+                                
+                                        [PSCustomObject]@{
+                                            Algorithm     = $Zpool_Algo
+                                            Info          = $null
+                                            Price         = $Stat.Live
+                                            StablePrice   = $Stat.Week
+                                            MarginOfError = $Stat.Week_Fluctuation
+                                            Protocol      = "stratum+tcp"
+                                            Host          = "mine.zpool.ca"
+                                            Port          = $coin.port
+                                            User          = $CoinsWallets.get_item($Currency)
+                                            Pass          = "c=$Currency,$WorkerName,stats"
+                                            Location      = "US"
+                                            SSL           = $false
+                                            Symbol        = $null
+                                            AbbName       = $AbbName
+                                            ActiveOnManualMode    = $ActiveOnManualMode
+                                            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                                            PoolWorkers = $coin.workers
+                                            }
+                           }
+    }
 

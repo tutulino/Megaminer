@@ -1,92 +1,114 @@
 1.1 
-Initial version
+*Initial version
 ----------------------------------------------
 1.3 
-Fixed no relaunch on sprnova fail
+**Fixed no relaunch on sprnova fail
 ----------------------------------------------
 1.4
-removed ngsminer
-Upgrade to Claymore 9.8
-Added to spnova: ZCOIN (XZC), ZCLASSIC (ZCL), BITCOIN CASH, BITCOIN CASH (login not unified with other sprnova pool, requires registration again)
-Added new pool BlocksFactory, suported coins: DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
-Added option in config.txt to donate AARONSACE as creator of 90% source code.
+*removed ngsminer
+*Upgrade to Claymore 9.8
+*Added to spnova: ZCOIN (XZC), ZCLASSIC (ZCL), BITCOIN CASH, BITCOIN CASH (login not unified with other sprnova pool, requires registration again)
+*Added new pool BlocksFactory, suported coins: DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
+*Added option in config.txt to donate AARONSACE as creator of 90% source code.
 
 ----------------------------------------------
 1.5
-Added to spnova: Komodo(KMD), monero (XMR), CHAINCOIN (CHC), ETHEREUM+DECRED (ETH+DCR), ETHEREUM+LIBRARY (ETH+LBRY)
-Removed from spnova: Bitcoin Cash (BCC), reason not viable mine with GPU
-Fixed equihash not working on Miningpoolhub
+*Added to spnova: Komodo(KMD), monero (XMR), CHAINCOIN (CHC), ETHEREUM+DECRED (ETH+DCR), ETHEREUM+LIBRARY (ETH+LBRY)
+*Removed from spnova: Bitcoin Cash (BCC), reason not viable mine with GPU
+*Fixed equihash not working on Miningpoolhub
 
 ----------------------------------------------
 1.6
-Fixed Interval from config.txt has no effect on runtime.
-Changed core from Batch to Powershell (open new posibilities)
-Now you can add coins, pools and algo editing json files
-Unified all start batches without lost no user action boot (see examples.bat)
-Added to Suprnova: Bitcore(BTX)
-Added basic info from Whattomine, Bittrex and Cryptopia as help for manual coin selection on Suprnova.
-Changed from ccminerskunk to ccminerAlexis for skein algo. Ccminerskunk not working.
+*Fixed Interval from config.txt has no effect on runtime.
+*Changed core from Batch to Powershell (open new posibilities)
+*Now you can add coins, pools and algo editing json files
+*Unified all start batches without lost no user action boot (see examples.bat)
+*Added to Suprnova: Bitcore(BTX)
+*Added basic info from Whattomine, Bittrex and Cryptopia as help for manual coin selection on Suprnova.
+*Changed from ccminerskunk to ccminerAlexis for skein algo. Ccminerskunk not working.
 
 ----------------------------------------------
 1.7
-Added spreadminer for spreadcoin
-upgrade screen instructions of use for each pool
-Added to Suprnova: SPREADCOIN (SPR)
-Added Yiimp pool (requires individual wallet for each coin in config.txt): DENARIUS (DNR), DECRED (DCR), SIGNATUM (SIGT), BITCORE (BTX), VERGE (VRG), SIBCOIN (SIB), VERTCOIN(VRC) 
-Software donwload for first execution is now independent of selected pool
+*Added spreadminer for spreadcoin
+*upgrade screen instructions of use for each pool
+*Added to Suprnova: SPREADCOIN (SPR)
+*Added Yiimp pool (requires individual wallet for each coin in config.txt): DENARIUS (DNR), DECRED (DCR), SIGNATUM (SIGT), BITCORE (BTX), VERGE (VRG), SIBCOIN (SIB), *VERTCOIN(VRC) 
+*Software donwload for first execution is now independent of selected pool
 
-THIS VERSION REQUIRES NEW CONFIG.TXT FILE, YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
+*THIS VERSION REQUIRES NEW CONFIG.TXT FILE, YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
 
 ----------------------------------------------
 2.0
-Included Miners for AMD platform, I haven´t AMD card, not tested. ¡¡¡ AMD TESTERS NEEDED !!!
-Automatic dual mining between pools (ex. Eth on MPH and lbry on Zpool), choosing more profitable pool for each coin
-Yiimp now support automatic profit based coin change, this pool has autoexchange off, you must set individual coins wallet on config.txt to mine
-Manual mining now choose best benchmarked software for each algo.
-New Miners files format, no more ".ps1" files only ".json" files. Easier to configure.
-Changed default interval to 200 seconds for acurate benchmarks
-Automatic profit files deletion on start
-Pools Multiselection allowed on menus and autoexecution batchs
-Added API integration with Yiimp and suprnova for manual mining (optional on config.txt)
-Donation (optional) now applies on manual pools too
-Removed duplicities between config files (deleted coins.json and algorithms.json)
-Removed Whattomine info 
+*Included Miners for AMD platform, I haven´t AMD card, not tested. ¡¡¡ AMD TESTERS NEEDED !!!
+*Automatic dual mining between pools (ex. Eth on MPH and lbry on Zpool), choosing more profitable pool for each coin
+*Yiimp now support automatic profit based coin change, this pool has autoexchange off, you must set individual coins wallet on config.txt to mine
+*Manual mining now choose best benchmarked software for each algo.
+*New Miners files format, no more ".ps1" files only ".json" files. Easier to configure.
+*Changed default interval to 200 seconds for acurate benchmarks
+*Automatic profit files deletion on start
+*Pools Multiselection allowed on menus and autoexecution batchs
+*Added API integration with Yiimp and suprnova for manual mining (optional on config.txt)
+*Donation (optional) now applies on manual pools too
+*Removed duplicities between config files (deleted coins.json and algorithms.json)
+*Removed Whattomine info 
 *Removed CCMINER-Skunk
 *Added CCMINER-SkunkKrnlx
-Fixed: MPH always choose US Location.
+*Fixed: MPH always choose US Location.
 
 THIS VERSION CHANGE ALL CONFIG FILES STRUCTURES (CONFIG,POOLS, MINERS, etc)
 
 ----------------------------------------------
 2.0.2
-Fixed: Zpool login is wrong but no error received
-Fixed: MM download all software, not only type on config.txt
+*Fixed: Zpool login is wrong but no error received
+*Fixed: MM download all software, not only type on config.txt
 
 ----------------------------------------------
 2.0.3
-Fixed: Sometimes incorrect location choosed
+*Fixed: Sometimes incorrect location choosed
 
 ----------------------------------------------
 2.1
+*Added info from Whattomine (profit) in manual mode menus, only for Whattomine available coins....
+*Added Digibyte-groestl (DGB) to Suprnova
+*Best menu load speed in manual mode with api info enabled
+*Now miners with cero hashrate are shown on screen (it allows see bad benchmarks)
+*Mayor changes on sgminer miner file
+*Added stat option on password for allow statistics to Zpool,Yiimp and HR
+*All ccminer has now 10sec error retry time (30sec before)
+*Added ZecMiner for equihash on AMD platform
 
-Added info from Whattomine (profit) in manual mode menus, only for Whattomine available coins....
-Added Digibyte-groestl (DGB) to Suprnova
-Best menu load speed in manual mode with api info enabled
-Now miners with cero hashrate are shown on screen (it allows see bad benchmarks)
-Mayor changes on sgminer miner file
-Added stat option on password for allow statistics to Zpool,Yiimp and HR
-All ccminer has now 10sec error retry time (30sec before)
-Added ZecMiner for equihash on AMD platform
-
-Fixed: Deleted tribus algo from ccminer tpruvot miner file
-Fixed: Zpool API is returning bad data (too high profit) for X11 coin Hiro, this makes always select X11 algo
-Fixed: X17 Algo (Verge)  not working
-Fixed: decred on manual mode not working on Suprnova
-Fixed: Algorithm filter (parameter or via algorithm.txt) not working 
-
+*Fixed: Deleted tribus algo from ccminer tpruvot miner file
+*Fixed: Zpool API is returning bad data (too high profit) for X11 coin Hiro, this makes always select X11 algo
+*Fixed: X17 Algo (Verge)  not working
+*Fixed: decred on manual mode not working on Suprnova
+*Fixed: Algorithm filter (parameter or via algorithm.txt) not working 
 
 
+------------------------------------------------
+3.0
+*New "Virtual" Pool Whattomine, based in whattomine statistics, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. See supported coins on readme.md file
+*Now if miner screen is closed (manually or error) MM don´t need to wait interval defined time, in less than 15 sec it will detect error and continue execution
+*Benchmark auto-interval, MM automatic set interval to 200 seconds for benchmarks, other executions are based on config.txt defined interval
+*Added info on main screen of time left to next interval and local currency conversion, removed BTC/GH/day
+*New ccminer tpruvot 2.2 (added algos in which it is fastest)--> recomended delete al tpruvot files on stat folder if you are copying from old version
+*Removed ccminerpalginskunk, new tpruvot is faster on skunk algo
+*Removed ccminerdjm, yescript no profitable
+*All ccminer has now 4 retry times on fail
+*Now hashrate shown 95% of maximum speed miner has reached anytime (benchmarking or running)
+*Zpool will not show coin mined info, reason: not real info, pool choose a coin for each algo and not always is same as your hashrate more profitable
+*Removed sgminer-skein
+*Deleted skein algo for sgminer
+*Changed X13 algo from ccminer-2.2 to faster ccminer-alexis
+*Removed unused source code
+*Main screen autoresize
+*Due to technical problems removed dual mining from manual for suprnova (you can get same on new pool WTM filtering by parameter algorithm on core launch)
+*Added to sprnova manual: SIBCOIN (SIB), UBIQ (UBQ), EXPANSE (EXP)
+*Now is possible mine on manual mode on MPH
+*Fixed: HashRefinery not working on 2.1 release
 
+
+THIS VERSION CHANGE CONFIG FILES STRUCTURES (CONFIG.txt and some POOLS)
+RECOMENDED CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 
 
  

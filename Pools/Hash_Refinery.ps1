@@ -1,5 +1,5 @@
 ﻿param(
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $true)]
     [String]$Querymode = $null #Info/detail"
     )
 
@@ -8,6 +8,7 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $false
 $ActiveOnAutomaticMode = $true
+$AbbName= 'H.RFRY'
 
 
 
@@ -16,6 +17,7 @@ if ($Querymode -eq "info"){
                     Disclaimer = "Autoexchange to config.txt wallet, no registration required"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
+                    AbbName=$AbbName
                          }
     }
 
@@ -35,43 +37,35 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         if(-not $HR_Request){return}
 
-       
-        $Location = "US"
 
-        $HR_Request | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name | foreach {
-            $HR_Host = "$_.us.hashrefinery.com"
-            $HR_Port = $HR_Request.$_.port
-            $HR_Algorithm = Get-Algorithm $HR_Request.$_.name
-            $HR_Coin = "Unknown"
+        $HR_Request | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name | ForEach-Object {
 
+                        $Divisor = (Get-Algo-Divisor $_) / 1000
+                    
 
-
-            $Divisor = Get-Algo-Divisor $HR_Algorithm
-          
-
-            if((Get-Stat -Name "$($Name)_$($HR_Algorithm)_Profit") -eq $null){$Stat = Set-Stat -Name "$($Name)_$($HR_Algorithm)_Profit" -Value ([Double]$HR_Request.$_.estimate_last24h/$Divisor)}
-            else{$Stat = Set-Stat -Name "$($Name)_$($HR_Algorithm)_Profit" -Value ([Double]$HR_Request.$_.estimate_current/$Divisor)}
-            
-            if($Wallet)
-            {
-                [PSCustomObject]@{
-                    Algorithm = $HR_Algorithm
-                    Info = $HR
-                    Price = $Stat.Live
-                    StablePrice = $Stat.Week
-                    MarginOfError = $Stat.Fluctuation
-                    Protocol = "stratum+tcp"
-                    Host = $HR_Host
-                    Port = $HR_Port
-                    User = $Wallet
-                    Pass = "c=$Currency,$WorkerName,stats"
-                    Location = $Location
-                    SSL = $false
-                    AbbName       = "HF"
-                    ActiveOnManualMode    = $ActiveOnManualMode
-                    ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                        if((Get-Stat -Name "$($Name)_$($HR_Algorithm)_Profit") -eq $null){$Stat = Set-Stat -Name "$($Name)_$($HR_Algorithm)_Profit" -Value ([Double]$HR_Request.$_.estimate_last24h/$Divisor)}
+                        else{$Stat = Set-Stat -Name "$($Name)_$($HR_Algorithm)_Profit" -Value ([Double]$HR_Request.$_.estimate_current/$Divisor)}
+                        
+                
+                            [PSCustomObject]@{
+                                Algorithm =  get-algo-unified-name $_
+                                Info = $null
+                                Price = $Stat.Live
+                                StablePrice = $Stat.Week
+                                MarginOfError = $Stat.Fluctuation
+                                Protocol = "stratum+tcp"
+                                Host = $_+".us.hashrefinery.com"
+                                Port = $HR_Request.$_.port
+                                User = $CoinsWallets.get_item($Currency)
+                                Pass = "c=$Currency,$WorkerName,stats"
+                                Location = "US"
+                                SSL = $false
+                                AbbName = $AbbName
+                                ActiveOnManualMode    = $ActiveOnManualMode
+                                ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                                PoolWorkers = $HR_Request.$_.workers
                     
                 }
-            }
+            
         }
 }

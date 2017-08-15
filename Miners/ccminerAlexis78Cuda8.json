@@ -8,7 +8,9 @@
 "Wrap" : false,
 "Dualmining":false,
 "Algorithms": [
-                {"qubit" : "-a qubit"}
+                {"qubit" : "-a qubit"},
+                {"x11gost" : "-a sib"}
+
               ]
 
 }

@@ -7,9 +7,10 @@
 "APIPort" : 3333,
 "Wrap" : false,
 "DualMining": true,
+"DualMiningMainCoin": "Ethereum",
 "Algorithms": [
                 {"Ethash_Sia":" -dcoin sc"},
-                {"Ethash_Decred":" -dcoin dcr"},
+                {"Ethash_Blake14r":" -dcoin dcr"},
                 {"Ethash_Pascal":" -dcoin pasc"},
                 {"Ethash_Lbry":" -dcoin lbc"}
               ]

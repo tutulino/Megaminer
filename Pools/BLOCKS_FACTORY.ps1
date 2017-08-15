@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $true)]
     [String]$Querymode = $null #Info/detail"
     )
 
@@ -8,6 +8,7 @@ param(
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $false
+$AbbName='B.FTRY'
 
 if ($Querymode -eq "info"){
         [PSCustomObject]@{
@@ -15,6 +16,7 @@ if ($Querymode -eq "info"){
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
                     ApiData = $true
+                    AbbName=$AbbName
                           }
     }
 
@@ -63,7 +65,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     Location      = $_.Location
                                     SSL           = $false
                                     Symbol        = $_.symbol
-                                    AbbName       = "SPV"
+                                    AbbName       = $AbbName
                                     ActiveOnManualMode    = $ActiveOnManualMode
                                     ActiveOnAutomaticMode = $ActiveOnAutomaticMode
 
