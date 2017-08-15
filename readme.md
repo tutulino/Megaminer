@@ -1,32 +1,45 @@
-﻿
-I'm user of NemosMiner and Multipoolminer also I'm user of diferents pools, manteinance of diferent software updates are painfull,  I have merged this softwares and added some features. I hope you enjoy it.
+﻿---- POOLS SUPORTED ---------------------------------------
+
+ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
+
+HASHREFINERY -- Anonymous, autoexchange to selected coin in config.txt
+
+MININGPOOLHUB -- registration required, autoexchange to selected coin on pool´s web.
+
+SPRNOVA -- registration required, one registration for all pools except bitcoin cash, no autoexchange
+
+BLOCKSFACTORY -- registration required, one registration for all pools, no autoexchange
+
+YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
+
+WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to us
 
 
-Based 70% on aaronsace, 30% is mine (aprox.)
+---- ALGOS/COINS SUPORTED -------------------------------
 
-Donations to
+**MPH, YIIMP, ZPOOL and HASHREFINERY (must be suported by pool)
+   skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, MyriadGroestl, Lyra2RE2, 
+   Keccak, blake2s,x11evos,sia, vanilla, timetravel, tribus, Qubit, decred ,X11, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
+   cryptonight, Nist5
 
-Aaronsace - 1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH
+**SPRNOVA
+   DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), ZCASH(ZEC),
+   ZENCASH (ZEN), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB), SIBCOIN (SIB) ,UBIQ (UBQ), EXPANSE (EXP)
 
-Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TMN
+
+**BLOCKSFACTORY
+   DIGIBYTE-SKEIN(DGB), FEATHERCOIN(FTC), PHOENIXCOIN(PXC), ORBITCOIN(ORB), GUNCOIN(GUN)
 
 
+**WHATTOMINE (virtual)
+   DECRED(DCR),  HUSH(HUSH), LBRY(LBRY), MONACOIN (MONA), ZCASH(ZEC), ZENCASH (ZEN), ZCOIN(XZC), ZCLASSIC(ZCL), VERTCOIN (VTC)
+   KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB),SIBCOIN (SIB),UBIQ (UBQ), EXPANSE (EXP), ETHEREUM CLASSIC (ETC), MYRIAD-GROESTL (XMY), MUSICOIN (MUSIC),
+   ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LIBRARY(ETH+LBRY)
 
------ DISCLAIMER ---- ------------------------------------------
+**CROSSED BETWEEN POOLS
+   ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LIBRARY(ETH+LBRY),ETHEREUM+PASCAL(ETH+PSC),ETHEREUM+SIA(ETH+SC),
 
-Only tested on nvidia pascal (10X0) , sorry I haven't AMD card for testing purposes.
 
-Only for Windows (at this moment)
-
-Miners for AMD are included but not tested , ¡¡¡ AMD TESTERS NEEDED !!!
-
-Core for auto change pools is forked from AaronSace MultipoolMiner, you can read info at https://github.com/aaronsace/MultiPoolMiner
-
-Profit calculations are estimates based on info provided by Pools/Whattomine for your bechmarked hashrate extrapolated to 24h. No real profit warranty.
-
-Pools/Whattomine statistics are based on past (luck, difficulty, exchange-rate, pool hashrte, network hashrate, etc), it can be not very accurate.
-
-Local Currency exchange rate to BTC is taken from Coindesk, Local currency profit can vary from whattomine revenue (instant), BTC revenue must be exact.
 
 
 -------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -----------
@@ -81,45 +94,28 @@ If new verson haven´t miners update you can copy "bin" folder
 If there is a new version on some miner is recomended delete hasrate.txt files of that miner on miners folder to force benchmark again.
 
 
----- POOLS SUPORTED ---------------------------------------
 
-ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
+----- DISCLAIMER ---- ------------------------------------------
 
-HASHREFINERY -- Anonymous, autoexchange to selected coin in config.txt
+Only tested on nvidia pascal (10X0) , sorry I haven't AMD card for testing purposes.
 
-MININGPOOLHUB -- registration required, autoexchange to selected coin on pool´s web.
+Only for Windows (at this moment)
 
-SPRNOVA -- registration required, one registration for all pools except bitcoin cash, no autoexchange
+Miners for AMD are included but not tested , ¡¡¡ AMD TESTERS NEEDED !!!
 
-BLOCKSFACTORY -- registration required, one registration for all pools, no autoexchange
+Core for auto change pools is forked from AaronSace MultipoolMiner, you can read info at https://github.com/aaronsace/MultiPoolMiner
 
-YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
+Profit calculations are estimates based on info provided by Pools/Whattomine for your bechmarked hashrate extrapolated to 24h. No real profit warranty.
 
+Pools/Whattomine statistics are based on past (luck, difficulty, exchange-rate, pool hashrte, network hashrate, etc), it can be not very accurate.
 
----- ALGOS/COINS SUPORTED -------------------------------
-
-**MPH, YIIMP, ZPOOL and HASHREFINERY (must be suported by pool)
-	skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, MyriadGroestl, Lyra2RE2, 
-	Keccak, blake2s,x11evos,sia, vanilla, timetravel, tribus, Qubit, decred ,X11, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
-	cryptonight, Nist5
-
-**SPRNOVA
-	DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), ZCASH(ZEC),
-	ZENCASH (ZEN), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB), SIBCOIN (SIB) ,UBIQ (UBQ), EXPANSE (EXP)
+Local Currency exchange rate to BTC is taken from Coindesk, Local currency profit can vary from whattomine revenue (instant), BTC revenue must be exact.
 
 
-**BLOCKSFACTORY
-	DIGIBYTE-SKEIN(DGB), FEATHERCOIN(FTC), PHOENIXCOIN(PXC), ORBITCOIN(ORB), GUNCOIN(GUN)
+Based 70% on aaronsace, 30% is mine (aprox.) Donations to
 
-
-**WHATTOMINE (virtual)
-	DECRED(DCR),  HUSH(HUSH), LBRY(LBRY), MONACOIN (MONA), ZCASH(ZEC), ZENCASH (ZEN), ZCOIN(XZC), ZCLASSIC(ZCL), VERTCOIN (VTC)
-	KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB),SIBCOIN (SIB),UBIQ (UBQ), EXPANSE (EXP), ETHEREUM CLASSIC (ETC), MYRIAD-GROESTL (XMY), MUSICOIN (MUSIC),
-	ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LIBRARY(ETH+LBRY)
-
-**CROSSED BETWEEN POOLS
-	ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LIBRARY(ETH+LBRY),ETHEREUM+PASCAL(ETH+PSC),ETHEREUM+SIA(ETH+SC),
-
+*Aaronsace - 1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH
+*Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TMN
 
 
 
@@ -127,10 +123,7 @@ YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
 
 You can see .ps1 files, are source code, miners are downloaded from github, can see address on miners folder files (except no github available, included)
 
-Due to technical issues, two miners are included (claymore and ccminer-djm), is possible antivirus detect this miners as "suspect", you can delete this miners if you want and use yours, no more .exe inside.
-
-
-
+Due to technical issues claymore is included, is possible antivirus detect this miner as "suspect", you can delete this miner if you want and use yours, no more .exe inside.
 
 
 
