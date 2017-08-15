@@ -51,7 +51,7 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. 
 
--Can mine on any of this pools (or all at same time): Zpool, Whattomine (virtual) HashRefinery, MPH or Yiimp with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
+-Can mine on any of this pools (or all at same time): Nicehash, Zpool, Whattomine (virtual) HashRefinery, MPH or Yiimp with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
 
 -Can mine on Suprnova,YIIMP or BlocksFactory pool without autochange or profit calculation, manual coin selection
 
