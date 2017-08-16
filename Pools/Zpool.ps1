@@ -46,7 +46,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 $Zpool_Algo =  get-algo-unified-name ($_.name)
 
                             
-                                $Divisor = (Get-Algo-Divisor $_.name) / 1000
+                                $Divisor = (Get-Algo-Divisor $Zpool_Algo) / 1000
+
+                                switch ($Zpool_Algo){
+                                    "X11"{$Divisor *= 1000}
+                                    "qubit"{$Divisor *= 1000}
+                                    "quark"{$Divisor *= 1000}
+                                    }
+
                                 
                                 
                                 if ((Get-Stat -Name "Zpool_$($Zpool_Algo)_Profit") -eq $null) {$Stat = Set-Stat -Name "Zpool_$($Zpool_Algo)_Profit" -Value ([Double]$coin.estimate_current / $Divisor * (1 - 0.05))}
