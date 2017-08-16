@@ -1,15 +1,15 @@
 {
   
-    "Path": ".\\Bin\\NVIDIA-ETHMINER\\BIN\\ETHMINER.exe",
-    "Uri" : "https://github.com/ethereum-mining/ethminer/releases/download/v0.11.0/ethminer-0.11.0-Windows.zip",
-    "Types":  ["NVIDIA"],
-    "Arguments":  "",
-    "API":  "",
-    "APIPort":  "",
+ "Path": ".\\Bin\\AMD-ETHMINER\\ETHMINER.exe",
+    "Uri" : "https://github.com/ethereum-mining/ethminer/releases/download/v0.12.0.dev2/ethminer-0.12.0.dev2-Windows.zip",
+    "Types":  ["AMD"],
+    "Arguments":  " -G -SP 2 -S #SERVER#:#PORT# -O #LOGIN#:#PASSWORD# --opencl-platform #GPUPLATFORM#",
+    "API" : "wrapper",
+    "APIPort" : 3333,
     "Wrap":  true,
     "Dualmining":false,
     "Algorithms": [
-                {"ETH":"sdasdsadasddas"}
+                {"ethash":""}
                   ]
 }
 

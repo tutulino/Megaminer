@@ -11,6 +11,7 @@
                 {"jha":"-a jha"},
                 {"blakecoin":"-a blakecoin"},
                 {"Blake14r":"-a decred"},
+                {"lyra2RE" : "-a lyra2" },                
                 {"Tribus":"-a tribus"},
                 {"lyra2z" : "-a lyra2z" },
                 {"Skunk" : "-a skunk" },

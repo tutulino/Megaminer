@@ -11,6 +11,7 @@
                 {"blake2s" : "-a blake2s"},
                 {"lbry" : "-a lbry" },
                 {"lyra2v2" : "-a lyra2v2" },
+                {"lyra2RE" : "-a lyra2" },
                 {"Myriad-Groestl" : "-a myr-gr"},
                 {"nist5" : "-a nist5"},
                 {"quark" : "-a quark"},

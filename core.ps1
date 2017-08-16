@@ -27,7 +27,7 @@ param(
 #$MiningMode='Automatic'
 #$MiningMode='Manual'
 
-#$PoolsName='whattomine_virtual'
+#$PoolsName=('whattomine_virtual','yiimp','hash_refinery','zpool','mining_pool_hub')
 #$PoolsName='nicehash'
 #$PoolsName='yiimp'
 #$PoolsName=('hash_refinery','yiimp')
@@ -35,7 +35,7 @@ param(
 #$PoolsName='zpool'
 #$PoolsName='Suprnova'
 
-#$Coinsname =('bitcore')
+#$Coinsname =('bitcore','Signatum','Zcash')
 #$Algorithm =('bitcore')
 
 
@@ -136,9 +136,14 @@ while ($true) {
 
     #Load information about the Pools, only must read parameter passed files (not all as mph do), level is Pool-Algo-Coin
 
-    $Pools=Get-Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm
+     do
+        {
+        $Pools=Get-Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm
+        if  ($Pools.Count -eq 0) {"NO POOLS!....retry in 10 sec" | Out-Host;Start-Sleep 10}
+        }
+    while ($Pools.Count -eq 0) 
     
-    if ($Pools.Count -eq 0) {"No Pools!" | Out-Host; Start-Sleep 10; continue}
+    
 
 
     #Load information about the Miner asociated to each Coin-Algo-Miner
@@ -264,7 +269,7 @@ while ($true) {
 
     #Paint no miners message
     $Miners = $Miners | Where-Object {Test-Path $_.Path}
-    if ($Miners.Count -eq 0) {"No Miners!" | Out-Host; Start-Sleep $Interval; continue}
+    if ($Miners.Count -eq 0) {"NO MINERS!" | Out-Host ; EXIT}
 
 
  
@@ -380,7 +385,7 @@ while ($true) {
 
 
     #Stop miners running if they arent best now
-    $ActiveMiners | Where-Object ActivatedTimes -GT 0 | Where-Object Best -EQ $false | Where-Object IsValid | ForEach-Object {
+    $ActiveMiners | Where-Object Best -EQ $false | ForEach-Object {
         if ($_.Process -eq $null) {
             $_.Status = "Failed"
         }
@@ -389,7 +394,7 @@ while ($true) {
             $_.Status = "Idle"
         }
         
-        
+        try {$_.Process.CloseMainWindow() | Out-Null} catch {} #security closing
     }
    
     Start-Sleep 1 #Wait to prevent BSOD

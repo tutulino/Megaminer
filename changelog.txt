@@ -120,4 +120,18 @@ RECOMENDED CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 *Fixed: Dual mining problems
 *Fixed: screen resize error
 *Fixed: benchmark not ending for AMD plattform
+
+
+------------------------------------------------
+3.2
+Added EthMiner for AMD
+Added Sgminer for Skein for AMD
+*Added 3 retries to yiimp api connection to minimize errors.
+
+*Fixed: lyra2RE not working at Nicehash
+*Fixed: file wrapper error
+*Fixed: (I hope) MM open new miner not closing old one
+
+
+
  

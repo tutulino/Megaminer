@@ -25,16 +25,21 @@ if ($Querymode -eq "info"){
     
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
-        try {
-            $Yiimp_Request = Invoke-WebRequest "http://yiimp.ccminer.org/api/currencies" -UseBasicParsing | ConvertFrom-Json 
-            #$Yiimp_Request=get-content "..\Yiimp_request.json" | ConvertFrom-Json
-        }
-        catch {
-                    WRITE-HOST 'YIIMP API NOT RESPONDING...ABORTING'
-                    EXIT
-                }
+        $retries=1
+                do {
+                        try {
+                             $Yiimp_Request = Invoke-WebRequest "http://yiimp.ccminer.org/api/currencies" -UseBasicParsing -timeout 5 | ConvertFrom-Json 
+                             #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
+                        }
+                        catch {}
+                        $retries++
+                    } while ($Yiimp_Request -eq $null -and $retries -le 3)
+                
+                if ($retries -gt 3) {
+                                    WRITE-HOST 'YIIMP API NOT RESPONDING...ABORTING'
+                                    EXIT
+                                    }
 
-        
 
         $Yiimp_Request | Get-Member -MemberType properties| ForEach-Object {
 

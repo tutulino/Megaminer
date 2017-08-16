@@ -19,7 +19,7 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and S
 
 ---- ALGOS/COINS SUPORTED (NVIDIA) -------------------------------
 
-**Mining Pool Hub, Yiimp, ZPOOL, Nicehash and Hashh Refinery (must be suported by pool)
+**Mining Pool Hub, Yiimp, ZPOOL, Nicehash and Hash Refinery (must be suported by pool)
    skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, Myriad-Groestl, Lyra2v2, 
    Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, Qubit ,X11, X13, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
    cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r
@@ -48,14 +48,15 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and S
 
 In this software you can get same features than Nemosminer (Zpool) and Multipoolminer (MiningPoolHub), and also:
 
+-Menus sytem to choose coin/algo/pool and start mining
+
+-One file config to start mining
 
 -Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. 
 
 -Can mine on any of this pools (or all at same time): Nicehash, Zpool, Whattomine (virtual) HashRefinery, MPH or Yiimp with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
 
--Can mine on Suprnova,YIIMP or BlocksFactory pool without autochange or profit calculation, manual coin selection
-
--One file config to start mining
+-Can mine on Suprnova,Nicehash, MPH, YIIMP or BlocksFactory pool without autochange or profit calculation, manual coin selection
 
 -Fastest miner for each algo/coin preselected for Nvidia Pascal (08/01/2017) on all pools.
 
