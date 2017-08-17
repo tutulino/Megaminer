@@ -24,10 +24,10 @@ param(
 
 #Parameters for testing, must be commented on real use
 
-$MiningMode='Automatic'
+#$MiningMode='Automatic'
 #$MiningMode='Manual'
 
-$PoolsName=('zpool','mining_pool_hub')
+#$PoolsName=('zpool','mining_pool_hub')
 #$PoolsName='nicehash'
 #$PoolsName='yiimp'
 #$PoolsName=('hash_refinery','yiimp')
