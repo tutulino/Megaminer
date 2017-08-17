@@ -24,10 +24,10 @@ param(
 
 #Parameters for testing, must be commented on real use
 
-#$MiningMode='Automatic'
+$MiningMode='Automatic'
 #$MiningMode='Manual'
 
-#$PoolsName=('whattomine_virtual','yiimp','hash_refinery','zpool','mining_pool_hub')
+$PoolsName=('zpool','mining_pool_hub')
 #$PoolsName='nicehash'
 #$PoolsName='yiimp'
 #$PoolsName=('hash_refinery','yiimp')
@@ -305,6 +305,7 @@ while ($true) {
                         $_.HashRateDual  = [double]$Miner.HashRateDual
                         $_.Hashrates   = if ($Miner.AlgorithmDual -ne $null) {(ConvertTo-Hash ($Miner.HashRate)) + "/s|"+(ConvertTo-Hash $Miner.HashRateDual) + "/s"} else {(ConvertTo-Hash $Miner.HashRate) +"/s"}
                         $_.PoolWorkers = $Miner.PoolWorkers
+                        if ($_.Status -ne 'Cancelled') {$_.IsValid=$true} 
                     
                             }
                     else {
