@@ -1,5 +1,6 @@
 {
 "Path" : ".\\Bin\\NVIDIA-TPruvot\\ccminer.exe",
+"ExtractionPath" : ".\\Bin\\NVIDIA-TPruvot\\",
 "Uri" : "https://github.com/tpruvot/ccminer/releases/download/v2.2-tpruvot/ccminer-x86-2.2.7z",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4",
@@ -11,11 +12,11 @@
                 {"jha":"-a jha"},
                 {"blakecoin":"-a blakecoin"},
                 {"Blake14r":"-a decred"},
-                {"lyra2RE" : "-a lyra2" },                
                 {"Tribus":"-a tribus"},
                 {"lyra2z" : "-a lyra2z" },
+
+
                 {"Skunk" : "-a skunk" },
-                {"Keccak":"-a keccak"},
                 {"Neoscrypt":"-a Neoscrypt"},
                 {"X15":"-a X15"},
                 {"whirpool":"-a whirl"}

@@ -74,6 +74,12 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Lastest version of miners available
 
+-Nvidia SMI Info (Power, temperatures...)
+
+-Pools Wallets info
+
+
+
 
 
 ---- INSTRUCTIONS ----------------------------------------------
@@ -87,7 +93,7 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 3. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt
 
 
-Default donation is 5 minutes each day on automatic pools, manual pools has no donation percent, you can change it at config.txt or donate manually ;-)
+Default donation is 5 minutes each day on automatic pools, you can change it at config.txt or donate manually ;-)
 
 
 ---- UPGRADE PROCEDURE ------------------------------------

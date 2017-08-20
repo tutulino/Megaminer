@@ -1,5 +1,6 @@
 {
 "Path" : ".\\Bin\\NVIDIA-skunkkrnlx\\ccminer-x64-80.exe",
+"ExtractionPath" : ".\\Bin\\NVIDIA-skunkkrnlx\\",
 "Uri" : "http://ccminer.org/preview/ccminer-skunk-krnlx-80.7z",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4",

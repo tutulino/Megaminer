@@ -10,6 +10,7 @@ $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $true
 $AbbName = 'NH'
+$WalletMode = "WALLET"
 
 
 if ($Querymode -eq "info"){
@@ -19,8 +20,34 @@ if ($Querymode -eq "info"){
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
                     ApiData = $True
                     AbbName=$AbbName
+                    WalletMode=$WalletMode
                          }
     }
+
+
+
+
+if ($Querymode -like "wallet_*")    {
+        
+                            $Wallet=($Querymode -split '_')[1]
+                            $Wallet=($Wallet -split '\.')[0]
+
+                            try {
+                                $http="https://api.nicehash.com/api?method=stats.provider&addr="+$wallet
+                                $NH_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats 
+                            }
+                            catch {}
+        
+                            if ($NH_Request -ne $null -and $NH_Request -ne ""){
+                                        [PSCustomObject]@{
+                                                        Pool =$name
+                                                        currency = "BTC"
+                                                        balance = ($NH_Request | Measure-Object -Sum balance).sum
+                                                    }
+                                    }
+                        }
+
+                        
 
 
     
@@ -45,6 +72,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
 
                     $NH_Algorithm = get-algo-unified-name ($_.name)
+                    $NH_AlgorithmOriginal =$_.name
                     
                     $Divisor = 1000000000
 
@@ -58,8 +86,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                             }
                  
                 
-                    if ((Get-Stat -Name "NH_$($NH_Coin)_Profit") -eq $null) {$Stat = Set-Stat -Name "NH_$($NH_Coin)_Profit" -Value ([Double]$_.paying / $Divisor * (1 - 0.05))}
-                    else {$Stat = Set-Stat -Name "$($Name)_$($NH_Coin)_Profit" -Value ([Double]$_.paying / $Divisor)}
 
 
 
@@ -71,13 +97,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     [PSCustomObject]@{
                                         Algorithm     = $NH_Algorithm
                                         Info          = $NH_coin
-                                        Price         = $Stat.Live
-                                        StablePrice   = $Stat.Week
-                                        MarginOfError = $Stat.Week_Fluctuation
+                                        Price         = [double]($_.paying / $Divisor)
+                                        Price24h      = $null
                                         Protocol      = "stratum+tcp"
                                         Host          = ($_.name)+"."+$location.NhLocation+".nicehash.com"
                                         Port          = $_.port
-                                        User          = $CoinsWallets.get_item('BTC')
+                                        User          = $CoinsWallets.get_item('BTC')+'.'+$Workername
                                         Pass          = "x"
                                         Location      = $location.MMLocation
                                         SSL           = $false
@@ -85,6 +110,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         AbbName       = $AbbName
                                         ActiveOnManualMode    = $ActiveOnManualMode
                                         ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                                        PoolName = $Name
+                                        WalletMode      = $WalletMode
+                                        OriginalAlgorithm =  $SNH_AlgorithmOriginal
+                                        OriginalCoin = $NH_coin
+                                            
                                         }
                         }
                 }

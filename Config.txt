@@ -26,7 +26,17 @@
 
 @@MANUALMININGAPIUSE=TRUE
 
--- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining
+
+-- Screen to be shown at start of program (WALLETS/CURRENT/HISTORY/PROFITS)
+
+@@STARTSCREEN=PROFITS
+
+-- Benchmarks interval time
+
+@@BENCHMARKTIME=200
+
+
+-- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX (XXX=currency symbol)
 
 @@WALLET_BTC=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 @@WALLET_BTX=1EqS1VZ1A5qZF6x72DRgLs4oULLsMcVDJd
@@ -43,6 +53,14 @@
 @@WALLET_XVG=DMpSQmLpitKrdnaHomJSnMP3Q77ZJ9f2aF
 @@WALLET_ZEC=t1RbZBWXx6K9cbFogePSJPNg6Bjfryrdzpx
 @@WALLET_UBQ=0xcd11aa1fec676c0d17ce5d88d13fec2dcf0f0cfd
+
+
+-- API Keys, Non Anonymous pools (Suprnova, MPH) requires api key to get wallets info (format @@APIKEY_NAMEOFPOOL=XXXXXXXXXX)
+
+@@APIKEY_MINING_POOL_HUB=a04e6330b38f7387833434ae40775f70eff6582e8ec37600216757554887ccbd36b4510b4
+@@APIKEY_SUPRNOVA=cd03834069c3314bb6d88d333408bc4342a51ec1d45f90577742e4e5275744a402e4afed
+
+
 
 -- Number of minutes each day (NOT PERCENT) of donation
 

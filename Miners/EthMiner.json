@@ -1,6 +1,7 @@
 {
   
- "Path": ".\\Bin\\AMD-ETHMINER\\ETHMINER.exe",
+  "Path": ".\\Bin\\AMD-ETHMINER\\ETHMINER.exe",
+  "ExtractionPath": ".\\Bin\\AMD-ETHMINER\\",
     "Uri" : "https://github.com/ethereum-mining/ethminer/releases/download/v0.12.0.dev2/ethminer-0.12.0.dev2-Windows.zip",
     "Types":  ["AMD"],
     "Arguments":  " -G -SP 2 -S #SERVER#:#PORT# -O #LOGIN#:#PASSWORD# --opencl-platform #GPUPLATFORM#",

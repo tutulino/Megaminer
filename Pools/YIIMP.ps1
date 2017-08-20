@@ -8,7 +8,9 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $true
+$ActiveOnAutomatic24hMode = $false
 $AbbName = 'YIIMP'
+$WalletMode ='WALLET'
 
 
 if ($Querymode -eq "info"){
@@ -16,11 +18,40 @@ if ($Querymode -eq "info"){
                     Disclaimer = "No registration, No autoexchange, need wallet for each coin on config.txt"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
+                    ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
                     ApiData = $True
                     AbbName=$AbbName
+                    WalletMode=$WalletMode
                          }
     }
 
+
+
+
+
+
+
+
+    if ($Querymode -like "wallet_*")    {
+        
+                            $Wallet=($Querymode -split '_')[1]
+                            try {
+                                $http="http://yiimp.ccminer.org/api/wallet?address="+$wallet
+                                $Yiimp_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+                            }
+                            catch {}
+        
+        
+                            if ($Yiimp_Request -ne $null -and $Yiimp_Request -ne ""){
+                                        [PSCustomObject]@{
+                                                        Pool =$name
+                                                        currency = $Yiimp_Request.currency
+                                                        balance = $Yiimp_Request.balance
+                                                    }
+                                    }
+                        }
+                        
+                        
 
     
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
@@ -33,6 +64,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                         }
                         catch {}
                         $retries++
+                    if ($Yiimp_Request -eq $null -or $Yiimp_Request -eq "") {start-sleep 5}
                     } while ($Yiimp_Request -eq $null -and $retries -le 3)
                 
                 if ($retries -gt 3) {
@@ -55,16 +87,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     
                 
 
-                    if ((Get-Stat -Name "Yiimp_$($Yiimp_Coin)_Profit") -eq $null) {$Stat = Set-Stat -Name "Yiimp_$($Yiimp_Coin)_Profit" -Value ([Double]$coin.estimate / $Divisor * (1 - 0.05))}
-                    else {$Stat = Set-Stat -Name "$($Name)_$($Yiimp_Coin)_Profit" -Value ([Double]$coin.estimate / $Divisor)}
-
-                            
                             [PSCustomObject]@{
                                 Algorithm     = $Yiimp_Algorithm
                                 Info          = $Yiimp_coin
-                                Price         = $Stat.Live
-                                StablePrice   = $Stat.Week
-                                MarginOfError = $Stat.Week_Fluctuation
+                                Price         = [Double]$coin.estimate / $Divisor
+                                Price24h      = $null
                                 Protocol      = "stratum+tcp"
                                 Host          = "yiimp.ccminer.org"
                                 Port          = $coin.port
@@ -79,6 +106,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 PoolWorkers       = $coin.Workers
                                 PoolHashRate  = $coin.HashRate
                                 Blocks_24h    = $coin."24h_blocks"
+                                WalletMode    = $WalletMode
+                                PoolName = $Name
                                 }
                         
                 

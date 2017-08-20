@@ -1,118 +1,4 @@
-﻿function Set-Stat {
-    param(
-        [Parameter(Mandatory = $true)]
-        [String]$Name, 
-        [Parameter(Mandatory = $true)]
-        [Double]$Value, 
-        [Parameter(Mandatory = $false)]
-        [DateTime]$Date = (Get-Date)
-    )
-
-
-    $Path = "$PSScriptRoot\Stats\$Name.txt"
-    $Date = $Date.ToUniversalTime()
-    $SmallestValue = 1E-20
-
-    $Stat = [PSCustomObject]@{
-        Live = $Value
-        Minute = $Value
-        Minute_Fluctuation = 1 / 2
-        Minute_5 = $Value
-        Minute_5_Fluctuation = 1 / 2
-        Minute_10 = $Value
-        Minute_10_Fluctuation = 1 / 2
-        Hour = $Value
-        Hour_Fluctuation = 1 / 2
-        Day = $Value
-        Day_Fluctuation = 1 / 2
-        Week = $Value
-        Week_Fluctuation = 1 / 2
-        Updated = $Date
-    }
-
-    if (Test-Path $Path) {$Stat = Get-Content $Path | ConvertFrom-Json}
-
-    $Stat = [PSCustomObject]@{
-        Live = [Double]$Stat.Live
-        Minute = [Double]$Stat.Minute
-        Minute_Fluctuation = [Double]$Stat.Minute_Fluctuation
-        Minute_5 = [Double]$Stat.Minute_5
-        Minute_5_Fluctuation = [Double]$Stat.Minute_5_Fluctuation
-        Minute_10 = [Double]$Stat.Minute_10
-        Minute_10_Fluctuation = [Double]$Stat.Minute_10_Fluctuation
-        Hour = [Double]$Stat.Hour
-        Hour_Fluctuation = [Double]$Stat.Hour_Fluctuation
-        Day = [Double]$Stat.Day
-        Day_Fluctuation = [Double]$Stat.Day_Fluctuation
-        Week = [Double]$Stat.Week
-        Week_Fluctuation = [Double]$Stat.Week_Fluctuation
-        Updated = [DateTime]$Stat.Updated
-    }
-    
-    $Span_Minute = [Math]::Min(($Date - $Stat.Updated).TotalMinutes, 1)
-    $Span_Minute_5 = [Math]::Min((($Date - $Stat.Updated).TotalMinutes / 5), 1)
-    $Span_Minute_10 = [Math]::Min((($Date - $Stat.Updated).TotalMinutes / 10), 1)
-    $Span_Hour = [Math]::Min(($Date - $Stat.Updated).TotalHours, 1)
-    $Span_Day = [Math]::Min(($Date - $Stat.Updated).TotalDays, 1)
-    $Span_Week = [Math]::Min((($Date - $Stat.Updated).TotalDays / 7), 1)
-
-    $Stat = [PSCustomObject]@{
-        Live = $Value
-        Minute = ((1 - $Span_Minute) * $Stat.Minute) + ($Span_Minute * $Value)
-        Minute_Fluctuation = ((1 - $Span_Minute) * $Stat.Minute_Fluctuation) + 
-        ($Span_Minute * ([Math]::Abs($Value - $Stat.Minute) / [Math]::Max([Math]::Abs($Stat.Minute), $SmallestValue)))
-        Minute_5 = ((1 - $Span_Minute_5) * $Stat.Minute_5) + ($Span_Minute_5 * $Value)
-        Minute_5_Fluctuation = ((1 - $Span_Minute_5) * $Stat.Minute_5_Fluctuation) + 
-        ($Span_Minute_5 * ([Math]::Abs($Value - $Stat.Minute_5) / [Math]::Max([Math]::Abs($Stat.Minute_5), $SmallestValue)))
-        Minute_10 = ((1 - $Span_Minute_10) * $Stat.Minute_10) + ($Span_Minute_10 * $Value)
-        Minute_10_Fluctuation = ((1 - $Span_Minute_10) * $Stat.Minute_10_Fluctuation) + 
-        ($Span_Minute_10 * ([Math]::Abs($Value - $Stat.Minute_10) / [Math]::Max([Math]::Abs($Stat.Minute_10), $SmallestValue)))
-        Hour = ((1 - $Span_Hour) * $Stat.Hour) + ($Span_Hour * $Value)
-        Hour_Fluctuation = ((1 - $Span_Hour) * $Stat.Hour_Fluctuation) + 
-        ($Span_Hour * ([Math]::Abs($Value - $Stat.Hour) / [Math]::Max([Math]::Abs($Stat.Hour), $SmallestValue)))
-        Day = ((1 - $Span_Day) * $Stat.Day) + ($Span_Day * $Value)
-        Day_Fluctuation = ((1 - $Span_Day) * $Stat.Day_Fluctuation) + 
-        ($Span_Day * ([Math]::Abs($Value - $Stat.Day) / [Math]::Max([Math]::Abs($Stat.Day), $SmallestValue)))
-        Week = ((1 - $Span_Week) * $Stat.Week) + ($Span_Week * $Value)
-        Week_Fluctuation = ((1 - $Span_Week) * $Stat.Week_Fluctuation) + 
-        ($Span_Week * ([Math]::Abs($Value - $Stat.Week) / [Math]::Max([Math]::Abs($Stat.Week), $SmallestValue)))
-        Updated = $Date
-    }
-
-    if (-not (Test-Path "Stats")) {New-Item "Stats" -ItemType "directory"}
-    [PSCustomObject]@{
-        Live = [Decimal]$Stat.Live
-        Minute = [Decimal]$Stat.Minute
-        Minute_Fluctuation = [Double]$Stat.Minute_Fluctuation
-        Minute_5 = [Decimal]$Stat.Minute_5
-        Minute_5_Fluctuation = [Double]$Stat.Minute_5_Fluctuation
-        Minute_10 = [Decimal]$Stat.Minute_10
-        Minute_10_Fluctuation = [Double]$Stat.Minute_10_Fluctuation
-        Hour = [Decimal]$Stat.Hour
-        Hour_Fluctuation = [Double]$Stat.Hour_Fluctuation
-        Day = [Decimal]$Stat.Day
-        Day_Fluctuation = [Double]$Stat.Day_Fluctuation
-        Week = [Decimal]$Stat.Week
-        Week_Fluctuation = [Double]$Stat.Week_Fluctuation
-        Updated = [DateTime]$Stat.Updated
-    } | ConvertTo-Json | Set-Content $Path
-
-    $Stat
-}
-
-function Get-Stat {
-    param(
-        [Parameter(Mandatory = $true)]
-        [String]$Name
-    )
-    
-        
-    $Path = "$PSScriptRoot\Stats\"
-
-    if (-not (Test-Path $Path)) {New-Item $Path -ItemType "directory"}
-    Get-ChildItem $Path | Where-Object Extension -NE ".ps1" | Where-Object BaseName -eq $Name | Get-Content | ConvertFrom-Json
-}
-
+﻿
 
 
 function Get-ChildItemContent {
@@ -156,28 +42,9 @@ function Get-ChildItemContent {
     
     $ChildItems
 }
-<#
-function Set-Algorithm {
-    param(
-        [Parameter(Mandatory=$true)]
-        [String]$API, 
-        [Parameter(Mandatory=$true)]
-        [Int]$Port, 
-        [Parameter(Mandatory=$false)]
-        [Array]$Parameters = @()
-    )
-    
-    $Server = "localhost"
-    
-    switch($API)
-    {
-        "nicehash"
-        {
-        }
-    }
-}
-#>
-function Get-HashRate {
+
+
+function Get-Live-HashRate {
     param(
         [Parameter(Mandatory = $true)]
         [String]$API, 
@@ -443,6 +310,7 @@ function Start-SubProcess {
     $Process
 }
 
+
 function Expand-WebRequest {
     param(
         [Parameter(Mandatory = $true)]
@@ -451,23 +319,22 @@ function Expand-WebRequest {
         [String]$Path
     )
 
-    $FolderName_Old = ([IO.FileInfo](Split-Path $Uri -Leaf)).BaseName
-    $FolderName_New = Split-Path $Path -Leaf
-    $FileName = "$FolderName_New$(([IO.FileInfo](Split-Path $Uri -Leaf)).Extension)"
+    
+    $DestinationFolder = $PSScriptRoot + $Path.Substring(1)
+    $FileName = ([IO.FileInfo](Split-Path $Uri -Leaf)).name
+    $FilePath = $PSScriptRoot +'\'+$Filename
+
 
     if (Test-Path $FileName) {Remove-Item $FileName}
-    if (Test-Path "$(Split-Path $Path)\$FolderName_New") {Remove-Item "$(Split-Path $Path)\$FolderName_New" -Recurse}
-    if (Test-Path "$(Split-Path $Path)\$FolderName_Old") {Remove-Item "$(Split-Path $Path)\$FolderName_Old" -Recurse}
+
 
     Invoke-WebRequest $Uri -OutFile $FileName -UseBasicParsing
-    Start-Process "7z" "x $FileName -o$(Split-Path $Path)\$FolderName_Old -y -spe" -Wait
-    if (Get-ChildItem "$(Split-Path $Path)\$FolderName_Old" | Where-Object PSIsContainer -EQ $false) {
-        Rename-Item "$(Split-Path $Path)\$FolderName_Old" "$FolderName_New"
-    }
-    else {
-        Get-ChildItem "$(Split-Path $Path)\$FolderName_Old" | Where-Object PSIsContainer -EQ $true | ForEach-Object {Move-Item "$(Split-Path $Path)\$FolderName_Old\$_" "$(Split-Path $Path)\$FolderName_New"}
-        Remove-Item "$(Split-Path $Path)\$FolderName_Old"
-    }
+    
+    $Command='x "'+$FilePath+'" -o"'+$DestinationFolder+'" -y -spe'
+    Start-Process "7z" $Command -Wait
+
+    if (Test-Path $FileName) {Remove-Item $FileName}
+    
 }
 
 
@@ -528,7 +395,7 @@ function Get-Pools {
 
             #Apply filters
             $AllPools2=@()
-            if ($Querymode -ne "info"){
+            if ($Querymode -eq "core" -or $Querymode -eq "menu" ){
                         foreach ($Pool in $AllPools){
                                 #must have wallet
                                 if ($Pool.user -ne $null) {
@@ -575,18 +442,15 @@ function Get-Pools {
  }
 
 
-
-
-
  
 function Get-Best-Hashrate-Algo {
     param(
         [Parameter(Mandatory = $true)]
-        [String]$Algo
+        [String]$Algorithm
     )
 
 
-    $Pattern="*_"+$Algo+"_HashRate.txt"
+    $Pattern="*_"+$Algorithm+"_HashRate.txt"
 
     $Besthashrate=0
 
@@ -703,3 +567,98 @@ function get-coin-unified-name ([string]$Coin) {
      $Result       
 
 }
+
+
+
+
+
+
+function Get-Hashrate {
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]$Algorithm,
+        [Parameter(Mandatory = $true)]
+        [String]$MinerName
+    )
+
+
+    $Pattern=$MinerName+"_"+$Algorithm+"_HashRate.txt"
+
+    
+    try {$Content=[double](Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {$Content=$null}
+    
+    $Content
+}
+
+
+function Set-Hashrate {
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]$Algorithm,
+        [Parameter(Mandatory = $true)]
+        [String]$MinerName,
+        [Parameter(Mandatory = $true)]
+        [double]$Value
+        
+    )
+
+
+    $Path=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_HashRate.txt"
+
+    $Value | Convertto-Json | Set-Content  -Path $Path
+
+    
+}
+
+
+
+
+
+
+function Start-Downloader {
+    param(
+    [Parameter(Mandatory = $true)]
+    [String]$URI,
+    [Parameter(Mandatory = $true)]
+    [String]$ExtractionPath,
+    [Parameter(Mandatory = $true)]
+    [String]$Path
+     )
+
+
+        if (-not (Test-Path $Path)) {
+            try {
+
+
+                if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
+                    New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
+                    Invoke-WebRequest $URI -OutFile $Path -UseBasicParsing -ErrorAction Stop
+                }
+                else {
+                    Clear-Host
+                    Write-Host -BackgroundColor green -ForegroundColor Black "Downloading....$($URI)"
+                    Expand-WebRequest $URI $ExtractionPath -ErrorAction Stop
+                }
+            }
+            catch {
+                
+                if ($URI) {Write-Host -BackgroundColor Yellow -ForegroundColor Black "Cannot download $($Path) distributed at $($URI). "}
+                else {Write-Host -BackgroundColor Yellow -ForegroundColor Black "Cannot download $($Path). "}
+                
+                
+                if ($Path_Old) {
+                    if (Test-Path (Split-Path $Path_New)) {(Split-Path $Path_New) | Remove-Item -Recurse -Force}
+                    (Split-Path $Path_Old) | Copy-Item -Destination (Split-Path $Path_New) -Recurse -Force
+                }
+                else {
+                    if ($URI) {Write-Host -BackgroundColor Yellow -ForegroundColor Black "Cannot find $($Path) distributed at $($URI). "}
+                    else {Write-Host -BackgroundColor Yellow -ForegroundColor Black "Cannot find $($Path). "}
+                }
+            }
+        }
+    
+
+    
+}
+
+

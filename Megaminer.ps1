@@ -37,8 +37,9 @@ write-host ...................SELECT MODE TO MINE...............................
 write-host ..............................................................................................
 
 $Modes=@()
-$Modes += [pscustomobject]@{"Option"=0;"Mode"='AUTOMATIC';"Explanation"='Not necesary choose coin to mine, program choose more profitable coin based on pool´s statistics'}
-$Modes += [pscustomobject]@{"Option"=1;"Mode"='MANUAL';"Explanation"='You select coin to mine'}
+$Modes += [pscustomobject]@{"Option"=0;"Mode"='AUTOMATIC';"Explanation"='Not necesary choose coin to mine, program choose more profitable coin based on pool´s current statistics'}
+$Modes += [pscustomobject]@{"Option"=1;"Mode"='AUTOMATIC24h';"Explanation"='Same as Automatic mode but based on pools/WTM reported last 24h profit'}
+$Modes += [pscustomobject]@{"Option"=2;"Mode"='MANUAL';"Explanation"='You select coin to mine'}
 
 $Modes | Format-Table Option,Mode,Explanation  | out-host
 
@@ -57,11 +58,11 @@ If ($MiningMode -eq "")
 
 #-----------------Ask user for pool/s to use, if a pool is indicated in parameters no prompt
 
-if ($MiningMode -eq "automatic"){
-        $Pools=Get-Pools -Querymode "Info" | Where-Object ActiveOnAutomaticMode -eq $true | sort name }
-    else 
-        {$Pools=Get-Pools -Querymode "Info" | Where-Object ActiveOnManualMode -eq $true | sort name  }
- 
+    switch ($MiningMode) {
+            "Automatic" {$Pools=Get-Pools -Querymode "Info" | Where-Object ActiveOnAutomaticMode -eq $true | sort name }
+            "Automatic24h" {$Pools=Get-Pools -Querymode "Info" | Where-Object ActiveOnAutomatic24hMode -eq $true | sort name }
+            "Manual" {$Pools=Get-Pools -Querymode "Info" | Where-Object ActiveOnManualMode -eq $true | sort name }
+            }
 
 $Pools | Add-Member Option "0"
 $counter=0
@@ -70,8 +71,8 @@ $Pools | ForEach-Object {
         $counter++}
 
 
-if ($MiningMode -eq "automatic"){
-        $Pools += [pscustomobject]@{"Disclaimer"="";"ActiveOnManualMode"=$false;"ActiveOnAutomaticMode"=$true;"name"='ALL POOLS';"option"=99}}
+if ($MiningMode -ne "Manual"){
+        $Pools += [pscustomobject]@{"Disclaimer"="";"ActiveOnManualMode"=$false;"ActiveOnAutomaticMode"=$true;"ActiveOnAutomatic24hMode"=$true;"name"='ALL POOLS';"option"=99}}
 
 
 #Clear-Host
@@ -93,7 +94,7 @@ If (($PoolsName -eq "") -or ($PoolsName -eq $null))
                     $SelectedOption = Read-Host -Prompt 'SELECT ONLY ONE OPTION:'
                     }
            }
-    if ($MiningMode -eq "automatic"){
+    if ($MiningMode -ne "Manual"){
             $SelectedOption = Read-Host -Prompt 'SELECT OPTION/S (separated by comma):'
             if ($SelectedOption -eq "99") {
                   $SelectedOption=""

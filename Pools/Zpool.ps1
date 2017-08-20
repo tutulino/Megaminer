@@ -1,6 +1,7 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null #Info/detail"
+    [String]$Querymode = $null
+
     )
 
 #. .\Include.ps1
@@ -8,17 +9,44 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $false
 $ActiveOnAutomaticMode = $true
+$ActiveOnAutomatic24hMode = $true
 $AbbName ='ZPOOL'
+$WalletMode='WALLET'
+
+
+
 
 if ($Querymode -eq "info"){
         [PSCustomObject]@{
                     Disclaimer = "Autoexchange to config.txt wallet, no registration required"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
+                    ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
                     AbbName=$AbbName
+                    WalletMode=$WalletMode
                          }
     }
 
+
+
+if ($Querymode -like "wallet_*")    {
+
+                    $Wallet=($Querymode -split '_')[1]
+                    try {
+                        $http="http://www.zpool.ca/api/wallet?address="+$wallet
+                        $Zpool_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+                    }
+                    catch {}
+
+
+                    if ($Zpool_Request -ne $null -and $Zpool_Request -ne ""){
+                                [PSCustomObject]@{
+                                                Pool =$name
+                                                currency = $Zpool_Request.currency
+                                                balance = $Zpool_Request.balance
+                                            }
+                            }
+                }
 
     
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
@@ -29,8 +57,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                             $Zpool_Request = Invoke-WebRequest "http://www.zpool.ca/api/status" -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
                             #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
                         }
-                        catch {}
+                        catch {start-sleep 2}
                         $retries++
+                        if ($Zpool_Request -eq $null -or $Zpool_Request -eq "") {start-sleep 3}
                     } while ($Zpool_Request -eq $null -and $retries -le 3)
                 
                 if ($retries -gt 3) {
@@ -56,16 +85,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                                 
                                 
-                                if ((Get-Stat -Name "Zpool_$($Zpool_Algo)_Profit") -eq $null) {$Stat = Set-Stat -Name "Zpool_$($Zpool_Algo)_Profit" -Value ([Double]$coin.estimate_current / $Divisor * (1 - 0.05))}
-                                else {$Stat = Set-Stat -Name "$($Name)_$($Zpool_Algo)_Profit" -Value ([Double]$coin.estimate_current / $Divisor)}
-
-                                
                                         [PSCustomObject]@{
                                             Algorithm     = $Zpool_Algo
                                             Info          = $null
-                                            Price         = $Stat.Live
-                                            StablePrice   = $Stat.Week
-                                            MarginOfError = $Stat.Week_Fluctuation
+                                            Price         = $coin.estimate_current / $Divisor
+                                            Price24h      = $coin.estimate_last24h / $Divisor
                                             Protocol      = "stratum+tcp"
                                             Host          = "mine.zpool.ca"
                                             Port          = $coin.port
@@ -78,6 +102,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             ActiveOnManualMode    = $ActiveOnManualMode
                                             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                                             PoolWorkers = $coin.workers
+                                            WalletMode=$WalletMode
+                                            PoolName = $Name
                                             }
                            }
     }

@@ -1,5 +1,6 @@
 {
-    "Path": ".\\Bin\\NVIDIA-EWBF\\Zminer.exe",
+  "Path": ".\\Bin\\NVIDIA-EWBF\\Zminer.exe",
+  "ExtractionPath": ".\\Bin\\NVIDIA-EWBF\\",
     "Uri": "https://github.com/nemosminer/EWBF-Zec-Miner/releases/download/0.3.4b/0.3.4b.7z",
     "Types": ["NVIDIA"],
     "Arguments":  "--api --server #SERVER# --port #PORT# --solver 0 --eexit 1 --user #LOGIN# --pass #PASSWORD#",

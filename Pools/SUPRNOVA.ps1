@@ -9,6 +9,7 @@ $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $false
 $AbbName='SNOVA'
+$WalletMode="APIKEY"
 
 if ($Querymode -eq "info"){
         [PSCustomObject]@{
@@ -17,8 +18,51 @@ if ($Querymode -eq "info"){
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
                     ApiData = $true
                     AbbName=$AbbName
+                    WalletMode=$WalletMode
                           }
     }
+
+
+    if ($Querymode -like "wallet_*")    {
+        
+                            #$Server=($Querymode -split '_')[1]
+                            #$Coin=($Querymode -split '_')[2]  
+                            $ApiKey=($Querymode -split '_')[3]  
+                            $Algo=($Querymode -split '_')[4]  
+                            $Symbol=($Querymode -split '_')[5]  
+
+                             
+                            Switch($Symbol) {
+                                "DGB" {$Symbol=$Symbol+($Algo.substring(0,1))}
+                               }
+
+                               #>
+
+
+                            
+                            try {
+                                $http="http://"+$Symbol+".suprnova.cc/index.php?page=api&action=getuserbalance&api_key="+$ApiKey+"&id="
+                                #$http |write-host  
+                                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12                              
+                                $Suprnova_Request =  Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 
+                                $Suprnova_Request = $Suprnova_Request | ConvertFrom-Json | Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
+                                }
+                            catch {
+                                $_.Exception.Response.StatusCode.Value__
+                                  }
+        
+        
+                            if ($Suprnova_Request -ne $null -and $Suprnova_Request -ne ""){
+                                        [PSCustomObject]@{
+                                                        Pool =$name
+                                                        currency = ($Querymode -split '_')[5]  
+                                                        balance = $Suprnova_Request.confirmed+$Suprnova_Request.unconfirmed
+                                                    }
+                                    }
+                        }
+
+                        
+
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
@@ -60,12 +104,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         $Pools |ForEach-Object {
 
-                                
-                                if ((Get-Stat -Name "$Name_$($_.Coin)_Profit") -eq $null) {$Stat = Set-Stat -Name "$Name_$($_.Coin)_Profit" -Value (0.0001)}
-                                else {$Stat = Set-Stat -Name "$($Name)_$($_.Coin)_Profit" -Value (0.0001)}
-
-
-
 
                                 if (($ManualMiningApiUse -eq $true) -and  ($Querymode -eq "Menu")) {
                                         $ApiResponse=$null
@@ -80,8 +118,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     Algorithm     = $_.Algo
                                     Info          = $_.Coin
                                     Price         = $null
-                                    StablePrice   = $null
-                                    MarginOfError = $null
+                                    Price24h      = $null
                                     Protocol      = "stratum+tcp"
                                     Host          = $_.Server
                                     Port          = $_.Port
@@ -93,8 +130,13 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     AbbName       = $AbbName
                                     ActiveOnManualMode    = $ActiveOnManualMode
                                     ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                    PoolWorkers       = $ApiResponse.Workers
-                                    PoolHashRate  = [double]$ApiResponse.hashrate
+                                    PoolWorkers     = $ApiResponse.Workers
+                                    PoolHashRate    = [double]$ApiResponse.hashrate
+                                    PoolName        = $Name
+                                    WalletMode      = $WalletMode
+                                    OriginalAlgorithm =  $_.Algo
+                                    OriginalCoin = $_.Coin
+
 
                                 }
 

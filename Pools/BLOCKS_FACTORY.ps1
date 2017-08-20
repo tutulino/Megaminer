@@ -9,6 +9,10 @@ $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $false
 $AbbName='B.FTRY'
+$WalletMode = "NONE"
+
+
+
 
 if ($Querymode -eq "info"){
         [PSCustomObject]@{
@@ -17,6 +21,7 @@ if ($Querymode -eq "info"){
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
                     ApiData = $true
                     AbbName=$AbbName
+                    WalletMode = $WalletMode
                           }
     }
 
@@ -31,32 +36,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Pools +=[pscustomobject]@{"coin" = "GUNCOIN"; "algo"="NEOSCRYPT"; "symbol"= "GUN"; "server"="s1.theblocksfactory.com";"port"="3330";"location"="US"}
 
 
-        
-
         $Pools |ForEach-Object {
 
                                
-                                if ((Get-Stat -Name "$Name_$($_.Coin)_Profit") -eq $null) {$Stat = Set-Stat -Name "$Name_$($_.Coin)_Profit" -Value (0.0001)}
-                                else {$Stat = Set-Stat -Name "$($Name)_$($_.Coin)_Profit" -Value (0.0001)}
-
-
-
-
-                                if (($ManualMiningApiUse -eq $true) -and  ($Querymode -eq "Menu")) {
-                                        $ApiResponse=$null
-                                        try {
-                                                $Apicall="https://"+$_.Server+"/index.php?page=api&action=public"
-                                                $ApiResponse=(Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 5| ConvertFrom-Json)
-                                            } catch{}
-                                        }
-                                
 
                                 [PSCustomObject]@{
                                     Algorithm     = $_.Algo
                                     Info          = $_.Coin
-                                    Price         = 0.0001
-                                    StablePrice   = 0.0001
-                                    MarginOfError = 0.0001
+                                    Price         = $Null
+                                    Price24h      = $Null
                                     Protocol      = "stratum+tcp"
                                     Host          = $_.Server
                                     Port          = $_.Port
@@ -68,6 +56,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     AbbName       = $AbbName
                                     ActiveOnManualMode    = $ActiveOnManualMode
                                     ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                                    PoolName = $Name
+                                    WalletMode      = $WalletMode
 
                                 }
 

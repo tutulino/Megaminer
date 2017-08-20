@@ -17,16 +17,27 @@ param(
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $false
 $ActiveOnAutomaticMode = $true
+$ActiveOnAutomatic24hMode = $true
+$WalletMode = "NONE"
 
 if ($Querymode -eq "info"){
         [PSCustomObject]@{
                     Disclaimer = "Based on Whattomine statistics, you must have acount on Suprnova a wallets for each coin on config.txt "
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
+                    ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
                     ApiData = $true
                     AbbName = 'WTM'
+                    WalletMode =$WalletMode
                           }
     }
+
+
+
+
+
+
+
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
@@ -119,11 +130,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 }
 
                         }
-                               
-
 
 
         $Pools |ForEach-Object {
+
 
                             #WTM json is for 3xAMD 480 hashrate must adjust
                             $WTMFactor=$null
@@ -143,12 +153,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                                 "Pascal"{$WTMFactor=2100000000}
                                         }
 
-                            if ($WTMFactor -ne $null) {$Estimate=$WTMResponse.($_.coin).btc_revenue/$WTMFactor}
-
-
-
-                            if ((Get-Stat -Name "WhatToMine_Virtual_$($_.Coin)_Profit") -eq $null) {$Stat = Set-Stat -Name "WhatToMine_Virtual_$($_.Coin)_Profit" -Value ([Double]$Estimate)}
-                                    else {$Stat = Set-Stat -Name  "WhatToMine_Virtual_$($_.Coin)_Profit" -Value ([Double]$Estimate)}
+                            if ($WTMFactor -ne $null) {
+                                                        $Estimate=[Double]($WTMResponse.($_.coin).btc_revenue/$WTMFactor)
+                                                        $Estimate24h=[Double]($WTMResponse.($_.coin).btc_revenue24/$WTMFactor)
+                                                        }
 
                             if ($_.Server -like '*suprnova*'){
                                         $VPUser="$Username.$WorkerName" 
@@ -182,9 +190,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                             [PSCustomObject]@{
                                 Algorithm     = $_.Algo
                                 Info          = $_.Coin
-                                Price         = $Stat.Live
-                                StablePrice   = $Stat.Week
-                                MarginOfError = $Stat.Week_Fluctuation
+                                Price         = $Estimate
+                                Price24h      = $Estimate24h
                                 Protocol      = $VPprotocol
                                 Host          = $_.Server
                                 Port          = $_.Port
@@ -196,7 +203,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 AbbName       = "WTM-"+$VpAbbname
                                 ActiveOnManualMode    = $ActiveOnManualMode
                                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-
+                                PoolName = $Name
+                                WalletMode = $WalletMode
                                 }
 
                         }

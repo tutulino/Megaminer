@@ -124,8 +124,8 @@ RECOMENDED CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 
 ------------------------------------------------
 3.2
-Added EthMiner for AMD
-Added Sgminer for Skein for AMD
+*Added EthMiner for AMD
+*Added Sgminer for Skein for AMD
 *Added 3 retries to yiimp api connection to minimize errors.
 
 *Fixed: lyra2RE not working at Nicehash
@@ -133,5 +133,28 @@ Added Sgminer for Skein for AMD
 *Fixed: (I hope) MM open new miner not closing old one
 
 
+------------------------------------------------
+4.0
+
+*Added Automatic24h mode, in this mode statistics are based on pools/WTM reported 24h statistics, not in current statistics as Automatic mode. Not all pool has this option.
+*Redesigned interactive main screen (remember set focus on window to keys response)
+*Added Nvidia SMI Info 
+*Added Pools Wallets info
+*Automatic detection of miner open but no mining speed
+*ccminer Klaust upgrade to 8.12, new assigned algos: Myriad-groestl, keccak
+*Now hashrate speed only is recorded on bechmark, this can avoid extremely high hashrates
+*No miners included in release, all miners all downloaded
+*Configurable bechmark time on config.txt
+*Configurable start screen on config.txt
+*Fixed: Zpool high profit for Quark,Qubit, x11
+*Fixed: Pools not restoring normal situation after api fail
+*Fixed: Claymore120 miner error due to Blake2s algo
+*Fixed: reduced memory consum 
+*Fixed: Nicehash workername not shown
+
+
+
+THIS VERSION CHANGE CONFIG FILES STRUCTURES
+OBLIGATORY CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 
  
