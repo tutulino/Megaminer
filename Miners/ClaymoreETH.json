@@ -3,7 +3,7 @@
 "ExtractionPath" : ".\\Bin\\Ethash-Claymore\\",
 "Uri" : "https://github.com/nanopool/Claymore-Dual-Miner/releases/download/v9.8/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v9.8.zip",
 "Types" : ["NVIDIA"],
-"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 ",
+"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -tt 80 -allpools 1 ",
 "API" : "Claymore",
 "APIPort" : 3333,
 "Wrap" : false,
