@@ -3,7 +3,7 @@
 "ExtractionPath" : ".\\Bin\\NVIDIA-Alexis78cuda8.0\\",
 "Uri" : "https://github.com/nicehash/ccminer-x11gost/releases/download/ccminer-x11gost_windows/ccminer_x11gost.7z",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 --max-temp=80",
 "API" : "Ccminer",
 "APIPort" : 4068,
 "Wrap" : false,

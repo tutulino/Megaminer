@@ -3,7 +3,7 @@
 "ExtractionPath" : ".\\Bin\\NVIDIA-skunkkrnlx\\",
 "Uri" : "http://ccminer.org/preview/ccminer-skunk-krnlx-80.7z",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 --max-temp=80",
 "API" : "Ccminer",
 "APIPort" : 4068,
 "Wrap" : false,
