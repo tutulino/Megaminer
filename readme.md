@@ -77,6 +77,8 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 -Nvidia SMI Info (Power, temperatures...)
 
 -Pools Wallets info
+ 
+-Option to autochange based on 24h statistics (on supported pools)
 
 
 
@@ -124,15 +126,12 @@ Local Currency exchange rate to BTC is taken from Coindesk, Local currency profi
 Based 70% on aaronsace, 30% is mine (aprox.) Donations to
 
 *Aaronsace - 1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH
-*Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TMN
+*Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 
 
 ---- NO SCAM WARRANTY --------------------------------------------
 
-You can see .ps1 files, are source code, miners are downloaded from github, can see address on miners folder files (except no github available, included)
-
-Due to technical issues claymore is included, is possible antivirus detect this miner as "suspect", you can delete this miner if you want and use yours, no more .exe inside.
-
+You can see .ps1 files, are source code, miners are downloaded from github
 
 
