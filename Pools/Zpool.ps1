@@ -1,6 +1,8 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null
+    [String]$Querymode = $null,
+    [Parameter(Mandatory = $false)]
+    [pscustomobject]$Info
 
     )
 
@@ -12,12 +14,12 @@ $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
 $AbbName ='ZPOOL'
 $WalletMode='WALLET'
-
+$Result=@()
 
 
 
 if ($Querymode -eq "info"){
-        [PSCustomObject]@{
+    $Result=[PSCustomObject]@{
                     Disclaimer = "Autoexchange to config.txt wallet, no registration required"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
@@ -29,23 +31,25 @@ if ($Querymode -eq "info"){
 
 
 
-if ($Querymode -like "wallet_*")    {
+if ($Querymode -eq "wallet")    {
 
-                    $Wallet=($Querymode -split '_')[1]
+               
                     try {
-                        $http="http://www.zpool.ca/api/wallet?address="+$wallet
-                        $Zpool_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+                        $http="http://www.zpool.ca/api/wallet?address="+$Info.user
+                        $Zpool_Request = Invoke-WebRequest $http -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
                     }
                     catch {}
 
 
                     if ($Zpool_Request -ne $null -and $Zpool_Request -ne ""){
-                                [PSCustomObject]@{
+                        $Result=[PSCustomObject]@{
                                                 Pool =$name
                                                 currency = $Zpool_Request.currency
                                                 balance = $Zpool_Request.balance
                                             }
+                            remove-variable  Zpool_Request                                            
                             }
+                
                 }
 
     
@@ -54,7 +58,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 $retries=1
                 do {
                         try {
-                            $Zpool_Request = Invoke-WebRequest "http://www.zpool.ca/api/status" -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+                            $Zpool_Request = Invoke-WebRequest "http://www.zpool.ca/api/status" -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
                             #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
                         }
                         catch {start-sleep 2}
@@ -68,9 +72,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     }
             
 
+               
                 $Zpool_Request | Get-Member -MemberType properties| ForEach-Object {
                                 
-                                $coin=$Zpool_Request | select -ExpandProperty $_.name
+                                $coin=$Zpool_Request | Select-Object -ExpandProperty $_.name
 
                                 $Zpool_Algo =  get-algo-unified-name ($_.name)
 
@@ -85,7 +90,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                                 
                                 
-                                        [PSCustomObject]@{
+                                    $Result+=[PSCustomObject]@{
                                             Algorithm     = $Zpool_Algo
                                             Info          = $null
                                             Price         = $coin.estimate_current / $Divisor
@@ -106,5 +111,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             PoolName = $Name
                                             }
                            }
+
+    remove-variable Zpool_Request                           
     }
 
+
+$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+remove-variable Result

@@ -8,7 +8,9 @@ THIS IS A VIRTUAL POOL, STATISTICS ARE TAKEN FROM WHATTOMINE AND RECALCULATED WI
 
 param(
     [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null
+    [String]$Querymode = $null,
+    [Parameter(Mandatory = $false)]
+    [pscustomobject]$Info
     )
 
 
@@ -18,10 +20,17 @@ $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $false
 $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
-$WalletMode = "NONE"
+$WalletMode = "MIXED"
+$Result=@()
+
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+
 
 if ($Querymode -eq "info"){
-        [PSCustomObject]@{
+        $Result=[PSCustomObject]@{
                     Disclaimer = "Based on Whattomine statistics, you must have acount on Suprnova a wallets for each coin on config.txt "
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
@@ -34,6 +43,33 @@ if ($Querymode -eq "info"){
 
 
 
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+
+
+    if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY"))    {
+
+                                switch($info.AbbName) {
+                                                "WTM-SN" {$PoolRealName = 'SUPRNOVA'  }
+                                                "WTM-MPH" {$PoolRealName = 'MINING_POOL_HUB'  }
+                                                "WTM-YI" {$PoolRealName = 'YIIMP'  }
+                                }
+                                
+                                $Info.poolname = $PoolRealName     
+                                $result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $PoolRealName -Info $Info  | select-object Pool,currency,balance
+                             
+                        
+                                 }
+        
+            
+
+
+
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
 
 
 
@@ -85,31 +121,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 }
 
                         }
-       
-
-
-        #search if Yiimp has pool for WTM mcoins
-
-               $YiimpPools=Get-Pools -Querymode "core" -PoolsFilterList 'YIIMP'
-
-                $YiimpPools | ForEach-Object {
-
-                        $WTMcoin=$WTMResponse.($_.Info)   
-                        if (($WTMcoin.Algorithm -eq $_.Algorithm) -and (($Pools | where-object coin -eq $_.info |where-object Algo -eq $_.Algorithm) -eq $null)) {
-                          if ($_.Info -ne 'decred') { #decred on yiimp has "server full" errors
-                                                $Pools +=[pscustomobject]@{
-                                                        "coin" = $_.Info
-                                                        "algo"= $_.Algorithm
-                                                        "symbol"= $WTMResponse.($_.Info).tag
-                                                        "server"= $_.host
-                                                        "port"=  $_.port
-                                                        "location"= $_.location
-                                                        }
-                                                }
-                                }
-
-                        }
-       
+      
 
          #search if suprnova has pool for WTM mcoins
 
@@ -131,10 +143,31 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                         }
 
+         <#                       
+         #search if Yiimp has pool for WTM mcoins
+
+               $YiimpPools=Get-Pools -Querymode "core" -PoolsFilterList 'YIIMP'
+               
+                               $YiimpPools | ForEach-Object {
+               
+                                       $WTMcoin=$WTMResponse.($_.Info)   
+                                       if (($WTMcoin.Algorithm -eq $_.Algorithm) -and (($Pools | where-object coin -eq $_.info |where-object Algo -eq $_.Algorithm) -eq $null)) {
+                                         if ($_.Info -ne 'decred') { #decred on yiimp has "server full" errors
+                                                               $Pools +=[pscustomobject]@{
+                                                                       "coin" = $_.Info
+                                                                       "algo"= $_.Algorithm
+                                                                       "symbol"= $WTMResponse.($_.Info).tag
+                                                                       "server"= $_.host
+                                                                       "port"=  $_.port
+                                                                       "location"= $_.location
+                                                                       }
+                                                               }
+                                               }
+               
+                                       }
+           #>           
 
         $Pools |ForEach-Object {
-
-
                             #WTM json is for 3xAMD 480 hashrate must adjust
                             $WTMFactor=$null
                             switch ($_.Algo)
@@ -163,21 +196,16 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         $VPPassword="x"  
                                         $VPprotocol="stratum+tcp"
                                         $VpAbbname='SN'
+                                        $VpWalletMode='APIKEY'
                                     }
 
-                            if ($_.Server -like '*blocksfactory*'){
-                                        $VPUser="$Username.$WorkerName" 
-                                        $VPPassword="x"  
-                                        $VPprotocol="stratum+tcp"
-                                        $VpAbbname='BF'
-                                    }
-       
                                     
                             if ($_.Server -like '*yiimp*'){
                                         $VPUser= $CoinsWallets.get_item($_.symbol)
                                         $VPPassword="c=$Yiimp_currency,ID=$WorkerName,stats"
                                         $VPprotocol="stratum+tcp"
                                         $VpAbbname='YI'
+                                        $VpWalletMode='WALLET'
                                     }
                         
                              if ($_.Server -like '*miningpoolhub*'){
@@ -185,9 +213,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         $VPPassword="x"
                                         $VPprotocol="stratum+tcp"
                                         $VpAbbname='MPH'
+                                        $VpWalletMode='APIKEY'
                                     }                                    
 
-                            [PSCustomObject]@{
+                $Result+=[PSCustomObject]@{
                                 Algorithm     = $_.Algo
                                 Info          = $_.Coin
                                 Price         = $Estimate
@@ -204,10 +233,25 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 ActiveOnManualMode    = $ActiveOnManualMode
                                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                                 PoolName = $Name
-                                WalletMode = $WalletMode
+                                WalletMode = $VpWalletMode
                                 }
 
                         }
 
+
+        remove-variable WTMResponse
+        remove-variable Pools
+        remove-variable WTMcoin
+        remove-variable MPHPools
+        remove-variable SPRPools                                      
+
         }
-                  
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+
+
+
+$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+remove-variable Result

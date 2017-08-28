@@ -157,4 +157,19 @@ RECOMENDED CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 THIS VERSION CHANGE CONFIG FILES STRUCTURES
 OBLIGATORY CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 
- 
+------------------------------------------------
+4.1
+
+*Added fan speed to nvidia SMI report
+*Added parameter checking to minimize errors
+*Added prospector miner for AMD
+*Changed .Bat and .txt files codification to ANSI
+*Log folder automatic clean
+*Restricted dual mining with high dcri to NVIDIA, created new profiles with low dcri for AMD
+*Due to api fails, Yiimp is disabled for Whattomine virtual Pool
+*Now Whattomine virtual pool shows wallets info
+*Fixed: gatelessgate for AMD not working
+*Fixed: Ethminer for AMD not working
+*Fixed: memory usage extremely high
+
+THIS VERSION CHANGE ALL POOL AND MINER FILES 

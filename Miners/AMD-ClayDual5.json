@@ -1,0 +1,20 @@
+{
+"Path" : ".\\Bin\\Ethash-Claymore\\EthDcrMiner64.exe",
+"ExtractionPath" : ".\\Bin\\Ethash-Claymore\\",
+"Uri" : "https://github.com/nanopool/Claymore-Dual-Miner/releases/download/v9.8/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v9.8.zip",
+"Types" : ["AMD"],
+"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL#  -dcri 5 #ALGORITHMPARAMETERS#",
+"API" : "Claymore",
+"APIPort" : 3333,
+"Wrap" : false,
+"DualMining": true,
+"DualMiningMainCoin": "Ethereum",
+"Algorithms": [
+                {"Ethash_Blake2b":" -dcoin sc"},
+                {"Ethash_Blake14r":" -dcoin dcr"},
+                {"Ethash_Pascal":" -dcoin pasc"},
+                {"Ethash_Lbry":" -dcoin lbc"}
+              ]
+
+}
+

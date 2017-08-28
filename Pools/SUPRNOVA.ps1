@@ -1,6 +1,8 @@
 param(
     [Parameter(Mandatory = $false)]
-    [String]$Querymode = $null #Info/detail"
+    [String]$Querymode = $null,
+    [Parameter(Mandatory = $false)]
+    [pscustomobject]$Info
     )
 
 
@@ -8,14 +10,17 @@ param(
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $false
+$ActiveOnAutomatic24hMode=$false
 $AbbName='SNOVA'
 $WalletMode="APIKEY"
+$Result=@()
 
 if ($Querymode -eq "info"){
-        [PSCustomObject]@{
+    $Result = [PSCustomObject]@{
                     Disclaimer = "Must register and set wallet for each coin on web"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
+                    ActiveOnAutomatic24hMode=$ActiveOnAutomaticMode
                     ApiData = $true
                     AbbName=$AbbName
                     WalletMode=$WalletMode
@@ -23,28 +28,28 @@ if ($Querymode -eq "info"){
     }
 
 
-    if ($Querymode -like "wallet_*")    {
+    if ($Querymode -eq "APIKEY")    {
         
-                            #$Server=($Querymode -split '_')[1]
-                            #$Coin=($Querymode -split '_')[2]  
-                            $ApiKey=($Querymode -split '_')[3]  
-                            $Algo=($Querymode -split '_')[4]  
-                            $Symbol=($Querymode -split '_')[5]  
+         
 
                              
-                            Switch($Symbol) {
-                                "DGB" {$Symbol=$Symbol+($Algo.substring(0,1))}
+                            Switch($Info.Symbol) {
+                                "DGB" {$Info.Symbol=$Info.Symbol+($Info.Algorithm.substring(0,1))}
                                }
 
-                               #>
+                               
 
 
                             
                             try {
-                                $http="http://"+$Symbol+".suprnova.cc/index.php?page=api&action=getuserbalance&api_key="+$ApiKey+"&id="
+
+                                $ApiKeyPattern='@@APIKEY_SUPRNOVA=*'
+                                $ApiKey = (Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} )-replace $ApiKeyPattern,''
+
+                                $http="http://"+$Info.Symbol+".suprnova.cc/index.php?page=api&action=getuserbalance&api_key="+$ApiKey+"&id="
                                 #$http |write-host  
                                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12                              
-                                $Suprnova_Request =  Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 
+                                $Suprnova_Request =  Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5
                                 $Suprnova_Request = $Suprnova_Request | ConvertFrom-Json | Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
                                 }
                             catch {
@@ -53,12 +58,14 @@ if ($Querymode -eq "info"){
         
         
                             if ($Suprnova_Request -ne $null -and $Suprnova_Request -ne ""){
-                                        [PSCustomObject]@{
+                                $Result=[PSCustomObject]@{
                                                         Pool =$name
-                                                        currency = ($Querymode -split '_')[5]  
+                                                        currency = $Info.OriginalCoin
                                                         balance = $Suprnova_Request.confirmed+$Suprnova_Request.unconfirmed
                                                     }
-                                    }
+                         
+                         
+                        Remove-variable Suprnova_Request                        }
                         }
 
                         
@@ -108,13 +115,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 if (($ManualMiningApiUse -eq $true) -and  ($Querymode -eq "Menu")) {
                                         $ApiResponse=$null
                                         try {
+                                                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12   
                                                 $Apicall="https://"+$_.Server+"/index.php?page=api&action=public"
-                                                $ApiResponse=(Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 5| ConvertFrom-Json)
+                                                $ApiResponse=(Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 3| ConvertFrom-Json)
                                             } catch{}
                                         }
                                 
 
-                                [PSCustomObject]@{
+                            $Result+=[PSCustomObject]@{
                                     Algorithm     = $_.Algo
                                     Info          = $_.Coin
                                     Price         = $null
@@ -141,6 +149,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 }
 
                         }
-
+                if (($ManualMiningApiUse -eq $true) -and  ($Querymode -eq "Menu")) {Remove-Variable ApiResponse}
+                Remove-Variable Pools
         }
                   
+$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+Remove-Variable Result

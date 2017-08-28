@@ -1,6 +1,8 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null #Info/detail"
+    [String]$Querymode = $null,
+    [Parameter(Mandatory = $false)]
+    [pscustomobject]$Info
     )
 
 #. .\Include.ps1
@@ -11,10 +13,14 @@ $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $false
 $AbbName="MPH"
 $WalletMode="APIKEY"
+$Result=@()
 
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
 
 if ($Querymode -eq "info"){
-        [PSCustomObject]@{
+    $Result = [PSCustomObject]@{
                     Disclaimer = "Registration required, set username/workername in config.txt file"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
@@ -25,25 +31,26 @@ if ($Querymode -eq "info"){
     }
 
 
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
 
     
 
-    if ($Querymode -like "wallet_*")    {
-        
-                            $Server=($Querymode -split '_')[1]
-                            $Coin=($Querymode -split '_')[2]  
-                            $ApiKey=($Querymode -split '_')[3]  
-                            $Algo=($Querymode -split '_')[4]  
+    if ($Querymode -eq "APIKEY")    {
 
-                            Switch($coin) {
-                                "DigiByte" {$Coin=$coin+'-'+$Algo}
-                                "Myriad" {$Coin=$coin+'-'+$Algo}
-                                "Verge" {$Coin=$coin+'-'+$Algo}
+                            Switch($Info.coin) {
+                                "DigiByte" {$Info.Coin=$Info.coin+'-'+$Info.Algorithm}
+                                "Myriad" {$Info.Coin=$Info.coin+'-'+$Info.Algorithm}
+                                "Verge" {$Info.Coin=$Info.coin+'-'+$Info.Algorithm}
                                 }
 
                             
                             try {
-                                $http="http://"+$Coin+".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key="+$ApiKey+"&id="
+                                $ApiKeyPattern='@@APIKEY_MINING_POOL_HUB=*'
+                                $ApiKey = (Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} )-replace $ApiKeyPattern,''
+
+                                $http="http://"+$Info.Coin+".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key="+$ApiKey+"&id="
                                 #$http |write-host                                
                                 $MiningPoolHub_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
 
@@ -53,14 +60,20 @@ if ($Querymode -eq "info"){
         
         
                             if ($MiningPoolHub_Request -ne $null -and $MiningPoolHub_Request -ne ""){
-                                        [PSCustomObject]@{
+                                $Result = [PSCustomObject]@{
                                                         Pool =$name
-                                                        currency = $MiningPoolHub_Request.currency
+                                                        currency = $Info.OriginalCoin
                                                         balance = $MiningPoolHub_Request.balance.confirmed+$MiningPoolHub_Request.balance.unconfirmed+$MiningPoolHub_Request.balance_for_auto_exchange.confirmed+$MiningPoolHub_Request.balance_for_auto_exchange.unconfirmed
                                                     }
-                                    }
+                                Remove-variable MiningPoolHub_Request                                    
+                                }
+
+                        
                         }
 
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
 
 
     
@@ -99,7 +112,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 $Locations | ForEach-Object {
                     $Location = $_
                     
-                    [PSCustomObject]@{
+                $Result+=[PSCustomObject]@{
                             Algorithm     = $MiningPoolHub_Algorithm
                             Info          = $MiningPoolHub_Coin
                             Price         = $MiningPoolHub_Price
@@ -124,5 +137,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 }
 
             }
+
+
+Remove-variable MiningPoolHub_Request
 }
 
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+
+
+$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+remove-variable Result

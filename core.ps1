@@ -31,15 +31,19 @@ param(
 #$PoolsName=('hash_refinery','zpool','mining_pool_hub')
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
-#$PoolsName=('BLOCKS_FACTORY','nicehash')
-#$PoolsName=('Suprnova')
-#$PoolsName=
+#$PoolsName='BLOCKS_FACTORY'
+
+#$PoolsName='Suprnova'
+#$PoolsName="Nicehash"
 
 #$Coinsname =('bitcore','Signatum','Zcash')
-#$Algorithm =('bitcore')
+#$Coinsname ='bitcore'
+#$Algorithm =('x11')
 
 
 #--------------Load config.txt file
+
+
 $location=@()
 $Types=@()
 $Currency=@()
@@ -69,6 +73,7 @@ else {$PSDefaultParameterValues["*:Proxy"] = $Proxy}
 $ActiveMiners = @()
 
 #Start the log
+Clear-log
 Start-Transcript ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 
 
@@ -97,6 +102,55 @@ set-WindowSize 120 60
  $GpuPlatform= $([array]::IndexOf((Get-WmiObject -class CIM_VideoController | Select-Object -ExpandProperty AdapterCompatibility), 'Advanced Micro Devices, Inc.')) 
     if ($GpuPlatform -eq -1) {$GpuPlatform=1} #For testing amd miners on nvidia
 
+    
+
+
+#---Paraneters checking
+
+if ($MiningMode -ne 'Automatic' -and $MiningMode -ne 'Manual' -and $MiningMode -ne 'Automatic24h'){
+    "Parameter MiningMode not valid, valid options: Manual, Automatic, Automatic24h" |Write-host
+    EXIT
+   }
+
+
+   
+$PoolsChecking=Get-Pools -Querymode "info" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm   
+
+$PoolsErrors=@()
+switch ($MiningMode){
+    "Automatic"{$PoolsErrors =$PoolsChecking |Where-Object ActiveOnAutomaticMode -eq $false}
+    "Automatic24h"{$PoolsErrors =$PoolsChecking |Where-Object ActiveOnAutomatic24hMode -eq $false}
+    "Manual"{$PoolsErrors =$PoolsChecking |Where-Object ActiveOnManualMode -eq $false }
+    }
+
+
+$PoolsErrors |ForEach-Object {
+    "Selected MiningMode is not valid for pool "+$_.name |write-host
+    EXIT
+}
+
+
+
+if ($MiningMode -eq 'Manual' -and ($Coinsname | Measure-Object).count -gt 1){
+    "On manual mode only one coin must be selected" |Write-host
+    EXIT
+   }
+
+
+if ($MiningMode -eq 'Manual' -and ($Coinsname | Measure-Object).count -eq 0){
+    "On manual mode must select one coin" |Write-host
+    EXIT
+   }   
+ 
+if ($MiningMode -eq 'Manual' -and ($Algorithm | measure-object).count -gt 1){
+    "On manual mode only one algorithm must be selected" |Write-host
+    EXIT
+   }
+    
+
+
+
+
 
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
@@ -110,7 +164,7 @@ set-WindowSize 120 60
 
 while ($true) {
     
-    $NextInterval=$Interval
+    $NextInterval=[int]$Interval
 
     #Activate or deactivate donation
     if ((Get-Date).AddDays(-1).AddMinutes($Donate) -ge $LastDonated) {
@@ -132,7 +186,6 @@ while ($true) {
  
 
     #Load information about the Pools, only must read parameter passed files (not all as mph do), level is Pool-Algo-Coin
-
      do
         {
         $Pools=Get-Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm
@@ -147,8 +200,6 @@ while ($true) {
 
     $Miners= @()
     
-   
-
 
     foreach ($MinerFile in (Get-ChildItem "Miners" | Where-Object extension -eq '.json'))  
         {
@@ -184,9 +235,10 @@ while ($true) {
 
                                            if ($_.info -eq $Miner.DualMiningMainCoin -or $Miner.Dualmining -eq $false) {  #not allow dualmining if main coin not coincide
                                            
-                                                $Arguments = $Miner.Arguments  -replace '#PORT#',$_.Port -replace '#SERVER#',$_.Host -replace '#PROTOCOL#',$_.Protocol -replace '#LOGIN#',$_.user -replace '#PASSWORD#',$_.Pass 
-                                                $Arguments= $Arguments -replace "#GpuPlatform#",$GpuPlatform
-                                                
+                                             $Arguments = $Miner.Arguments  -replace '#PORT#',$_.Port -replace '#SERVER#',$_.Host -replace '#PROTOCOL#',$_.Protocol -replace '#LOGIN#',$_.user -replace '#PASSWORD#',$_.Pass -replace "#GpuPlatform#",$GpuPlatform  -replace '#ALGORITHM#',$Algoname -replace '#ALGORITHMPARAMETERS#',$Algo.PSObject.Properties.Value
+                                             $ConfigFileArguments = $Miner.ConfigFileArguments  -replace '#PORT#',$_.Port -replace '#SERVER#',$_.Host -replace '#PROTOCOL#',$_.Protocol -replace '#LOGIN#',$_.user -replace '#PASSWORD#',$_.Pass -replace "#GpuPlatform#",$GpuPlatform   -replace '#ALGORITHM#',$Algoname -replace '#ALGORITHMPARAMETERS#',$Algo.PSObject.Properties.Value
+
+
                                                 if ($MiningMode -eq 'Automatic24h') {
                                                         $MinerProfit=[Double]([double]$HashrateValue * [double]$_.Price24h)}
                                                     else {
@@ -211,7 +263,10 @@ while ($true) {
                                                                 $MinerProfitDual = [Double]([double]$HashrateValueDual * [double]$PoolDual.Price24h)
                                                                 }
 
-                                                    $Arguments = $Arguments -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass
+                                                    $Arguments = $Arguments -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass  -replace '#ALGORITHMDUAL#',$AlgonameDual 
+                                                    $ConfigFileArguments = $ConfigFileArguments -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass -replace '#ALGORITHMDUAL#',$AlgonameDual
+
+
                                                     $PoolAbbName += '|' + $PoolDual.Abbname
                                                     $PoolName += '|' + $PoolDual.name
                                                     if ($PoolDual.workers -ne $null) {$PoolWorkers += '|' + $PoolDual.workers}
@@ -235,7 +290,7 @@ while ($true) {
                                                                     Port =$Miner.APIPort
                                                                     Wrap =$Miner.Wrap
                                                                     URI = $Miner.URI
-                                                                    Arguments=$Arguments+' '+$Algo.PSObject.Properties.Value
+                                                                    Arguments=$Arguments
                                                                     Profit=$MinerProfit
                                                                     ProfitDual=$MinerProfitDual
                                                                     PoolPrice=$_.Price
@@ -248,11 +303,13 @@ while ($true) {
                                                                     WalletMode=$_.WalletMode
                                                                     Host =$_.Host
                                                                     ExtractionPath = $Miner.ExtractionPath
+                                                                    GenerateConfigFile = $miner.GenerateConfigFile
+                                                                    ConfigFileArguments = $ConfigFileArguments
 
                                                                 }
                             
                                             }                       
-                                         }   #         
+                                         }          
      
                             }            
                         }
@@ -372,6 +429,8 @@ while ($true) {
                             Username             = $_.Username
                             WalletMode           = $_.WalletMode
                             Host                 = $_.Host
+                            ConfigFileArguments  = $_.ConfigFileArguments
+                            GenerateConfigFile   = $_.GenerateConfigFile
 
                         }
                         $ActiveMinersIdCounter++
@@ -417,6 +476,8 @@ while ($true) {
 
             $_.ActivatedTimes++
 
+            if ($_.GenerateConfigFile -ne $null) {$_.ConfigFileArguments | Set-Content ($_.GenerateConfigFile)}
+
             if ($_.Wrap) {$_.Process = Start-Process -FilePath "PowerShell" -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$($_.Arguments)' -WorkingDirectory '$(Split-Path $_.Path)'" -PassThru}
               else {$_.Process = Start-SubProcess -FilePath $_.Path -ArgumentList $_.Arguments -WorkingDirectory (Split-Path $_.Path)}
           
@@ -456,8 +517,10 @@ while ($true) {
 
     $FirstLoopExecution=$True   
     $IntervalStartTime=Get-Date
-    $key=$null
-    
+
+    #---------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
+
     while ($Host.UI.RawUI.KeyAvailable)  {$host.ui.RawUi.Flushinputbuffer()} #keyb buffer flush
 
     #loop to update info and check if miner is running                        
@@ -488,8 +551,6 @@ while ($true) {
         
         #display current mining info
 
-      
-
         "------------------------------------------------ACTIVE MINERS----------------------------------------------------------"| write-host
   
           $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
@@ -517,13 +578,13 @@ while ($true) {
                     $YToWrite=[ref]0      
                     Get-ConsolePosition ([ref]$XToWrite) ([ref]$YToWrite)  
                     Set-ConsolePosition 95 $YToWrite
+                    Remove-Variable XToWrite
+                    Remove-Variable YToWrite
                     
                     "(T)oggle All / Top 40" | Write-host 
 
-                    
-                    
                     #Display profits  information
-                    $ActiveMiners | Where-Object IsValid | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits} | select-object -first $ProfitsScreenLimit | Format-Table -AutoSize -GroupBy Type (
+                    $ActiveMiners | Where-Object IsValid | Sort-Object -Descending Type,{if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits} | select-object -first $ProfitsScreenLimit | Format-Table -AutoSize -GroupBy Type (
                         @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else  {$_.Algorithm+ '|' + $_.AlgorithmDual}}},   
                         @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else  {($_.coin)+ '|' + ($_.CoinDual)}}},   
                         @{Label = "Miner"; Expression = {$_.Name}}, 
@@ -552,17 +613,19 @@ while ($true) {
                     #Nvidia SMI-info
                     if ((Compare-Object "NVIDIA" $types -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0) {
                                 $NvidiaCards=@()
-                                invoke-expression "./nvidia-smi.exe --query-gpu=gpu_name,driver_version,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit --format=csv,noheader"  | foreach {
+                                invoke-expression "./nvidia-smi.exe --query-gpu=gpu_name,driver_version,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed  --format=csv,noheader"  | foreach {
                             
                                         $SMIresultSplit = $_ -split (",")
                                             $NvidiaCards +=[PSCustomObject]@{
-                                                        gpu_name           = $SMIresultSplit[0]
+
+                                                        gpu_name           = $SMIresultSplit[0] 
                                                         driver_version     = $SMIresultSplit[1]
                                                         utilization_gpu    = $SMIresultSplit[2]
                                                         utilization_memory = $SMIresultSplit[3]
                                                         temperature_gpu    = $SMIresultSplit[4]
                                                         power_draw         = $SMIresultSplit[5]
                                                         power_limit        = $SMIresultSplit[6]
+                                                        FanSpeed           = $SMIresultSplit[7]
                                                     }
                                     }               
 
@@ -572,7 +635,9 @@ while ($true) {
                                         @{Label = "GPU%"; Expression = {$_.utilization_gpu}},   
                                         @{Label = "Mem%"; Expression = {$_.utilization_memory}}, 
                                         @{Label = "Temp"; Expression = {$_.temperature_gpu}}, 
+                                        @{Label = "FanSpeed"; Expression = {$_.FanSpeed}},
                                         @{Label = "Power"; Expression = {$_.power_draw+" /"+$_.power_limit}}
+                                        
                                     ) | Out-Host
 
 
@@ -588,72 +653,87 @@ while ($true) {
                     $YToWrite=[ref]0      
                     Get-ConsolePosition ([ref]$XToWrite) ([ref]$YToWrite)  
                     Set-ConsolePosition 85 $YToWrite
+                   
+
                     
                     "(U)pdate  - $WalletsUpdate  " | Write-host 
 
 
-
-                    if (($WalletStatus | Measure-Object).count -eq 0) { #wallets only refresh one time each interval, not each loop iteration
+                    if ($WalletsUpdate -eq $null) { #wallets only refresh one time each interval, not each loop iteration
 
                             $WalletsUpdate=get-date
 
                             $WalletsToCheck=@()
                             
-                            $WalletsToCheck += $Pools  | where-object WalletMode -eq 'WALLET' | Select-Object PoolName,User,WalletMode -unique | Sort-Object Poolname
-                            $WalletsToCheck += $Pools  | where-object WalletMode -eq 'APIKEY' | Select-Object PoolName,Algorithm,info,OriginalAlgorithm,OriginalCoin,Host,Symbol,WalletMode  -unique  | Sort-Object Poolname,info,Algorithm
-
+                            $Pools  | where-object WalletMode -eq 'WALLET' | Select-Object PoolName,AbbName,User,WalletMode -unique  | ForEach-Object {
+                                $WalletsToCheck += [PSCustomObject]@{
+                                            PoolName   = $_.PoolName
+                                            AbbName = $_.AbbName
+                                            WalletMode = $_.WalletMode
+                                            User       = $_.User
+                                            Coin = $null
+                                            Algorithm =$null                                      
+                                            OriginalAlgorithm =$null
+                                            OriginalCoin = $null
+                                            Host = $null
+                                            Symbol =$null
+                                            }
+                                }
+                            $Pools  | where-object WalletMode -eq 'APIKEY' | Select-Object PoolName,AbbName,info,Algorithm,OriginalAlgorithm,OriginalCoin,Symbol,WalletMode  -unique  | ForEach-Object {
+                                $WalletsToCheck += [PSCustomObject]@{
+                                            PoolName   = $_.PoolName
+                                            AbbName = $_.AbbName
+                                            WalletMode = $_.WalletMode
+                                            User       = $null
+                                            Coin = $_.Info
+                                            Algorithm =$_.Algorithm
+                                            OriginalAlgorithm =$_.OriginalAlgorithm
+                                            OriginalCoin = $_.OriginalCoin
+                                            Symbol = $_.Symbol
+                                            }
+                                }
 
                             $WalletStatus=@()
                             $WalletsToCheck |ForEach-Object {
-                                        
-                                        if ($_.WalletMode -eq "APIKEY") {
-                                            $ApiKeyPattern='@@APIKEY_'+$_.PoolName+'=*'
-                                            $ApiKey=(Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} )-replace $ApiKeyPattern,''
-                                            if (($ApiKey |Measure-Object).count -eq 0) {"NOT API KEY AVAILABLE ON CONFIG.TXT FOR POOL "+$_.PoolName|Write-Output;break}
-                                            $Querymode = 'WALLET_'+$_.Host+'_'+$_.OriginalCoin+'_'+$ApiKey+'_'+$_.OriginalAlgorithm+'_'+$_.symbol
+
                                             Set-ConsolePosition $XToWrite $YToWrite
                                             "                                                                         "| Write-host 
                                             Set-ConsolePosition $XToWrite $YToWrite
-                                            "Checking "+$_.PoolName+" - "+$_.info+' ('+$_.Algorithm+')' | Write-host 
-                                            } 
 
-                                        if ($_.WalletMode -eq "WALLET") {
-                                            $Querymode="Wallet_"+$_.User
-                                            Set-ConsolePosition $XToWrite $YToWrite
-                                            "                                                                         "| Write-host 
-                                            Set-ConsolePosition $XToWrite $YToWrite
-                                             "Checking "+$_.PoolName+" - "+$_.User | Write-host
-                                            }
-                                        
+                                            if ($_.WalletMode -eq "WALLET") {"Checking "+$_.Abbname+" - "+$_.User | Write-host}
+                                                else {"Checking "+$_.Abbname+" - "+$_.coin+' ('+$_.Algorithm+')' | Write-host}
 
-                                        $Ws = Get-Pools -Querymode $Querymode -PoolsFilterList $_.Poolname
-                                        
-                                        if ($_.WalletMode -eq "WALLET") {$Ws | Add-Member Wallet $_.User}
-                                        else  {$Ws | Add-Member Wallet $_.Info}
+                                           
+                                            $Ws = Get-Pools -Querymode $_.WalletMode -PoolsFilterList $_.Poolname -Info ($_)
+                                            
+                                            if ($_.WalletMode -eq "WALLET") {$Ws | Add-Member Wallet $_.User}
+                                            else  {$Ws | Add-Member Wallet $_.Coin}
 
-                                        $Ws | Add-Member PoolName $_.Poolname
-                                        
-                                        $WalletStatus += $Ws
+                                            $Ws | Add-Member PoolName $_.Poolname
+                                            
+                                            $WalletStatus += $Ws
 
-                                        start-sleep 1 #no saturation of pool api
-                                        "                                                                         "| Write-host     
-                                     }
+                                            start-sleep 1 #no saturation of pool api
+                                            "                                                                         "| Write-host     
+                                        } 
 
-
-                                }
+                        }
 
 
 
-                        $WalletStatus | where-object Balance -gt 0 | Format-Table -Wrap -groupby poolname (
+                        $WalletStatus | where-object Balance -gt 0 | Sort-Object poolname | Format-Table -Wrap -groupby poolname (
                             @{Label = "Wallet"; Expression = {$_.wallet}}, 
                             @{Label = "Currency"; Expression = {$_.currency}}, 
-                            @{Label = "Balance"; Expression = {$_.balance}}
+                            @{Label = "Balance"; Expression = {$_.balance.tostring("n5")}}
                         ) | Out-Host
                 
 
                         $Pools  | where-object WalletMode -eq 'NONE' | Select-Object PoolName -unique | ForEach-Object {
                             "NO EXISTS API FOR POOL "+$_.PoolName+" - NO WALLETS CHECK" | Write-host 
-                            }                        
+                            }  
+
+                        Remove-Variable XToWrite
+                        Remove-Variable YToWrite                          
                             
                         }
 
@@ -679,8 +759,6 @@ while ($true) {
                                 $_.SpeedLive = 0
                                 $_.SpeedLiveDual = 0
                                 $Miner_HashRates = $null
-
-                                
 
 
                                 if ($_.Process -eq $null -or $_.Process.HasExited) {
@@ -735,12 +813,9 @@ while ($true) {
                         }
 
                     
-            
-           
 
 
                 $FirstLoopExecution=$False
-                
 
                 #Loop for reading key and wait
                 $Loopstart=get-date 
@@ -763,7 +838,7 @@ while ($true) {
                     'H' {$Screen='history'}
                     'E' {$ExitLoop=$true}
                     'W' {$Screen='Wallets'}
-                    'U' {if ($Screen -eq "Wallets") {$WalletStatus=$null}}
+                    'U' {if ($Screen -eq "Wallets") {$WalletsUpdate=$null}}
                     'T' {if ($Screen -eq "Profits") {if ($ProfitsScreenLimit -eq 40) {$ProfitsScreenLimit=1000} else {$ProfitsScreenLimit=40}}}
                     
                 }
@@ -780,6 +855,10 @@ while ($true) {
     
         }
      
+        
+    
+    Remove-variable miners
+    Remove-variable pools
     [GC]::Collect() #force garbage recollector for free memory
    
 
