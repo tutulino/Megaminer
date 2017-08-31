@@ -355,6 +355,10 @@ while ($true) {
                             PoolAbbName          = $_.PoolAbbName
                             SpeedLive            = 0
                             SpeedLiveDual        = 0
+                            HashrateTotal        = 0
+                            HashrateTicks        = 0
+                            HashrateDualTotal    = 0
+                            HashrateDualTicks    = 0
                             Best                 = $false
                             Process              = $null
                             NewThisRoud          = $True
@@ -429,6 +433,10 @@ while ($true) {
             else {
                    $_.Status = "Running"
                    $_.LastActiveCheck=get-date
+                   $_.HashrateTotal = 0
+                   $_.HashrateTicks = 0
+                   $_.HashrateDualTotal = 0
+                   $_.HashrateDualTicks = 0
                 }
 
             }
@@ -700,25 +708,45 @@ while ($true) {
                                         $Miner_HashRates = Get-Live-HashRate $_.API $_.Port 
 
                                         if ($Miner_HashRates -ne $null){
-                                            $_.SpeedLive = [double]($Miner_HashRates[0])
-                                            $Value=[double]($Miner_HashRates[0] * 0.95)
+											$_.SpeedLive = [double]($Miner_HashRates[0])
+                                            $Hashrate = [double]($Miner_HashRates[0] * 0.95)
 
-                                            if ($Value -gt 0) {$ConsecutiveZeroSpeed=0} else {$ConsecutiveZeroSpeed++}
-                                            if ( $Value -gt $_.Hashrate -and $_.NeedBenchmark) {
-                                                    $_.Hashrate= $Value
-                                                    Set-Hashrate -algorithm $_.Algorithm -minername $_.Name -value  $Value
-                                                    }
-                                            
-                                                
-                                            if ($_.DualMining){     
-                                                $_.SpeedLiveDual = [double]($Miner_HashRates[1])
-                                                $Value=[double]($Miner_HashRates[1] * 0.95)
-                                                if ( $Value -gt $_.HashrateDual  -and $_.NeedBenchmark) {
-                                                        $_.HashrateDual= $Value
-                                                        Set-Hashrate -algorithm $_.AlgorithmDual -minername $_.Name -value  $Value
-                                                        }
-                                                }
-                                            }          
+                                            if ($Hashrate -gt 0) {
+												$ConsecutiveZeroSpeed = 0
+											
+												$_.HashrateTotal += $Hashrate;
+												$_.HashrateTicks++
+												
+												
+												if ($_.DualMining) {     
+													$_.SpeedLiveDual = [double]($Miner_HashRates[1])
+													$HashrateDual = [double]($Miner_HashRates[1] * 0.95)
+													
+													if ($HashrateDual -gt 0) {
+														$_.HashrateDualTotal += $HashrateDual;
+														$_.HashrateDualTicks++
+														
+														if ($_.NeedBenchmark) {
+															$_.Hashrate = $Hashrate
+															$HashrateAvg = $_.HashrateTotal / $_.HashrateTicks
+															Set-Hashrate -algorithm $_.Algorithm -minername $_.Name -value  $_.HashrateAvg
+															
+															$_.HashrateDual = $HashrateDual
+															$HashrateDualAvg  = $_.HashrateDualTotal / $_.HashrateDualTicks
+															Set-Hashrate -algorithm $_.AlgorithmDual -minername $_.Name -value $HashrateDualAvg
+														}
+													}
+												} else {
+													if ($_.NeedBenchmark) {
+														$_.Hashrate= $Hashrate
+														$HashrateAvg = $_.HashrateTotal / $_.HashrateTicks
+														Set-Hashrate -algorithm $_.Algorithm -minername $_.Name -value  $_.HashrateAvg
+													}
+												}												
+											} else {
+												$ConsecutiveZeroSpeed++
+											}
+                                        }        
                                     }
                                 
                                         
