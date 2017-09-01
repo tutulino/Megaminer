@@ -139,6 +139,17 @@ function Get-Live-HashRate {
 
             }
 
+            "claymoreZEC" {
+
+                    $Request = Invoke-WebRequest "http://$($Server):$Port" -UseBasicParsing
+					
+                    $Data = $Request.Content.Substring($Request.Content.IndexOf("{"), $Request.Content.LastIndexOf("}") - $Request.Content.IndexOf("{") + 1) | ConvertFrom-Json
+                    
+                    $HashRate = [double]$Data.result[2].Split(";")[0]
+                    $HashRate_Dual = [double]$Data.result[4].Split(";")[0]
+
+            }
+	    
             "prospector" {
                     $Request = Invoke-WebRequest "http://$($Server):$Port/api/v0/hashrates" -UseBasicParsing
                     $Data = $Request | ConvertFrom-Json
