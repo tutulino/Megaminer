@@ -313,7 +313,7 @@ while ($true) {
                         }          
                     }
                 }
-            }            
+            }
         }
              
 
@@ -765,6 +765,7 @@ while ($true) {
                    
 
                 $ActiveMiners | Where-Object Best -eq $true | ForEach-Object {
+                
                     $_.SpeedLive = 0
                     $_.SpeedLiveDual = 0
                     $Miner_HashRates = $null
@@ -792,7 +793,6 @@ while ($true) {
                             
                                 $_.HashrateTotal += $Hashrate;
                                 $_.HashrateTicks++
-                                
                                 
                                 if ($_.DualMining) {     
                                     $_.SpeedLiveDual = [double]($Miner_HashRates[1])
@@ -825,7 +825,6 @@ while ($true) {
                         }          
                     }
                     
-                            
                     #Benchmark timeout
                     if ($_.BenchmarketTimes -ge 3) {
                         for ($i = $Miner_HashRates.Count; $i -lt $_.Algorithm.Count; $i++) {

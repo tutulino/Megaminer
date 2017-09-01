@@ -1,9 +1,9 @@
 {
 "Path" : ".\\Bin\\NVIDIA-CcminerKlaust\\ccminer.exe",
 "ExtractionPath" : ".\\Bin\\NVIDIA-CcminerKlaust\\",
-"Uri" : "https://github.com/KlausT/ccminer/releases/download/8.12/ccminer-812-cuda8-x64.zip",
+"Uri" : "https://github.com/KlausT/ccminer/releases/download/8.13/ccminer-813-x64.zip",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
 "API" : "Ccminer",
 "APIPort" : 4068,
 "Wrap" : false,
@@ -11,7 +11,7 @@
 "Algorithms": [
                 {"groestl":"-a groestl"},
                 {"Myriad-Groestl" : "-a myr-gr"},
-                {"Keccak":"-a keccak"},
+                {"Neoscrypt":"-a Neoscrypt"},
                 {"sib" : "-a sib"}
                 
 

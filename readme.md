@@ -6,7 +6,7 @@ HASHREFINERY -- Anonymous, autoexchange to selected coin in config.txt
 
 MININGPOOLHUB -- registration required, autoexchange to selected coin on pool´s web.
 
-SPRNOVA -- registration required, one registration for all pools except bitcoin cash, no autoexchange
+SUPRNOVA -- registration required, one registration for all pools except bitcoin cash, no autoexchange
 
 BLOCKSFACTORY -- registration required, one registration for all pools, no autoexchange
 
@@ -24,7 +24,7 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and S
    Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, Qubit ,X11, X13, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
    cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r
 
-**SPRNOVA
+**SUPRNOVA
    DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), ZCASH(ZEC),
    ZENCASH (ZEN), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB), SIBCOIN (SIB) ,UBIQ (UBQ), EXPANSE (EXP)
 

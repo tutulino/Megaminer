@@ -1,6 +1,8 @@
 param(
     [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null #Info/detail"
+    [String]$Querymode = $null,
+    [Parameter(Mandatory = $false)]
+    [pscustomobject]$Info
     )
 
 
@@ -10,12 +12,13 @@ $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $false
 $AbbName='B.FTRY'
 $WalletMode = "NONE"
+$Result=@()
 
 
 
 
 if ($Querymode -eq "info"){
-        [PSCustomObject]@{
+    $Result =[PSCustomObject]@{
                     Disclaimer = "Must register and set wallet for each coin on web, set login on config.txt file"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
@@ -36,11 +39,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Pools +=[pscustomobject]@{"coin" = "GUNCOIN"; "algo"="NEOSCRYPT"; "symbol"= "GUN"; "server"="s1.theblocksfactory.com";"port"="3330";"location"="US"}
 
 
+
         $Pools |ForEach-Object {
 
                                
 
-                                [PSCustomObject]@{
+                   $Result+=[PSCustomObject]@{
                                     Algorithm     = $_.Algo
                                     Info          = $_.Coin
                                     Price         = $Null
@@ -63,5 +67,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                         }
 
+
+
+        remove-variable Pools                   
         }
-                  
+
+
+    $Result |ConvertTo-Json | Set-Content ("$name.tmp")
+    remove-variable result
+    

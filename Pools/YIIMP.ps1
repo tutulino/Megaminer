@@ -1,6 +1,8 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null 
+    [String]$Querymode = $null ,
+    [Parameter(Mandatory = $false)]
+    [pscustomobject]$Info
     )
 
 #. .\..\Include.ps1
@@ -11,10 +13,17 @@ $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $false
 $AbbName = 'YIIMP'
 $WalletMode ='WALLET'
+$Result = @()
 
+
+
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
 
 if ($Querymode -eq "info"){
-        [PSCustomObject]@{
+    $Result = [PSCustomObject]@{
                     Disclaimer = "No registration, No autoexchange, need wallet for each coin on config.txt"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
@@ -30,37 +39,50 @@ if ($Querymode -eq "info"){
 
 
 
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
 
 
-    if ($Querymode -like "wallet_*")    {
+
+    if ($Querymode -eq "wallet")    {
         
-                            $Wallet=($Querymode -split '_')[1]
+                            
                             try {
-                                $http="http://yiimp.ccminer.org/api/wallet?address="+$wallet
-                                $Yiimp_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+                                $http="http://yiimp.ccminer.org/api/wallet?address="+$Info.user
+                                $Yiimp_Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
                             }
                             catch {}
         
         
                             if ($Yiimp_Request -ne $null -and $Yiimp_Request -ne ""){
-                                        [PSCustomObject]@{
+                                $Result = [PSCustomObject]@{
                                                         Pool =$name
                                                         currency = $Yiimp_Request.currency
                                                         balance = $Yiimp_Request.balance
                                                     }
+                                    remove-variable Yiimp_Request                                                                                                        
                                     }
+
+                        
                         }
                         
                         
 
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
     
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         $retries=1
                 do {
                         try {
-                             $Yiimp_Request = Invoke-WebRequest "http://yiimp.ccminer.org/api/currencies" -UseBasicParsing -timeout 5 | ConvertFrom-Json 
+                            $Yiimp_Request = Invoke-WebRequest "http://yiimp.ccminer.org/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 
+                            $Yiimp_Request = $Yiimp_Request | ConvertFrom-Json 
                              #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
+
                         }
                         catch {}
                         $retries++
@@ -87,7 +109,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     
                 
 
-                            [PSCustomObject]@{
+                    $Result+=[PSCustomObject]@{
                                 Algorithm     = $Yiimp_Algorithm
                                 Info          = $Yiimp_coin
                                 Price         = [Double]$coin.estimate / $Divisor
@@ -112,5 +134,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                         
                 
                 }
+
+  remove-variable Yiimp_Request                
     }
 
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+
+    $Result |ConvertTo-Json | Set-Content ("$name.tmp")
+    remove-variable Result
+    

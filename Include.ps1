@@ -1,7 +1,3 @@
-
-
-
-
 function Get-Live-HashRate {
     param(
         [Parameter(Mandatory = $true)]
