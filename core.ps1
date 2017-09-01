@@ -740,7 +740,7 @@ while ($true) {
                                                     if ($_.NeedBenchmark) {
                                                         $_.Hashrate= $Hashrate
                                                         $HashrateAvg = $_.HashrateTotal / $_.HashrateTicks
-                                                        Set-Hashrate -algorithm $_.Algorithm -minername $_.Name -value  $_.HashrateAvg
+                                                        Set-Hashrate -algorithm $_.Algorithm -minername $_.Name -value  $HashrateAvg
                                                     }
                                                 }                                                
                                             } else {
