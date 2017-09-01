@@ -1,47 +1,5 @@
-﻿
 
 
-function Get-ChildItemContent {
-    param(
-        [Parameter(Mandatory = $true)]
-        [String]$Path
-    )
-
-    $ChildItems = Get-ChildItem $Path | ForEach-Object {
-        $Name = $_.BaseName
-        $Content = @()
-        if ($_.Extension -eq ".ps1") {
-            $Content = &$_.FullName
-        }
-        else {
-            $Content = $_ | Get-Content | ConvertFrom-Json
-        }
-        $Content | ForEach-Object {
-            [PSCustomObject]@{Name = $Name; Content = $_}
-        }
-    }
-    
-    $ChildItems | ForEach-Object {
-        $Item = $_
-        $ItemKeys = $Item.Content.PSObject.Properties.Name.Clone()
-        $ItemKeys | ForEach-Object {
-            if ($Item.Content.$_ -is [String]) {
-                $Item.Content.$_ = Invoke-Expression "`"$($Item.Content.$_)`""
-            }
-            elseif ($Item.Content.$_ -is [PSCustomObject]) {
-                $Property = $Item.Content.$_
-                $PropertyKeys = $Property.PSObject.Properties.Name
-                $PropertyKeys | ForEach-Object {
-                    if ($Property.$_ -is [String]) {
-                        $Property.$_ = Invoke-Expression "`"$($Property.$_)`""
-                    }
-                }
-            }
-        }
-    }
-    
-    $ChildItems
-}
 
 
 function Get-Live-HashRate {
@@ -184,6 +142,13 @@ function Get-Live-HashRate {
 
 
             }
+
+            "prospector" {
+                    $Request = Invoke-WebRequest "http://$($Server):$Port/api/v0/hashrates" -UseBasicParsing
+                    $Data = $Request | ConvertFrom-Json
+                    $HashRate =  [Double]($Data.rate | Measure-Object -Sum).sum
+                 }
+
             "fireice" {
                 
                     $Request = Invoke-WebRequest "http://$($Server):$Port/h" -UseBasicParsing
@@ -206,7 +171,7 @@ function Get-Live-HashRate {
                 }
         }
 
-        $HashRates=@()
+        $HashRates = @()
         $HashRates += [double]$HashRate
         $HashRates += [double]$HashRate_Dual
 
@@ -215,6 +180,12 @@ function Get-Live-HashRate {
     catch {
     }
 }
+
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
 
 function ConvertTo-Hash { 
     param(
@@ -233,6 +204,13 @@ function ConvertTo-Hash {
         }
     $Return
 }
+
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
 
 function Get-Combination {
     param(
@@ -265,6 +243,12 @@ function Get-Combination {
         }
     }
 }
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
 
 function Start-SubProcess {
     param(
@@ -311,6 +295,12 @@ function Start-SubProcess {
 }
 
 
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
 function Expand-WebRequest {
     param(
         [Parameter(Mandatory = $true)]
@@ -338,6 +328,12 @@ function Expand-WebRequest {
 }
 
 
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
 function Get-Pools {
     param(
         [Parameter(Mandatory = $true)]
@@ -352,44 +348,34 @@ function Get-Pools {
         [string]$Location=$null,
         #[string]$Location='EUROPE'
         [Parameter(Mandatory = $false)]
-        [array]$AlgoFilterList
-         )
+        [array]$AlgoFilterList,
+        [Parameter(Mandatory = $false)]
+        [pscustomobject]$Info
+        )
         #in detail mode returns a line for each pool/algo/coin combination, in info mode returns a line for pool
 
 
-            $PoolsFolderContent= Get-ChildItem ($PSScriptRoot+'\pools') | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure).Count -gt 0}
 
-            $ChildItems = $PoolsFolderContent | ForEach-Object {
-                $Name = $_.BaseName
-                $Content = @()
-                $Content = &$_.FullName -Querymode $Querymode
-                $Content | ForEach-Object {[PSCustomObject]@{Name = $Name; Content = $_}}
-                }
-            
+        $PoolsFolderContent= Get-ChildItem ($PSScriptRoot+'\pools') | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure).Count -gt 0}
+        
+            $ChildItems=@()
 
-            $ChildItems | ForEach-Object {
-                            $Item = $_.content
-                            $ItemKeys = $Item.PSObject.Properties.Name.Clone()
-                            
+            $PoolsFolderContent | ForEach-Object {
+                                    $Name = $_.BaseName
+                                    $SharedFile="$PSScriptRoot\$Name.tmp"
+                                    if (Test-Path $SharedFile) {Remove-Item $SharedFile}
+                                    &$_.FullName -Querymode $Querymode -Info $Info
+                                    if (Test-Path $SharedFile) {
+                                            $Content=Get-Content $SharedFile | ConvertFrom-Json 
+                                            Remove-Item $SharedFile
+                                        }
+                                    $Content | ForEach-Object {$ChildItems +=[PSCustomObject]@{Name = $Name; Content = $_}}
+                                    }
+                                
+         
 
-                            $ItemKeys | ForEach-Object {
-                                if ($Item.$_ -is [String]) {
-                                    $Item.$_ = Invoke-Expression "`"$($Item.$_)`""
-                                }
-                                elseif ($Item.$_ -is [PSCustomObject]) {
-                                    $Property = $Item.$_
-                                    $PropertyKeys = $Property.PSObject.Properties.Name
-                                    $PropertyKeys | ForEach-Object {
-                                        if ($Property.$_ -is [String]) {
-                                            $Property.$_ = Invoke-Expression "`"$($Property.$_)`""
-                                }
-                            }
-                        }
-                    }
-                }
-                    
-            
-            $AllPools=$ChildItems | ForEach {$_.Content | Add-Member @{Name = $_.Name} -PassThru}
+            $AllPools = $ChildItems | ForEach-Object {if ($_.content -ne $null) {$_.Content | Add-Member @{Name = $_.Name} -PassThru}}
+               
 
             $AllPools | Add-Member LocationPriority 9999
 
@@ -436,11 +422,19 @@ function Get-Pools {
              { $Return= $AllPools }
 
 
+    
+    Remove-variable ChildItems
+    Remove-variable AllPools
+    Remove-variable AllPools2
+    
     $Return     
     
 
  }
 
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
 
  
 function Get-Best-Hashrate-Algo {
@@ -470,6 +464,10 @@ function Get-Best-Hashrate-Algo {
     $Return
 }
 
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
 
 function Get-Algo-Divisor {
       param(
@@ -493,6 +491,9 @@ function Get-Algo-Divisor {
      }
 
 
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
 
 function set-ConsolePosition ([int]$x,[int]$y) { 
         # Get current cursor position and store away 
@@ -501,7 +502,8 @@ function set-ConsolePosition ([int]$x,[int]$y) {
         $position.x=$x
         $position.y=$y
         # Place modified location back to $HOST 
-        $host.ui.rawui.cursorposition=$position 
+        $host.ui.rawui.cursorposition=$position
+        remove-variable position
         }
 
 
@@ -510,13 +512,15 @@ function Get-ConsolePosition ([ref]$x,[ref]$y) {
     $position=$host.ui.rawui.cursorposition 
     $x.value=$position.x
     $y.value=$position.y
-
-    #write-host $position $x.value $y.value
+    remove-variable position
 
 }
         
 
    
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
 
 function set-WindowSize ([int]$Width,[int]$Height) { 
     #zero not change this axis
@@ -528,6 +532,9 @@ function set-WindowSize ([int]$Width,[int]$Height) {
     $psWindow.WindowSize= $newSize
 }
 
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
 
 function get-algo-unified-name ([string]$Algo) {
 
@@ -550,7 +557,10 @@ function get-algo-unified-name ([string]$Algo) {
 
 }
 
- 
+ #************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
                     
 function get-coin-unified-name ([string]$Coin) {
 
@@ -570,48 +580,77 @@ function get-coin-unified-name ([string]$Coin) {
 
 
 
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
 
 
 
 function Get-Hashrate {
     param(
         [Parameter(Mandatory = $true)]
-        [String]$Algorithm,
+        [String]$MinerName,
         [Parameter(Mandatory = $true)]
-        [String]$MinerName
+        [String]$Algorithm,
+        [Parameter(Mandatory = $false)]
+        [String]$AlgorithmDual
     )
 
-
-    $Pattern=$MinerName+"_"+$Algorithm+"_HashRate.txt"
-
+	$DirPath = $PSScriptRoot + "\Stats"
+    $BasenameSplit = $MinerName, $Algorithm, $AlgorithmDual, "HashRate" | Where-Object { $_ } | Select -Unique
+    $Basename = $BasenameSplit -join "_"
+    $Filename = $Basename + ".txt"
     
-    try {$Content=[double](Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {$Content=$null}
+    try {
+        $Hashrates = Get-ChildItem ($DirPath) | Where-Object pschildname -eq $Filename | Get-Content | ConvertFrom-Json
+        ## Backward Compatible
+        if ($Hashrates -is [double]) {
+            $Hashrate = $Hashrates
+            $Hashrates = @()
+            $Hashrates += $Hashrate
+        }
+    } catch {
+        $Hashrates = @()
+    }
     
-    $Content
+	$Hashrates
 }
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
 
 
 function Set-Hashrate {
     param(
         [Parameter(Mandatory = $true)]
-        [String]$Algorithm,
-        [Parameter(Mandatory = $true)]
         [String]$MinerName,
         [Parameter(Mandatory = $true)]
-        [double]$Value
+        [String]$Algorithm,
+        [Parameter(Mandatory = $true)]
+        [double]$Value,
+        [Parameter(Mandatory = $false)]
+        [String]$AlgorithmDual,
+        [Parameter(Mandatory = $false)]
+        [double]$ValueDual
         
     )
 
+	$DirPath = $PSScriptRoot + "\Stats"
+    $BasenameSplit = $MinerName, $Algorithm, $AlgorithmDual, "HashRate" | Where-Object { $_ } | Select -Unique
+    $Basename = $BasenameSplit -join "_"
+    $Filename = $Basename + ".txt"
+    $Path = $DirPath + "\" + $Filename
 
-    $Path=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_HashRate.txt"
-
-    $Value | Convertto-Json | Set-Content  -Path $Path
-
-    
+	$Hashrates = $Value, $ValueDual
+    $Hashrates | Convertto-Json | Set-Content -Path $Path
+	
 }
 
 
 
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
 
 
 
@@ -662,3 +701,24 @@ function Start-Downloader {
 }
 
 
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
+function clear-log{
+
+    $Now = Get-Date
+    $Days = "3"
+
+    $TargetFolder = ".\Logs"
+    $Extension = "*.txt"
+    $LastWrite = $Now.AddDays(-$Days)
+
+    $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
+
+    $Files |ForEach-Object {Remove-Item $_.fullname}
+
+}
