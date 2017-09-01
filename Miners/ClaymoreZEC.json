@@ -1,0 +1,15 @@
+{
+"Path" : ".\\Bin\\ClaymoreZEC\\ZecMiner64.exe",
+"ExtractionPath" : ".\\Bin\\ClaymoreZEC\\",
+"Uri" : "https://github.com/nanopool/ClaymoreZECMiner/releases/download/v12.6/Claymore.s.ZCash.AMD.GPU.Miner.v12.6.zip",
+"Types" : ["AMD"],
+"Arguments" : "-zpool #SERVER#:#PORT# -zwal #LOGIN# -zpsw #PASSWORD# -allpools 1 #ALGORITHMPARAMETERS#",
+"API" : "ClaymoreZEC",
+"APIPort" : 3333,
+"Wrap" : false,
+"DualMining": false,
+"Algorithms": [
+                {"equihash":""}
+              ]
+
+}
