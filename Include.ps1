@@ -1,7 +1,3 @@
-﻿
-
-
-
 function Get-Live-HashRate {
     param(
         [Parameter(Mandatory = $true)]
@@ -171,7 +167,7 @@ function Get-Live-HashRate {
                 }
         }
 
-        $HashRates=@()
+        $HashRates = @()
         $HashRates += [double]$HashRate
         $HashRates += [double]$HashRate_Dual
 
@@ -589,18 +585,31 @@ function get-coin-unified-name ([string]$Coin) {
 function Get-Hashrate {
     param(
         [Parameter(Mandatory = $true)]
-        [String]$Algorithm,
+        [String]$MinerName,
         [Parameter(Mandatory = $true)]
-        [String]$MinerName
+        [String]$Algorithm,
+        [Parameter(Mandatory = $false)]
+        [String]$AlgorithmDual
     )
 
-
-    $Pattern=$MinerName+"_"+$Algorithm+"_HashRate.txt"
-
+	$DirPath = $PSScriptRoot + "\Stats"
+    $BasenameSplit = $MinerName, $Algorithm, $AlgorithmDual, "HashRate" | Where-Object { $_ } | Select -Unique
+    $Basename = $BasenameSplit -join "_"
+    $Filename = $Basename + ".txt"
     
-    try {$Content=[double](Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {$Content=$null}
+    try {
+        $Hashrates = Get-ChildItem ($DirPath) | Where-Object pschildname -eq $Filename | Get-Content | ConvertFrom-Json
+        ## Backward Compatible
+        if ($Hashrates -is [double]) {
+            $Hashrate = $Hashrates
+            $Hashrates = @()
+            $Hashrates += $Hashrate
+        }
+    } catch {
+        $Hashrates = @()
+    }
     
-    $Content
+	$Hashrates
 }
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
@@ -610,20 +619,27 @@ function Get-Hashrate {
 function Set-Hashrate {
     param(
         [Parameter(Mandatory = $true)]
-        [String]$Algorithm,
-        [Parameter(Mandatory = $true)]
         [String]$MinerName,
         [Parameter(Mandatory = $true)]
-        [double]$Value
+        [String]$Algorithm,
+        [Parameter(Mandatory = $true)]
+        [double]$Value,
+        [Parameter(Mandatory = $false)]
+        [String]$AlgorithmDual,
+        [Parameter(Mandatory = $false)]
+        [double]$ValueDual
         
     )
 
+	$DirPath = $PSScriptRoot + "\Stats"
+    $BasenameSplit = $MinerName, $Algorithm, $AlgorithmDual, "HashRate" | Where-Object { $_ } | Select -Unique
+    $Basename = $BasenameSplit -join "_"
+    $Filename = $Basename + ".txt"
+    $Path = $DirPath + "\" + $Filename
 
-    $Path=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_HashRate.txt"
-
-    $Value | Convertto-Json | Set-Content  -Path $Path
-
-    
+	$Hashrates = $Value, $ValueDual
+    $Hashrates | Convertto-Json | Set-Content -Path $Path
+	
 }
 
 
