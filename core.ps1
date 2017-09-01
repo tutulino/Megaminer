@@ -708,44 +708,44 @@ while ($true) {
                                         $Miner_HashRates = Get-Live-HashRate $_.API $_.Port 
 
                                         if ($Miner_HashRates -ne $null){
-											$_.SpeedLive = [double]($Miner_HashRates[0])
+                                            $_.SpeedLive = [double]($Miner_HashRates[0])
                                             $Hashrate = [double]($Miner_HashRates[0] * 0.95)
 
                                             if ($Hashrate -gt 0) {
-												$ConsecutiveZeroSpeed = 0
-											
-												$_.HashrateTotal += $Hashrate;
-												$_.HashrateTicks++
-												
-												
-												if ($_.DualMining) {     
-													$_.SpeedLiveDual = [double]($Miner_HashRates[1])
-													$HashrateDual = [double]($Miner_HashRates[1] * 0.95)
-													
-													if ($HashrateDual -gt 0) {
-														$_.HashrateDualTotal += $HashrateDual;
-														$_.HashrateDualTicks++
-														
-														if ($_.NeedBenchmark) {
-															$_.Hashrate = $Hashrate
-															$HashrateAvg = $_.HashrateTotal / $_.HashrateTicks
-															Set-Hashrate -algorithm $_.Algorithm -minername $_.Name -value  $HashrateAvg
-															
-															$_.HashrateDual = $HashrateDual
-															$HashrateDualAvg  = $_.HashrateDualTotal / $_.HashrateDualTicks
-															Set-Hashrate -algorithm $_.AlgorithmDual -minername $_.Name -value $HashrateDualAvg
-														}
-													}
-												} else {
-													if ($_.NeedBenchmark) {
-														$_.Hashrate= $Hashrate
-														$HashrateAvg = $_.HashrateTotal / $_.HashrateTicks
-														Set-Hashrate -algorithm $_.Algorithm -minername $_.Name -value  $_.HashrateAvg
-													}
-												}												
-											} else {
-												$ConsecutiveZeroSpeed++
-											}
+                                                $ConsecutiveZeroSpeed = 0
+                                            
+                                                $_.HashrateTotal += $Hashrate;
+                                                $_.HashrateTicks++
+                                                
+                                                
+                                                if ($_.DualMining) {     
+                                                    $_.SpeedLiveDual = [double]($Miner_HashRates[1])
+                                                    $HashrateDual = [double]($Miner_HashRates[1] * 0.95)
+                                                    
+                                                    if ($HashrateDual -gt 0) {
+                                                        $_.HashrateDualTotal += $HashrateDual;
+                                                        $_.HashrateDualTicks++
+                                                        
+                                                        if ($_.NeedBenchmark) {
+                                                            $_.Hashrate = $Hashrate
+                                                            $HashrateAvg = $_.HashrateTotal / $_.HashrateTicks
+                                                            Set-Hashrate -algorithm $_.Algorithm -minername $_.Name -value  $HashrateAvg
+                                                            
+                                                            $_.HashrateDual = $HashrateDual
+                                                            $HashrateDualAvg  = $_.HashrateDualTotal / $_.HashrateDualTicks
+                                                            Set-Hashrate -algorithm $_.AlgorithmDual -minername $_.Name -value $HashrateDualAvg
+                                                        }
+                                                    }
+                                                } else {
+                                                    if ($_.NeedBenchmark) {
+                                                        $_.Hashrate= $Hashrate
+                                                        $HashrateAvg = $_.HashrateTotal / $_.HashrateTicks
+                                                        Set-Hashrate -algorithm $_.Algorithm -minername $_.Name -value  $_.HashrateAvg
+                                                    }
+                                                }                                                
+                                            } else {
+                                                $ConsecutiveZeroSpeed++
+                                            }
                                         }        
                                     }
                                 
