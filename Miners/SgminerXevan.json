@@ -1,7 +1,7 @@
 {
-"Path" : ".\\Bin\\Lyra2z-AMD\\kernel\\sgminer.exe",
-"ExtractionPath" : ".\\Bin\\Lyra2z-AMD\\",
-"Uri" : "https://github.com/djm34/sgminer-msvc2015/releases/download/v0.2-pre/kernel_and_binary.rar",
+"Path" : ".\\Bin\\AMD-sgminerXevan\\sgminer.exe",
+"ExtractionPath" : ".\\Bin\\AMD-sgminerXevan\\",
+"Uri" : "https://github.com/LIMXTEC/Xevan-GPU-Miner/releases/download/1/sgminer-xevan-5.5.0-nicehash-1-windows-amd64.zip",
 "Types" : ["AMD"],
 "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
 "API" : "Xgminer",
@@ -9,9 +9,12 @@
 "Wrap" : false,
 "Dualmining":false,
 "Algorithms": [
-                {"lyra2z":"-k lyra2z --worksize 32 --intensity 18"}
+                {"xevan":""}
               ]
 
 }
 
  
+ 
+  
+     

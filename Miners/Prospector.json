@@ -4,16 +4,16 @@
 "Uri" : "https://github.com/semtexzv/Prospector/releases/download/0.0.10-ALPHA/prospector-0.0.10-ALPHA-win64.zip",
 "Types" : ["AMD"],
 "GenerateConfigFile" : ".\\Bin\\Prospector\\prospector.toml",
-"ConfigFileArguments" :  "#ALGORITHMPARAMETERS#\n url = \"stratum+tcp://#SERVER#:#PORT#\"  \n username = \"#LOGIN#\" \n password = \"#PASSWORD#\"  \n[gpus.#GpuPlatform#-0]\n enabled = true \n[gpus.#GpuPlatform#-1]\n enabled = true \n[gpus.#GpuPlatform#-2]\n enabled = true \n[gpus.#GpuPlatform#-3]\n enabled = true \n[gpus.#GpuPlatform#-4]\n enabled = true \n[gpus.#GpuPlatform#-5]\n  enabled = true \n[gpus.#GpuPlatform#-6]\n enabled = true \n[gpus.#GpuPlatform#-7]\n enabled = true  \n[cpu]\n  enabled = false",
+"PatternConfigFile": ".\\Patterns\\ProspectorPattern.txt",
 "Arguments" : "-c prospector.toml",
 "API" : "prospector",
 "APIPort" : 42000,
 "Wrap" : false,
 "DualMining": false,
 "Algorithms": [
-                {"Ethash":"[general]\n gpu-coin = \"eth\" \n[pools.eth]"},
-                {"Blake2b":"[general]\n gpu-coin = \"sia\" \n[pools.sia]"},
-                {"Skunk":"[general]\n gpu-coin = \"sigt\" \n[pools.sigt]"}
+                {"Ethash":"eth"},
+                {"Blake2b":"sia"},
+                {"Skunk":"sigt"}
               ]
 
 }

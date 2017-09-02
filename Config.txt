@@ -36,6 +36,11 @@
 @@BENCHMARKTIME=200
 
 
+-- Gpu Platform, some miners (sgminer and prospector) needs specify gpu platform, usually this value is 0,1 (you must try, no automatic detection)
+
+@@GPUPLATFORM=1
+
+
 -- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX (XXX=currency symbol)
 
 @@WALLET_BTC=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
@@ -59,7 +64,6 @@
 
 @@APIKEY_MINING_POOL_HUB=a04e6330b38f7387833434ae40775f70eff6582e8ec37600216757554887ccbd36b4510b4
 @@APIKEY_SUPRNOVA=cd03834069c3314bb6d88d333408bc4342a51ec1d45f90577742e4e5275744a402e4afed
-
 
 
 -- Number of minutes each day (NOT PERCENT) of donation

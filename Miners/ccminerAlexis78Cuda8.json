@@ -10,8 +10,9 @@
 "Dualmining":false,
 "Algorithms": [
                 {"qubit" : "-a qubit"},
-                {"x11gost" : "-a sib"}
+                {"x11gost" : "-a sib"},
 
+                {"lyra2v2" : "-a lyra2v2" }
               ]
 
 }

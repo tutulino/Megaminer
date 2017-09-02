@@ -10,14 +10,15 @@
 "Dualmining":false,
 "Algorithms": [
                 {"blake2s" : "-a blake2s"},
-                {"lbry" : "-a lbry" },
-                {"lyra2v2" : "-a lyra2v2" },                
+
+                {"lbry" : "-a lbry" },                
+
+
                 {"nist5" : "-a nist5"},
                 {"quark" : "-a quark"},
                 {"sib" : "-a sib"},
                 {"skein" : "-a skein"},
                 {"veltor" : "-a veltor"},
-                {"x11" : "-a x11" },
                 {"x14" : "-a x14" },
                 {"x13" : "-a x13" },
                 {"x11evo" : "-a x11evo"},

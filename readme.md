@@ -26,7 +26,8 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and S
 
 **SUPRNOVA
    DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), ZCASH(ZEC),
-   ZENCASH (ZEN), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB), SIBCOIN (SIB) ,UBIQ (UBQ), EXPANSE (EXP)
+   ZENCASH (ZEN), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB), SIBCOIN (SIB) ,UBIQ (UBQ), EXPANSE (EXP),
+   BITSEND (BSD)
 
 
 **BLOCKSFACTORY
@@ -54,7 +55,7 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. 
 
--Can mine on any of this pools (or all at same time): Nicehash, Zpool, Whattomine (virtual) HashRefinery, MPH or Yiimp with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
+-Can mine on any of this pools (or all at same time): Nicehash, Zpool, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
 
 -Can mine on Suprnova,Nicehash, MPH, YIIMP or BlocksFactory pool without autochange or profit calculation, manual coin selection
 
@@ -76,7 +77,7 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Nvidia SMI Info (Power, temperatures...)
 
--Pools Wallets info
+-Pools Wallets actual and evolution info
  
 -Option to autochange based on 24h statistics (on supported pools)
 

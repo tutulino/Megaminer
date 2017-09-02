@@ -95,7 +95,7 @@ function Get-Live-HashRate {
                     if ($HashRate -eq $null) {$HashRate = $Data.result.speed_sps}
 
             }
-            "nicehash" {
+            "excavator" {
                 $Message = @{id = 1; method = "algorithm.list"; params = @()} | ConvertTo-Json -Compress
 
                 $Client = New-Object System.Net.Sockets.TcpClient $server, $port
@@ -107,9 +107,12 @@ function Get-Live-HashRate {
                     $Writer.WriteLine($Message)
                     $Request = $Reader.ReadLine()
 
-                    $Data = $Request | ConvertFrom-Json
+                    $Data = ($Request | ConvertFrom-Json).Algorithms
+
+
+                    $HashRate = [Double](($Data.workers.speed) | Measure-Object -Sum).Sum
                 
-                    $HashRate = $Data.algorithms.workers.speed
+
 
 
             }
@@ -127,7 +130,7 @@ function Get-Live-HashRate {
 
                     $Data = $Request | ConvertFrom-Json
                 
-                    $HashRate += [Double](($Data.result.speed_sps) | Measure-Object -Sum).Sum
+                    $HashRate = [Double](($Data.result.speed_sps) | Measure-Object -Sum).Sum
             }
             "claymore" {
 
@@ -360,6 +363,10 @@ function Get-Pools {
         
             $ChildItems=@()
 
+            if ($info -eq $null) {$Info=[pscustomobject]@{}}
+
+            if (($info |  Get-Member -MemberType NoteProperty | where-object name -eq location) -eq $null) {$info | Add-Member Location $Location}
+
             $PoolsFolderContent | ForEach-Object {
                                     $Name = $_.BaseName
                                     $SharedFile="$PSScriptRoot\$Name.tmp"
@@ -448,10 +455,10 @@ function Get-Best-Hashrate-Algo {
 
     $Besthashrate=0
 
-    Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -like $Pattern | foreach {
-              $Content= $_ | Get-Content | ConvertFrom-Json
-              if ($Content.week -gt $Besthashrate) {
-                      $Besthashrate=$Content.week
+    Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -like $Pattern | ForEach-Object {
+              $Content= [double]($_ | Get-Content)
+              if ($Content -gt $Besthashrate) {
+                      $Besthashrate=$Content
                       $Miner= ($_.pschildname -split '_')[0]
                       }
             $Return=[pscustomobject]@{
@@ -506,6 +513,9 @@ function set-ConsolePosition ([int]$x,[int]$y) {
         remove-variable position
         }
 
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
 
 function Get-ConsolePosition ([ref]$x,[ref]$y) { 
 
@@ -586,42 +596,49 @@ function get-coin-unified-name ([string]$Coin) {
 
 
 
-function Get-Hashrate {
+function Get-Hashrates  {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Algorithm,
         [Parameter(Mandatory = $true)]
         [String]$MinerName
+
     )
 
 
     $Pattern=$MinerName+"_"+$Algorithm+"_HashRate.txt"
 
+    try {$Content=(Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {$Content=$null}
     
-    try {$Content=[double](Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {$Content=$null}
-    
-    $Content
+    if ($content -ne $null) {$Hrs = $Content[0].tostring() + "_" + $Content[1].tostring()}
+
+    $Hrs
+
 }
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
 
-function Set-Hashrate {
+function Set-Hashrates {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Algorithm,
         [Parameter(Mandatory = $true)]
         [String]$MinerName,
         [Parameter(Mandatory = $true)]
-        [double]$Value
+        [long]$Value,
+        [Parameter(Mandatory = $true)]
+        [long]$ValueDual
         
     )
 
 
     $Path=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_HashRate.txt"
 
-    $Value | Convertto-Json | Set-Content  -Path $Path
+    $Array=$Value,$valueDual
+    $Array | Convertto-Json | Set-Content  -Path $Path
+    Remove-Variable Array
 
     
 }

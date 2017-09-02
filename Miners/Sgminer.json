@@ -16,7 +16,6 @@
                 {"blake14r":"-k decred"},
                 {"Keccak":"-k maxcoin"},
                 {"lbry":"-k lbry"},
-                {"neoscrypt":"-k neoscrypt --gpu-threads 1 --worksize 64 --intensity 11 --thread-concurrency 64"},
                 {"Pascal":"-k pascal"},
                 {"Qubit":"-k qubitcoin --gpu-threads 2 --worksize 128 --intensity d"},
                 {"blake2s":"-k sia"},

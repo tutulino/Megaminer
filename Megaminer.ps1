@@ -21,7 +21,7 @@ if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY 
 
 
 #--------------Load config.txt file
-$location=@()
+
 $Location=(Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} )-replace '@@LOCATION=',''
 $CoinsWallets=@{} #needed for anonymous pools load
      (Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','' | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
@@ -137,7 +137,9 @@ if ($MiningMode -eq "manual"){
                     else 
                         {write-host CALLING POOL API........}
 
-                    $CoinsPool=Get-Pools -Querymode "Menu" -PoolsFilterList $PoolsName |Select-Object info,symbol,algorithm,Workers,PoolHashRate,Blocks_24h -unique | Sort-Object info
+
+
+                    $CoinsPool=Get-Pools -Querymode "Menu" -PoolsFilterList $PoolsName -location $Location |Select-Object info,symbol,algorithm,Workers,PoolHashRate,Blocks_24h -unique | Sort-Object info
 
                     $CoinsPool | Add-Member Option "0"
                     $CoinsPool | Add-Member YourHashRate ([Double]0.0)
@@ -148,6 +150,8 @@ if ($MiningMode -eq "manual"){
                     $CoinsPool | Add-Member BtcProfit ([Double]0.0)
                     $CoinsPool | Add-Member EurProfit ([Double]0.0)
                     $CoinsPool | Add-Member DollarProfit ([Double]0.0)
+                    $CoinsPool | Add-Member EurPrice ([Double]0.0)
+                    $CoinsPool | Add-Member DollarPrice ([Double]0.0)
                     
                     
                     $ManualMiningApiUse=(Get-Content config.txt | Where-Object {$_ -like '@@MANUALMININGAPIUSE=*'} )-replace '@@MANUALMININGAPIUSE=',''    
@@ -175,7 +179,7 @@ if ($MiningMode -eq "manual"){
                                                 $counter++
                                                 $_.YourHashRate=(Get-Best-Hashrate-Algo $_.Algorithm).hashrate
 
-                                                if ($ManualMiningApiUse -eq $true -and $_.symbol -ne "" -and $_symbol -ne $null){
+                                                if ($ManualMiningApiUse -eq $true -and $_.symbol -ne "" -and $_.symbol -ne $null){
 
                                                                 #Get data from bittrex global api call
                                                                 if ($BTXResponse -ne $null) {
@@ -187,7 +191,7 @@ if ($MiningMode -eq "manual"){
                                                                 #If no data try with CRYPTOPIA                                    
                                                                 if ($_.BTCPrice -eq 0){
                                                                                         $ApiResponse = $null
-                                                                                        "CALLING CRYPTOPIA API........"+$_.symbol+"_BTC" |Write-Host
+                                                                                        "CALLING CRYPTOPIA API........"+$_.symbol+"_BTC" | out-Host
                                                                                         try {
                                                                                                 $Apicall="https://www.cryptopia.co.nz/api/GetMarket/"+$_.symbol+'_BTC'
                                                                                                 $ApiResponse=(Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 2| ConvertFrom-Json|Select-Object -ExpandProperty data)
@@ -236,6 +240,9 @@ if ($MiningMode -eq "manual"){
                                                                                 
                                                                  $_.EurProfit = [double]$CDKResponse.eur.rate * [double]$_.BtcProfit
                                                                  $_.DollarProfit = [double]$CDKResponse.usd.rate * [double]$_.BtcProfit
+                                                                 $_.EurPrice = [double]$CDKResponse.eur.rate * [double]$_.BtcPrice
+                                                                 $_.DollarPrice = [double]$CDKResponse.usd.rate * [double]$_.BtcPrice
+                                                                 
 
                                                                 }
                                                                      
@@ -273,7 +280,7 @@ if ($MiningMode -eq "manual"){
                                 @{Label = "HashRate"; Expression = {(ConvertTo-Hash ($_.YourHashRate))+"/s"}; Align = 'right'},   
                                 #@{Label = "Blocks_24h"; Expression = {$_.Blocks_24h}; Align = 'right'},
                                 @{Label = "BTCPrice"; Expression = {[math]::Round($_.BTCPrice,6)}; Align = 'right'},
-                                @{Label = $LabelPrice; Expression = { if ($Location -eq 'Europe') {[string][math]::Round($_.EurProfit,2)} else {[math]::Round($_.DollarProfit,2)}}; Align = 'right'},
+                                @{Label = $LabelPrice; Expression = { if ($Location -eq 'Europe') {[string][math]::Round($_.EurPrice,2)} else {[math]::Round($_.DollarPrice,2)}}; Align = 'right'},
                                 #@{Label = "DiffChange24h"; Expression = {([math]::Round($_.DiffChange24h,1)).ToString()+'%'}; Align = 'right'},
                                 @{Label = "Reward"; Expression = {([math]::Round($_.Reward,3))}; Align = 'right'},
                                 @{Label = "BtcProfit"; Expression = {([math]::Round($_.BtcProfit,6))}; Align = 'right'},

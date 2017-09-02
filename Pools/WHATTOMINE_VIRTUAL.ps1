@@ -57,7 +57,7 @@ if ($Querymode -eq "info"){
                                 }
                                 
                                 $Info.poolname = $PoolRealName     
-                                $result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $PoolRealName -Info $Info  | select-object Pool,currency,balance
+                                $result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $PoolRealName -Info $Info   | select-object Pool,currency,balance
                              
                         
                                  }
@@ -103,7 +103,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         #search if MPH has pool for WTM mcoins
 
-                $MPHPools=Get-Pools -Querymode "core" -PoolsFilterList 'MINING_POOL_HUB'
+                $MPHPools=Get-Pools -Querymode "core" -PoolsFilterList 'MINING_POOL_HUB' -location $Info.Location
 
                 $MPHPools | ForEach-Object {
 
@@ -125,7 +125,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
          #search if suprnova has pool for WTM mcoins
 
-               $SPRPools=Get-Pools -Querymode "core" -PoolsFilterList 'Suprnova'
+               $SPRPools=Get-Pools -Querymode "core" -PoolsFilterList 'Suprnova' -location $Info.Location
 
                 $SPRPools | ForEach-Object {
 
@@ -143,10 +143,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                         }
 
-         <#                       
+         
          #search if Yiimp has pool for WTM mcoins
 
-               $YiimpPools=Get-Pools -Querymode "core" -PoolsFilterList 'YIIMP'
+               $YiimpPools=Get-Pools -Querymode "core" -PoolsFilterList 'YIIMP' -location $Info.Location
                
                                $YiimpPools | ForEach-Object {
                
@@ -165,7 +165,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                                }
                
                                        }
-           #>           
+           
 
         $Pools |ForEach-Object {
                             #WTM json is for 3xAMD 480 hashrate must adjust

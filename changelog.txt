@@ -172,4 +172,39 @@ OBLIGATORY CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 *Fixed: Ethminer for AMD not working
 *Fixed: memory usage extremely high
 
+
 THIS VERSION CHANGE ALL POOL AND MINER FILES 
+
+------------------------------------------------
+4.2
+
+*Added in Wallet Screen difference between actual balance and balance at start program (generated profit while running)
+*Added excavator miner for AMD
+*Added Claymore ZEC miner for AMD
+*Added start parameters to batch files for AMD
+*Added dcri 140,160 for NVIDIA
+*Added sgminer Xevan for AMD
+*Added BITSEND (BSD) to suprnova pool
+*Added GPU Platform variable in config.txt due to incorrect automatic detection (only AMD sgminer/prospector neeeds this variable at moment)
+*Added Option in profits screen to show only best miner for each algo/coin (default: active)
+*Upgrade ccminer tpruvot to 2.2.1 (cuda9) Require a nvidia driver 384.xx or more recent
+*Upgrade claymore dual to 10.0
+*Tweaked gatelessgate algorithms parameters
+*Due to api fails/bans, Yiimp lost api integration: no automatic mode (except on Whattomine virtual Pool) and no more wallets info
+*Removed X11 Algo, Asics territory
+*Fixed: Dual Minning Benchmarks always shows best main algo benchmark (independent of second Algo)
+*Fixed: memory usage extremely high on profit screen -- Tested for 2 days, be careful
+*Fixed: Whattomine virtual pool not using location variable
+*Fixed: Suprnova Hush pool not working due to new pool address
+*Fixed: profit not well calculated for dual mining
+*Fixed: failed times error when miner is not mining for various intervals
+*Fixed: automatic detection and close of hanged miner not working
+*Fixed: some menu data not shown on manual mode
+*Fixed: sgminer lyra2z path
+*Fixed: duplicated coins on manual mode menu
+*Fixed: ActiveMiners screen section not showing live speed profit 
+
+
+THIS VERSION ADD VARIABLE @@GPUPLATFORM to config.txt (at moment not necessary for NVIDIA)
+THIS VERSION REQUIRES RUN ALL BENCHMARKS AGAIN (if you are upgrading over old version delete stats folder content)
+TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER)
