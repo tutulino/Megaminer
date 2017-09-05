@@ -3,7 +3,7 @@
 "ExtractionPath" : ".\\Bin\\Ethash-Claymore\\",
 "Uri" : "https://github.com/tutulino/Claymore-Dual/releases/download/10.0/Claymore-Dual10.zip",
 "Types" : ["NVIDIA"],
-"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 -mode 1 #ALGORITHMPARAMETERS#",
+"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 -wd 1 -mode 1 #ALGORITHMPARAMETERS#",
 "API" : "Claymore",
 "APIPort" : 3333,
 "Wrap" : false,
