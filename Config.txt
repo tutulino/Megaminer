@@ -18,7 +18,7 @@
 
 @@TYPE=NVIDIA
 
--- Location of your rig: EUROPE/US/ASIA (some pool may have no desired location, US will be selected then)
+-- Location of your rig: EUROPE/US/ASIA/GB  (some pool may have no desired location, US will be selected then)
 
 @@LOCATION=EUROPE
 

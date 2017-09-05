@@ -535,8 +535,15 @@ while ($true) {
                 Clear-Host
                 "COINDESK API NOT RESPONDING, NOT POSSIBLE LOCAL COIN CONVERSION" | Out-host 
                 }
-     
-                if ($Location -eq 'Europe') {$LabelProfit="EUR/Day"} else {$LabelProfit="USD/Day"}
+                
+                switch ($location) {
+                    'Europe' {$LabelProfit="EUR/Day" ; $localBTCvalue = [double]$CDKResponse.eur.rate}
+                    'US'     {$LabelProfit="USD/Day" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
+                    'ASIA'   {$LabelProfit="USD/Day" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
+                    'GB'     {$LabelProfit="GBP/Day" ; $localBTCvalue = [double]$CDKResponse.gbp.rate}
+
+                }
+
 
 
 
@@ -574,7 +581,7 @@ while ($true) {
         "" | Out-Host
       
 
-        
+
         #display current mining info
 
         "------------------------------------------------ACTIVE MINERS----------------------------------------------------------"| Out-host
@@ -582,7 +589,7 @@ while ($true) {
           $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
               @{Label = "Speed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive))+'s'} else {(ConvertTo-Hash  ($_.SpeedLive))+'/s|'+(ConvertTo-Hash ($_.SpeedLiveDual))+'/s'} }; Align = 'right'},     
               @{Label = "BTC/Day"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.ProfitLive.tostring("n5")}}; Align = 'right'}, 
-              @{Label = $LabelProfit; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {if ($Location -eq 'Europe') {(([double]$_.ProfitLive + [double]$_.ProfitLiveDual) * [double]$CDKResponse.eur.rate).tostring("n2") } else {(([double]$_.ProfitLive + [double]$_.ProfiLivetDual) * [double]$CDKResponse.usd.rate).tostring("n2")}}}; Align = 'right'},
+              @{Label = $LabelProfit; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {(([double]$_.ProfitLive + [double]$_.ProfitLiveDual) *  [double]$localBTCvalue ).tostring("n2")}}}, 
               @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else  {$_.Algorithm+ '|' + $_.AlgorithmDual}}},   
               @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else  {($_.coin)+ '|' + ($_.CoinDual)}}},   
               @{Label = "Miner"; Expression = {$_.Name}}, 
@@ -624,18 +631,21 @@ while ($true) {
                     else 
                            {$ProfitMiners=$ActiveMiners}
                     
-                    
-                           $ProfitMiners= $ProfitMiners | Sort-Object -Descending Type,NeedBenchmark,Profits #dont merge with next line, memory leak happens when are joined
-                           $ProfitMiners= $ProfitMiners | select-object -first $ProfitsScreenLimit
+                           $inserted=1
+                           $ProfitMiners2=@()
+                            $ProfitMiners | Sort-Object -Descending Type,NeedBenchmark,Profits | ForEach-Object {
+                                if ($inserted -le $ProfitsScreenLimit) {$ProfitMiners2+=$_ ; $inserted++} #this can be done with select-object -first but then memory leak happens, ¿why?
+                           }
+                           
 
                     #Display profits  information
-                    $ProfitMiners | Format-Table -GroupBy Type (
+                    $ProfitMiners2 | Format-Table -GroupBy Type (
                         @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else  {$_.Algorithm+ '|' + $_.AlgorithmDual}}},   
                         @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else  {($_.coin)+ '|' + ($_.CoinDual)}}},   
                         @{Label = "Miner"; Expression = {$_.Name}}, 
                         @{Label = "Speed"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Hashrates}}}, 
                         @{Label = "BTC/Day"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Profits.tostring("n5")}}; Align = 'right'}, 
-                        @{Label = $LabelProfit; Expression = { if ($Location -eq 'Europe') {([double]$_.Profits * [double]$CDKResponse.eur.rate).tostring("n2") } else {([double]$_.Profits * [double]$CDKResponse.usd.rate).tostring("n2")}}; Align = 'right'},
+                        @{Label = $LabelProfit; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n2") } ; Align = 'right'},
                         @{Label = "Pool"; Expression = {$_.PoolAbbName}},
                         @{Label = "PoolWorkers"; Expression = {$_.PoolWorkers}}
                     ) | Out-Host

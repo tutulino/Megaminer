@@ -148,10 +148,9 @@ if ($MiningMode -eq "manual"){
                     $CoinsPool | Add-Member DiffChange24h ([Double]0.0)
                     $CoinsPool | Add-Member Reward ([Double]0.0)
                     $CoinsPool | Add-Member BtcProfit ([Double]0.0)
-                    $CoinsPool | Add-Member EurProfit ([Double]0.0)
-                    $CoinsPool | Add-Member DollarProfit ([Double]0.0)
-                    $CoinsPool | Add-Member EurPrice ([Double]0.0)
-                    $CoinsPool | Add-Member DollarPrice ([Double]0.0)
+                    $CoinsPool | Add-Member LocalProfit ([Double]0.0)
+                    $CoinsPool | Add-Member LocalPrice ([Double]0.0)
+                    
                     
                     
                     $ManualMiningApiUse=(Get-Content config.txt | Where-Object {$_ -like '@@MANUALMININGAPIUSE=*'} )-replace '@@MANUALMININGAPIUSE=',''    
@@ -237,11 +236,13 @@ if ($MiningMode -eq "manual"){
 
                                                                                 }
                                                                  
-                                                                                
-                                                                 $_.EurProfit = [double]$CDKResponse.eur.rate * [double]$_.BtcProfit
-                                                                 $_.DollarProfit = [double]$CDKResponse.usd.rate * [double]$_.BtcProfit
-                                                                 $_.EurPrice = [double]$CDKResponse.eur.rate * [double]$_.BtcPrice
-                                                                 $_.DollarPrice = [double]$CDKResponse.usd.rate * [double]$_.BtcPrice
+
+                                                                    if ($location -eq 'Europe') {$_.LocalProfit = [double]$CDKResponse.eur.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.eur.rate * [double]$_.BtcPrice}
+                                                                    if ($location -eq 'US')     {$_.LocalProfit = [double]$CDKResponse.usd.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.usd.rate * [double]$_.BtcPrice}
+                                                                    if ($location -eq 'GB')     {$_.LocalProfit = [double]$CDKResponse.gbp.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.gbp.rate * [double]$_.BtcPrice}
+                                            
+                                                                    
+                                                                                                                            
                                                                  
 
                                                                 }
@@ -261,14 +262,14 @@ if ($MiningMode -eq "manual"){
                     
                     if ($SelectedPool.ApiData -eq $false)  {write-host        ----POOL API NOT EXISTS, SOME DATA NOT AVAILABLE---}
 
-                    if ($Location -eq 'Europe') {
-                                 $LabelPrice="EurPrice"
-                                 $LabelProfit="EurProfit"
-                                } 
-                    else {
-                           $LabelPrice="UsdPrice"
-                           $LabelProfit="UsdProfit"
-                          }
+                    switch ($location) {
+                        'Europe' {$LabelPrice="EurPrice"; $LabelProfit="EurProfit" ; $localBTCvalue = [double]$CDKResponse.eur.rate}
+                        'US'     {$LabelPrice="UsdPrice" ; $LabelProfit="UsdProfit" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
+                        'GB'     {$LabelPrice="GbpPrice" ; $LabelProfit="GbpProfit" ; $localBTCvalue = [double]$CDKResponse.gbp.rate}
+
+                       }
+
+                 
 
                     $CoinsPool  | Format-Table -Wrap (
                                 @{Label = "Opt."; Expression = {$_.Option}; Align = 'right'} ,
@@ -280,11 +281,11 @@ if ($MiningMode -eq "manual"){
                                 @{Label = "HashRate"; Expression = {(ConvertTo-Hash ($_.YourHashRate))+"/s"}; Align = 'right'},   
                                 #@{Label = "Blocks_24h"; Expression = {$_.Blocks_24h}; Align = 'right'},
                                 @{Label = "BTCPrice"; Expression = {[math]::Round($_.BTCPrice,6)}; Align = 'right'},
-                                @{Label = $LabelPrice; Expression = { if ($Location -eq 'Europe') {[string][math]::Round($_.EurPrice,2)} else {[math]::Round($_.DollarPrice,2)}}; Align = 'right'},
+                                @{Label = $LabelPrice; Expression = { [math]::Round($_.LocalPrice,2)}; Align = 'right'},
                                 #@{Label = "DiffChange24h"; Expression = {([math]::Round($_.DiffChange24h,1)).ToString()+'%'}; Align = 'right'},
                                 @{Label = "Reward"; Expression = {([math]::Round($_.Reward,3))}; Align = 'right'},
                                 @{Label = "BtcProfit"; Expression = {([math]::Round($_.BtcProfit,6))}; Align = 'right'},
-                                @{Label = $LabelProfit; Expression = { if ($Location -eq 'Europe') {[math]::Round($_.EurProfit,2)} else {[math]::Round($_.DollarProfit,2)}}; Align = 'right'}
+                                @{Label = $LabelProfit; Expression = {[math]::Round($_.LocalProfit,2)}; Align = 'right'}
                                 )  | out-host        
             
 

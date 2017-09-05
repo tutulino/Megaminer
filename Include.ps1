@@ -143,7 +143,7 @@ function Get-Live-HashRate {
 
             }
 
-            "claymoreZEC" {
+            "ClaymoreV2" {
                 
                                     $Request = Invoke-WebRequest "http://$($Server):$Port" -UseBasicParsing
                                     
@@ -216,43 +216,6 @@ function ConvertTo-Hash {
 }
 
 
-
-#************************************************************************************************************************************************************************************
-#************************************************************************************************************************************************************************************
-#************************************************************************************************************************************************************************************
-
-
-function Get-Combination {
-    param(
-        [Parameter(Mandatory = $true)]
-        [Array]$Value, 
-        [Parameter(Mandatory = $false)]
-        [Int]$SizeMax = $Value.Count, 
-        [Parameter(Mandatory = $false)]
-        [Int]$SizeMin = 1
-    )
-
-    $Combination = [PSCustomObject]@{}
-
-    for ($i = 0; $i -lt $Value.Count; $i++) {
-        $Combination | Add-Member @{[Math]::Pow(2, $i) = $Value[$i]}
-    }
-
-    $Combination_Keys = $Combination | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name
-
-    for ($i = $SizeMin; $i -le $SizeMax; $i++) {
-        $x = [Math]::Pow(2, $i) - 1
-
-        while ($x -le [Math]::Pow(2, $Value.Count) - 1) {
-            [PSCustomObject]@{Combination = $Combination_Keys | Where-Object {$_ -band $x} | ForEach-Object {$Combination.$_}}
-            $smallest = ($x -band - $x)
-            $ripple = $x + $smallest
-            $new_smallest = ($ripple -band - $ripple)
-            $ones = (($new_smallest / $smallest) -shr 1) - 1
-            $x = $ripple -bor $ones
-        }
-    }
-}
 
 
 #************************************************************************************************************************************************************************************
@@ -364,7 +327,7 @@ function Get-Pools {
         )
         #in detail mode returns a line for each pool/algo/coin combination, in info mode returns a line for pool
 
-
+        if ($location -eq 'GB') {$location='EUR'}
 
         $PoolsFolderContent= Get-ChildItem ($PSScriptRoot+'\pools') | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure).Count -gt 0}
         
@@ -463,9 +426,12 @@ function Get-Best-Hashrate-Algo {
     $Besthashrate=0
 
     Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -like $Pattern | ForEach-Object {
-              $Content= [double]($_ | Get-Content)
-              if ($Content -gt $Besthashrate) {
-                      $Besthashrate=$Content
+              $Content= ($_ | Get-Content | ConvertFrom-Json)
+              $Hrs=0
+              if ($content -ne $null) {$Hrs = [double]($Content[0])}
+
+              if ($Hrs -gt $Besthashrate) {
+                      $Besthashrate=$Hrs
                       $Miner= ($_.pschildname -split '_')[0]
                       }
             $Return=[pscustomobject]@{
