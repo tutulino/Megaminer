@@ -83,7 +83,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Pools +=[pscustomobject]@{"coin" = "MONACOIN";"algo"="lyra2v2"; "symbol"= "MONA";"server"="mona.suprnova.cc"; "port"= "2995";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "SIGNATUM";"algo"="SKUNK"; "symbol"= "SIGT";"server"="sigt.suprnova.cc"; "port"= "7106";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "VELTOR";"algo"="VELTOR"; "symbol"= "VLT";"server"="veltor.suprnova.cc"; "port"= "8897";"location"="US"};
-        $Pools +=[pscustomobject]@{"coin" = "ZENCASH";"algo"="Equihash"; "symbol"= "ZEN";"server"="zen.suprnova.cc"; "port"= "4048";"location"="US"};
+        $Pools +=[pscustomobject]@{"coin" = "ZENCASH";"algo"="Equihash"; "symbol"= "ZEN";"server"="zen.suprnova.cc"; "port"= "3618";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "ZCASH";"algo"="Equihash"; "symbol"= "ZEC";"server"="zec-us.suprnova.cc"; "port"= "2142";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "ZCASH";"algo"="Equihash"; "symbol"= "ZEC";"server"="zec-eu.suprnova.cc"; "port"= "2142";"location"="EUROPE"};
         $Pools +=[pscustomobject]@{"coin" = "ZCASH";"algo"="Equihash"; "symbol"= "ZEC";"server"="zec-apac.suprnova.cc"; "port"= "2142";"location"="ASIA"};
