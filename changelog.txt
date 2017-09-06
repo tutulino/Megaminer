@@ -208,3 +208,20 @@ THIS VERSION CHANGE ALL POOL AND MINER FILES
 THIS VERSION ADD VARIABLE @@GPUPLATFORM to config.txt (at moment not necessary for NVIDIA)
 THIS VERSION REQUIRES RUN ALL BENCHMARKS AGAIN (if you are upgrading over old version delete stats folder content)
 TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER)
+
+
+
+------------------------------------------------
+4.3
+
+*Added dcri 15,20,25,30,25,40,45 for AMD
+*Added Claymore-cryptonote for AMD
+*Added location GB (GBP as local currency)
+
+*Fixed: memory usage extremely high on profit screen
+*Fixed: claymore ZEC speed x1000
+*Fixed: suprnova zen port
+*Fixed: claymore duplicated opened windows
+
+
+
