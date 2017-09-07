@@ -1,6 +1,6 @@
 {
 "Path" : ".\\Bin\\NVIDIA-Nanashi\\ccminer.exe",
-"ExtractionPath" : ".\\Bin\\NVIDIA-Nanashi\\",
+"ExtractionPath" : ".\\Bin\\NVIDIA-Nanashi\\ccminer-2.2-mod-r2-CUDA9\\",
 "Uri" : "https://github.com/Nanashi-Meiyo-Meijin/ccminer/releases/download/v2.2-mod-r2/2.2-mod-r2-CUDA9.binary.zip",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",

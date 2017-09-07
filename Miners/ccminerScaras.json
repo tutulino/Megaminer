@@ -1,6 +1,6 @@
 {
 "Path" : ".\\Bin\\NVIDIA-Scaras\\ccminer.exe",
-"ExtractionPath" : ".\\Bin\\NVIDIA-Scaras\\",
+"ExtractionPath" : ".\\Bin\\NVIDIA-Scaras\\ccminer-2.2-mod-r1\\",
 "Uri" : "https://github.com/scaras/ccminer-2.2-mod-r1/releases/download/2.2-r1/2.2-mod-r1.zip",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
