@@ -1,6 +1,6 @@
 {
 "Path" : ".\\Bin\\NVIDIA-DJM34\\ccminer.exe",
-"ExtractionPath" : ".\\Bin\\NVIDIA-DJM34\",
+"ExtractionPath" : ".\\Bin\\NVIDIA-DJM34\\",
 "Uri" : "https://github.com/djm34/ccminer-msvc2015/releases/download/v0.0.3/ccminer.exe",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
