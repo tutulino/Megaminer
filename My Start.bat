@@ -6,7 +6,7 @@ setx GPU_SINGLE_ALLOC_PERCENT 100
 
 :LOOP
 
-nvidiaInspector.exe -setBaseClockOffset:0,0,200 -setMemoryClockOffset:0,0,600 -setPowerTarget:0,112 -setTempTarget:0,0,75 -setFanSpeed:0,0,70
+nvidiaInspector.exe -setBaseClockOffset:0,0,200 -setMemoryClockOffset:0,0,600 -setPowerTarget:0,112 -setTempTarget:0,0,75 -setFanSpeed:0,70 -forcepstate:0,0
 
 del "Stats\*_Profit.txt"
 
