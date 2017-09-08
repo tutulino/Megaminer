@@ -17,20 +17,14 @@
 				{"hmq1725":"-a hmq1725"},
 				{"jha":"-a jha"},
 				{"lbry":"-a lbry"},
-				{"nist5":"-a nist5"},
-				{"quark":"-a quark"},
 				{"sib":"-a sib"},
-				{"Skunk":"-a skunk"},
 				{"timetravel":"-a timetravel"},
 				{"Tribus":"-a tribus"},
 				{"veltor":"-a veltor"},
 				{"whirpool":"-a whirl"},
 				{"x11evo":"-a x11evo"},
 				{"x11gost":"-a sib"},
-				{"x13":"-a x13"},
-				{"x14":"-a x14"},
-				{"X15":"-a x15"},
-				{"x17":"-a x17"}
+				{"x14":"-a x14"}
               ]
 
 }
