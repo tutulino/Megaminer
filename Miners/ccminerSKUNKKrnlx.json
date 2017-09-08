@@ -10,7 +10,6 @@
 "Dualmining":false,
 "Algorithms": [
 				{"bitcore":"-a bitcore"},
-				{"cryptonight":"-a cryptonight"},
 				{"sib":"-a sib"},
 				{"whirpool":"-a whirl"},
 				{"x14":"-a x14"}
