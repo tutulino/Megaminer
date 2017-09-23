@@ -8,12 +8,10 @@
 "APIPort" : 4068,
 "Wrap" : false,
 "Dualmining":false,
+"PrelaunchCommand":"",
 "Algorithms": [
                 {"blake2s" : "-a blake2s"},
-
                 {"lbry" : "-a lbry" },                
-
-
                 {"nist5" : "-a nist5"},
                 {"quark" : "-a quark"},
                 {"sib" : "-a sib"},

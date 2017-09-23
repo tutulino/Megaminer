@@ -327,7 +327,7 @@ function Get-Pools {
         )
         #in detail mode returns a line for each pool/algo/coin combination, in info mode returns a line for pool
 
-        if ($location -eq 'GB') {$location='EUR'}
+        if ($location -eq 'GB') {$location='EUROPE'}
 
         $PoolsFolderContent= Get-ChildItem ($PSScriptRoot+'\pools') | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure).Count -gt 0}
         
@@ -535,6 +535,7 @@ function get-algo-unified-name ([string]$Algo) {
             "daggerhashimoto" {$Result="Ethash"}
             "dagger" {$Result="Ethash"}
             "hashimoto" {$Result="Ethash"}
+            "skunkhash" {$Result="skunk"}
             }        
      $Result       
 

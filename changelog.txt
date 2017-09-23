@@ -224,4 +224,16 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Fixed: claymore duplicated opened windows
 
 
+------------------------------------------------
+4.4
+*Added option to miners file to launch a command before run (for example nvidiainspector, afterburner, etc)
+*Added Sgminer for Tribus and Veltor algos on AMD
+*Added X11gost to Sgminer for AMD
+*Added Skunk Algo to Whattomine virtual pool
+*Added Location to "Profits" and "Active Miner" sections
+*Added new pool Flypool (only manual mode Zcash mining)
+
+*Fixed: GB location not choosing EUROPE pools always
+*Fixed: WTM virtual pool not getting same result as WTM web due to default hashrates changes on WTM Web
+
 

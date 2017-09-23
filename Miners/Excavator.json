@@ -10,6 +10,7 @@
 "APIPort" : 3456 ,
 "Wrap" : false,
 "DualMining": false,
+"PrelaunchCommand":"",
 "Algorithms": [
               {"Ethash":"daggerhashimoto"},
               {"equihash":"equihash"},

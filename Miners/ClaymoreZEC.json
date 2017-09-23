@@ -8,6 +8,7 @@
   "APIPort" : 3333,
   "Wrap" : false,
   "DualMining": false,
+  "PrelaunchCommand":"",
   "Algorithms": [
                   {"equihash":""}
                 ]

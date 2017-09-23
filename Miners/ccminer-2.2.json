@@ -8,6 +8,7 @@
 "APIPort" : 4068,
 "Wrap" : false,
 "Dualmining":false,
+"PrelaunchCommand":"",
 "Algorithms": [
                 {"bitcore":"-a bitcore"},
                 {"hmq1725":"-a hmq1725"},

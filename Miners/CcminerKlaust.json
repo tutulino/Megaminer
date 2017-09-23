@@ -8,6 +8,7 @@
 "APIPort" : 4068,
 "Wrap" : false,
 "Dualmining":false,
+"PrelaunchCommand":"",
 "Algorithms": [
                 {"groestl":"-a groestl"},
                 {"Myriad-Groestl" : "-a myr-gr"},
