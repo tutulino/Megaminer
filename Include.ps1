@@ -459,7 +459,7 @@ function Get-Algo-Divisor {
                     
                     switch($Algo)
                     {
-                        "skein"{$Divisor *= 10}
+                        "skein"{$Divisor *= 100}
                         "equihash"{$Divisor /= 1000}
                         "blake2s"{$Divisor *= 1000}
                         "blakecoin"{$Divisor *= 1000}
