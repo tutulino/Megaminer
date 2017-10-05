@@ -10,9 +10,12 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"bitcore":"-a bitcore"},
-                {"hmq1725":"-a hmq1725"},
-                {"cryptonight":"-a cryptonight"}
+				{"cryptonight":"-a cryptonight"},
+				{"hmq1725":"-a hmq1725"},
+				{"sib":"-a sib"},
+				{"timetravel":"-a timetravel"},
+				{"whirpool":"-a whirl"},
+				{"x14":"-a x14"}
               ]
 
 }

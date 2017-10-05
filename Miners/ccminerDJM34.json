@@ -1,16 +1,14 @@
 {
-"Path" : ".\\Bin\\NVIDIA-skunkkrnlx\\ccminer-x64-80.exe",
-"ExtractionPath" : ".\\Bin\\NVIDIA-skunkkrnlx\\",
-"Uri" : "http://ccminer.org/preview/ccminer-skunk-krnlx-80.7z",
+"Path" : ".\\Bin\\NVIDIA-DJM34\\ccminer.exe",
+"ExtractionPath" : ".\\Bin\\NVIDIA-DJM34\\",
+"Uri" : "https://github.com/djm34/ccminer-msvc2015/releases/download/v0.0.3/ccminer.exe",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
 "API" : "Ccminer",
 "APIPort" : 4068,
 "Wrap" : false,
 "Dualmining":false,
-"PrelaunchCommand":"",
 "Algorithms": [
-				{"bitcore":"-a bitcore"},
 				{"sib":"-a sib"},
 				{"whirpool":"-a whirl"},
 				{"x14":"-a x14"}

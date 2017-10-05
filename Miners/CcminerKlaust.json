@@ -10,13 +10,9 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"groestl":"-a groestl"},
-                {"Myriad-Groestl" : "-a myr-gr"},
-                {"Neoscrypt":"-a Neoscrypt"},
-                {"sib" : "-a sib"}
-                
-
-                
+				{"sib":"-a sib"},
+				{"whirpool":"-a whirl"},
+				{"x14":"-a x14"}
               ]
 }
 
