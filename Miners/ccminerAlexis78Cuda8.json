@@ -11,10 +11,7 @@
 "PrelaunchCommand":"",
 "Algorithms": [
 				{"sib":"-a sib"},
-				{"whirpool":"-a whirl"},
-				{"x14":"-a x14"}
+				{"whirpool":"-a whirl"}
               ]
 
 }
-
- 
