@@ -238,7 +238,7 @@ if ($MiningMode -eq "manual"){
                                                                  
 
                                                                     if ($location -eq 'Europe') {$_.LocalProfit = [double]$CDKResponse.eur.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.eur.rate * [double]$_.BtcPrice}
-                                                                    if ($location -eq 'US')     {$_.LocalProfit = [double]$CDKResponse.usd.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.usd.rate * [double]$_.BtcPrice}
+                                                                    if ($location -eq 'US' -or $location -eq 'ASIA')     {$_.LocalProfit = [double]$CDKResponse.usd.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.usd.rate * [double]$_.BtcPrice}
                                                                     if ($location -eq 'GB')     {$_.LocalProfit = [double]$CDKResponse.gbp.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.gbp.rate * [double]$_.BtcPrice}
                                             
                                                                     

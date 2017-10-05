@@ -8,6 +8,7 @@
 "APIPort" : 4068,
 "Wrap" : false,
 "Dualmining":false,
+"PrelaunchCommand":"",
 "Algorithms": [
 				{"blake2s":"-a blake2s"},
 				{"blake14r":"-a decred"},

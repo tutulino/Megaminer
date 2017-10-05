@@ -21,7 +21,7 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and S
 
 **Mining Pool Hub, Yiimp, ZPOOL, Nicehash and Hash Refinery (must be suported by pool)
    skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, Myriad-Groestl, Lyra2v2, 
-   Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, Qubit ,X11, X13, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
+   Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, Qubit , X13, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
    cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r
 
 **SUPRNOVA
@@ -57,7 +57,7 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Can mine on any of this pools (or all at same time): Nicehash, Zpool, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
 
--Can mine on Suprnova,Nicehash, MPH, YIIMP or BlocksFactory pool without autochange or profit calculation, manual coin selection
+-Can mine on Suprnova,Nicehash, MPH, YIIMP, Flypool or BlocksFactory pool without autochange or profit calculation, manual coin selection
 
 -Fastest miner for each algo/coin preselected for Nvidia Pascal (08/01/2017) on all pools.
 
@@ -80,6 +80,8 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 -Pools Wallets actual and evolution info
  
 -Option to autochange based on 24h statistics (on supported pools)
+
+-Option for asociate command to launch before run to each miner (nvidia inspector for example to set overclock)
 
 
 

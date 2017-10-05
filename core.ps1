@@ -315,6 +315,8 @@ while ($true) {
                                                                     ExtractionPath = $Miner.ExtractionPath
                                                                     GenerateConfigFile = $miner.GenerateConfigFile
                                                                     ConfigFileArguments = $ConfigFileArguments
+                                                                    Location = $_.location
+                                                                    PrelaunchCommand = $Miner.PrelaunchCommand
 
                                                                 }
                             
@@ -357,6 +359,7 @@ while ($true) {
                             Where-Object AlgorithmDual -eq $_.AlgorithmDual | 
                             Where-Object PoolAbbName -eq $_.PoolAbbName |
                             Where-Object Arguments -eq $_.Arguments |
+                            Where-Object Location -eq $_.Location |
                             Where-Object ConfigFileArguments -eq $_.ConfigFileArguments
 
                     $_.Best = $false
@@ -404,6 +407,7 @@ while ($true) {
                             Where-Object PoolAbbName -eq $_.PoolAbbName |
                             Where-Object Arguments -eq $_.Arguments|
                             Where-Object Arguments -eq $_.Arguments |
+                            Where-Object Location -eq $_.Location |
                             Where-Object ConfigFileArguments -eq $_.ConfigFileArguments
 
                 
@@ -455,6 +459,8 @@ while ($true) {
                             ConfigFileArguments  = $_.ConfigFileArguments
                             GenerateConfigFile   = $_.GenerateConfigFile
                             ConsecutiveZeroSpeed = 0
+                            Location             = $_.Location
+                            PrelaunchCommand     = $_.PrelaunchCommand
 
                         }
                         $ActiveMinersIdCounter++
@@ -503,6 +509,9 @@ while ($true) {
             $_.ActivatedTimes++
 
             if ($_.GenerateConfigFile -ne $null) {$_.ConfigFileArguments | Set-Content ($_.GenerateConfigFile)}
+
+            #run prelaunch command
+            if ($_.PrelaunchCommand -ne "") {Start-Process -FilePath $_.PrelaunchCommand}
 
             if ($_.Wrap) {$_.Process = Start-Process -FilePath "PowerShell" -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$($_.Arguments)' -WorkingDirectory '$(Split-Path $_.Path)'" -PassThru}
               else {$_.Process = Start-SubProcess -FilePath $_.Path -ArgumentList $_.Arguments -WorkingDirectory (Split-Path $_.Path)}
@@ -594,6 +603,7 @@ while ($true) {
               @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else  {($_.coin)+ '|' + ($_.CoinDual)}}},   
               @{Label = "Miner"; Expression = {$_.Name}}, 
               @{Label = "Pool"; Expression = {$_.PoolAbbName}},
+              @{Label = "Location"; Expression = {$_.Location}},
               @{Label = "PoolWorkers"; Expression = {$_.PoolWorkers}}
           ) | Out-Host
           
@@ -647,7 +657,8 @@ while ($true) {
                         @{Label = "BTC/Day"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Profits.tostring("n5")}}; Align = 'right'}, 
                         @{Label = $LabelProfit; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n2") } ; Align = 'right'},
                         @{Label = "Pool"; Expression = {$_.PoolAbbName}},
-                        @{Label = "PoolWorkers"; Expression = {$_.PoolWorkers}}
+                        @{Label = "Location"; Expression = {$_.Location}}
+
                     ) | Out-Host
 
 

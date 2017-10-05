@@ -95,7 +95,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Pass          = "c=$Yiimp_symbol,ID=$WorkerName,stats"
                                 Location      = $_.location
                                 SSL           = $false
-                                Symbol        = $Yiimp_Simbol
+                                Symbol        = $Yiimp_Symbol
                                 AbbName       = $AbbName
                                 ActiveOnManualMode    = $ActiveOnManualMode
                                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode

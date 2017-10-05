@@ -10,6 +10,7 @@
 "APIPort" : 42000,
 "Wrap" : false,
 "DualMining": false,
+"PrelaunchCommand":"",
 "Algorithms": [
                 {"Ethash":"eth"},
                 {"Blake2b":"sia"},

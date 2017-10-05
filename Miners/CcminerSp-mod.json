@@ -8,6 +8,7 @@
 "APIPort" : 4068,
 "Wrap" : true,
 "Dualmining":false,
+"PrelaunchCommand":"",
 "Algorithms": [
 				{"sib":"-a sib"},
 				{"whirpool":"-a whirl"},

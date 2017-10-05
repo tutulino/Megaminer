@@ -8,6 +8,7 @@
 "APIPort" : 13333,
 "Wrap" : false,
 "DualMining": false,
+"PrelaunchCommand":"",
 "Algorithms": [
                 {"Cryptonight":""}
               ]

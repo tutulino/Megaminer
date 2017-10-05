@@ -8,6 +8,7 @@
 "APIPort" : 4068,
 "Wrap" : false,
 "Dualmining":false,
+"PrelaunchCommand":"",
 "Algorithms": [
 				{"cryptonight":"-a cryptonight"},
 				{"hmq1725":"-a hmq1725"},
