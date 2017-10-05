@@ -10,19 +10,25 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"blake2s" : "-a blake2s"},
-                {"c11" : "-a c11" },  
-                {"lbry" : "-a lbry" },
-                {"nist5" : "-a nist5"},
-                {"quark" : "-a quark"},
-                {"sib" : "-a sib"},
-                {"skein" : "-a skein"},
-                {"veltor" : "-a veltor"},
-                {"x14" : "-a x14" },
-                {"x13" : "-a x13" },
-                {"x11evo" : "-a x11evo"},
-                {"x17" : "-a x17" },
-                {"Keccak":"-a keccak"}
+				{"blake2s":"-a blake2s"},
+				{"blake14r":"-a decred"},
+				{"c11":"-a c11"},
+				{"keccak":"-a keccak"},
+				{"lbry":"-a lbry"},
+				{"myriad-groestl":"-a myr-gr"},
+				{"neoscrypt":"-a neoscrypt"},
+				{"nist5":"-a nist5"},
+				{"quark":"-a quark"},
+				{"qubit":"-a qubit"},
+				{"sib":"-a sib"},
+				{"skein":"-a skein"},
+				{"veltor":"-a veltor"},
+				{"whirpool":"-a whirl"},
+				{"x11gost":"-a sib"},
+				{"x13":"-a x13"},
+				{"x14":"-a x14"},
+				{"x15":"-a x15"},
+				{"x17":"-a x17"}
               ]
 
 }
