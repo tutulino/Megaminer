@@ -204,7 +204,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     
                             if ($_.Server -like '*yiimp*'){
                                         $VPUser= $CoinsWallets.get_item($_.symbol)
-                                        $VPPassword="c=$Yiimp_currency,ID=$WorkerName,stats"
+                                        $VPPassword="c=$Yiimp_currency,ID=$WorkerName"
                                         $VPprotocol="stratum+tcp"
                                         $VpAbbname='YI'
                                         $VpWalletMode='WALLET'
