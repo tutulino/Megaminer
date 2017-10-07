@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\NVIDIA-xevan_64\\ccminer.exe",
 "ExtractionPath" : ".\\Bin\\NVIDIA-xevan_64\\",
-"Uri" : "",
+"Uri" : "https://github.com/krnlx/ccminer-xevan/releases/download/0.1/ccminer.exe",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
 "API" : "Ccminer",
