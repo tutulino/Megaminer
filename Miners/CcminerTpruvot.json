@@ -10,10 +10,11 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
+				{"hsr":"-a hsr"},
+				{"phi":"-a phi"},
 				{"sib":"-a sib"},
 				{"skunk":"-a skunk"},
 				{"tribus":"-a tribus"},
-				{"phi":"-a phi"},
 				{"whirpool":"-a whirl"}
               ]
 
