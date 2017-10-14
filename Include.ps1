@@ -523,6 +523,9 @@ function get-algo-unified-name ([string]$Algo) {
 
     $Result=$Algo
     switch ($Algo){
+            "phi" {$Result="phi1612"}
+            "hsr" {$Result="x13sm3"}
+            "bitcore" {$Result="timetravel10"}
             "sib" {$Result="x11gost"}
             "Blake (14r)" {$Result="Blake14r"} 
             "Blake (2b)" {$Result="Blake2b"} 
