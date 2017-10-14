@@ -1,0 +1,15 @@
+﻿{
+"Path" : ".\\Bin\\CPU-JayDDeeOld\\cpuminer-opt-3.5.9.1-windows\\cpuminer-aes-avx2.exe",
+"ExtractionPath" : ".\\Bin\\CPU-JayDDeeOld\\",
+"Uri" : "https://github.com/JayDDee/cpuminer-opt/releases/download/v3.5.9.1/cpuminer-opt-3.5.9.1-windows.zip",
+"Types" : ["CPU"],
+"Arguments" : "--api-bind 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
+"API" : "Ccminer",
+"APIPort" : 4068,
+"Wrap" : false,
+"Dualmining":false,
+"PrelaunchCommand":"",
+"Algorithms": [
+    {"x14": "-a x14"}
+    ]
+}

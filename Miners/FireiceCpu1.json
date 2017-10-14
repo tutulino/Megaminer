@@ -1,0 +1,17 @@
+﻿{
+"Path" : ".\\Bin\\CPU-xmr-stak\\xmr-stak-cpu\\xmr-stak-cpu.exe",
+"ExtractionPath" : ".\\Bin\\CPU-xmr-stak\\",
+"Uri" : "https://github.com/fireice-uk/xmr-stak-cpu/releases/download/v1.3.0-1.5.0/xmr-stak-cpu-win64.zip",
+"Types" : ["CPU"],
+"GenerateConfigFile" : ".\\Bin\\CPU-xmr-stak\\xmr-stak-cpu\\config.txt",
+"PatternConfigFile": ".\\Patterns\\xmrstakCPU1Pattern.txt",
+"Arguments" : "",
+"API" : "fireice",
+"APIPort" : 16000,
+"Wrap" : false,
+"Dualmining":false,
+"PrelaunchCommand":"",
+"Algorithms": [
+    {"cryptonight": ""}
+	]
+}
