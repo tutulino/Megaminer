@@ -10,7 +10,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-        {"skein":" -k skeincoin --gpu-threads 2 --worksize 256 --intensity d"}
+        {"skein":" -k skeincoin --gpu-threads 2 --worksize 256 --intensity 23"}
         ]
 
 }

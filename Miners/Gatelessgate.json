@@ -8,11 +8,12 @@
 "APIPort" : 4028,
 "Wrap" : false,
 "Dualmining":false,
+"PrelaunchCommand":"",
 "Algorithms": [
             
-            {"neoscrypt":"-k neoscrypt --gpu-threads 1 --worksize 256 --intensity 13"},
+            {"neoscrypt":"-k neoscrypt --gpu-threads 1 --worksize 256 --intensity 16"},
             {"ethash":"-k ethash-new --gpu-threads 2 --worksize 192 --intensity 19"},
-            {"cryptonight":"-k cryptonight --gpu-threads 1 --worksize 4 --rawintensity 720"},
+            {"cryptonight":"-k cryptonight --gpu-threads 2 --worksize 4 --rawintensity 1024"},
             {"equihash":"-k equihash --gpu-threads 2 --worksize 256"}
 	 ]
 }

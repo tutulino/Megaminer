@@ -10,12 +10,7 @@
   "Dualmining":false,
   "PrelaunchCommand":"",
   "Algorithms": [
-                  {"tribus":"-k tribus --shaders 1792 --lookup-gap 4 --intensity 19"},
-                  {"veltor":"-k veltor --intensity 19"}
+                  {"tribus":"-k tribus --shaders 2304 --lookup-gap 4 --intensity 21"},
+                  {"veltor":"-k veltor --intensity 21"}
                 ]
   }
-  
- 
- 
-  
-     
