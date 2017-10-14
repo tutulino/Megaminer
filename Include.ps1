@@ -549,7 +549,7 @@ function get-algo-unified-name ([string]$Algo) {
 function get-coin-unified-name ([string]$Coin) {
 
     $Result = $Coin
-    switch –wildcard  ($Coin){
+    switch -wildcard  ($Coin){
             "Myriadcoin-*" {$Result="Myriad"}
             "Myriad-*" {$Result="Myriad"}
             "Dgb-*" {$Result="Digibyte"}

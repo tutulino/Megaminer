@@ -52,7 +52,7 @@ start-sleep 5
   #>          
 
 
-            switch  –wildcard ($Word) {
+            switch  -wildcard ($Word) {
                 "*kh/s*" {$HashRate *= [Math]::Pow(1000, 1)}
                 "*mh/s*" {$HashRate *= [Math]::Pow(1000, 2)}
                 "*gh/s*" {$HashRate *= [Math]::Pow(1000, 3)}
