@@ -1,0 +1,15 @@
+﻿{
+"Path" : ".\\Bin\\nheqminer\\Windows_x64_nheqminer-5c\\nheqminer.exe",
+"ExtractionPath" : ".\\Bin\\nheqminer\\",
+"Uri" : "https://github.com/nicehash/nheqminer/releases/download/0.5c/Windows_x64_nheqminer-5c.zip",
+"Types" : ["CPU"],
+"Arguments" : "-a 14000 -t 2 -l #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
+"API" : "nicehashequihash",
+"APIPort" : 14000,
+"Wrap" : false,
+"Dualmining":false,
+"PrelaunchCommand":"",
+"Algorithms": [
+    {"equihash": ""}
+	]
+}
