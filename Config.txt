@@ -1,6 +1,6 @@
 --ID for each rig you have
 
-@@WORKERNAME=NVRig
+@@WORKERNAME=mega
 
 --Prefered Currency you will be pay, only for anonymous pools with autoexchange (Zpool, HR...), must set wallet for this currency on "Wallets Section"
 
@@ -8,19 +8,19 @@
 
 --Pool username for not anonymous pools like SprNova, BlocksFactory or MiningPoolHub
 
-@@USERNAME=MikeBuzz
+@@USERNAME=ffwd
 
 -- Time in seconds each restarting of algo, Benchmarks run at 200 seconds on automatic way, not need to change
 
-@@INTERVAL=600
+@@INTERVAL=300
 
 -- Only NVIDIA tested, AMD must work, but not tested (for mixed rig set AMD,NVIDIA)
 
-@@TYPE=NVIDIA
+@@TYPE=AMD
 
 -- Location of your rig: EUROPE/US/ASIA/GB  (some pool may have no desired location, US will be selected then)
 
-@@LOCATION=GB
+@@LOCATION=EUROPE
 
 -- Enabled or disabled call to apis (pools and traders) to help on manual coin selection, some pools has slow response and must delay show prompt to user
 
@@ -28,7 +28,7 @@
 
 -- Screen to be shown at start of program (WALLETS/CURRENT/HISTORY/PROFITS)
 
-@@STARTSCREEN=PROFITS
+@@STARTSCREEN=HISTORY
 
 -- Benchmarks interval time
 
@@ -36,49 +36,26 @@
 
 -- Gpu Platform, some miners (sgminer and prospector) needs specify gpu platform, usually this value is 0,1 (you must try, no automatic detection)
 
-@@GPUPLATFORM=1
+@@GPUPLATFORM=0
 
 -- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX (XXX=currency symbol)
 
-@@WALLET_BTC=39hpJhfk5iVr97ouFFggK4k6zW5NerymxV
-@@WALLET_BTX=1FJThobhKa2wAHTHso3Z4JzCwZZGiFV1w4
-@@WALLET_DCR=DsbiLjwvAdK2JpzBqeuYrtsQR8JwDDYLoRe
-@@WALLET_DNR=DPJzmDgSnSJ7Sa5uoKdKPHisYstM3Wuqgi
-@@WALLET_EXP=0x65722bc8776b153b941edfc3adea6ab9f82edd92
-@@WALLET_FTC=6mQLVT2MeqW1rHRWTBoUBJWH8ipXb1Y5C1
-@@WALLET_GRS=FarbpXVzNUqejdJdbD55Ft2VpFSTHWoy84
-@@WALLET_ORB=
-@@WALLET_SIB=SZeJJLpozDzVPHESZuE6BmThufMzxtHjyK
-@@WALLET_SIGT=BDarDbapFLve2ttVEpshg5jobWkXj6ToSm
-@@WALLET_VTC=VkZbordS7EVrBhyXug4GYxvf41JpafQV8q
-@@WALLET_XLR=
-@@WALLET_XVG=DFjrATNgyg2tPLUJY5VpqhtMtJGFy6x8Aw
-@@WALLET_ZEC=t1Rd2ATZnq9Mbq6ydk81TMvSPcZ2i4sjC8d
-@@WALLET_UBQ=0x7af44beb3c8d9bb4ece33b27a603727f6c19ecca
+@@WALLET_BTC=3PFC7i8VT3jQG3ppoFEQyYy2wrg9YNoLmj
+
+@@WALLET_XMG=9RDkTkKowYRcKgRKjHSgJN91VH2GW44581
+@@WALLET_VIVO=VXnYnqx1mbaYYChuhJCmijYfSgutnYJyaR
+@@WALLET_BTCZ=t1Xy8QUxKssufpQMu2xi572KH13175sy1Ex
 
 -- API Keys, Non Anonymous pools (Suprnova, MPH) requires api key to get wallets info (format @@APIKEY_NAMEOFPOOL=XXXXXXXXXX)
 
-@@APIKEY_MINING_POOL_HUB=611e40cd5a07adf42c36d2afd7b3480cefce0399dd95dff4a1112466f364d0ca
-@@APIKEY_SUPRNOVA=00283c9ac3d2fa5edd068b55575c0327ff6a13c227043650c73a05357232da19
+@@APIKEY_MINING_POOL_HUB=903106f05fddd0222af24e20312d14dff08ccbb6914855d5fe552c8c88cb3425
+@@APIKEY_SUPRNOVA=1ac1daa25868186cb8fc1ac9ce1e259949cb681332ac0faba20c40fddc05e98a
 
 -- Number of minutes each day (NOT PERCENT) of donation
 
-@@DONATE=10
+@@DONATE=0
 
--- Destination of donation (BTC) AARONSACE:1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH, ME:1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+-- Destination of donation (BTC) AARONSACE:1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH, ME:1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM 
 
-@@WALLETDONATE_BTC=39hpJhfk5iVr97ouFFggK4k6zW5NerymxV
-@@WALLETDONATE_BTX=1FJThobhKa2wAHTHso3Z4JzCwZZGiFV1w4
-@@WALLETDONATE_DCR=DsbiLjwvAdK2JpzBqeuYrtsQR8JwDDYLoRe
-@@WALLETDONATE_DNR=DPJzmDgSnSJ7Sa5uoKdKPHisYstM3Wuqgi
-@@WALLETDONATE_EXP=0x65722bc8776b153b941edfc3adea6ab9f82edd92
-@@WALLETDONATE_FTC=6mQLVT2MeqW1rHRWTBoUBJWH8ipXb1Y5C1
-@@WALLETDONATE_GRS=FarbpXVzNUqejdJdbD55Ft2VpFSTHWoy84
-@@WALLETDONATE_ORB=
-@@WALLETDONATE_SIB=SZeJJLpozDzVPHESZuE6BmThufMzxtHjyK
-@@WALLETDONATE_SIGT=BDarDbapFLve2ttVEpshg5jobWkXj6ToSm
-@@WALLETDONATE_VTC=VkZbordS7EVrBhyXug4GYxvf41JpafQV8q
-@@WALLETDONATE_XLR=
-@@WALLETDONATE_XVG=DFjrATNgyg2tPLUJY5VpqhtMtJGFy6x8Aw
-@@WALLETDONATE_ZEC=t1Rd2ATZnq9Mbq6ydk81TMvSPcZ2i4sjC8d
-@@WALLETDONATE_UBQ=0x7af44beb3c8d9bb4ece33b27a603727f6c19ecca
+@@WALLETDONATE_BTC=3PFC7i8VT3jQG3ppoFEQyYy2wrg9YNoLmj
+
