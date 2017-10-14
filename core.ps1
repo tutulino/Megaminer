@@ -884,9 +884,11 @@ while ($true) {
                                                 $ValueDual=[long]($Miner_HashRates[1] * 0.95)
                                                 $_.Hashrate= $Value
                                                 $_.HashrateDual= $ValueDual
-                                                Set-Hashrates -algorithm $_.Algorithms -minername $_.Name -value  $Value -valueDual $ValueDual
+                                                if ( -not $_.DualMining -or $ValueDual -gt 0 ) {
+                                                    Set-Hashrates -algorithm $_.Algorithms -minername $_.Name -value  $Value -valueDual $ValueDual
                                                 }
                                             }
+                                        }
                                     }
 
 
