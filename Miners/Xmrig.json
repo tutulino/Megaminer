@@ -1,0 +1,16 @@
+﻿{
+"Path" : ".\\Bin\\CPU-Xmrig\\xmrig.exe",
+"ExtractionPath" : ".\\Bin\\CPU-Xmrig\\",
+"Uri" : "https://github.com/xmrig/xmrig/releases/download/v2.4.1/xmrig-2.4.1-gcc-win64.zip",
+"Types" : ["CPU"],
+"Arguments" : "--api-port 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 --donate-level=1 #ALGORITHMPARAMETERS#",
+"API" : "xmrig",
+"APIPort" : 4068,
+"Wrap" : false,
+"Dualmining":false,
+"PrelaunchCommand":"",
+"Algorithms": [
+    {"cryptonight": "-a cryptonight"},
+    {"cryptonight-lite": "-a cryptonight-lite"}
+	]
+}
