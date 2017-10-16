@@ -894,7 +894,7 @@ while ($true) {
 
 
 
-                                if ($_.ConsecutiveZeroSpeed -gt 10) { #to prevent miner hangs
+                                if ($_.ConsecutiveZeroSpeed -gt 50) { #to prevent miner hangs
                                     $ExitLoop='true'
                                     $_.FailedTimes++
                                     $_.Status='Failed'
