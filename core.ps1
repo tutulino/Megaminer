@@ -902,7 +902,7 @@ while ($true) {
 
 
                                 #Benchmark timeout
-                                if ($_.BenchmarketTimes -ge 3) {
+                                if ($_.BenchmarkedTimes -ge 3) {
                                     $_.Status='Cancelled'
                                     $ExitLoop = $true
                                     }
