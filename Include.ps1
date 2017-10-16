@@ -162,8 +162,9 @@ function Get-Live-HashRate {
             "xmrig" {
                     $Request = Invoke-WebRequest "http://$($Server):$Port/" -UseBasicParsing
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate =  [Double]($Data.hashrate.total[1] | Measure-Object -Sum).sum
-                    if ($HashRate -eq 0) {$HashRate =  [Double]($Data.hashrate.total[0] | Measure-Object -Sum).sum}
+                    $HashRate =  [Double]($Data.hashrate.highest | Measure-Object -Sum).sum
+                    #$HashRate =  [Double]($Data.hashrate.total[1] | Measure-Object -Sum).sum
+                    #if ($HashRate -eq 0) {$HashRate =  [Double]($Data.hashrate.total[0] | Measure-Object -Sum).sum}
             }
 
             "fireice" {
