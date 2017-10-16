@@ -167,6 +167,12 @@ function Get-Live-HashRate {
                     #if ($HashRate -eq 0) {$HashRate =  [Double]($Data.hashrate.total[0] | Measure-Object -Sum).sum}
             }
 
+            "optiminer" {
+                    $Request = Invoke-WebRequest "http://$($Server):$Port/" -UseBasicParsing
+                    $Data = $Request | ConvertFrom-Json
+                    $HashRate =  [Double]($Data.solution_rate.Total."5s" | Measure-Object -Sum).sum
+            }
+
             "fireice" {
                 
                     $Request = Invoke-WebRequest "http://$($Server):$Port/h" -UseBasicParsing
