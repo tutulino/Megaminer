@@ -1,7 +1,7 @@
 ﻿{
-"Path" : ".\\Bin\\CPU-JayDDee\\cpuminer-opt-3.6.10-windows\\cpuminer-aes-avx2.exe",
+"Path" : ".\\Bin\\CPU-JayDDee\\cpuminer-opt-3.7.0-windows\\cpuminer-aes-avx2.exe",
 "ExtractionPath" : ".\\Bin\\CPU-JayDDee\\",
-"Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.6.10-windows.zip",
+"Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.0-windows.zip",
 "Types" : ["CPU"],
 "Arguments" : "--api-bind 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
 "API" : "Ccminer",
@@ -65,6 +65,7 @@
     {"x11gost": "-a x11gost"},
     {"x13": "-a x13"},
     {"x13sm3": "-a x13sm3"},
+    {"x14": "-a x14"},
     {"x15": "-a x15"},
     {"x17": "-a x17"},
     {"xevan": "-a xevan"},
