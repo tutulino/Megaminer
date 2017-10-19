@@ -20,7 +20,7 @@
                 {"Pascal":"-k pascal --gpu-threads 2 --worksize 64 --intensity 21"},
                 {"Qubit":"-k qubitcoin --gpu-threads 4 --worksize 128 --intensity 16"},
                 {"blake2b":"-k sia"},
-                {"darkcoin-mod":"-k darkcoin-mod --gpu-threads 2 --worksize 128 --intensity d"},
+                {"x11":"-k darkcoin-mod --gpu-threads 2 --worksize 128 --intensity d"},
                 {"x11gost":"-k sibcoin-mod --gpu-threads 2 --worksize 64 --intensity 16"},
                 {"lyra2v2":"-k lyra2rev2 --gpu-threads 2 --worksize 128 --intensity d"}
               ]
