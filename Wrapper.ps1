@@ -1,12 +1,12 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
-    [Int]$ControllerProcessID, 
+    [Int]$ControllerProcessID,
     [Parameter(Mandatory = $true)]
-    [String]$Id, 
+    [String]$Id,
     [Parameter(Mandatory = $true)]
-    [String]$FilePath, 
+    [String]$FilePath,
     [Parameter(Mandatory = $false)]
-    [String]$ArgumentList = "", 
+    [String]$ArgumentList = "",
     [Parameter(Mandatory = $false)]
     [String]$WorkingDirectory = ""
 )
@@ -34,22 +34,22 @@ do {
     $PowerShell.Streams.Verbose.ReadAll() | ForEach-Object {
         $Line = $_
 
-        if ($Line -like "*total speed:*" -or $Line -like "*accepted:*" -or   $Line -like "*Mining on #*"  ) {
+        if ($Line -like "*total speed:*" -or $Line -like "*accepted:*" -or $Line -like "*Mining on #*"  ) {
 
-#write-host 1111 $Line
-#start-sleep 25    
-            $Line = $Line -replace "\smh/s","mh/s" -replace "\skh/s","kh/s" -replace "\sgh/s","gh/s" -replace "\sth/s","th/s" -replace "\sph/s","ph/s" -replace "\sh/s"," h/s" 
+            #write-host 1111 $Line
+            #start-sleep 25
+            $Line = $Line -replace "\smh/s", "mh/s" -replace "\skh/s", "kh/s" -replace "\sgh/s", "gh/s" -replace "\sth/s", "th/s" -replace "\sph/s", "ph/s" -replace "\sh/s", " h/s"
             $Words = $Line -split " "
-            $Word =  $words -like "*/s*" | Select-Object -Last 1
-            $HashRate = [Decimal]($Word -replace "mh/s","" -replace "kh/s","" -replace "gh/s","" -replace "th/s","" -replace "ph/s","" -replace "h/s","" )
+            $Word = $words -like "*/s*" | Select-Object -Last 1
+            $HashRate = [Decimal]($Word -replace "mh/s", "" -replace "kh/s", "" -replace "gh/s", "" -replace "th/s", "" -replace "ph/s", "" -replace "h/s", "" )
 
-<#
-write-host 3332
-$Line | write-host
-$Word | write-host
-$HashRate | write-host
-start-sleep 5
-  #>          
+            <#
+            write-host 3332
+            $Line | write-host
+            $Word | write-host
+            $HashRate | write-host
+            start-sleep 5
+            #>
 
 
             switch  -wildcard ($Word) {
@@ -61,14 +61,12 @@ start-sleep 5
             }
 
             $HashRate | Set-Content ".\Wrapper_$Id.txt"
-<#
-write-host 4444
-$HashRate | write-host
-start-sleep 2
-#>
-            
+            <#
+            write-host 4444
+            $HashRate | write-host
+            start-sleep 2
+            #>
         }
-
         $Line
     }
 
