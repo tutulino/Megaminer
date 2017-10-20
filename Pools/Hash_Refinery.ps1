@@ -99,7 +99,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Host = $_+".us.hashrefinery.com"
                                 Port = $HR_Request.$_.port
                                 User = $CoinsWallets.get_item($Currency)
-                                Pass = "c=$Currency,$WorkerName"
+                                Pass = "c=$Currency,$WorkerName,Stats"
                                 Location = "US"
                                 SSL = $false
                                 AbbName = $AbbName

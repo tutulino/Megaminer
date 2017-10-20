@@ -99,7 +99,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             Host          = $Jpool_Algo + ".jpool.cc"
                                             Port          = $coin.port
                                             User          = $CoinsWallets.get_item($Currency)
-                                            Pass          = "c=$Currency,$WorkerName"
+                                            Pass          = "c=$Currency,$WorkerName,Stats"
                                             Location      = "Europe"
                                             SSL           = $false
                                             Symbol        = $null
