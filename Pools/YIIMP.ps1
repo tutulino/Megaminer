@@ -1,6 +1,6 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null ,
+    [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
     [pscustomobject]$Info
 )
@@ -12,11 +12,11 @@ $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $false
 $ActiveOnAutomatic24hMode = $false
 $AbbName = 'YIIMP'
-$WalletMode = "WALLET"
+$WalletMode = 'WALLET'
 $ApiUrl = 'http://api.yiimp.eu/api'
 $MineUrl = 'yiimp.eu'
 $Location = 'Europe'
-$UserAgent = '"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"'
+$UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
 
@@ -52,7 +52,6 @@ if ($Querymode -eq "wallet") {
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-
     $retries = 1
     do {
         try {
@@ -94,7 +93,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Host                  = $MineUrl
             Port                  = $coin.port
             User                  = $CoinsWallets.get_item($Pool_symbol)
-            Pass                  = "c=$Pool_symbol,ID=$WorkerName"
+            Pass                  = "c=$Pool_symbol,ID=$WorkerName,stats"
             Location              = $Location
             SSL                   = $false
             Symbol                = $Pool_Symbol

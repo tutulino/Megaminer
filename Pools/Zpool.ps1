@@ -5,7 +5,7 @@
     [pscustomobject]$Info
 )
 
-#. .\Include.ps1
+#. .\..\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $false
@@ -16,7 +16,7 @@ $WalletMode = 'WALLET'
 $ApiUrl = 'http://www.zpool.ca/api'
 $MineUrl = 'mine.zpool.ca'
 $Location = 'US'
-$UserAgent = '"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"'
+$UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
 
@@ -45,8 +45,8 @@ if ($Querymode -eq "wallet") {
             currency = $Request.currency
             balance  = $Request.balance
         }
-        remove-variable Request
     }
+    remove-variable Request
 }
 
 
@@ -68,10 +68,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
 
 
-    $Request | Get-Member -MemberType Properties| ForEach-Object {
+    $Request | Get-Member -MemberType Properties | ForEach-Object {
 
         $coin = $Request | Select-Object -ExpandProperty $_.name
-        $Pool_Algo = get-algo-unified-name ($_.name)
+        $Pool_Algo = get-algo-unified-name $coin.name
 
         $Divisor = (Get-Algo-Divisor $Pool_Algo) / 1000
 
@@ -87,7 +87,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Price                 = $coin.estimate_current / $Divisor
             Price24h              = $coin.estimate_last24h / $Divisor
             Protocol              = "stratum+tcp"
-            Host                  = $_ + "." + $MineUrl
+            Host                  = $coin.name + "." + $MineUrl
             Port                  = $coin.port
             User                  = $CoinsWallets.get_item($Currency)
             Pass                  = "c=$Currency,$WorkerName,stats"
