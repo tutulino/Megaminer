@@ -12,15 +12,13 @@ $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $false
 $ActiveOnAutomatic24hMode = $false
 $AbbName = 'YIIMP'
-$WalletMode = "NONE"
+$WalletMode = "WALLET"
+$ApiUrl = 'http://api.yiimp.eu/api'
+$MineUrl = 'yiimp.eu'
+$Location = 'Europe'
+$UserAgent = '"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"'
 $Result = @()
 
-
-
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
@@ -35,88 +33,84 @@ if ($Querymode -eq "info") {
 }
 
 
-
-
-
-
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
-if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-
-    $Pools = @()
-    $Pools += [pscustomobject]@{"Symbol" = "AUR"; "algo" = "skein"; "port" = 4933; "coin" = "AuroraCoin"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "BOAT"; "algo" = "hmq1725"; "port" = 3747; "coin" = "Doubloon"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "BSD"; "algo" = "xevan"; "port" = 3739; "coin" = "BitSend"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "BSTY"; "algo" = "yescrypt"; "port" = 6233; "coin" = "GlobalBoostY"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "BTX"; "algo" = "bitcore"; "port" = 3556; "coin" = "BitCore"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "CHC"; "algo" = "c11"; "port" = 3573; "coin" = "Chaincoin"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "DCR"; "algo" = "decred"; "port" = 3252; "coin" = "decred"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "DGB"; "algo" = "skein"; "port" = 4933; "coin" = "Digibyte"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "DNR"; "algo" = "tribus"; "port" = 8533; "coin" = "Denarius"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "FTC"; "algo" = "neoscrypt"; "port" = 4233; "coin" = "Feathercoin"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "GRS"; "algo" = "groestl"; "port" = 5339; "coin" = "Groestlcoin"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "HUSH"; "algo" = "equihash"; "port" = 2142; "coin" = "Hush"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "KMD"; "algo" = "equihash"; "port" = 2142; "coin" = "Komodo"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "MAC"; "algo" = "timetravel"; "port" = 3555; "coin" = "MachineCoin"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "NEVA"; "algo" = "blake2s"; "port" = 4262; "coin" = "Neva"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "ORB"; "algo" = "neoscrypt"; "port" = 4233; "coin" = "OrbitCoin"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "SIB"; "algo" = "sib"; "port" = 5033; "coin" = "SibCoin"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "SIGT"; "algo" = "skunk"; "port" = 8433; "coin" = "Signatum"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "SWEEP"; "algo" = "jha"; "port" = 4633; "coin" = "Sweepstake"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "TAJ"; "algo" = "blake2s"; "port" = 4262; "coin" = "TajCoin"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "TIT"; "algo" = "sha256"; "port" = 3333; "coin" = "Titcoin"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "VIVO"; "algo" = "neoscrypt"; "port" = 4233; "coin" = "Vivo"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "VTC"; "algo" = "lyra2v2"; "port" = 4533; "coin" = "VertCoin"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "XLR"; "algo" = "nist5"; "port" = 3833; "coin" = "Solaris"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "XRE"; "algo" = "x11evo"; "port" = 3553; "coin" = "Revolver"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "XVG"; "algo" = "x17"; "port" = 3737; "coin" = "Verge"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "ZEN"; "algo" = "equihash"; "port" = 2142; "coin" = "ZenCash"; "location" = "US"; "server" = "yiimp.ccminer.org"}
-
-
-    $Pools |  ForEach-Object {
-
-        $Yiimp_Algorithm = get-algo-unified-name $_.algo
-        $Yiimp_coin = get-coin-unified-name $_.coin
-        $Yiimp_symbol = $_.Symbol
-
-
-        $Result += [PSCustomObject]@{
-            Algorithm             = $Yiimp_Algorithm
-            Info                  = $Yiimp_coin
-            Price                 = $null
-            Price24h              = $null
-            Protocol              = "stratum+tcp"
-            Host                  = $_.server
-            Port                  = $_.port
-            User                  = $CoinsWallets.get_item($Yiimp_symbol)
-            Pass                  = "c=$Yiimp_symbol,ID=$WorkerName"
-            Location              = $_.location
-            SSL                   = $false
-            Symbol                = $Yiimp_Symbol
-            AbbName               = $AbbName
-            ActiveOnManualMode    = $ActiveOnManualMode
-            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolWorkers           = $_.Workers
-            PoolHashRate          = $null
-            Blocks_24h            = $null
-            WalletMode            = $WalletMode
-            PoolName              = $Name
-        }
-
-
+if ($Querymode -eq "wallet") {
+    try {
+        $http = $ApiUrl + "/wallet?address=" + $Info.user
+        $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
     }
+    catch {}
 
-
+    if ($Request -ne $null -and $Request -ne "") {
+        $Result = [PSCustomObject]@{
+            Pool     = $name
+            currency = $Request.currency
+            balance  = $Request.balance
+        }
+    }
+    remove-variable Request
 }
 
 
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
+if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
+
+    $retries = 1
+    do {
+        try {
+            $http = $ApiUrl + "/currencies"
+            $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+        }
+        catch {start-sleep 2}
+        $retries++
+        if ($Request -eq $null -or $Request -eq "") {start-sleep 3}
+    } while ($Request -eq $null -and $retries -le 3)
+
+    if ($retries -gt 3) {
+        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+        Exit
+    }
+
+    $Request | Get-Member -MemberType Properties | ForEach-Object {
+
+        $coin = $Request | Select-Object -ExpandProperty $_.name
+        $Pool_Algo = get-algo-unified-name $coin.algo
+
+        $Pool_coin = get-coin-unified-name $coin.name
+        $Pool_symbol = $_.name
+
+        $Divisor = (Get-Algo-Divisor $Pool_Algo) / 1000
+
+        switch ($Pool_Algo) {
+            "X11" {$Divisor *= 1000}
+            "qubit" {$Divisor *= 1000}
+            "quark" {$Divisor *= 1000}
+        }
+
+        $Result += [PSCustomObject]@{
+            Algorithm             = $Pool_Algo
+            Info                  = $Pool_coin
+            Price                 = $coin.estimate / $Divisor
+            Price24h              = $coin.'24h_btc' / $Divisor
+            Protocol              = "stratum+tcp"
+            Host                  = $MineUrl
+            Port                  = $coin.port
+            User                  = $CoinsWallets.get_item($Pool_symbol)
+            Pass                  = "c=$Pool_symbol,ID=$WorkerName"
+            Location              = $Location
+            SSL                   = $false
+            Symbol                = $Pool_Symbol
+            AbbName               = $AbbName
+            ActiveOnManualMode    = $ActiveOnManualMode
+            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+            PoolWorkers           = $coin.Workers
+            PoolHashRate          = $coin.hashrate
+            Blocks_24h            = $coin.'24h_blocks'
+            WalletMode            = $WalletMode
+            PoolName              = $Name
+        }
+    }
+    remove-variable Request
+}
+
 
 $Result |ConvertTo-Json | Set-Content ("$name.tmp")
 remove-variable Result
-

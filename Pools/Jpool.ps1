@@ -3,7 +3,6 @@
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
     [pscustomobject]$Info
-
 )
 
 #. .\Include.ps1
@@ -14,8 +13,11 @@ $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
 $AbbName = 'JPOOL'
 $WalletMode = 'WALLET'
+$ApiUrl = 'http://www.jpool.cc/api'
+$MineUrl = 'jpool.cc'
+$Location = 'Europe'
+$UserAgent = '"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"'
 $Result = @()
-
 
 
 if ($Querymode -eq "info") {
@@ -30,91 +32,80 @@ if ($Querymode -eq "info") {
 }
 
 
-
 if ($Querymode -eq "wallet") {
-
-
     try {
-        $http = "http://www.jpool.cc/api/wallet?address=" + $Info.user
-        $Jpool_Request = Invoke-WebRequest $http -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+        $http = $ApiUrl + "/wallet?address=" + $Info.user
+        $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
     }
     catch {}
 
-
-    if ($Jpool_Request -ne $null -and $Jpool_Request -ne "") {
+    if ($Request -ne $null -and $Request -ne "") {
         $Result = [PSCustomObject]@{
             Pool     = $name
-            currency = $Jpool_Request.currency
-            balance  = $Jpool_Request.balance
+            currency = $Request.currency
+            balance  = $Request.balance
         }
-        remove-variable  Jpool_Request
     }
-
+    remove-variable Request
 }
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-
     $retries = 1
     do {
         try {
-            $Jpool_Request = Invoke-WebRequest "http://www.jpool.cc/api/status" -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-            #$Jpool_Request=get-content "..\Jpool_request.json" | ConvertFrom-Json
+            $http = $ApiUrl + "/status"
+            $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
         }
         catch {start-sleep 2}
         $retries++
-        if ($Jpool_Request -eq $null -or $Jpool_Request -eq "") {start-sleep 3}
-    } while ($Jpool_Request -eq $null -and $retries -le 3)
+        if ($Request -eq $null -or $Request -eq "") {start-sleep 3}
+    } while ($Request -eq $null -and $retries -le 3)
 
     if ($retries -gt 3) {
-        WRITE-HOST 'Jpool API NOT RESPONDING...ABORTING'
-        EXIT
+        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+        Exit
     }
 
 
+    $Request | Get-Member -MemberType Properties| ForEach-Object {
 
-    $Jpool_Request | Get-Member -MemberType properties| ForEach-Object {
+        $coin = $Request | Select-Object -ExpandProperty $_.name
+        $Pool_Algo = get-algo-unified-name ($_.name)
 
-        $coin = $Jpool_Request | Select-Object -ExpandProperty $_.name
+        $Divisor = (Get-Algo-Divisor $Pool_Algo) / 1000
 
-        $Jpool_Algo = get-algo-unified-name ($_.name)
-
-
-        $Divisor = (Get-Algo-Divisor $Jpool_Algo) / 1000
-
-        switch ($Jpool_Algo) {
+        switch ($Pool_Algo) {
             "X11" {$Divisor *= 1000}
             "qubit" {$Divisor *= 1000}
             "quark" {$Divisor *= 1000}
         }
 
-
-
         $Result += [PSCustomObject]@{
-            Algorithm             = $Jpool_Algo
+            Algorithm             = $Pool_Algo
             Info                  = $null
             Price                 = $coin.estimate_current / $Divisor
             Price24h              = $coin.estimate_last24h / $Divisor
             Protocol              = "stratum+tcp"
-            Host                  = $Jpool_Algo + ".jpool.cc"
+            Host                  = $_ + "." + $MineUrl
             Port                  = $coin.port
             User                  = $CoinsWallets.get_item($Currency)
-            Pass                  = "c=$Currency,$WorkerName,Stats"
-            Location              = "Europe"
+            Pass                  = "c=$Currency,$WorkerName,stats"
+            Location              = $Location
             SSL                   = $false
             Symbol                = $null
             AbbName               = $AbbName
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolWorkers           = $coin.workers
+            PoolWorkers           = $coin.Workers
+            PoolHashRate          = $coin.hashrate
             WalletMode            = $WalletMode
             PoolName              = $Name
         }
     }
-
-    remove-variable Jpool_Request
+    remove-variable Request
 }
 
 
 $Result |ConvertTo-Json | Set-Content ("$name.tmp")
-remove-variable Result
+Remove-variable Result
