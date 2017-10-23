@@ -1,7 +1,7 @@
 ﻿{
-"Path" : ".\\Bin\\CPU-Xmrig\\xmrig.exe",
-"ExtractionPath" : ".\\Bin\\CPU-Xmrig\\",
-"Uri" : "https://github.com/xmrig/xmrig/releases/download/v2.4.2/xmrig-2.4.2-gcc-win64.zip",
+"Path" : ".\\Bin\\CPU-XmrigMSVC\\xmrig.exe",
+"ExtractionPath" : ".\\Bin\\CPU-XmrigMSVC\\",
+"Uri" : "https://github.com/xmrig/xmrig/releases/download/v2.4.2/xmrig-2.4.2-msvc-win64.zip",
 "Types" : ["CPU"],
 "Arguments" : "--api-port 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 --donate-level=1 #ALGORITHMPARAMETERS#",
 "API" : "xmrig",
