@@ -1,7 +1,7 @@
 ﻿{
-"Path" : ".\\Bin\\CPU-JayDDee-x\\cpuminer-aes-sha.exe",
-"ExtractionPath" : ".\\Bin\\CPU-JayDDee-x\\",
-"Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.1-x.zip",
+"Path" : ".\\Bin\\CPU-JayDDee-4ward\\cpuminer-aes-avx2.exe",
+"ExtractionPath" : ".\\Bin\\CPU-JayDDee-4ward\\",
+"Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.2-4ward.zip",
 "Types" : ["CPU"],
 "Arguments" : "--api-bind 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
 "API" : "Ccminer",
