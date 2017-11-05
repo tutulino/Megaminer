@@ -929,6 +929,8 @@ while ($true) {
             }
         }
 
+        Start-Sleep -Seconds 10
+
         switch ($KeyPressed) {
             'P' {$Screen = 'profits'}
             'C' {$Screen = 'current'}
