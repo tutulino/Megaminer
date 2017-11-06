@@ -654,7 +654,7 @@ while ($true) {
                 @{Label = "Miner"; Expression = {$_.Name}},
                 @{Label = "Speed"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Hashrates}}},
                 @{Label = "mBTC/Day"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {($_.Profits * 1000).tostring("n5")}}; Align = 'right'},
-                @{Label = $LabelProfit; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n3") } ; Align = 'right'},
+                @{Label = $LabelProfit; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n2") } ; Align = 'right'},
                 @{Label = "Pool"; Expression = {$_.PoolAbbName}},
                 @{Label = "Location"; Expression = {$_.Location}}
 
