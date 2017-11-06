@@ -76,7 +76,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Divisor = (Get-Algo-Divisor $Pool_Algo) / 1000
 
         switch ($Pool_Algo) {
-            "X11" {$Divisor *= 1000}
+            "sha256" {$Divisor *= 1000000}
+            "x11" {$Divisor *= 1000}
             "qubit" {$Divisor *= 1000}
             "quark" {$Divisor *= 1000}
         }
