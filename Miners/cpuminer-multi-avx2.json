@@ -1,6 +1,6 @@
 ﻿{
-"Path" : ".\\Bin\\CPU-TPruvot\\cpuminer-gw64-avx2.exe",
-"ExtractionPath" : ".\\Bin\\CPU-TPruvot\\",
+"Path" : ".\\Bin\\cpuminer-multi\\cpuminer-gw64-avx2.exe",
+"ExtractionPath" : ".\\Bin\\cpuminer-multi\\",
 "Uri" : "https://github.com/tpruvot/cpuminer-multi/releases/download/v1.3.1-multi/cpuminer-multi-rel1.3.1-x64.zip",
 "Types" : ["CPU"],
 "Arguments" : "--api-bind 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
