@@ -24,6 +24,29 @@ function Get-Live-HashRate {
 
     try {
         switch ($API) {
+
+            "Dtsm" {
+
+                
+
+                   
+
+                    $Client = New-Object System.Net.Sockets.TcpClient $server, $port
+                    $Writer = New-Object System.IO.StreamWriter $Client.GetStream()
+                    $Reader = New-Object System.IO.StreamReader $Client.GetStream()
+                    $Writer.AutoFlush = $true
+
+                    $Writer.WriteLine($Message)
+                    $Request = $Reader.ReadLine()
+
+                    $Data = $Request | ConvertFrom-Json | Select-Object  -ExpandProperty result 
+
+                    $HashRate =  [Double](($Data.sol_ps) | Measure-Object -Sum).Sum
+            
+
+
+
+                    }
             "xgminer" {
                 $Message = @{command = "summary"; parameter = ""} | ConvertTo-Json -Compress
             
