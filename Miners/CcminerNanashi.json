@@ -1,0 +1,16 @@
+{
+    "Path" : ".\\Bin\\NVIDIA-Nanashi\\ccminer-2.2-mod-r2-CUDA9\\ccminer.exe",
+    "ExtractionPath" : ".\\Bin\\NVIDIA-Nanashi\\",
+    "Uri" : "https://github.com/Nanashi-Meiyo-Meijin/ccminer/releases/download/v2.2-mod-r2/2.2-mod-r2-CUDA9.binary.zip",
+    "Types" : ["NVIDIA"],
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
+    "API" : "Ccminer",
+    "APIPort" : 4068,
+    "Wrap" : false,
+    "Dualmining":false,
+    "Algorithms": [
+
+    				{"lyra2z":"-a lyra2z"}
+                  ]
+    
+    }

@@ -1,0 +1,16 @@
+{
+    "Path" : ".\\Bin\\NVIDIA-Nice\\ccminer.exe",
+    "ExtractionPath" : ".\\Bin\\NVIDIA-Nice\\",
+    "Uri" : "https://github.com/nicehash/ccminer-nanashi/releases/download/1.7.6-r6/ccminer.zip",
+    "Types" : ["NVIDIA"],
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
+    "API" : "Ccminer",
+    "APIPort" : 4068,
+    "Wrap" : false,
+    "Dualmining":false,
+    "Algorithms": [
+                    {"groestl":"-a groestl"}
+                  ]
+    
+    }
+    

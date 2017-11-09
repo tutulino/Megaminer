@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\NVIDIA-CcminerKlaust\\ccminer.exe",
 "ExtractionPath" : ".\\Bin\\NVIDIA-CcminerKlaust\\",
-"Uri" : "https://github.com/KlausT/ccminer/releases/download/8.13/ccminer-813-x64.zip",
+"Uri" : "https://github.com/KlausT/ccminer/releases/download/8.14beta/ccminer-814beta-x64-cuda9.zip",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
 "API" : "Ccminer",
@@ -14,8 +14,6 @@
                 {"Myriad-Groestl" : "-a myr-gr"},
                 {"Neoscrypt":"-a Neoscrypt"},
                 {"sib" : "-a sib"}
-                
-
                 
               ]
 }

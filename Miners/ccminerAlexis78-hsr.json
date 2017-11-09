@@ -1,0 +1,20 @@
+{
+    "Path" : ".\\Bin\\NVIDIA-alexis-hsr\\ccminer-alexis.exe",
+    "ExtractionPath" : ".\\Bin\\NVIDIA-alexis-hsr\\",
+    "Uri" : "http://ccminer.org/preview/ccminer-hsr-alexis-x86-cuda8.7z",
+    "Types" : ["NVIDIA"],
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
+    "API" : "Ccminer",
+    "APIPort" : 4068,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+                    
+
+                    {"hsr":"-a hsr"}
+
+                    
+                  ]
+    
+    }

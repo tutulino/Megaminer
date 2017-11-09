@@ -10,7 +10,8 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"timetravel":"-a timetravel"}
+        {"timetravel":"-a timetravel"},
+        {"bitcore":"-a bitcore"}
 
 
               ]

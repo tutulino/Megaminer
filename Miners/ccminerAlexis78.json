@@ -22,7 +22,9 @@
                 {"x13" : "-a x13" },
                 {"x11evo" : "-a x11evo"},
                 {"x17" : "-a x17" },
-                {"Keccak":"-a keccak"}
+                {"Keccak":"-a keccak"},
+
+                {"Neoscrypt":"-a Neoscrypt"}
               ]
 
 }
