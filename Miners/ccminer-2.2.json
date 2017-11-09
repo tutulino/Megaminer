@@ -10,12 +10,6 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-				{"cryptonight":"-a cryptonight"},
-				{"hmq1725":"-a hmq1725"},
-				{"sib":"-a sib"},
-				{"timetravel":"-a timetravel"},
-				{"whirpool":"-a whirl"},
-				{"x14":"-a x14"}
+                {"cryptonight":"-a cryptonight"}
               ]
-
 }

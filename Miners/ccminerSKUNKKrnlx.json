@@ -10,10 +10,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-				{"bitcore":"-a bitcore"},
-				{"sib":"-a sib"},
-				{"whirpool":"-a whirl"},
-				{"x14":"-a x14"}
+        {"timetravel":"-a timetravel"},
+        {"bitcore":"-a bitcore"}
               ]
-
 }

@@ -1,0 +1,17 @@
+{
+  
+  "Path": ".\\Bin\\NVIDIA-dtsmEquihash\\zm.exe",
+  "ExtractionPath": ".\\Bin\\NVIDIA-dtsmEquihash",
+  "Uri": "https://github.com/tutulino/Claymore-Dual/releases/download/10.0/NVIDIA-dtsmEquihash.0.5.4.zip",
+  "Types": ["NVIDIA"],
+  "Arguments":  "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --telemetry #ALGORITHMPARAMETERS# ",
+  "API":  "DTSM",
+  "APIPort":  "2222",
+  "Wrap":  false,
+  "Dualmining":false,
+  "PrelaunchCommand":"",
+  "Algorithms": [
+                     {"Equihash":""}
+                   ]
+
+}

@@ -80,7 +80,7 @@ Start-Transcript ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 
 #Set donation parameters
 $LastDonated = (Get-Date).AddDays(-1).AddHours(1)
-$UserNameDonate = "MikeBuzz"
+$UserNameDonate = "tutulino"
 $WorkerNameDonate = "Megaminer"
 $CoinsWalletsDonate = @{}
 (Get-Content config.txt | Where-Object {$_ -like '@@WALLETDONATE_*=*'}) -replace '@@WALLETDONATE_*=*', '' | ForEach-Object {$CoinsWalletsDonate.add(($_ -split "=")[0], ($_ -split "=")[1])}

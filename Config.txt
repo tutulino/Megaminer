@@ -12,11 +12,11 @@
 
 -- Time in seconds each restarting of algo, Benchmarks run at 200 seconds on automatic way, not need to change
 
-@@INTERVAL=300
+@@INTERVAL=600
 
 -- Only NVIDIA tested, AMD must work, but not tested (for mixed rig set AMD,NVIDIA)
 
-@@TYPE=AMD
+@@TYPE=CPU
 
 -- Location of your rig: EUROPE/US/ASIA/GB  (some pool may have no desired location, US will be selected then)
 
@@ -28,11 +28,11 @@
 
 -- Screen to be shown at start of program (WALLETS/CURRENT/HISTORY/PROFITS)
 
-@@STARTSCREEN=HISTORY
+@@STARTSCREEN=CURRENT
 
 -- Benchmarks interval time
 
-@@BENCHMARKTIME=200
+@@BENCHMARKTIME=120
 
 -- Gpu Platform, some miners (sgminer and prospector) needs specify gpu platform, usually this value is 0,1 (you must try, no automatic detection)
 
@@ -40,11 +40,10 @@
 
 -- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX (XXX=currency symbol)
 
-@@WALLET_BTC=3PFC7i8VT3jQG3ppoFEQyYy2wrg9YNoLmj
-
+@@WALLET_BTC=178YrJwP4RHUT1VxCzgUTBAgsLq1TsZbYo
 @@WALLET_XMG=9RDkTkKowYRcKgRKjHSgJN91VH2GW44581
-@@WALLET_VIVO=VXnYnqx1mbaYYChuhJCmijYfSgutnYJyaR
-@@WALLET_BTCZ=t1Xy8QUxKssufpQMu2xi572KH13175sy1Ex
+
+
 
 -- API Keys, Non Anonymous pools (Suprnova, MPH) requires api key to get wallets info (format @@APIKEY_NAMEOFPOOL=XXXXXXXXXX)
 
@@ -57,5 +56,5 @@
 
 -- Destination of donation (BTC) AARONSACE:1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH, ME:1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM 
 
-@@WALLETDONATE_BTC=3PFC7i8VT3jQG3ppoFEQyYy2wrg9YNoLmj
+@@WALLETDONATE_BTC=178YrJwP4RHUT1VxCzgUTBAgsLq1TsZbYo
 

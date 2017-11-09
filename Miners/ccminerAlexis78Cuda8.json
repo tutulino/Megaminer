@@ -10,9 +10,8 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-				{"sib":"-a sib"},
-				{"whirpool":"-a whirl"},
-				{"x14":"-a x14"}
+                {"qubit" : "-a qubit"},
+                {"x11gost" : "-a sib"},
+                {"lyra2v2" : "-a lyra2v2" }
               ]
-
 }

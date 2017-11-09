@@ -10,6 +10,7 @@ cd /d %~dp0
 :LOOP
 del "Stats\*_Profit.txt"
 
-powershell -version 5.0 -noexit -executionpolicy bypass -command "&.\core.ps1 -MiningMode AUTOMATIC -PoolsName Zpool,Mining_Pool_Hub,NICEHASH,Hash_Refinery
+powershell -version 5.0 -noexit -executionpolicy bypass -command "&.\core.ps1 -MiningMode AUTOMATIC -PoolsName Mining_Pool_Hub,Zpool
+::,NICEHASH,Hash_Refinery,SOpool
 
 GOTO LOOP

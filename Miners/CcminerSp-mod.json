@@ -10,8 +10,8 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-				{"sib":"-a sib"},
-				{"whirpool":"-a whirl"}
+                {"c11":"-a c11"}
               ]
 
 }
+

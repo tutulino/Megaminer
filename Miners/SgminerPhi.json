@@ -10,6 +10,6 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"phi1612":"-k phi --intensity 20"}
+                {"phi":"-k phi --intensity 20"}
               ]
 }

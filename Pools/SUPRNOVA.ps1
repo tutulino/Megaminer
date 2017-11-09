@@ -78,7 +78,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "BitcoinCash"; "algo" = "SHA256d"; "symbol" = "BCH"; "server" = "bcc.suprnova.cc"; "port" = "3333"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "BitSend"; "algo" = "Xevan"; "symbol" = "BSD"; "server" = "bsd.suprnova.cc"; "port" = "8686"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "BitcoinZ"; "algo" = "Equihash"; "symbol" = "BTCZ"; "server" = "btcz.suprnova.cc"; "port" = "5586"; "location" = "US"};
-    $Pools += [pscustomobject]@{"coin" = "BitCore"; "algo" = "TimeTravel10"; "symbol" = "BTX"; "server" = "btx.suprnova.cc"; "port" = "3629"; "location" = "US"};
+    $Pools += [pscustomobject]@{"coin" = "BitCore"; "algo" = "BitCore"; "symbol" = "BTX"; "server" = "btx.suprnova.cc"; "port" = "3629"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "ChainCoin"; "algo" = "C11"; "symbol" = "CHC"; "server" = "chc.suprnova.cc"; "port" = "5888"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "DashCoin"; "algo" = "X11"; "symbol" = "Dash"; "server" = "dash.suprnova.cc"; "port" = "9995"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Decred"; "algo" = "Blake14r"; "symbol" = "DCR"; "server" = "dcr.suprnova.cc"; "port" = "3252"; "location" = "US"};

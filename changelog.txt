@@ -232,8 +232,15 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Added Skunk Algo to Whattomine virtual pool
 *Added Location to "Profits" and "Active Miner" sections
 *Added new pool Flypool (only manual mode Zcash mining)
+*Added PHI and HSR algos to Nvidia
+*Added CcminerAlexis-hsr, ccminerNanashi, ccminerPalgin, ccminerPalgin for nvidia
+*Optimized selected miner for each algo (thx MikeBuzz)
+
+*Updated ccminer Tpruvot to 2.2.2
+*Updated ccminer Klaust to 8.14b cuda9
 
 *Fixed: GB location not choosing EUROPE pools always
 *Fixed: WTM virtual pool not getting same result as WTM web due to default hashrates changes on WTM Web
+*Fixed: Skein profit calculation error
 
 

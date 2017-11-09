@@ -20,6 +20,21 @@
 
     try {
         switch ($API) {
+            "Dtsm" {
+                    $Client = New-Object System.Net.Sockets.TcpClient $server, $port
+                    $Writer = New-Object System.IO.StreamWriter $Client.GetStream()
+                    $Reader = New-Object System.IO.StreamReader $Client.GetStream()
+                    $Writer.AutoFlush = $true
+
+                    $Writer.WriteLine($Message)
+                    $Request = $Reader.ReadLine()
+
+                    $Data = $Request | ConvertFrom-Json | Select-Object  -ExpandProperty result
+
+                    $HashRate =  [Double](($Data.sol_ps) | Measure-Object -Sum).Sum
+                    }
+
+
             "xgminer" {
                 $Message = @{command = "summary"; parameter = ""} | ConvertTo-Json -Compress
 
@@ -521,9 +536,6 @@ function get-algo-unified-name ([string]$Algo) {
 
     $Result = $Algo
     switch ($Algo) {
-        "phi" {$Result = "phi1612"}
-        "hsr" {$Result = "x13sm3"}
-        "bitcore" {$Result = "timetravel10"}
         "sib" {$Result = "x11gost"}
         "Blake (14r)" {$Result = "Blake14r"}
         "Blake (2b)" {$Result = "Blake2b"}

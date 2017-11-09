@@ -22,7 +22,7 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and S
 **Mining Pool Hub, Yiimp, ZPOOL, Nicehash and Hash Refinery (must be suported by pool)
    skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, Myriad-Groestl, Lyra2v2, 
    Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, Qubit , X13, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
-   cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r
+   cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r, PHI, HSR
 
 **SUPRNOVA
    DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), ZCASH(ZEC),
@@ -32,6 +32,9 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and S
 
 **BLOCKSFACTORY
    DIGIBYTE-SKEIN(DGB), FEATHERCOIN(FTC), PHOENIXCOIN(PXC), ORBITCOIN(ORB), GUNCOIN(GUN)
+
+**FLYPOOL
+   ZCASH
 
 
 **WHATTOMINE (virtual)

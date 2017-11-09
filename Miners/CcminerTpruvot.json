@@ -10,12 +10,18 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-				{"hsr":"-a hsr"},
-				{"phi":"-a phi"},
-				{"sib":"-a sib"},
-				{"skunk":"-a skunk"},
-				{"tribus":"-a tribus"},
-				{"whirpool":"-a whirl"}
+                {"jha":"-a jha"},
+                {"blakecoin":"-a blakecoin"},
+                {"Blake14r":"-a decred"},
+                {"Tribus":"-a tribus"},
+                {"lyra2z" : "-a lyra2z" },
+                {"Skunk" : "-a skunk" },
+                {"X15":"-a X15"},
+                {"whirpool":"-a whirl"},
+                {"phi":"-a phi"},
+                {"hsr":"-a hsr"}
+
+
               ]
 
 }
