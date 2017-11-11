@@ -3,7 +3,7 @@
 "ExtractionPath" : ".\\Bin\\cpuminer-opt-4ward\\",
 "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.2-4ward.zip",
 "Types" : ["CPU"],
-"Arguments" : "--api-bind 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
+"Arguments" : "--api-bind 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS# -q",
 "API" : "Ccminer",
 "APIPort" : 4068,
 "Wrap" : false,

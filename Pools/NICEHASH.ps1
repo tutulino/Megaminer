@@ -95,7 +95,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Protocol              = "stratum+tcp"
                 Host                  = $AlgoOriginal + "." + $location.NhLocation + ".nicehash.com"
                 Port                  = $_.port
-                User                  = $CoinsWallets.get_item('BTC') + '.' + $Workername
+                User                  = $CoinsWallets.get_item('NH-BTC') + '.' + $Workername
                 Pass                  = "x"
                 Location              = $location.MMLocation
                 SSL                   = $false

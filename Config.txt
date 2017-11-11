@@ -1,6 +1,6 @@
 --ID for each rig you have
 
-@@WORKERNAME=mega
+@@WORKERNAME=fractal
 
 --Prefered Currency you will be pay, only for anonymous pools with autoexchange (Zpool, HR...), must set wallet for this currency on "Wallets Section"
 
@@ -16,7 +16,7 @@
 
 -- Only NVIDIA tested, AMD must work, but not tested (for mixed rig set AMD,NVIDIA)
 
-@@TYPE=CPU
+@@TYPE=AMD,CPU
 
 -- Location of your rig: EUROPE/US/ASIA/GB  (some pool may have no desired location, US will be selected then)
 
@@ -40,6 +40,7 @@
 
 -- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX (XXX=currency symbol)
 
+@@WALLET_NH-BTC=3PFC7i8VT3jQG3ppoFEQyYy2wrg9YNoLmj
 @@WALLET_BTC=178YrJwP4RHUT1VxCzgUTBAgsLq1TsZbYo
 @@WALLET_XMG=9RDkTkKowYRcKgRKjHSgJN91VH2GW44581
 
