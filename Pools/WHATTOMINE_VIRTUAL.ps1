@@ -168,25 +168,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
            
            
         $Pools |ForEach-Object {
-                            #WTM json is for 3xAMD 480 hashrate must adjust, 
-                            # to check result with WTM set WTM on "Difficulty for revenue" to "current diff" and "and sort by "current profit" set your algo hashrate from profits screen, WTM "Rev. BTC" and MM BTC/Day must be the same
-                            $WTMFactor=$null
-                            switch ($_.Algo)
-                                        {
-                                                "Ethash"{$WTMFactor=79500000}
-                                                "Groestl"{$WTMFactor=54000000}
-                                                "Myriad-Groestl"{$WTMFactor=79380000}
-                                                "X11Gost"{$WTMFactor=20100000}
-                                                "Cryptonight"{$WTMFactor=2190}
-                                                "equihash"{$WTMFactor=870}
-                                                "lyra2v2"{$WTMFactor=14700000}
-                                                "Neoscrypt"{$WTMFactor=1950000}
-                                                "Lbry"{$WTMFactor=285000000}
-                                                "Blake2b"{$WTMFactor=2970000000} 
-                                                "Blake14r"{$WTMFactor=4200000000}
-                                                "Pascal"{$WTMFactor=2070000000}
-                                                "skunk"{$WTMFactor=54000000}
-                                        }
+                            
+                            $WTMFactor = get-WhattomineFactor ($_.Algo)
+                          
 
                             if ($WTMFactor -ne $null) {
                                                         $Estimate=[Double]($WTMResponse.($_.coin).btc_revenue/$WTMFactor)

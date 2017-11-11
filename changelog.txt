@@ -243,4 +243,18 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Fixed: WTM virtual pool not getting same result as WTM web due to default hashrates changes on WTM Web
 *Fixed: Skein profit calculation error
 
+------------------------------------------------
+4.5
+
+*Added DTSM equihash miner
+*Added AHASHPOOL Pool (No registration, Autoexchange)
+*Added UNIMINING Pool (No registration, No autoexchange, need wallet for each coin on config.txt)
+*Added to Suprnova: ELECTRONEUM (ETN),SMARTCASH (SMART),BITCOINZ (BTCZ),BITCOIN GOLD (BCG)
+
+*Fixed: Some pools-algo combination are ignored on multiple pool executions
+*Fixed: Blocks Factory skein port
+*Fixed: Hash Refinery "HR_request" error
+*Fixed: Other small bugs
+
+
 

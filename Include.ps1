@@ -410,7 +410,7 @@ function Get-Pools {
                         if ($Location -ne "") {
                                 $Return=@()
                                 $AllPools2 | Sort-Object Info,Algorithm,LocationPriority | ForEach-Object {
-                                    $Ex = $Return | Where-Object Info -eq $_.Info | Where-Object Algorithm -eq $_.Algorithm
+                                    $Ex = $Return | Where-Object Info -eq $_.Info | Where-Object Algorithm -eq $_.Algorithm | Where-Object PoolName -eq $_.PoolName
                                     if ($Ex.count -eq 0) {$Return += $_}
                                     }
                             }
@@ -716,3 +716,39 @@ function clear-log{
     $Files |ForEach-Object {Remove-Item $_.fullname}
 
 }
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
+
+function get-WhattomineFactor ([string]$Algo) {
+    
+   #WTM json is for 3xAMD 480 hashrate must adjust, 
+   # to check result with WTM set WTM on "Difficulty for revenue" to "current diff" and "and sort by "current profit" set your algo hashrate from profits screen, WTM "Rev. BTC" and MM BTC/Day must be the same
+            
+            switch ($_.Algo)
+                        {
+                                "Ethash"{$WTMFactor=79500000}
+                                "Groestl"{$WTMFactor=54000000}
+                                "Myriad-Groestl"{$WTMFactor=79380000}
+                                "X11Gost"{$WTMFactor=20100000}
+                                "Cryptonight"{$WTMFactor=2190}
+                                "equihash"{$WTMFactor=870}
+                                "lyra2v2"{$WTMFactor=14700000}
+                                "Neoscrypt"{$WTMFactor=1950000}
+                                "Lbry"{$WTMFactor=285000000}
+                                "Blake2b"{$WTMFactor=2970000000} 
+                                "Blake14r"{$WTMFactor=4200000000}
+                                "Pascal"{$WTMFactor=2070000000}
+                                "skunk"{$WTMFactor=54000000}
+                        }
+
+
+              
+         $WTMFactor       
+    
+    }
+    

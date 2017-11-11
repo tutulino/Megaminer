@@ -210,22 +210,7 @@ if ($MiningMode -eq "manual"){
                                                                                     {
                                                                                    
                                                                                     if ($WtmCoin.difficulty24 -ne 0)  {$_.DiffChange24h=(1-($WtmCoin.difficulty/$WtmCoin.difficulty24))*100}
-                                                                                    #WTM returns default data as 3x480 hashrates
-                                                                                    $WTMFactor=$null
-                                                                                    switch ($_.Algorithm)
-                                                                                                {
-                                                                                                        "Ethash"{$WTMFactor=84000000}
-                                                                                                        "Groestl"{$WTMFactor=630900000 }
-                                                                                                        "X11Gost"{$WTMFactor=20100000}
-                                                                                                        "Cryptonight"{$WTMFactor=2190}
-                                                                                                        "equihash"{$WTMFactor=870}
-                                                                                                        "lyra2v2"{$WTMFactor=14700000}
-                                                                                                        "Neoscrypt"{$WTMFactor=1950000}
-                                                                                                        "Lbry"{$WTMFactor=315000000}
-                                                                                                        "sia"{$WTMFactor=3450000000} #Blake2b
-                                                                                                        "decred"{$WTMFactor=5910000000} #Blake14r
-                                                                                                        "Pascal"{$WTMFactor=2100000000}
-                                                                                                }
+                                                                                    $WTMFactor = get-WhattomineFactor ($_.Algo)
 
                                                                                     if ($WTMFactor -ne $null) {
                                                                                                     $_.Reward=[double]([double]$WtmCoin.estimated_rewards * ([double]$_.YourHashRate/[double]$WTMFactor))

@@ -100,10 +100,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Pools +=[pscustomobject]@{"coin" = "SIBCOIN";"algo"="X11gost"; "symbol"= "ETH";"server"="sib.suprnova.cc"; "port"= "3458";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "UBIQ";"algo"="Ethash"; "symbol"= "UBQ";"server"="ubiq.suprnova.cc"; "port"= "3030";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "EXPANSE";"algo"="Ethash"; "symbol"= "UBQ";"server"="exp.suprnova.cc"; "port"= "3333";"location"="US"};
-        $Pools +=[pscustomobject]@{"coin" = "BITSEND";"algo"="Xevan"; "symbol"= "BSD";"server"="bsd.suprnova.cc"; "port"= "8686";"location"="US"};
-
-
-        
+        $Pools +=[pscustomobject]@{"coin" = "ELECTRONEUM";"algo"="CRYPTONIGHT"; "symbol"= "ETN";"server"="etn.suprnova.cc"; "port"= "8875";"location"="US"};
+        $Pools +=[pscustomobject]@{"coin" = "SMARTCASH";"algo"="keccak"; "symbol"= "SMART";"server"="smart.suprnova.cc"; "port"= "4192";"location"="US"};
+        $Pools +=[pscustomobject]@{"coin" = "BITCOINZ";"algo"="equihash"; "symbol"= "BTCZ";"server"="btcz.suprnova.cc"; "port"= "5586";"location"="US"};
+        $Pools +=[pscustomobject]@{"coin" = "BITCOINGOLD";"algo"="equihash"; "symbol"= "BTG";"server"="btg.suprnova.cc"; "port"= "8816";"location"="US"};
 
 
         #$Pools +=[pscustomobject]@{"coin"= "SPREADCOIN";"algo"="SPREADX11"; "symbol"= "SPR";"server"="spr.suprnova.cc"; "port"= "6666";"location"="US"}

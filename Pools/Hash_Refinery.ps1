@@ -111,7 +111,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     
                 }
             
-                remove-variable HR_Request
+                
         }
 
 

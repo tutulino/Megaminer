@@ -28,10 +28,10 @@ param(
 #$PoolsName=('zpool','mining_pool_hub')
 #$PoolsName='whattomine_virtual'
 #$PoolsName='yiimp'
-#$PoolsName=('hash_refinery','zpool','mining_pool_hub')
+#$PoolsName=('hash_refinery','zpool')
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
-#$PoolsName='BLOCKS_FACTORY'
+#$PoolsName='hash_refinery'
 
 #$PoolsName='Suprnova'
 #$PoolsName="Nicehash"
@@ -511,7 +511,7 @@ while ($true) {
             if ($_.GenerateConfigFile -ne $null) {$_.ConfigFileArguments | Set-Content ($_.GenerateConfigFile)}
 
             #run prelaunch command
-            if ($_.PrelaunchCommand -ne "") {Start-Process -FilePath $_.PrelaunchCommand}
+            if ($_.PrelaunchCommand -ne $null -and $_.PrelaunchCommand -ne "") {Start-Process -FilePath $_.PrelaunchCommand}
 
             if ($_.Wrap) {$_.Process = Start-Process -FilePath "PowerShell" -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$($_.Arguments)' -WorkingDirectory '$(Split-Path $_.Path)'" -PassThru}
               else {$_.Process = Start-SubProcess -FilePath $_.Path -ArgumentList $_.Arguments -WorkingDirectory (Split-Path $_.Path)}

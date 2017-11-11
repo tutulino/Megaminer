@@ -32,7 +32,7 @@ if ($Querymode -eq "info"){
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Pools=@()
-        $Pools +=[pscustomobject]@{"coin" = "DIGIBYTE";"algo"="SKEIN"; "symbol"= "DGB";"server"="s1.theblocksfactory.com"; "port"= "9002";"location"="US"};
+        $Pools +=[pscustomobject]@{"coin" = "DIGIBYTE";"algo"="SKEIN"; "symbol"= "DGB";"server"="s1.theblocksfactory.com"; "port"= "9001";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "FEATHERCOIN"; "algo"="NEOSCRYPT"; "symbol"= "FTC"; "server"="s1.theblocksfactory.com";"port"="3333";"location"="US"}
         $Pools +=[pscustomobject]@{"coin" = "PHOENIXCOIN"; "algo"="NEOSCRYPT"; "symbol"= "PXC"; "server"="s1.theblocksfactory.com";"port"="3332";"location"="US"}
         $Pools +=[pscustomobject]@{"coin" = "ORBITCOIN"; "algo"="NEOSCRYPT"; "symbol"= "ORB"; "server"="s1.theblocksfactory.com";"port"="3334";"location"="US"}
