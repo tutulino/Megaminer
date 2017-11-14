@@ -104,6 +104,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "Litecoin"; "algo" = "Scrypt"; "symbol" = "LTC"; "server" = "ltc.suprnova.cc"; "port" = "4444"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "MachineCoin"; "algo" = "TimeTravel"; "symbol" = "MAC"; "server" = "mac.suprnova.cc"; "port" = "4942"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "MagiCoin"; "algo" = "M7M"; "symbol" = "XMG"; "server" = "xmg.suprnova.cc"; "port" = "7128"; "location" = "US"};
+    $Pools += [pscustomobject]@{"coin" = "MinexCoin"; "algo" = "Mars"; "symbol" = "MNX"; "server" = "mnx.suprnova.cc"; "port" = "7076"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "MonaCoin"; "algo" = "Lyra2V2"; "symbol" = "MONA"; "server" = "mona.suprnova.cc"; "port" = "2995"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Monero"; "algo" = "Cryptonight"; "symbol" = "XMR"; "server" = "xmr-eu.suprnova.cc"; "port" = "5222"; "location" = "Europe"};
     $Pools += [pscustomobject]@{"coin" = "Monero"; "algo" = "Cryptonight"; "symbol" = "XMR"; "server" = "xmr.suprnova.cc"; "port" = "5222"; "location" = "US"};

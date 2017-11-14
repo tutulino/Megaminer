@@ -718,7 +718,8 @@ while ($true) {
 
 
 
-        if ($Screen -eq "Wallets" -or $FirstTotalExecution -eq $true) {
+        if ($Screen -eq "Wallets") {
+        # if ($Screen -eq "Wallets" -or $FirstTotalExecution -eq $true) {
 
 
 

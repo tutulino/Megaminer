@@ -88,7 +88,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Price                 = $coin.estimate_current / $Divisor
             Price24h              = $coin.estimate_last24h / $Divisor
             Protocol              = "stratum+tcp"
-            Host                  = $MineUrl
+            Host                  = $coin.name + "." + $MineUrl
             Port                  = $coin.port
             User                  = $CoinsWallets.get_item($Currency)
             Pass                  = "c=$Currency,$WorkerName,stats"

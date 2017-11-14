@@ -21,18 +21,18 @@
     try {
         switch ($API) {
             "Dtsm" {
-                    $Client = New-Object System.Net.Sockets.TcpClient $server, $port
-                    $Writer = New-Object System.IO.StreamWriter $Client.GetStream()
-                    $Reader = New-Object System.IO.StreamReader $Client.GetStream()
-                    $Writer.AutoFlush = $true
+                $Client = New-Object System.Net.Sockets.TcpClient $server, $port
+                $Writer = New-Object System.IO.StreamWriter $Client.GetStream()
+                $Reader = New-Object System.IO.StreamReader $Client.GetStream()
+                $Writer.AutoFlush = $true
 
-                    $Writer.WriteLine($Message)
-                    $Request = $Reader.ReadLine()
+                $Writer.WriteLine($Message)
+                $Request = $Reader.ReadLine()
 
-                    $Data = $Request | ConvertFrom-Json | Select-Object  -ExpandProperty result
+                $Data = $Request | ConvertFrom-Json | Select-Object  -ExpandProperty result
 
-                    $HashRate =  [Double](($Data.sol_ps) | Measure-Object -Sum).Sum
-                    }
+                $HashRate = [Double](($Data.sol_ps) | Measure-Object -Sum).Sum
+            }
 
 
             "xgminer" {
@@ -161,16 +161,16 @@
                 $Request = Invoke-WebRequest "http://$($Server):$Port/" -UseBasicParsing
                 $Data = $Request | ConvertFrom-Json
                 # $HashRate = [Double]($Data.hashrate.highest | Measure-Object -Sum).sum
-                $HashRate =  [Double]($Data.hashrate.total[1] | Measure-Object -Sum).sum
-                if ($HashRate -eq 0) {$HashRate =  [Double]($Data.hashrate.total[0] | Measure-Object -Sum).sum}
+                $HashRate = [Double]($Data.hashrate.total[1] | Measure-Object -Sum).sum
+                if ($HashRate -eq 0) {$HashRate = [Double]($Data.hashrate.total[0] | Measure-Object -Sum).sum}
             }
 
             "xmrminer" {
                 $Request = Invoke-WebRequest "http://$($Server):$Port/api.json" -UseBasicParsing
                 $Data = $Request | ConvertFrom-Json
                 # $HashRate = [Double]($Data.highest | Measure-Object -Sum).sum
-                $HashRate =  [Double]($Data.total[1] | Measure-Object -Sum).sum
-                if ($HashRate -eq 0) {$HashRate =  [Double]($Data.total[0] | Measure-Object -Sum).sum}
+                $HashRate = [Double]($Data.total[1] | Measure-Object -Sum).sum
+                if ($HashRate -eq 0) {$HashRate = [Double]($Data.total[0] | Measure-Object -Sum).sum}
             }
 
             "optiminer" {
@@ -705,4 +705,27 @@ function clear-log {
 
     $Files |ForEach-Object {Remove-Item $_.fullname}
 
+}
+
+function get-WhattomineFactor ([string]$Algo) {
+
+    #WTM json is for 3xAMD 480 hashrate must adjust,
+    # to check result with WTM set WTM on "Difficulty for revenue" to "current diff" and "and sort by "current profit" set your algo hashrate from profits screen, WTM "Rev. BTC" and MM BTC/Day must be the same
+
+    switch ($_.Algo) {
+        "Ethash" {$WTMFactor = 88500000}
+        "Groestl" {$WTMFactor = 54000000}
+        "Myriad-Groestl" {$WTMFactor = 79380000}
+        "X11Gost" {$WTMFactor = 20100000}
+        "Cryptonight" {$WTMFactor = 2190}
+        "equihash" {$WTMFactor = 870}
+        "lyra2v2" {$WTMFactor = 14700000}
+        "Neoscrypt" {$WTMFactor = 1950000}
+        "Lbry" {$WTMFactor = 285000000}
+        "Blake2b" {$WTMFactor = 2970000000}
+        "Blake14r" {$WTMFactor = 4200000000}
+        "Pascal" {$WTMFactor = 2070000000}
+        "skunk" {$WTMFactor = 54000000}
+    }
+    $WTMFactor
 }
