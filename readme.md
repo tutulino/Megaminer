@@ -20,12 +20,14 @@ FLYPOOL -- Anonymous, manual mode only
 
 UNIMINING -- No registration, No autoexchange, need wallet for each coin on config.txt
 
-WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to us
+ITALYIIMP -- Anonymous, autoexchange to selected coin in config.txt
+
+WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to us
 
 
 ---- ALGOS/COINS SUPORTED (NVIDIA) -------------------------------
 
-**Mining Pool Hub, Yiimp, ZPOOL, AhashPool, Unimining, Nicehash and Hash Refinery (must be suported by pool)
+**Mining Pool Hub, Yiimp, ZPOOL, AhashPool, Unimining, Italyiimp Nicehash and Hash Refinery (must be suported by pool)
    skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, Myriad-Groestl, Lyra2v2, 
    Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, Qubit , X13, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
    cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r, PHI, HSR
@@ -46,12 +48,33 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH,Yiimp and S
 **WHATTOMINE (virtual)
    DECRED(DCR),  HUSH(HUSH), LBRY(LBRY), MONACOIN (MONA), ZCASH(ZEC), ZENCASH (ZEN), ZCOIN(XZC), ZCLASSIC(ZCL), VERTCOIN (VTC)
    KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB),SIBCOIN (SIB),UBIQ (UBQ), EXPANSE (EXP), ETHEREUM CLASSIC (ETC), MYRIAD-GROESTL (XMY), MUSICOIN (MUSIC),
-   ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LBRY(ETH+LBRY)
+   ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LBRY(ETH+LBRY),BITCOINZ (BTCZ)
 
 
 **CROSSED BETWEEN POOLS
     ETHEREUM+DECRED, ETHEREUM+LBRY, ETHEREUM+PASCAL, ETHEREUM+SIACOIN
 
+
+---- INSTRUCTIONS ----------------------------------------------
+
+0. Download latest Release from github
+
+1. Edit CONFIG.TXT file before mining
+
+2. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt
+
+3. Firt time, software will be donwloaded from miners github repositories and your system will be benchmarked
+
+
+
+Default donation is 5 minutes each day on automatic pools, you can change it at config.txt or donate manually ;-)
+
+
+---- UPGRADE PROCEDURE ------------------------------------
+
+Safest way is download new software and copy from old version "stats" folders and "config.txt" file.
+If new verson haven´t miners update you can copy "bin" folder
+If there is a new version on some miner is recomended delete hasrate.txt files of that miner on miners folder to force benchmark again.
 
 
 -------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -----------
@@ -92,29 +115,7 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Option for asociate command to launch before run to each miner (nvidia inspector for example to set overclock)
 
-
-
-
-
----- INSTRUCTIONS ----------------------------------------------
-
-0. Download latest Release from github
-
-1. Edit CONFIG.TXT file before mining
-
-2. Firt time, software will be donwloaded from miners github repositories.
-
-3. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt
-
-
-Default donation is 5 minutes each day on automatic pools, you can change it at config.txt or donate manually ;-)
-
-
----- UPGRADE PROCEDURE ------------------------------------
-
-Safest way is download new software and copy from old version "stats" folders and "config.txt" file.
-If new verson haven´t miners update you can copy "bin" folder
-If there is a new version on some miner is recomended delete hasrate.txt files of that miner on miners folder to force benchmark again.
+-Miners and Pools fees are included in profit calculation
 
 
 

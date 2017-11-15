@@ -32,12 +32,13 @@ param(
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
 #$PoolsName='hash_refinery'
+#$PoolsName='ahashpool'
+#$PoolsName='suprnova'
 
-#$PoolsName='Suprnova'
 #$PoolsName="Nicehash"
 
 #$Coinsname =('bitcore','Signatum','Zcash')
-#$Coinsname ='bitcore'
+#$Coinsname ='bitcoingold'
 #$Algorithm =('x11')
 
 
@@ -247,10 +248,17 @@ while ($true) {
                                                              $ConfigFileArguments = (get-content $Miner.PatternConfigFile -raw)  -replace '#PORT#',$_.Port -replace '#SERVER#',$_.Host -replace '#PROTOCOL#',$_.Protocol -replace '#LOGIN#',$_.user -replace '#PASSWORD#',$_.Pass -replace "#GpuPlatform#",$GpuPlatform   -replace '#ALGORITHM#',$Algoname -replace '#ALGORITHMPARAMETERS#',$Algo.PSObject.Properties.Value -replace '#WORKERNAME#',$WorkerName
                                                         }
 
+                                                        
                                                 if ($MiningMode -eq 'Automatic24h') {
-                                                        $MinerProfit=[Double]([double]$HashrateValue * [double]$_.Price24h)}
+                                                        $MinerProfit=[Double]([double]$HashrateValue * [double]$_.Price24h)
+                                                       
+                                                        }
                                                     else {
                                                         $MinerProfit=[Double]([double]$HashrateValue * [double]$_.Price)}
+
+                                                #apply fee to profit       
+                                                if ($Miner.Fee -gt 0) {$MinerProfit=$MinerProfit -($minerProfit*[double]$Miner.fee)}
+                                                if ($_.Fee -gt 0) {$MinerProfit=$MinerProfit -($minerProfit*[double]$_.fee)}
 
                                                 $PoolAbbName=$_.Abbname
                                                 $PoolName = $_.name
@@ -270,6 +278,10 @@ while ($true) {
                                                                 $PoolDual = $Pools |where-object Algorithm -eq $AlgoNameDual | sort-object price24h -Descending| Select-Object -First 1
                                                                 $MinerProfitDual = [Double]([double]$HashrateValueDual * [double]$PoolDual.Price)
                                                                 }
+
+                                                     #apply fee to profit       
+                                                     if ($Miner.Fee -gt 0) {$MinerProfitDual=$MinerProfitDual -($MinerProfitDual*[double]$Miner.fee)}             
+                                                     if ($PoolDual.Fee -gt 0) {$MinerProfitDual=$MinerProfitDual -($MinerProfitDual*[double]$PoolDual.fee)}             
 
                                                     $Arguments = $Arguments -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass  -replace '#ALGORITHMDUAL#',$AlgonameDual  
                                                     if ($Miner.PatternConfigFile -ne $null) {
@@ -317,6 +329,8 @@ while ($true) {
                                                                     ConfigFileArguments = $ConfigFileArguments
                                                                     Location = $_.location
                                                                     PrelaunchCommand = $Miner.PrelaunchCommand
+                                                                    MinerFee= if ($Miner.Fee -eq $null) {$null} else {[double]$Miner.fee}
+                                                                    PoolFee = if ($_.Fee -eq $null) {$null} else {[double]$_.fee}
 
                                                                 }
                             
@@ -461,6 +475,8 @@ while ($true) {
                             ConsecutiveZeroSpeed = 0
                             Location             = $_.Location
                             PrelaunchCommand     = $_.PrelaunchCommand
+                            MinerFee             = $_.MinerFee
+                            PoolFee              = $_.PoolFee
 
                         }
                         $ActiveMinersIdCounter++
@@ -656,12 +672,15 @@ while ($true) {
                         @{Label = "Speed"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Hashrates}}}, 
                         @{Label = "BTC/Day"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Profits.tostring("n5")}}; Align = 'right'}, 
                         @{Label = $LabelProfit; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n2") } ; Align = 'right'},
+                        
+                        @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:P1}" -f $_.PoolFee}}; Align = 'right'},
+                        @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:P1}" -f $_.MinerFee}}; Align = 'right'},
                         @{Label = "Pool"; Expression = {$_.PoolAbbName}},
                         @{Label = "Location"; Expression = {$_.Location}}
 
                     ) | Out-Host
 
-
+                       
                     Remove-Variable ProfitMiners
 
                 }

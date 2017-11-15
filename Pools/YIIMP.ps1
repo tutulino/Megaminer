@@ -104,6 +104,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Blocks_24h    = $null
                                 WalletMode    = $WalletMode
                                 PoolName = $Name
+                                Fee = 0.02
                                 }
                         
                 

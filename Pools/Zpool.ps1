@@ -89,7 +89,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     }
 
                                 
-                                
                                     $Result+=[PSCustomObject]@{
                                             Algorithm     = $Zpool_Algo
                                             Info          = $null
@@ -109,6 +108,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             PoolWorkers = $coin.workers
                                             WalletMode=$WalletMode
                                             PoolName = $Name
+                                            Fee = $coin.Fees/100
                                             }
                            }
 

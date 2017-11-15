@@ -6,6 +6,7 @@
 "Arguments" : "-r -1 -mport 13333 -o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -allpools 1 #ALGORITHMPARAMETERS#",
 "API" : "ClaymoreV2",
 "APIPort" : 13333,
+"Fee" : "0.01",
 "Wrap" : false,
 "DualMining": false,
 "PrelaunchCommand":"",

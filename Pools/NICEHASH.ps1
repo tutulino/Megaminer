@@ -128,6 +128,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         WalletMode      = $WalletMode
                                         OriginalAlgorithm =  $SNH_AlgorithmOriginal
                                         OriginalCoin = $NH_coin
+                                        Fee = 0.04
                                             
                                         }
                         }

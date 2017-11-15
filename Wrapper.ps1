@@ -28,16 +28,16 @@ $Result = $PowerShell.BeginInvoke()
 
 Write-Host "Wrapper Started" -BackgroundColor Yellow -ForegroundColor Black
 
+
+
 do {
     Start-Sleep 1
 
     $PowerShell.Streams.Verbose.ReadAll() | ForEach-Object {
         $Line = $_
+        
 
-        if ($Line -like "*total speed:*" -or $Line -like "*accepted:*" -or   $Line -like "*Mining on #*"  ) {
-
-#write-host 1111 $Line
-#start-sleep 25    
+        if ($Line -like "*total speed:*" -or $Line -like "*accepted:*" -or   $Line -like "*Mining on #*" -or $line -like "*diff*yes!*" ) {
             $Line = $Line -replace "\smh/s","mh/s" -replace "\skh/s","kh/s" -replace "\sgh/s","gh/s" -replace "\sth/s","th/s" -replace "\sph/s","ph/s" -replace "\sh/s"," h/s" 
             $Words = $Line -split " "
             $Word =  $words -like "*/s*" | Select-Object -Last 1
@@ -48,8 +48,9 @@ write-host 3332
 $Line | write-host
 $Word | write-host
 $HashRate | write-host
-start-sleep 5
-  #>          
+start-sleep 50
+#>
+          
 
 
             switch  –wildcard ($Word) {

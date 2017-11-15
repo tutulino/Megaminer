@@ -81,7 +81,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                         try {
                             $Aha_Request = Invoke-WebRequest "http://www.ahashpool.com/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 
                             $Aha_Request = $Aha_Request | ConvertFrom-Json 
-                             #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
+
+                            $Aha_Request2 = Invoke-WebRequest "http://www.ahashpool.com/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 
+                            $Aha_Request2 = $Aha_Request2 | ConvertFrom-Json 
 
                         }
                         catch {}
@@ -103,6 +105,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     $Aha_Algorithm = get-algo-unified-name $coin.algo
                     $Aha_coin =  get-coin-unified-name $coin.name
                     $Aha_Simbol=$_.name
+                   
             
 
                     $Divisor = Get-Algo-Divisor $Aha_Algorithm
@@ -130,6 +133,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Blocks_24h    = $coin."24h_blocks"
                                 WalletMode    = $WalletMode
                                 PoolName = $Name
+                                Fee = $Aha_Request2.$($coin.algo).Fees / 100
                                 }
                         
                 

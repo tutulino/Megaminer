@@ -3,11 +3,12 @@
 "ExtractionPath" : ".\\Bin\\Ethash-Claymore\\",
 "Uri" : "https://github.com/tutulino/Claymore-Dual/releases/download/10.0/Claymore-Dual10.zip",
 "Types" : ["NVIDIA"],
-"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL# -wd 1 -dcri 120 #ALGORITHMPARAMETERS#",
+"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL# -wd 1 -dcri 40 #ALGORITHMPARAMETERS#",
 "API" : "Claymore",
 "APIPort" : 3333,
 "Wrap" : false,
 "DualMining": true,
+"Fee" : "0.02",
 "DualMiningMainCoin": "Ethereum",
 "PrelaunchCommand":"",
 "Algorithms": [

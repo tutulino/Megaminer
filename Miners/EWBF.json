@@ -3,11 +3,12 @@
   "ExtractionPath": ".\\Bin\\NVIDIA-EWBF\\",
     "Uri": "https://github.com/nemosminer/EWBF-Zec-Miner/releases/download/0.3.4b/0.3.4b.7z",
     "Types": ["NVIDIA"],
-    "Arguments":  "--api --server #SERVER# --port #PORT# --solver 0 --pec --eexit 1 --user #LOGIN# --pass #PASSWORD# #ALGORITHMPARAMETERS#",
+    "Arguments":  "--api --server #SERVER# --port #PORT# --solver 0 --pec --fee 0 --eexit 1 --user #LOGIN# --pass #PASSWORD# #ALGORITHMPARAMETERS# ",
     "API":  "EWBF",
     "APIPort":  "42000",
     "Wrap":  false,
     "Dualmining":false,
+    "Fee":"0",
     "PrelaunchCommand":"",
      "Algorithms": [
                      {"Equihash":""}

@@ -53,11 +53,10 @@ if ($Querymode -eq "info"){
                                 $Suprnova_Request = $Suprnova_Request | ConvertFrom-Json | Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
                                 }
                             catch {
-                                $_.Exception.Response.StatusCode.Value__
                                   }
         
         
-                            if ($Suprnova_Request -ne $null -and $Suprnova_Request -ne ""){
+                        
                                 $Result=[PSCustomObject]@{
                                                         Pool =$name
                                                         currency = $Info.OriginalCoin
@@ -65,7 +64,7 @@ if ($Querymode -eq "info"){
                                                     }
                          
                          
-                        Remove-variable Suprnova_Request                        }
+                                                
                         }
 
                         
@@ -148,6 +147,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     WalletMode      = $WalletMode
                                     OriginalAlgorithm =  $_.Algo
                                     OriginalCoin = $_.Coin
+                                    Fee = 0.01
 
 
                                 }

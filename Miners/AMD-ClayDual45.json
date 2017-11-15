@@ -9,6 +9,7 @@
 "Wrap" : false,
 "DualMining": true,
 "DualMiningMainCoin": "Ethereum",
+"Fee" : "0.02",
 "Algorithms": [
                 {"Ethash_Blake2b":" -dcoin sc"},
                 {"Ethash_Blake14r":" -dcoin dcr"},
