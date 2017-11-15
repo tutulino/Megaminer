@@ -8,6 +8,7 @@
 "APIPort" : 4068,
 "Wrap" : false,
 "Dualmining":false,
+"Fee":"0.01",
 "PrelaunchCommand":"",
 "Algorithms": [
     {"cryptonight": "-a cryptonight"},

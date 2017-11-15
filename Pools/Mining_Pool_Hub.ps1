@@ -130,13 +130,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         PoolName              = $Name
         OriginalAlgorithm     = $MiningPoolHub_OriginalAlgorithm
         OriginalCoin          = $MiningPoolHub_OriginalCoin
-
+        Fee                   = 0.009
       }
     }
-
   }
-
-
   Remove-variable MiningPoolHub_Request
 }
 

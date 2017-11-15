@@ -1,0 +1,17 @@
+{
+    "Path" : ".\\Bin\\lbry-sp-mod6\\ccminer.exe",
+    "ExtractionPath" : ".\\Bin\\",
+    "Uri" : "https://github.com/sp-hash/ccminer/releases/download/LBRYSP6/lbry-sp-mod6_2.7z",
+    "Types" : ["NVIDIA"],
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
+    "API" : "wrapper",
+    "APIPort" : 4070,
+    "Wrap" : true,
+    "Fee":"0.017",
+    "Dualmining":false,
+    "Algorithms": [
+                    {"lbry":"-a lbry"}
+                  ]
+    
+    }
+    

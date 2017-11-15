@@ -10,6 +10,8 @@
     "Dualmining":false,
     "Algorithms": [
 
-    				{"lyra2z":"-a lyra2z"}
+                    {"lyra2z":"-a lyra2z"},
+                    {"lyra2v2" : "-a lyra2v2" }
                   ]
-}
+    
+    }

@@ -257,4 +257,15 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Fixed: Other small bugs
 
 
+------------------------------------------------
+4.6
+
+*Now pools and miners fees affects profit calculation (see profits screen)
+*Shortened miner filenames, this will make some benchmarks run again
+*Upgraded ccminer Klaust to 8.14
+*Added ccminer Spmod #6 for lbry
+
+*Fixed: suprnova wallet error msg at start
+
+
 

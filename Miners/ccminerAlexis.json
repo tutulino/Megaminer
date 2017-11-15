@@ -11,7 +11,7 @@
 "PrelaunchCommand":"",
 "Algorithms": [
                 {"blake2s" : "-a blake2s"},
-                {"c11" : "-a c11" },
+                {"c11" : "-a c11" },  
                 {"lbry" : "-a lbry" },
                 {"nist5" : "-a nist5"},
                 {"quark" : "-a quark"},
@@ -23,6 +23,8 @@
                 {"x11evo" : "-a x11evo"},
                 {"x17" : "-a x17" },
                 {"Keccak":"-a keccak"},
+
                 {"Neoscrypt":"-a Neoscrypt"}
               ]
+
 }

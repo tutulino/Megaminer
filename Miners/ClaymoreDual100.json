@@ -10,6 +10,7 @@
 "DualMining": true,
 "DualMiningMainCoin": "Ethereum",
 "PrelaunchCommand":"",
+"Fee" : "0.02",
 "Algorithms": [
                 {"Ethash_Blake2b":" -dcoin sc"},
                 {"Ethash_Blake14r":" -dcoin dcr"},

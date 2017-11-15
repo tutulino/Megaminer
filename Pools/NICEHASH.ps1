@@ -105,6 +105,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         WalletMode            = $WalletMode
         OriginalAlgorithm     = $AlgoOriginal
         OriginalCoin          = $coin
+        Fee                   = 0.04
 
       }
     }

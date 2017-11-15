@@ -9,6 +9,7 @@
 "Wrap" : false,
 "DualMining": true,
 "DualMiningMainCoin": "Ethereum",
+"Fee" : "0.02",
 "PrelaunchCommand":"",
 "Algorithms": [
                 {"Ethash_Blake2b":" -dcoin sc"},

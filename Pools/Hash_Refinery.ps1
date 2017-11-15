@@ -100,6 +100,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
       PoolHashRate          = $coin.hashrate
       WalletMode            = $WalletMode
       PoolName              = $Name
+      Fee                   = $coin.Fees / 100
     }
   }
   remove-variable Request

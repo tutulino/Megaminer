@@ -10,6 +10,7 @@
 "DualMining": true,
 "DualMiningMainCoin": "Ethereum",
 "PrelaunchCommand":"",
+"Fee" : "0.02",
 "Algorithms": [
                 {"Ethash_Lbry":" -dcoin lbc"}
               ]

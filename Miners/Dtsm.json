@@ -9,6 +9,7 @@
   "APIPort":  "2222",
   "Wrap":  false,
   "Dualmining":false,
+  "Fee":"0.02",
   "PrelaunchCommand":"",
   "Algorithms": [
                      {"Equihash":""}

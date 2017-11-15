@@ -11,5 +11,10 @@
 "PrelaunchCommand":"",
 "Algorithms": [
                 {"cryptonight":"-a cryptonight"}
+
+                
+
+
               ]
+
 }

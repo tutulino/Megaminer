@@ -5,6 +5,7 @@
 "Types" : ["NVIDIA"],
 "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 -wd 1 -mode 1  #ALGORITHMPARAMETERS#",
 "API" : "Claymore",
+"Fee" : "0.01",
 "APIPort" : 3333,
 "Wrap" : false,
 "DualMining": false,

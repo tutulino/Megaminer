@@ -10,6 +10,11 @@
     "Dualmining":false,
     "PrelaunchCommand":"",
     "Algorithms": [
+                    
+
                     {"hsr":"-a hsr"}
+
+                    
                   ]
-}
+    
+    }

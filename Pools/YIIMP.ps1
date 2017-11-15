@@ -103,6 +103,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
       Blocks_24h            = $coin.'24h_blocks'
       WalletMode            = $WalletMode
       PoolName              = $Name
+      Fee                   = 0.02
     }
   }
   remove-variable Request

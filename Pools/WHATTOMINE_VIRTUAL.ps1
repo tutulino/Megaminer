@@ -117,9 +117,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
   #             "server"   = $_.host
   #             "port"     = $_.port
   #             "location" = $_.location
+  #             "Fee"      = $_.Fee
   #         }
   #     }
-
   # }
 
 
@@ -138,9 +138,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         "server"   = $_.host
         "port"     = $_.port
         "location" = $_.location
+        "Fee"      = $_.Fee
       }
     }
-
   }
 
 
@@ -161,10 +161,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
   #                 "server"   = $_.host
   #                 "port"     = $_.port
   #                 "location" = $_.location
+  #                 "Fee"      = $_.Fee
   #             }
   #         }
   #     }
-
   # }
 
 
@@ -220,10 +220,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
       ActiveOnAutomaticMode = $ActiveOnAutomaticMode
       PoolName              = $Name
       WalletMode            = $VpWalletMode
+      Fee                   = $_.Fee
     }
-
   }
-
 
   remove-variable WTMResponse
   remove-variable Pools
@@ -231,7 +230,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
   # remove-variable MPHPools
   remove-variable SPRPools
   # remove-variable YiimpPools
-
 }
 
 #****************************************************************************************************************************************************************************************

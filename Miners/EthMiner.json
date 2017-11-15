@@ -9,6 +9,7 @@
     "APIPort" : 3333,
     "Wrap":  true,
     "Dualmining":false,
+    "Fee" : "0.01",
     "Algorithms": [
                 {"ethash":""}
                   ]

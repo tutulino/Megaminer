@@ -128,6 +128,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
       Blocks_24h            = $coin."24h_blocks"
       WalletMode            = $WalletMode
       PoolName              = $Name
+      Fee                   = $coin.Fees/100
     }
 
 
