@@ -1,8 +1,8 @@
 ﻿param(
-    [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null,
-    [Parameter(Mandatory = $false)]
-    [pscustomobject]$Info
+  [Parameter(Mandatory = $true)]
+  [String]$Querymode = $null,
+  [Parameter(Mandatory = $false)]
+  [pscustomobject]$Info
 )
 
 #. .\..\Include.ps1
@@ -21,90 +21,88 @@ $Result = @()
 
 
 if ($Querymode -eq "info") {
-    $Result = [PSCustomObject]@{
-        Disclaimer               = "Autoexchange to config.txt wallet, no registration required"
-        ActiveOnManualMode       = $ActiveOnManualMode
-        ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
-        ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
-        AbbName                  = $AbbName
-        WalletMode               = $WalletMode
-    }
+  $Result = [PSCustomObject]@{
+    Disclaimer               = "Autoexchange to config.txt wallet, no registration required"
+    ActiveOnManualMode       = $ActiveOnManualMode
+    ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
+    ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
+    AbbName                  = $AbbName
+    WalletMode               = $WalletMode
+  }
 }
 
 
 if ($Querymode -eq "wallet") {
-    try {
-        $http = $ApiUrl + "/wallet?address=" + $Info.user
-        $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
-    }
-    catch {}
+  try {
+    $http = $ApiUrl + "/wallet?address=" + $Info.user
+    $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+  } catch {}
 
-    if ($Request -ne $null -and $Request -ne "") {
-        $Result = [PSCustomObject]@{
-            Pool     = $name
-            currency = $Request.currency
-            balance  = $Request.balance
-        }
+  if ($Request -ne $null -and $Request -ne "") {
+    $Result = [PSCustomObject]@{
+      Pool     = $name
+      currency = $Request.currency
+      balance  = $Request.balance
     }
-    remove-variable Request
+  }
+  remove-variable Request
 }
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-    $retries = 1
-    do {
-        try {
-            $http = $ApiUrl + "/status"
-            $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
-        }
-        catch {start-sleep 2}
-        $retries++
-        if ($Request -eq $null -or $Request -eq "") {start-sleep 3}
-    } while ($Request -eq $null -and $retries -le 3)
+  $retries = 1
+  do {
+    try {
+      $http = $ApiUrl + "/status"
+      $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+    } catch {start-sleep 2}
+    $retries++
+    if ($Request -eq $null -or $Request -eq "") {start-sleep 3}
+  } while ($Request -eq $null -and $retries -le 3)
 
-    if ($retries -gt 3) {
-        Write-Host $Name 'API NOT RESPONDING...ABORTING'
-        Exit
+  if ($retries -gt 3) {
+    Write-Host $Name 'API NOT RESPONDING...ABORTING'
+    Exit
+  }
+
+
+  $Request | Get-Member -MemberType Properties | ForEach-Object {
+
+    $coin = $Request | Select-Object -ExpandProperty $_.name
+    $Pool_Algo = get-algo-unified-name $coin.name
+
+    $Divisor = (Get-Algo-Divisor $Pool_Algo) / 1000
+
+    switch ($Pool_Algo) {
+      "sha256" {$Divisor *= 1000000}
+      "x11" {$Divisor *= 1000}
+      "qubit" {$Divisor *= 1000}
+      "quark" {$Divisor *= 1000}
     }
 
-
-    $Request | Get-Member -MemberType Properties | ForEach-Object {
-
-        $coin = $Request | Select-Object -ExpandProperty $_.name
-        $Pool_Algo = get-algo-unified-name $coin.name
-
-        $Divisor = (Get-Algo-Divisor $Pool_Algo) / 1000
-
-        switch ($Pool_Algo) {
-            "sha256" {$Divisor *= 1000000}
-            "x11" {$Divisor *= 1000}
-            "qubit" {$Divisor *= 1000}
-            "quark" {$Divisor *= 1000}
-        }
-
-        $Result += [PSCustomObject]@{
-            Algorithm             = $Pool_Algo
-            Info                  = $null
-            Price                 = $coin.estimate_current / $Divisor
-            Price24h              = $coin.estimate_last24h / $Divisor
-            Protocol              = "stratum+tcp"
-            Host                  = $coin.name + "." + $MineUrl
-            Port                  = $coin.port
-            User                  = $CoinsWallets.get_item($Currency)
-            Pass                  = "c=$Currency,$WorkerName,stats"
-            Location              = $Location
-            SSL                   = $false
-            Symbol                = $null
-            AbbName               = $AbbName
-            ActiveOnManualMode    = $ActiveOnManualMode
-            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolWorkers           = $coin.Workers
-            PoolHashRate          = $coin.hashrate
-            WalletMode            = $WalletMode
-            PoolName              = $Name
-        }
+    $Result += [PSCustomObject]@{
+      Algorithm             = $Pool_Algo
+      Info                  = $null
+      Price                 = $coin.estimate_current / $Divisor
+      Price24h              = $coin.estimate_last24h / $Divisor
+      Protocol              = "stratum+tcp"
+      Host                  = $coin.name + "." + $MineUrl
+      Port                  = $coin.port
+      User                  = $CoinsWallets.get_item($Currency)
+      Pass                  = "c=$Currency,$WorkerName,stats"
+      Location              = $Location
+      SSL                   = $false
+      Symbol                = $null
+      AbbName               = $AbbName
+      ActiveOnManualMode    = $ActiveOnManualMode
+      ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+      PoolWorkers           = $coin.Workers
+      PoolHashRate          = $coin.hashrate
+      WalletMode            = $WalletMode
+      PoolName              = $Name
     }
-    remove-variable Request
+  }
+  remove-variable Request
 }
 
 
