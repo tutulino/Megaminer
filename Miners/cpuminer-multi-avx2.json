@@ -3,14 +3,27 @@
 "ExtractionPath" : ".\\Bin\\cpuminer-multi\\",
 "Uri" : "https://github.com/tpruvot/cpuminer-multi/releases/download/v1.3.1-multi/cpuminer-multi-rel1.3.1-x64.zip",
 "Types" : ["CPU"],
-"Arguments" : "--api-bind 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS# -q",
+"Arguments" : "--api-bind 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS# -q --benchmark",
 "API" : "Ccminer",
 "APIPort" : 4068,
 "Wrap" : false,
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-    {"blake2b": "-a sia"},
-    {"s3": "-a s3"}
+    {"blake": "-a blake"},
+    {"bmw": "-a bmw"},
+    {"dmd-gr": "-a dmd-gr"},
+    {"drop": "-a drop"},
+    {"fresh": "-a fresh"},
+    {"heavy": "-a heavy"},
+    {"luffa": "-a luffa"},
+    {"pluck": "-a pluck"},
+    {"pentablake": "-a pentablake"},
+    {"verium": "-a scrypt:1048576"},
+    {"shavite3": "-a shavite3"},
+    {"skein2": "-a skein2"},
+    {"s3": "-a s3"},
+    {"vanilla": "-a vanilla"},
+    {"zr5": "-a zr5"}
 	]
 }
