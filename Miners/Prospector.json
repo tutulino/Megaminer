@@ -13,8 +13,6 @@
 "PrelaunchCommand":"",
 "Fee" : "0.01",
 "Algorithms": [
-                {"Ethash":"eth"},
-                {"Blake2b":"sia"},
                 {"Skunk":"sigt"}
               ]
 }

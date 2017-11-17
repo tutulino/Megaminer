@@ -10,16 +10,12 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"Myriad-groestl":"-k myriadcoin-groestl --gpu-threads 2 --worksize 64 --intensity 19"},
-                {"Groestl":"-k groestlcoin --gpu-threads 2 --worksize 128 --intensity 19"},
+                {"myriad-groestl":"-k myriadcoin-groestl --gpu-threads 2 --worksize 64 --intensity 19"},
+                {"groestl":"-k groestlcoin --gpu-threads 2 --worksize 128 --intensity 19"},
                 {"blake":"-k blake"},
                 {"vanilla":"-k vanilla --intensity d"},
-                {"blake14r":"-k decred --gpu-threads 1 --xintensity 256 --lookup-gap 2 --worksize 64"},
-                {"Keccak":"-k maxcoin"},
-                {"lbry":"-k lbry --xintensity 512 --worksize 128 --gpu-threads 2"},
-                {"Pascal":"-k pascal --gpu-threads 2 --worksize 64 --intensity 21"},
-                {"Qubit":"-k qubitcoin --gpu-threads 4 --worksize 128 --intensity 16"},
-                {"blake2b":"-k sia"},
+                {"keccak":"-k maxcoin"},
+                {"pascal":"-k pascal --gpu-threads 2 --worksize 64 --intensity 21"},
                 {"x11gost":"-k sibcoin-mod --gpu-threads 2 --worksize 128 --intensity 19"},
                 {"lyra2v2":"-k lyra2rev2 --gpu-threads 2 --worksize 128 --intensity d"}
               ]
