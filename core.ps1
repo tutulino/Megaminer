@@ -705,7 +705,7 @@ while ($true) {
                     #Nvidia SMI-info
                     if ((Compare-Object "NVIDIA" $types -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0) {
                                 $NvidiaCards=@()
-                                invoke-expression "./nvidia-smi.exe --query-gpu=gpu_name,driver_version,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed  --format=csv,noheader"  | foreach {
+                                invoke-expression "./bin/nvidia-smi.exe --query-gpu=gpu_name,driver_version,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed  --format=csv,noheader"  | foreach {
 
                                         $SMIresultSplit = $_ -split (",")
                                             $NvidiaCards +=[PSCustomObject]@{

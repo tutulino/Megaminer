@@ -338,7 +338,7 @@ function Expand-WebRequest {
     Invoke-WebRequest $Uri -OutFile $FileName -UseBasicParsing
 
     $Command='x "'+$FilePath+'" -o"'+$DestinationFolder+'" -y -spe'
-    Start-Process "7z" $Command -Wait
+    Start-Process "./bin/7z.exe" $Command -Wait
 
     if (Test-Path $FileName) {Remove-Item $FileName}
 
