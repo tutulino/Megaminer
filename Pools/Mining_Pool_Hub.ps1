@@ -100,8 +100,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $MiningPoolHub_OriginalCoin = $_.coin_name
 
 
-    $MiningPoolHub_Hosts = $_.host_list.split(";")
-    $MiningPoolHub_Port = $_.port
+    $MiningPoolHub_Hosts = $_.direct_mining_host_list.split(";")
+    $MiningPoolHub_Port = $_.direct_mining_algo_port
 
     $Divisor = [double]1000000000
 
