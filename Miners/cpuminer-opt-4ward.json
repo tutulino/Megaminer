@@ -41,7 +41,6 @@
     {"lyra2z330": "-a lyra2z330"},
     {"m7m": "-a m7m"},
     {"myriad-groestl": "-a myr-gr"},
-    {"#neoscrypt": "-a neoscrypt"},
     {"nist5": "-a nist5"},
     {"pentablake": "-a pentablake"},
     {"phi": "-a phi1612"},
