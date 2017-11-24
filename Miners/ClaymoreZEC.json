@@ -7,7 +7,7 @@
   "API" : "ClaymoreV2",
   "APIPort" : 3333,
   "Wrap" : false,
-  "Fee" : "0.01",
+  "Fee" : "0.025",
   "DualMining": false,
   "PrelaunchCommand":"",
   "Algorithms": [
