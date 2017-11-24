@@ -10,7 +10,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"xevan":"-k xevan-mod --gpu-threads=2 --intensity 16"}
+                {"xevan":"-k xevan-mod -g 2 -I 16"}
               ]
 
 }

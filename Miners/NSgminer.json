@@ -1,7 +1,7 @@
 {
-"Path" : ".\\Bin\\Lyra2z-AMD\\kernel\\sgminer.exe",
-"ExtractionPath" : ".\\Bin\\Lyra2z-AMD\\",
-"Uri" : "https://github.com/djm34/sgminer-msvc2015/releases/download/v0.2-pre/kernel_and_binary.rar",
+"Path" : ".\\Bin\\AMD-NSgminer\\nsgminer-win64-0.9.3\\nsgminer.exe",
+"ExtractionPath" : ".\\Bin\\AMD-NSgminer\\",
+"Uri" : "https://github.com/ghostlander/nsgminer/releases/download/nsgminer-v0.9.3/nsgminer-win64-0.9.3.zip",
 "Types" : ["AMD"],
 "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
 "API" : "Xgminer",
@@ -10,8 +10,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"lyra2z":"-k lyra2z -w 32 -I 18"}
+                {"neoscrypt":"--neoscrypt -g 1 -w 128 -I 18"}
               ]
 
 }
-

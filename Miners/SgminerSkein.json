@@ -10,12 +10,11 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-        {"skein":" -k skeincoin --gpu-threads 2 --worksize 256 --intensity 23"}
+        {"skein":" -k skeincoin -g 2 -w 256 -I 23"}
         ]
 
 }
 
- 
- 
-  
-   
+
+
+

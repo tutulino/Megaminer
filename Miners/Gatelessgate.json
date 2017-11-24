@@ -10,10 +10,10 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-            
-            {"neoscrypt":"-k neoscrypt --gpu-threads 1 --worksize 256 --intensity 16"},
-            {"ethash":"-k ethash-new --gpu-threads 2 --worksize 192 --intensity 19"},
-            {"cryptonight":"-k cryptonight --gpu-threads 2 --worksize 8 --rawintensity 1024"},
-            {"equihash":"-k equihash --gpu-threads 2 --worksize 256"}
+
+            {"neoscrypt":"-k neoscrypt -g 1 -w 256 -I 16"},
+            {"ethash":"-k ethash-new -g 2 -w 192 -I 19"},
+            {"cryptonight":"-k cryptonight -g 2 -w 8 --rawintensity 1024"},
+            {"equihash":"-k equihash -g 2 -w 256"}
 	 ]
 }

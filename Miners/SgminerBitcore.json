@@ -10,6 +10,6 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"bitcore":"-k timetravel10 --gpu-threads=2 --intensity 21"}
+                {"bitcore":"-k timetravel10 -g 2 -I 21"}
               ]
 }

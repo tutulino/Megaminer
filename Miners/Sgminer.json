@@ -10,13 +10,13 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"myriad-groestl":"-k myriadcoin-groestl --gpu-threads 2 --worksize 64 --intensity 19"},
-                {"groestl":"-k groestlcoin --gpu-threads 2 --worksize 128 --intensity 19"},
+                {"myriad-groestl":"-k myriadcoin-groestl -g 2 -w 64 -I 19"},
+                {"groestl":"-k groestlcoin -g 2 -w 128 -I 19"},
                 {"blake":"-k blake"},
-                {"vanilla":"-k vanilla --intensity d"},
+                {"vanilla":"-k vanilla -I d"},
                 {"keccak":"-k maxcoin"},
-                {"pascal":"-k pascal --gpu-threads 2 --worksize 64 --intensity 21"},
-                {"x11gost":"-k sibcoin-mod --gpu-threads 2 --worksize 128 --intensity 19"},
-                {"lyra2v2":"-k lyra2rev2 --gpu-threads 2 --worksize 128 --intensity d"}
+                {"pascal":"-k pascal -g 2 -w 64 -I 21"},
+                {"x11gost":"-k sibcoin-mod -g 2 -w 128 -I 19"},
+                {"lyra2v2":"-k lyra2rev2 -g 2 -w 128 -I d"}
               ]
 }
