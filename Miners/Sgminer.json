@@ -17,6 +17,6 @@
                 {"keccak":"-k maxcoin"},
                 {"pascal":"-k pascal -g 2 -w 64 -I 21"},
                 {"x11gost":"-k sibcoin-mod -g 2 -w 128 -I 20"},
-                {"lyra2v2":"-k lyra2rev2 -g 2 -w 128 -I d"}
+                {"lyra2v2":"-k lyra2rev2 -g 2 -w 64 -I d"}
               ]
 }
