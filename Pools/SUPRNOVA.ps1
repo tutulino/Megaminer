@@ -113,7 +113,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Pools += [pscustomobject]@{"coin" = "SmartCash"; "algo" = "keccak"; "symbol" = "SMART"; "server" = "smart.suprnova.cc"; "port" = "4192"; "location" = "US"};
         # $Pools += [pscustomobject]@{"coin" = "SpreadCoin"; "algo" = "SpreadX11"; "symbol" = "SPR"; "server" = "spr.suprnova.cc"; "port" = "6666"; "location" = "US"};
         # $Pools += [pscustomobject]@{"coin" = "StartCoin"; "algo" = "X11"; "symbol" = "Start"; "server" = "start.suprnova.cc"; "port" = "2207"; "location" = "US"};
-        $Pools += [pscustomobject]@{"coin" = "UBIQ"; "algo" = "Ethash"; "symbol" = "UBQ"; "server" = "ubq.suprnova.cc"; "port" = "3030"; "location" = "US"};
+        $Pools += [pscustomobject]@{"coin" = "UBIQ"; "algo" = "Ethash"; "symbol" = "UBQ"; "server" = "ubiq.suprnova.cc"; "port" = "3030"; "location" = "US"};
         $Pools += [pscustomobject]@{"coin" = "Veltor"; "algo" = "Veltor"; "symbol" = "VLT"; "server" = "veltor.suprnova.cc"; "port" = "8897"; "location" = "US"};
         # $Pools += [pscustomobject]@{"coin" = "XIOS"; "algo" = "Scrypt"; "symbol" = "XIOS"; "server" = "xios.suprnova.cc"; "port" = "8972"; "location" = "US"};
         $Pools += [pscustomobject]@{"coin" = "ZCash"; "algo" = "Equihash"; "symbol" = "ZEC"; "server" = "zec-apac.suprnova.cc"; "port" = "2142"; "location" = "Asia"};
