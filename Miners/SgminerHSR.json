@@ -1,0 +1,17 @@
+{
+"Path" : ".\\Bin\\AMD-SgminerHSR\\sgminer.exe",
+"ExtractionPath" : ".\\Bin\\AMD-SgminerHSR\\",
+"Uri" : "https://github.com/Partiolainen/sgminer-gm/releases/download/5.5.5-part/sgminer-5.5.5-part-hsr.win.x64.zip",
+"Types" : ["AMD"],
+"Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+"API" : "Xgminer",
+"APIPort" : 4028,
+"Wrap" : false,
+"Dualmining":false,
+"PrelaunchCommand":"",
+"Algorithms": [
+                {"hsr":"-k hsr -I 20"}
+              ]
+
+}
+
