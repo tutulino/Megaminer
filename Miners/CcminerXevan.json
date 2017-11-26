@@ -1,0 +1,17 @@
+{
+"Path" : ".\\Bin\\NVIDIA-CcminerXevan\\ccminer_x86.exe",
+"ExtractionPath" : ".\\Bin\\NVIDIA-CcminerXevan\\",
+"Uri" : "https://github.com/krnlx/ccminer-xevan/releases/download/0.1/ccminer_x86.exe",
+"Types" : ["NVIDIA"],
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R10 -r 4 #ALGORITHMPARAMETERS#",
+"API" : "Ccminer",
+"APIPort" : 4068,
+"Wrap" : false,
+"Dualmining":false,
+"PrelaunchCommand":"",
+"Algorithms": [
+                {"xevan":"-a xevan"}
+                
+              ]
+}
+

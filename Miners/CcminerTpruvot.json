@@ -10,18 +10,17 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
+
+  
+  {"skunk":"-a skunk"},
                 {"jha":"-a jha"},
-                {"blakecoin":"-a blakecoin"},
                 {"Blake14r":"-a decred"},
                 {"Tribus":"-a tribus"},
                 {"lyra2z" : "-a lyra2z" },
-                {"Skunk" : "-a skunk" },
                 {"X15":"-a X15"},
                 {"whirpool":"-a whirl"},
-                {"phi":"-a phi"},
-                {"hsr":"-a hsr"}
-
-
+                {"phi":"-a phi"}
+                
               ]
 
 }
