@@ -10,6 +10,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
+                {"lyra2re":"-k lyra2re -I 15"},
                 {"lyra2z":"-k lyra2z -w 32 -I 18"}
               ]
 
