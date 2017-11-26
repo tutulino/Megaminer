@@ -264,8 +264,30 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Shortened miner filenames, this will make some benchmarks run again
 *Upgraded ccminer Klaust to 8.14
 *Added ccminer Spmod #6 for lbry
+*Added ItalYiimp Pool
 
 *Fixed: suprnova wallet error msg at start
 
+
+------------------------------------------------
+4.7
+
+*Added CCMiner-Xevan for Xevan algo (NVIDIA)
+*Added CCMiner-Polytmos for Polytmos algo (NVIDIA) (thx MikeBuzz)
+*Added Nsgminer for Neoscrypt (AMD) 
+*Upgraded prospector to 0.0.13-ALPHA
+*Upgrade Excavator to v1.3.7a
+*Upgrade CCminer-Klaust to 8.15
+*Added to Suprnova.cc: STACKS (STACK), POLYTMOS (POLY)
+*Nvidia optimized miner for each algorithm
+*Live config.txt, now you can change config.txt values without restarting MM
+*Changed donation mechanism, now donation is always on MiningPoolHub
+
+
+
+*Fixed: sometimes benchmark for dualmining is saved with second algo zero value
+*Fixed: claymore Cryptonote not working due to wrong parameters
+*Fixed: incorrect live profit shown on Automatic24h mode
+*Fixed: ahashpool Automatic24h mode not working
 
 
