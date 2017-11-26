@@ -669,16 +669,16 @@ while ($true) {
 
                     #Display profits  information
                     $ProfitMiners2 | Format-Table -GroupBy Type (
-                        @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else  {$_.Algorithm+ '|' + $_.AlgorithmDual}}},
+                        @{Label = "Algo"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else  {$_.Algorithm+ '|' + $_.AlgorithmDual}}},
                         @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else  {($_.coin)+ '|' + ($_.CoinDual)}}},
                         @{Label = "Miner"; Expression = {$_.Name}},
                         @{Label = "Speed"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Hashrates}}},
                         @{Label = "mBTC/Day"; Expression = {if ($_.NeedBenchmark) {"-------"} else {($_.Profits * 1000).tostring("n5")}}; Align = 'right'},
                         @{Label = $LabelProfit; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n2") } ; Align = 'right'},
-                        @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:P1}" -f $_.PoolFee}}; Align = 'right'},
-                        @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:P1}" -f $_.MinerFee}}; Align = 'right'},
+                        @{Label = "Pool"; Expression = {if ($_.PoolFee -ne $null) {"{0:P1}" -f $_.PoolFee}}; Align = 'right'},
+                        @{Label = "Miner"; Expression = {if ($_.MinerFee -ne $null) {"{0:P1}" -f $_.MinerFee}}; Align = 'right'},
                         @{Label = "Pool"; Expression = {$_.PoolAbbName}},
-                        @{Label = "Location"; Expression = {$_.Location}}
+                        @{Label = "Loc"; Expression = {$_.Location}}
                     ) | Out-Host
 
 
@@ -944,7 +944,7 @@ while ($true) {
                             }
                 }
 
-                Start-Sleep -Seconds 5
+                Start-Sleep -Seconds 10
 
                 switch ($KeyPressed){
                     'P' {$Screen='profits'}
