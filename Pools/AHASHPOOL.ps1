@@ -79,12 +79,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $retries=1
                 do {
                         try {
-                            $Aha_Request = Invoke-WebRequest "http://www.ahashpool.com/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 
-                            $Aha_Request = $Aha_Request | ConvertFrom-Json 
-
-                            $Aha_Request2 = Invoke-WebRequest "http://www.ahashpool.com/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 
-                            $Aha_Request2 = $Aha_Request2 | ConvertFrom-Json 
-
+                            $Aha_Request = Invoke-WebRequest "http://www.ahashpool.com/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5  | ConvertFrom-Json 
                         }
                         catch {}
                         $retries++
@@ -102,29 +97,25 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 $coin=$Aha_Request | Select-Object -ExpandProperty $_.name
                 
 
-                    $Aha_Algorithm = get-algo-unified-name $coin.algo
-                    $Aha_coin =  get-coin-unified-name $coin.name
-                    $Aha_Simbol=$_.name
-                   
+                    $Aha_Algorithm = get-algo-unified-name $_.name
             
 
-                    $Divisor = Get-Algo-Divisor $Aha_Algorithm
-                    
+                    $Divisor = (Get-Algo-Divisor $Aha_Algorithm) / 1000
                 
 
                     $Result+=[PSCustomObject]@{
                                 Algorithm     = $Aha_Algorithm
-                                Info          = $Aha_coin
-                                Price         = [Double]$coin.estimate / $Divisor
-                                Price24h      = [Double]$coin.actual_last24h / $Divisor
+                                Info          = $null
+                                Price         = $coin.estimate_current / $Divisor
+                                Price24h      = $coin.estimate_last24h / $Divisor
                                 Protocol      = "stratum+tcp"
-                                Host          = $coin.algo + ".mine.ahashpool.com"
+                                Host          = $_.name + ".mine.ahashpool.com"
                                 Port          = $coin.port
-                                User          = $CoinsWallets.get_item($Currency)
-                                Pass          = "c=$Currency,$WorkerName,stats"
+                                User          = $CoinsWallets.get_item("BTC")
+                                Pass          = "c=BTC,$WorkerName,stats"
                                 Location      = 'US'
                                 SSL           = $false
-                                Symbol        = $Aha_Simbol
+                                Symbol        = $null
                                 AbbName       = $AbbName
                                 ActiveOnManualMode    = $ActiveOnManualMode
                                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
@@ -133,7 +124,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Blocks_24h    = $coin."24h_blocks"
                                 WalletMode    = $WalletMode
                                 PoolName = $Name
-                                Fee = $Aha_Request2.$($coin.algo).Fees / 100
+                                Fee = $Coin.Fees / 100
                                 }
                         
                 

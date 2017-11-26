@@ -5,7 +5,7 @@ param(
     [pscustomobject]$Info
     )
 
-
+#. .\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
@@ -72,6 +72,8 @@ if ($Querymode -eq "info"){
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
+
+    
         $Pools=@()
         $Pools +=[pscustomobject]@{"coin" = "DECRED"; "algo"="Blake14r"; "symbol"= "DCR"; "server"="dcr.suprnova.cc";"port"="3252";"location"="US"}
         $Pools +=[pscustomobject]@{"coin" = "BITCORE"; "algo"="BITCORE"; "symbol"= "BTX"; "server"="btx.suprnova.cc";"port"="3629";"location"="US"}
@@ -98,14 +100,16 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Pools +=[pscustomobject]@{"coin" = "ETHEREUM";"algo"="ETHASH"; "symbol"= "ETH";"server"="eth.suprnova.cc"; "port"= "5000";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "SIBCOIN";"algo"="X11gost"; "symbol"= "ETH";"server"="sib.suprnova.cc"; "port"= "3458";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "UBIQ";"algo"="Ethash"; "symbol"= "UBQ";"server"="ubiq.suprnova.cc"; "port"= "3030";"location"="US"};
-        $Pools +=[pscustomobject]@{"coin" = "EXPANSE";"algo"="Ethash"; "symbol"= "UBQ";"server"="exp.suprnova.cc"; "port"= "3333";"location"="US"};
+        $Pools +=[pscustomobject]@{"coin" = "EXPANSE";"algo"="Ethash"; "symbol"= "EXP";"server"="exp.suprnova.cc"; "port"= "3333";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "ELECTRONEUM";"algo"="CRYPTONIGHT"; "symbol"= "ETN";"server"="etn.suprnova.cc"; "port"= "8875";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "SMARTCASH";"algo"="keccak"; "symbol"= "SMART";"server"="smart.suprnova.cc"; "port"= "4192";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "BITCOINZ";"algo"="equihash"; "symbol"= "BTCZ";"server"="btcz.suprnova.cc"; "port"= "5586";"location"="US"};
         $Pools +=[pscustomobject]@{"coin" = "BITCOINGOLD";"algo"="equihash"; "symbol"= "BTG";"server"="btg.suprnova.cc"; "port"= "8816";"location"="US"};
+        $Pools +=[pscustomobject]@{"coin" = "polytimos";"algo"="polytimos"; "symbol"= "POLY";"server"="poly.suprnova.cc"; "port"= "7935";"location"="US"};
+        $Pools +=[pscustomobject]@{"coin" = "Straks";"algo"="lyra2v2"; "symbol"= "STAK";"server"="stak.suprnova.cc"; "port"= "7706";"location"="US"};
 
-
-        #$Pools +=[pscustomobject]@{"coin"= "SPREADCOIN";"algo"="SPREADX11"; "symbol"= "SPR";"server"="spr.suprnova.cc"; "port"= "6666";"location"="US"}
+        
+        
 
 
         $ManualMiningApiUse=(Get-Content config.txt | Where-Object {$_ -like '@@MANUALMININGAPIUSE=*'} )-replace '@@MANUALMININGAPIUSE=',''

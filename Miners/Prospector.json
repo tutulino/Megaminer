@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\Prospector\\prospector.exe",
 "ExtractionPath" : ".\\Bin\\Prospector\\",
-"Uri" : "https://github.com/semtexzv/Prospector/releases/download/0.0.10-ALPHA/prospector-0.0.10-ALPHA-win64.zip",
+"Uri" : "https://github.com/semtexzv/Prospector/releases/download/0.0.13-ALPHA/prospector-0.0.13-ALPHA-win64.zip",
 "Types" : ["AMD"],
 "GenerateConfigFile" : ".\\Bin\\Prospector\\prospector.toml",
 "PatternConfigFile": ".\\Patterns\\ProspectorPattern.txt",

@@ -1,0 +1,15 @@
+{
+  "Path" : ".\\Bin\\NVIDIA-TPruvot1\\ccminer.exe",
+  "ExtractionPath" : ".\\Bin\\NVIDIA-TPruvot1\\",
+  "Uri" : "https://github.com/nemosminer/tpruvot-ccminer/releases/download/v2.2-tpruvot/ccminer-x86-2.2.7z",
+  "Types" : ["NVIDIA"],
+  "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
+  "API" : "Ccminer",
+  "APIPort" : 4068,
+  "Wrap" : false,
+  "Dualmining":false,
+  "Algorithms": [
+          {"skunk":"-a skunk"}
+                ]
+  
+  }

@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\Excavator\\Excavator.exe",
 "ExtractionPath" : ".\\Bin\\Excavator\\",
-"Uri" : "https://github.com/nicehash/excavator/releases/download/v1.2.11a/excavator_v1.2.11a_Win64.zip",
+"Uri" : "https://github.com/nicehash/excavator/releases/download/v1.3.7a/excavator_v1.3.7a_NVIDIA_Win64.zip",
 "Types" : ["AMD"],
 "GenerateConfigFile" : ".\\Bin\\Excavator\\Excavator.json",
 "PatternConfigFile": ".\\Patterns\\excavatorPattern.txt",
@@ -11,12 +11,15 @@
 "Wrap" : false,
 "DualMining": false,
 "PrelaunchCommand":"",
+"Fee":"0",
 "Algorithms": [
               {"Ethash":"daggerhashimoto"},
               {"equihash":"equihash"},
               {"Lyra2v2":"lyra2rev2"},
-              {"Blake2b":"sia"}
-              ]
+              {"Blake2b":"sia"},
+              {"cryptonight":"cryptonight"},
+              {"keccak":"keccak"}
+            ]
 
 }
 

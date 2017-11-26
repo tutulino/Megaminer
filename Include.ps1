@@ -228,12 +228,12 @@ function ConvertTo-Hash {
 
     
     $Return=switch ([math]::truncate([math]::log($Hash, [Math]::Pow(1000, 1)))) {
-                0 {"{0:n2}  H" -f ($Hash / [Math]::Pow(1000, 0))}
-                1 {"{0:n2} KH" -f ($Hash / [Math]::Pow(1000, 1))}
-                2 {"{0:n2} MH" -f ($Hash / [Math]::Pow(1000, 2))}
-                3 {"{0:n2} GH" -f ($Hash / [Math]::Pow(1000, 3))}
-                4 {"{0:n2} TH" -f ($Hash / [Math]::Pow(1000, 4))}
-                Default {"{0:n2} PH" -f ($Hash / [Math]::Pow(1000, 5))}
+                0 {"{0:n1}  H" -f ($Hash / [Math]::Pow(1000, 0))}
+                1 {"{0:n1} KH" -f ($Hash / [Math]::Pow(1000, 1))}
+                2 {"{0:n1} MH" -f ($Hash / [Math]::Pow(1000, 2))}
+                3 {"{0:n1} GH" -f ($Hash / [Math]::Pow(1000, 3))}
+                4 {"{0:n1} TH" -f ($Hash / [Math]::Pow(1000, 4))}
+                Default {"{0:n1} PH" -f ($Hash / [Math]::Pow(1000, 5))}
         }
     $Return
 }
