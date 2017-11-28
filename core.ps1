@@ -161,7 +161,7 @@ while ($true) {
 
                 $DonationInterval = $true
                 $UserName = "ffwd"
-                $WorkerName = "mega"
+                $WorkerName = "megaminer"
 
                 $NextInterval=$DonateTime *60
 
