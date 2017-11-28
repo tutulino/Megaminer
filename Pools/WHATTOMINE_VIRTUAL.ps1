@@ -54,7 +54,8 @@ if ($Querymode -eq "info"){
                                                 "WTM-SNOVA" {$PoolRealName = 'SUPRNOVA'  }
                                                 "WTM-MPH" {$PoolRealName = 'MINING_POOL_HUB'  }
                                                 "WTM-YI" {$PoolRealName = 'YIIMP'  }
-                                }
+                                                "WTM-FAIR" {$PoolRealName = 'FairPool'  }
+                                        }
 
                                 if ($PoolRealName -ne $null){
                                         $Info.poolname = $PoolRealName
@@ -85,10 +86,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         #Manual Pools zone (you cand add your pools here - wallet for that coins must exists on config.txt)
 
                 #$Pools +=[pscustomobject]@{"coin" = "PIRL";"algo"="Ethash"; "symbol"= "PIRL";"server"="pirl.minerpool.net"; "port"= "8004";"location"="US";"User"="XXX";"Pass" = "YYY";"fee"="0";"Abbname"="MinerP";"WalletMode"="NONE"}
-                $Pools +=[pscustomobject]@{"coin" = "Sumokoin";"algo"="Cryptonight"; "symbol"= "SUMO";"server"="mine.sumo.fairpool.xyz";"port"= "5555";"protocol" = "stratum+tcp";"location"="US";
-                        "User"=$CoinsWallets.get_item('SUMO');"Pass" = "x";"fee"="0.01";"Abbname"="FairP";"WalletMode"="NONE"}
-                $Pools +=[pscustomobject]@{"coin" = "PascalLite";"algo"="Pascal"; "symbol"= "PASL";"server"="mine.pasl.fairpool.xyz";"port"= "4009";"protocol" = "stratum+tcp";"location"="US";
-                        "User"=$CoinsWallets.get_item('PASL');"Pass" = "x";"fee"="0.02";"Abbname"="FairP";"WalletMode"="NONE"}
+                # $Pools +=[pscustomobject]@{"coin" = "Sumokoin";"algo"="Cryptonight"; "symbol"= "SUMO";"server"="mine.sumo.fairpool.xyz";"port"= "5555";"protocol" = "stratum+tcp";"location"="US";
+                #         "User"=$CoinsWallets.get_item('SUMO');"Pass" = "x";"fee"="0.01";"Abbname"="FairP";"WalletMode"="NONE"}
+                # $Pools +=[pscustomobject]@{"coin" = "PascalLite";"algo"="Pascal"; "symbol"= "PASL";"server"="mine.pasl.fairpool.xyz";"port"= "4009";"protocol" = "stratum+tcp";"location"="US";
+                #         "User"=$CoinsWallets.get_item('PASL');"Pass" = "x";"fee"="0.02";"Abbname"="FairP";"WalletMode"="NONE"}
 
 
         #Data from WTM
@@ -110,15 +111,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         #search on pools where to mine coins, switch sentence determines order to look, if one pool has one coin, no more pools for that coin are searched after.
 
                 $PoolOrder=1
-                while ($PoolOrder -le 2)
+                while ($PoolOrder -le 3)
                 {
 
                          switch ($PoolOrder)
                                         {
                                                 "1"{$PoolToSearch='MINING_POOL_HUB'}
                                                 "2"{$PoolToSearch='Suprnova'}
-                                                # "3"{$PoolToSearch='YIIMP'}
-
+                                                "3"{$PoolToSearch='FairPool'}
+                                                # "4"{$PoolToSearch='YIIMP'}
                                         }
 
                         $HPools=Get-Pools -Querymode "core" -PoolsFilterList $PoolToSearch -location $Info.Location
