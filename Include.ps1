@@ -606,6 +606,44 @@ function get-coin-unified-name ([string]$Coin) {
 
 }
 
+function get-coin-symbol ([string]$Coin) {
+
+        $Result = $Coin
+        switch -wildcard  ($Coin){
+            "bitcoin" {$Result="BTC"}
+            "bitcoin-cash" {$Result="BCH"}
+            "bitcoin-gold" {$Result="BTG"}
+            "monero" {$Result="XMR"}
+            "feathercoin" {$Result="FTC"}
+            "ethereum-classic" {$Result="ETC"}
+            "expanse" {$Result="EXP"}
+            "musicoin" {$Result="MUSIC"}
+            "ethereum" {$Result="ETH"}
+            "siacoin" {$Result="SIA"}
+            "zcoin" {$Result="XZC"}
+            "zcash" {$Result="ZEC"}
+            "zclassic" {$Result="ZCL"}
+            "zencash" {$Result="ZEN"}
+            "globalboosty" {$Result="BSTY"}
+            "groestlcoin" {$Result="GRS"}
+            "vertcoin" {$Result="VTC"}
+            "monacoin" {$Result="MONA"}
+            "litecoin" {$Result="LTC"}
+            "gamecredits" {$Result="GAME"}
+            "geocoin" {$Result="GEO"}
+            "dash" {$Result="DASH"}
+            "maxcoin" {$Result="MAX"}
+            "startcoin" {$Result="START"}
+            "adzcoin" {$Result="ADZ"}
+            "sexcoin" {$Result="SXC"}
+            "myriad" {$Result="XMY"}
+            "verge" {$Result="XVG"}
+            "digibyte" {$Result="DGB"}
+            "auroracoin" {$Result="AUR"}
+        }
+         $Result
+    }
+
 
 
 #************************************************************************************************************************************************************************************

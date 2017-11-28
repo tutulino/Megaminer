@@ -122,7 +122,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Pass                  = "x"
         Location              = $Location
         SSL                   = $false
-        Symbol                = ""
+        Symbol                = get-coin-symbol -Coin $MiningPoolHub_Coin
         AbbName               = $AbbName
         ActiveOnManualMode    = $ActiveOnManualMode
         ActiveOnAutomaticMode = $ActiveOnAutomaticMode

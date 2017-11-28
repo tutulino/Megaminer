@@ -300,11 +300,11 @@ while ($true) {
 
 
                                                 $Miners += [pscustomobject] @{
-                                                                    Algorithm = $AlgoName.toupper()
+                                                                    Algorithm = $AlgoName
                                                                     AlgorithmDual = $AlgoNameDual
                                                                     Algorithms=$Algo.PSObject.Properties.Name
-                                                                    Coin = $_.Info.tolower()
-                                                                    CoinDual = $PoolDual.Info
+                                                                    Coin = $_.Symbol
+                                                                    CoinDual = $PoolDual.Symbol
                                                                     Name = $Minerfile.basename
                                                                     Types = $Miner.Types
                                                                     Path = $Miner.Path
