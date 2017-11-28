@@ -8,6 +8,7 @@
   "APIPort" : 3333,
   "Wrap" : false,
   "Fee" : "0.025",
+  "SslFree": "0.02",
   "DualMining": false,
   "PrelaunchCommand":"",
   "Algorithms": [
