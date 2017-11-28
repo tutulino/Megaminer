@@ -86,9 +86,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                 #$Pools +=[pscustomobject]@{"coin" = "PIRL";"algo"="Ethash"; "symbol"= "PIRL";"server"="pirl.minerpool.net"; "port"= "8004";"location"="US";"User"="XXX";"Pass" = "YYY";"fee"="0";"Abbname"="MinerP";"WalletMode"="NONE"}
                 $Pools +=[pscustomobject]@{"coin" = "Sumokoin";"algo"="Cryptonight"; "symbol"= "SUMO";"server"="mine.sumo.fairpool.xyz";"port"= "5555";"protocol" = "stratum+tcp";"location"="US";
-                        "User"="Sumoo5H59i819DcLT3DjZVToKneE2UE5xFSGCZkzwmdkdg1W8KPF4s8CmAiNzhmEKW9VLupxAvk56JZYp64wTKEgKufmGzsAeq9.7ec501c659201ab73d8e69eb6e37a952ee3bf35856a4565b0eeb632af4eb06e9";"Pass" = "x";"fee"="0.01";"Abbname"="FairP";"WalletMode"="NONE"}
+                        "User"=$CoinsWallets.get_item('SUMO');"Pass" = "x";"fee"="0.01";"Abbname"="FairP";"WalletMode"="NONE"}
                 $Pools +=[pscustomobject]@{"coin" = "PascalLite";"algo"="Pascal"; "symbol"= "PASL";"server"="mine.pasl.fairpool.xyz";"port"= "4009";"protocol" = "stratum+tcp";"location"="US";
-                        "User"="5-70.5ba62cf8eb757914861d76c2cd71ff653802d99adcb65cfa4c125c4da0b9f026";"Pass" = "x";"fee"="0.02";"Abbname"="FairP";"WalletMode"="NONE"}
+                        "User"=$CoinsWallets.get_item('PASL');"Pass" = "x";"fee"="0.02";"Abbname"="FairP";"WalletMode"="NONE"}
 
 
         #Data from WTM

@@ -16,7 +16,7 @@
 
 -- Only NVIDIA tested, AMD must work, but not tested (for mixed rig set AMD,NVIDIA)
 
-@@TYPE=AMD
+@@TYPE=AMD,CPU
 
 -- Location of your rig: EUROPE/US/ASIA/GB  (some pool may have no desired location, US will be selected then)
 
@@ -48,6 +48,9 @@
 @@WALLET_PLYS=PCRmwsrUAKcC3UbF7fgw76ZRyRY48eWuen
 @@WALLET_GBX=Gf3RJExWWZV69KsRbNVft5Yf1NBQmAm81h
 
+@@WALLET_PASL=3GhhbotqzjTq9mpXabpzqw4WLCZVp2SFG2CVs6Jfox4t3jCBgvAq92wiTVUEE5mCniN2zNDwhEZteq8QTk3cU7hHK6H6Jr3Aecpm1c
+@@WALLET_SUMO=Sumoo32iRyQi9saNjaW7hcL7jbxe7pQmh8Vvuzy5M5uuYdnscDiSqrwFFckdFc9TuhW1PFJ46Q6NM9gpbGzdJLpCBkC3cw3RhC6
+
 -- API Keys, Non Anonymous pools (Suprnova, MPH) requires api key to get wallets info (format @@APIKEY_NAMEOFPOOL=XXXXXXXXXX)
 
 @@APIKEY_MINING_POOL_HUB=903106f05fddd0222af24e20312d14dff08ccbb6914855d5fe552c8c88cb3425
@@ -55,4 +58,4 @@
 
 -- Number of minutes each day (NOT PERCENT) of donation
 
-@@DONATE=0
+@@DONATE=10
