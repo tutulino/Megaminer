@@ -87,7 +87,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
       $Result += [PSCustomObject]@{
         Algorithm             = $Algo
-        Info                  = $coin
+        Info                  = $null
         Price                 = [double]($_.paying / $Divisor)
         Price24h              = $null
         Protocol              = "stratum+tcp"
