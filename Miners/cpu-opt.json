@@ -1,7 +1,7 @@
 ﻿{
-"Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.3\\cpuminer-aes-avx2.exe",
+"Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.4-windows\\cpuminer-aes-avx2.exe",
 "ExtractionPath" : ".\\Bin\\cpuminer-opt\\",
-"Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.3.zip",
+"Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.4-windows.zip",
 "Types" : ["CPU"],
 "Arguments" : "-b 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
 "API" : "Ccminer",
