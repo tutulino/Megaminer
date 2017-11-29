@@ -55,6 +55,7 @@ if ($Querymode -eq "info"){
                                                 "WTM-MPH" {$PoolRealName = 'MINING_POOL_HUB'  }
                                                 "WTM-YI" {$PoolRealName = 'YIIMP'  }
                                                 "WTM-FAIR" {$PoolRealName = 'FairPool'  }
+                                                "WTM-MY" {$PoolRealName = 'MyPools'  }
                                         }
 
                                 if ($PoolRealName -ne $null){
@@ -111,7 +112,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         #search on pools where to mine coins, switch sentence determines order to look, if one pool has one coin, no more pools for that coin are searched after.
 
                 $PoolOrder=1
-                while ($PoolOrder -le 3)
+                while ($PoolOrder -le 4)
                 {
 
                          switch ($PoolOrder)
@@ -119,6 +120,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                                 "1"{$PoolToSearch='MINING_POOL_HUB'}
                                                 "2"{$PoolToSearch='Suprnova'}
                                                 "3"{$PoolToSearch='FairPool'}
+                                                "4"{$PoolToSearch='MyPools'}
                                                 # "4"{$PoolToSearch='YIIMP'}
                                         }
 
