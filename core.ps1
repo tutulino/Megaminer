@@ -678,7 +678,7 @@ while ($true) {
                         @{Label = "Pool"; Expression = {if ($_.PoolFee -ne $null) {"{0:P1}" -f $_.PoolFee}}; Align = 'right'},
                         @{Label = "Miner"; Expression = {if ($_.MinerFee -ne $null) {"{0:P1}" -f $_.MinerFee}}; Align = 'right'},
                         @{Label = "Pool"; Expression = {$_.PoolAbbName}},
-                        @{Label = "Loc"; Expression = {$_.Location}}
+                        @{Label = "Location"; Expression = {$_.Location}}
                     ) | Out-Host
 
 
@@ -733,9 +733,25 @@ while ($true) {
                                         @{Label = "Power"; Expression = {$_.power_draw+" /"+$_.power_limit}}
 
                                     ) | Out-Host
-
-
                                 }
+                    if ((Compare-Object "AMD" $types -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0) {
+                        $AMDCards=@()
+                        invoke-expression "./bin/adli.exe --noheader"  | foreach {
+                                $SMIresultSplit = $_ -split (",")
+                                    $AMDCards +=[PSCustomObject]@{
+                                        gpu_index          = $SMIresultSplit[0]
+                                        gpu_name           = $SMIresultSplit[1]
+                                        temperature_gpu    = $SMIresultSplit[2]
+                                        FanSpeed           = $SMIresultSplit[3]
+                                    }
+                            }
+                            $AMDCards | Format-Table -Wrap  (
+                                @{Label = "#"; Expression = {$_.gpu_index}},
+                                @{Label = "GPU"; Expression = {$_.gpu_name}},
+                                @{Label = "Temp"; Expression = {$_.temperature_gpu}},
+                                @{Label = "FanSpeed"; Expression = {$_.FanSpeed}}
+                            ) | Out-Host
+                    }
                 }
 
 
