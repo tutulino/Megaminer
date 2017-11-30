@@ -41,11 +41,12 @@
 @@GPUPLATFORM=1
 
 
--- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX (XXX=currency symbol)
+-- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX (XXX=currency symbol), @@WALLET_NICE= can be either you own Wallet or Nicehash Wallet address for those that want to use it
 
 @@WALLET_BTC=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 @@WALLET_XXX=YOUR_WALLET_DIRECTION
 
+@@WALLET_NICE=
 
 -- API Keys, Non Anonymous pools (Suprnova, MPH) requires api key to get wallets info (format @@APIKEY_NAMEOFPOOL=XXXXXXXXXX)
 
