@@ -1,0 +1,15 @@
+{
+"Path" : ".\\Bin\\AMD-mkxminer\\mkxminer.exe",
+"ExtractionPath" : ".\\Bin\\AMD-mkxminer\\",
+"Uri" : "",
+"Types" : ["AMD"],
+"Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+"API" : "Xgminer",
+"APIPort" : 4028,
+"Wrap" : false,
+"Dualmining":false,
+"PrelaunchCommand":"",
+"Algorithms": [
+                {"lyra2v2":"-k lyra2rev2 -I 23 --asm"}
+              ]
+}

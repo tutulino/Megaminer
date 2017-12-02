@@ -12,8 +12,6 @@
 "Algorithms": [
 
             {"neoscrypt":"-k neoscrypt -g 1 -w 256 -I 16"},
-            {"ethash":"-k ethash-new -g 2 -w 192 -I 19"},
-            {"cryptonight":"-k cryptonight -g 2 -w 8 --rawintensity 1024"},
-            {"equihash":"-k equihash -g 2 -w 256"}
+            {"cryptonight":"-k cryptonight -g 2 -w 8 --rawintensity 1024"}
 	 ]
 }
