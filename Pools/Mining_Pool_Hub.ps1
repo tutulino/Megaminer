@@ -111,31 +111,33 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 $MiningPoolHub_Price=[Double]($_.profit / $Divisor)
 
                 $Locations | ForEach-Object {
-                    $Location = $_
-                    
-                $Result+=[PSCustomObject]@{
-                            Algorithm     = $MiningPoolHub_Algorithm
-                            Info          = $MiningPoolHub_Coin
-                            Price         = $MiningPoolHub_Price
-                            Price24h      = $null #MPH not send this on api
-                            Protocol      = "stratum+tcp"
-                            Host          = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
-                            Port          = $MiningPoolHub_Port
-                            User          = "$UserName.$WorkerName"
-                            Pass          = "x"
-                            Location      = $Location
-                            SSL           = $false
-                            Symbol        = ""
-                            AbbName       = $AbbName
-                            ActiveOnManualMode    = $ActiveOnManualMode
-                            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                            WalletMode     = $WalletMode
-                            PoolName = $Name
-                            OriginalAlgorithm = $MiningPoolHub_OriginalAlgorithm
-                            OriginalCoin = $MiningPoolHub_OriginalCoin
-                            Fee = 0.009
-                            }
-                }
+                        $Location = $_
+
+                        if ($MiningPoolHub_Algorithm -ne 'Blake2b') { #mph has different stratum protocol for blake2b, it has problem with some miners
+                                $Result+=[PSCustomObject]@{
+                                            Algorithm     = $MiningPoolHub_Algorithm
+                                            Info          = $MiningPoolHub_Coin
+                                            Price         = $MiningPoolHub_Price
+                                            Price24h      = $null #MPH not send this on api
+                                            Protocol      = "stratum+tcp"
+                                            Host          = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
+                                            Port          = $MiningPoolHub_Port
+                                            User          = "$UserName.$WorkerName"
+                                            Pass          = "x"
+                                            Location      = $Location
+                                            SSL           = $false
+                                            Symbol        = ""
+                                            AbbName       = $AbbName
+                                            ActiveOnManualMode    = $ActiveOnManualMode
+                                            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                                            WalletMode     = $WalletMode
+                                            PoolName = $Name
+                                            OriginalAlgorithm = $MiningPoolHub_OriginalAlgorithm
+                                            OriginalCoin = $MiningPoolHub_OriginalCoin
+                                            Fee = 0.009
+                                            }
+                                        }
+                        }
 
             }
 
