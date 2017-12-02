@@ -42,6 +42,11 @@ param(
 #$Algorithm =('x11')
 
 
+#--------------Load config.txt file
+
+
+
+
 Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
 
 Get-ChildItem . -Recurse | Unblock-File
@@ -64,6 +69,7 @@ $ShowBestMinersOnly=$true
 $FirstTotalExecution =$true
 $IntervalStartAt = (Get-Date)
 
+
 Clear-Host
 set-WindowSize 120 40
 
@@ -71,6 +77,10 @@ set-WindowSize 120 40
 $GpuPlatform= $([array]::IndexOf((Get-WmiObject -class CIM_VideoController | Select-Object -ExpandProperty AdapterCompatibility), 'Advanced Micro Devices, Inc.'))
  if ($GpuPlatform -eq -1) {$GpuPlatform= $([array]::IndexOf((Get-WmiObject -class CIM_VideoController | Select-Object -ExpandProperty AdapterCompatibility), 'NVIDIA')) } #For testing amd miners on nvidia
 #>
+
+$Screen=(Get-Content config.txt | Where-Object {$_ -like '@@STARTSCREEN=*'} )-replace '@@STARTSCREEN=',''
+    
+
 
 #---Paraneters checking
 
@@ -80,6 +90,7 @@ if ($MiningMode -ne 'Automatic' -and $MiningMode -ne 'Manual' -and $MiningMode -
    }
 
 
+   
 $PoolsChecking=Get-Pools -Querymode "info" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm
 
 $PoolsErrors=@()
@@ -123,6 +134,8 @@ if ($MiningMode -eq 'Manual' -and ($Algorithm | measure-object).count -gt 1){
     $ParamMiningModeBCK=$MiningMode
 
 
+    
+
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
@@ -145,7 +158,7 @@ while ($true) {
     $Currency=(Get-Content config.txt | Where-Object {$_ -like '@@CURRENCY=*'} )-replace '@@CURRENCY=',''
     $GpuPlatform=(Get-Content config.txt | Where-Object {$_ -like '@@GPUPLATFORM=*'} )-replace '@@GPUPLATFORM=',''
     $BechmarkintervalTime=(Get-Content config.txt | Where-Object {$_ -like '@@BENCHMARKTIME=*'} )-replace '@@BENCHMARKTIME=',''
-    $Screen=(Get-Content config.txt | Where-Object {$_ -like '@@STARTSCREEN=*'} )-replace '@@STARTSCREEN=',''
+
 
 
     #Donation
@@ -171,6 +184,7 @@ while ($true) {
                 $MiningMode="Automatic"
 
                 0 | Set-Content  -Path Donation.ctr
+
             }
             else { #NOT donation interval
                     $DonationInterval = $false
@@ -186,6 +200,7 @@ while ($true) {
                     (Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','' | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
 
                     $ElapsedDonationTime | Set-Content  -Path Donation.ctr
+
        }
 
 
@@ -254,6 +269,7 @@ while ($true) {
 
                                                 if ($MiningMode -eq 'Automatic24h') {
                                                         $MinerProfit=[Double]([double]$HashrateValue * [double]$_.Price24h)
+                                                       
                                                         }
                                                     else {
                                                         $MinerProfit=[Double]([double]$HashrateValue * [double]$_.Price)}
@@ -335,9 +351,12 @@ while ($true) {
                                                                     PrelaunchCommand = $Miner.PrelaunchCommand
                                                                     MinerFee= if ($Miner.Fee -eq $null) {$null} else {[double]$Miner.fee}
                                                                     PoolFee = if ($_.Fee -eq $null) {$null} else {[double]$_.fee}
-                                                                }
+
                                             }
-                                         }
+                            
+                                            }                       
+                                         }          
+     
                             }
                         }
                 }
@@ -406,10 +425,13 @@ while ($true) {
                         $_.PoolWorkers = $Miner.PoolWorkers
                         $_.PoolFee= $Miner.PoolFee
                         if ($_.Status -ne 'Cancelled') {$_.IsValid=$true}
+                    
                             }
                     else {
                             $_.IsValid = $false #simulates a delete
-                         }
+                           
+                            }
+                
                 }
 
 
@@ -480,6 +502,7 @@ while ($true) {
                             PrelaunchCommand     = $_.PrelaunchCommand
                             MinerFee             = $_.MinerFee
                             PoolFee              = $_.PoolFee
+
                         }
                         $ActiveMinersIdCounter++
                 }
@@ -568,6 +591,7 @@ while ($true) {
                     'US'     {$LabelProfit="USD/Day" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
                     'ASIA'   {$LabelProfit="USD/Day" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
                     'GB'     {$LabelProfit="GBP/Day" ; $localBTCvalue = [double]$CDKResponse.gbp.rate}
+
                 }
 
 
@@ -876,6 +900,10 @@ while ($true) {
                     ) | Out-Host
                 }
 
+  
+                 
+                   
+
                 $ActiveMiners | Where-Object Best -eq $true | ForEach-Object {
                                 $_.SpeedLive = 0
                                 $_.SpeedLiveDual = 0
@@ -976,7 +1004,13 @@ while ($true) {
                     'B' {if ($Screen -eq "Profits") {if ($ShowBestMinersOnly -eq $true) {$ShowBestMinersOnly=$false} else {$ShowBestMinersOnly=$true}}}
 
                 }
+
+
+           
                 if (((Get-Date) -ge ($IntervalStartTime.AddSeconds($NextInterval))) -or ($ExitLoop)  ) {break} #If time of interval has over, exit of main loop
+
+           
+    
         }
 
 

@@ -87,13 +87,13 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
       $Result += [PSCustomObject]@{
         Algorithm             = $Algo
-        Info                  = $null
+        Info                  = $coin
         Price                 = [double]($_.paying / $Divisor)
         Price24h              = $null
         Protocol              = "stratum+tcp"
         Host                  = $AlgoOriginal + "." + $location.NhLocation + ".nicehash.com"
         Port                  = $_.port
-        User                  = $CoinsWallets.get_item('NH-BTC') + '.' + $Workername
+        User                  = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')})+'.'+$Workername
         Pass                  = "x"
         Location              = $location.MMLocation
         SSL                   = $false
