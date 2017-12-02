@@ -85,7 +85,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         # $Pools += [pscustomobject]@{"coin" = "Digibyte"; "algo" = "Qubit"; "symbol" = "DGB"; "server" = "dgbq.suprnova.cc"; "port" = "8531"; "location" = "US"};
         $Pools += [pscustomobject]@{"coin" = "Digibyte"; "algo" = "Skein"; "symbol" = "DGB"; "server" = "dgbs.suprnova.cc"; "port" = "5226"; "location" = "US"};
         # $Pools += [pscustomobject]@{"coin" = "Einsteinium"; "algo" = "Scrypt"; "symbol" = "EMC2"; "server" = "emc2.suprnova.cc"; "port" = "3366"; "location" = "US"};
-        $Pools += [pscustomobject]@{"coin" = "Electroneum"; "algo" = "Cryptonight"; "symbol" = "ETN"; "server" = "etn.suprnova.cc"; "port" = "8875"; "location" = "US"};
+        $Pools += [pscustomobject]@{"coin" = "Electroneum"; "algo" = "Cryptonight"; "symbol" = "ETN"; "server" = "etn-stratum.suprnova.cc"; "port" = "8875"; "location" = "US"};
         # $Pools += [pscustomobject]@{"coin" = "eMark"; "algo" = "SHA256"; "symbol" = "DEM"; "server" = "dem.suprnova.cc"; "port" = "5555"; "location" = "US"};
         $Pools += [pscustomobject]@{"coin" = "Ethereum"; "algo" = "Ethash"; "symbol" = "ETH"; "server" = "eth.suprnova.cc"; "port" = "5000"; "location" = "US"};
         $Pools += [pscustomobject]@{"coin" = "EuropeCoin v3"; "algo" = "HODL"; "symbol" = "ERC"; "server" = "erc.suprnova.cc"; "port" = "7674"; "location" = "US"};
