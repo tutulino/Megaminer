@@ -762,7 +762,7 @@ function clear-log{
     $Extension = "*.txt"
     $LastWrite = $Now.AddDays(-$Days)
 
-    $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
+    $Files = Get-Childitem $TargetFolder -Include $Extension -Exclude "empty.txt" -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
 
     $Files |ForEach-Object {Remove-Item $_.fullname}
 
