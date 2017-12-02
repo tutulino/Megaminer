@@ -1,9 +1,9 @@
 {
 "Path" : ".\\Bin\\AMD-XMR-Miner\\amdxmrminer\\AMDXMRMiner.exe",
 "ExtractionPath" : ".\\Bin\\AMD-XMR-Miner\\",
-"Uri" : "https://www.amdxmrminer.com/download/amd-xmr-miner-v0-63b/?wpdmdl=223",
+"Uri" : "https://github.com/yuzi-co/miners/releases/download/1/amdxmrminer_v0.65b.zip",
 "Types" : ["AMD"],
-"Arguments" : "--port 4664 --pool #SERVER#:#PORT# --wallet #LOGIN# --password #PASSWORD# --platformindex #GPUPLATFORM# --donate 0 #ALGORITHMPARAMETERS#",
+"Arguments" : "-wp 4664 -p #SERVER#:#PORT# -w #LOGIN# -psw #PASSWORD# -pidx #GPUPLATFORM# -do 0 #ALGORITHMPARAMETERS#",
 "API" : "xmrminer",
 "APIPort" : 4664,
 "Wrap" : false,
