@@ -79,7 +79,7 @@ $GpuPlatform= $([array]::IndexOf((Get-WmiObject -class CIM_VideoController | Sel
 #>
 
 $Screen=(Get-Content config.txt | Where-Object {$_ -like '@@STARTSCREEN=*'} )-replace '@@STARTSCREEN=',''
-    
+
 
 
 #---Paraneters checking
@@ -90,7 +90,7 @@ if ($MiningMode -ne 'Automatic' -and $MiningMode -ne 'Manual' -and $MiningMode -
    }
 
 
-   
+
 $PoolsChecking=Get-Pools -Querymode "info" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm
 
 $PoolsErrors=@()
@@ -134,7 +134,7 @@ if ($MiningMode -eq 'Manual' -and ($Algorithm | measure-object).count -gt 1){
     $ParamMiningModeBCK=$MiningMode
 
 
-    
+
 
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
@@ -269,7 +269,7 @@ while ($true) {
 
                                                 if ($MiningMode -eq 'Automatic24h') {
                                                         $MinerProfit=[Double]([double]$HashrateValue * [double]$_.Price24h)
-                                                       
+
                                                         }
                                                     else {
                                                         $MinerProfit=[Double]([double]$HashrateValue * [double]$_.Price)}
@@ -353,10 +353,10 @@ while ($true) {
                                                                     PoolFee = if ($_.Fee -eq $null) {$null} else {[double]$_.fee}
 
                                             }
-                            
-                                            }                       
-                                         }          
-     
+
+                                            }
+                                         }
+
                             }
                         }
                 }
@@ -425,13 +425,13 @@ while ($true) {
                         $_.PoolWorkers = $Miner.PoolWorkers
                         $_.PoolFee= $Miner.PoolFee
                         if ($_.Status -ne 'Cancelled') {$_.IsValid=$true}
-                    
+
                             }
                     else {
                             $_.IsValid = $false #simulates a delete
-                           
+
                             }
-                
+
                 }
 
 
@@ -900,9 +900,9 @@ while ($true) {
                     ) | Out-Host
                 }
 
-  
-                 
-                   
+
+
+
 
                 $ActiveMiners | Where-Object Best -eq $true | ForEach-Object {
                                 $_.SpeedLive = 0
@@ -981,7 +981,7 @@ while ($true) {
                 $KeyPressed=$null
 
 
-                while ((NEW-TIMESPAN $Loopstart (get-date)).Seconds -lt 4 -and $KeyPressed -ne 'P'-and $KeyPressed -ne 'C'-and $KeyPressed -ne 'H'-and $KeyPressedkey -ne 'E' -and $KeyPressedkey -ne 'W'  -and $KeyPressedkey -ne 'U'  -and $KeyPressedkey -ne 'T' -and $KeyPressedkey -ne 'B'){
+                while ((NEW-TIMESPAN $Loopstart (get-date)).Seconds -lt 4 -and $KeyPressed -notin @('P', 'C', 'H','E', 'W', 'U','T','B')){
 
                             if ($host.ui.RawUi.KeyAvailable) {
                                         $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyUp")
@@ -989,9 +989,8 @@ while ($true) {
                                         while ($Host.UI.RawUI.KeyAvailable)  {$host.ui.RawUi.Flushinputbuffer()} #keyb buffer flush
 
                             }
+                            Start-Sleep -Seconds 1
                 }
-
-                Start-Sleep -Seconds 10
 
                 switch ($KeyPressed){
                     'P' {$Screen='profits'}
@@ -1000,17 +999,17 @@ while ($true) {
                     'E' {$ExitLoop=$true}
                     'W' {$Screen='Wallets'}
                     'U' {if ($Screen -eq "Wallets") {$WalletsUpdate=$null}}
-                    'T' {if ($Screen -eq "Profits") {if ($ProfitsScreenLimit -eq 40) {$ProfitsScreenLimit=1000} else {$ProfitsScreenLimit=40}}}
+                    'T' {if ($Screen -eq "Profits") {if ($ProfitsScreenLimit -eq 20) {$ProfitsScreenLimit=1000} else {$ProfitsScreenLimit=20}}}
                     'B' {if ($Screen -eq "Profits") {if ($ShowBestMinersOnly -eq $true) {$ShowBestMinersOnly=$false} else {$ShowBestMinersOnly=$true}}}
 
                 }
 
 
-           
+
                 if (((Get-Date) -ge ($IntervalStartTime.AddSeconds($NextInterval))) -or ($ExitLoop)  ) {break} #If time of interval has over, exit of main loop
 
-           
-    
+
+
         }
 
 
