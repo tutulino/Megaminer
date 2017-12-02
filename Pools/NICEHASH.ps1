@@ -67,7 +67,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
   $Locations += [PSCustomObject]@{NhLocation = 'USA'; MMlocation = 'US'}
   $Locations += [PSCustomObject]@{NhLocation = 'EU'; MMlocation = 'Europe'}
 
-  $Request | ForEach-Object {
+  $Request | Where-Object {$_.paying -gt 0 } | ForEach-Object {
 
     $Algo = get-algo-unified-name ($_.name)
     $AlgoOriginal = $_.name
