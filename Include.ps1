@@ -619,7 +619,7 @@ function get-coin-symbol ([string]$Coin) {
             "expanse" {$Result="EXP"}
             "musicoin" {$Result="MUSIC"}
             "ethereum" {$Result="ETH"}
-            "siacoin" {$Result="SIA"}
+            "siacoin" {$Result="SC"}
             "zcoin" {$Result="XZC"}
             "zcash" {$Result="ZEC"}
             "zclassic" {$Result="ZCL"}

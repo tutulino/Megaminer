@@ -87,10 +87,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         #Manual Pools zone (you cand add your pools here - wallet for that coins must exists on config.txt)
 
                 #$Pools +=[pscustomobject]@{"coin" = "PIRL";"algo"="Ethash"; "symbol"= "PIRL";"server"="pirl.minerpool.net"; "port"= "8004";"location"="US";"User"="XXX";"Pass" = "YYY";"fee"="0";"Abbname"="MinerP";"WalletMode"="NONE"}
-                # $Pools +=[pscustomobject]@{"coin" = "Sumokoin";"algo"="Cryptonight"; "symbol"= "SUMO";"server"="mine.sumo.fairpool.xyz";"port"= "5555";"protocol" = "stratum+tcp";"location"="US";
-                #         "User"=$CoinsWallets.get_item('SUMO');"Pass" = "x";"fee"="0.01";"Abbname"="FairP";"WalletMode"="NONE"}
-                # $Pools +=[pscustomobject]@{"coin" = "PascalLite";"algo"="Pascal"; "symbol"= "PASL";"server"="mine.pasl.fairpool.xyz";"port"= "4009";"protocol" = "stratum+tcp";"location"="US";
-                #         "User"=$CoinsWallets.get_item('PASL');"Pass" = "x";"fee"="0.02";"Abbname"="FairP";"WalletMode"="NONE"}
 
 
         #Data from WTM
