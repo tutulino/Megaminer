@@ -79,28 +79,29 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
       "qubit" {$Divisor *= 1000}
       "quark" {$Divisor *= 1000}
     }
-
-    $Result += [PSCustomObject]@{
-      Algorithm             = $Pool_Algo
-      Info                  = $null
-      Price                 = $coin.estimate_current / $Divisor
-      Price24h              = $coin.estimate_last24h / $Divisor
-      Protocol              = "stratum+tcp"
-      Host                  = $coin.name + "." + $MineUrl
-      Port                  = $coin.port
-      User                  = $CoinsWallets.get_item($Currency)
-      Pass                  = "c=$Currency,$WorkerName,stats"
-      Location              = $Location
-      SSL                   = $false
-      Symbol                = $null
-      AbbName               = $AbbName
-      ActiveOnManualMode    = $ActiveOnManualMode
-      ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-      PoolWorkers           = $coin.Workers
-      PoolHashRate          = $coin.hashrate
-      WalletMode            = $WalletMode
-      PoolName              = $Name
-      Fee                   = $coin.Fees / 100
+    if ( $coin.Workers -gt 0 ) {
+      $Result += [PSCustomObject]@{
+        Algorithm             = $Pool_Algo
+        Info                  = $null
+        Price                 = $coin.estimate_current / $Divisor
+        Price24h              = $coin.estimate_last24h / $Divisor
+        Protocol              = "stratum+tcp"
+        Host                  = $coin.name + "." + $MineUrl
+        Port                  = $coin.port
+        User                  = $CoinsWallets.get_item($Currency)
+        Pass                  = "c=$Currency,$WorkerName,stats"
+        Location              = $Location
+        SSL                   = $false
+        Symbol                = $null
+        AbbName               = $AbbName
+        ActiveOnManualMode    = $ActiveOnManualMode
+        ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+        PoolWorkers           = $coin.Workers
+        PoolHashRate          = $coin.hashrate
+        WalletMode            = $WalletMode
+        PoolName              = $Name
+        Fee                   = $coin.Fees / 100
+      }
     }
   }
   remove-variable Request
