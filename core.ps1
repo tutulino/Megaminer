@@ -59,13 +59,13 @@ Start-Transcript ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 
 $ActiveMinersIdCounter=0
 $Activeminers=@()
-$ProfitsScreenLimit=40
+$ProfitsScreenLimit=20
 $ShowBestMinersOnly=$true
 $FirstTotalExecution =$true
 $IntervalStartAt = (Get-Date)
 
 Clear-Host
-set-WindowSize 120 60
+set-WindowSize 120 40
 
 <#
 $GpuPlatform= $([array]::IndexOf((Get-WmiObject -class CIM_VideoController | Select-Object -ExpandProperty AdapterCompatibility), 'Advanced Micro Devices, Inc.'))
