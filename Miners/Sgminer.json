@@ -10,12 +10,11 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"myriad-groestl":"-k myriadcoin-groestl -g 2 -w 64 -I 19"},
-                {"groestl":"-k groestlcoin -g 2 -w 128 -I 19"},
+                {"myriad-groestl":"-k myriadcoin-groestl -I 28"},
+                {"groestl":"-k groestlcoin -I 22"},
                 {"blake":"-k blake"},
-                {"vanilla":"-k vanilla -I d"},
-                {"keccak":"-k maxcoin"},
-                {"pascal":"-k pascal -g 2 -w 64 -I 21"},
+                {"keccak":"-k maxcoin -g 2 -I 10"},
+                {"pascal":"-k pascal -g 2 -I 22"},
                 {"x11gost":"-k sibcoin-mod -g 2 -w 128 -I 20"},
                 {"lyra2v2":"-k lyra2rev2 -g 2 -w 64 -I d"}
               ]
