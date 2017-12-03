@@ -1,15 +1,14 @@
-REM --This is an example of how launch Megaminer without prompt for automatic coin selection pools
-
+@echo off
 setx GPU_FORCE_64BIT_PTR 1
 setx GPU_MAX_HEAP_SIZE 100
 setx GPU_USE_SYNC_OBJECTS 1
 setx GPU_MAX_ALLOC_PERCENT 100
 setx GPU_SINGLE_ALLOC_PERCENT 100
 
-
+cd /d %~dp0
 
 :LOOP
-del "Stats\*_Profit.txt"
 
-powershell -version 5.0 -noexit -executionpolicy bypass -command "&.\core.ps1 -MiningMode Manual -PoolsName suprnova -Coinsname Bitcore
+powershell -version 5.0 -noexit -executionpolicy bypass -command ^
+    "&.\core.ps1 -MiningMode Manual -PoolsName suprnova -Coinsname Bitcore
 GOTO LOOP

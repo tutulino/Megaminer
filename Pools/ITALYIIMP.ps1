@@ -3,142 +3,110 @@
     [String]$Querymode = $null ,
     [Parameter(Mandatory = $false)]
     [pscustomobject]$Info
-    )
+)
 
 #. .\..\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
-$ActiveOnManualMode    = $true
+$ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
 $AbbName = 'ITY'
-$WalletMode ='WALLET'
+$WalletMode = 'WALLET'
+$ApiUrl = 'http://italyiimp.com/api'
+$MineUrl = 'italyiimp.com'
+$Location = 'EU'
+$UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
 
-
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
-if ($Querymode -eq "info"){
+if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-                    Disclaimer = "Anonymous, autoexchange to selected coin in config.txt"
-                    ActiveOnManualMode=$ActiveOnManualMode  
-                    ActiveOnAutomaticMode=$ActiveOnAutomaticMode
-                    ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
-                    ApiData = $True
-                    AbbName=$AbbName
-                    WalletMode=$WalletMode
-                         }
+        Disclaimer               = "Autoexchange to config.txt wallet, no registration required"
+        ActiveOnManualMode       = $ActiveOnManualMode
+        ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
+        ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
+        AbbName                  = $AbbName
+        WalletMode               = $WalletMode
+    }
+}
+
+
+if ($Querymode -eq "wallet") {
+    try {
+        $http = $ApiUrl + "/wallet?address=" + $Info.user
+        $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+    } catch {}
+
+    if ($Request -ne $null -and $Request -ne "") {
+        $Result = [PSCustomObject]@{
+            Pool     = $name
+            currency = $Request.currency
+            balance  = $Request.balance
+        }
+    }
+    remove-variable Request
+}
+
+
+if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
+    $retries = 1
+    do {
+        try {
+            $http = $ApiUrl + "/status"
+            $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+        } catch {start-sleep 2}
+        $retries++
+        if ($Request -eq $null -or $Request -eq "") {start-sleep 3}
+    } while ($Request -eq $null -and $retries -le 3)
+
+    if ($retries -gt 3) {
+        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+        Exit
     }
 
 
+    $Request | Get-Member -MemberType Properties | ForEach-Object {
 
+        $coin = $Request | Select-Object -ExpandProperty $_.name
+        $Pool_Algo = get-algo-unified-name $coin.name
 
+        $Divisor = (Get-Algo-Divisor $Pool_Algo) / 1000
 
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
-
-
-    if ($Querymode -eq "wallet")    {
-        
-                            
-                            try {
-                                $http="http://italyiimp.com/api/wallet?address="+$Info.user
-                                $Ita_Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
-                            }
-                            catch {}
-        
-        
-                            if ($Ita_Request -ne $null -and $Ita_Request -ne ""){
-                                $Result = [PSCustomObject]@{
-                                                        Pool =$name
-                                                        currency = $Ita_Request.currency
-                                                        balance = $Ita_Request.balance
-                                                    }
-                                    remove-variable Ita_Request                                                                                                        
-                                    }
-
-                        
-                        }
-                        
-                        
-
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-    
-if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
-
-        $retries=1
-                do {
-                        try {
-                            $Ita_Request = Invoke-WebRequest "http://italyiimp.com/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 | ConvertFrom-Json 
-
-                        }
-                        catch {}
-                        $retries++
-                    if ($Ita_Request -eq $null -or $Ita_Request -eq "") {start-sleep 5}
-                    } while ($Ita_Request -eq $null -and $retries -le 3)
-                
-                if ($retries -gt 3) {
-                                    WRITE-HOST 'ITALYIIMP API NOT RESPONDING...ABORTING'
-                                    EXIT
-                                    }
-
-
-
-                  
-
-                $Ita_Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | ForEach-Object {
-                    
-                                            $Divisor = (Get-Algo-Divisor $_) / 1000
-
-                                            switch ($_){
-                                                "X11"{$Divisor *= 1000}
-                                                "qubit"{$Divisor *= 1000}
-                                                "quark"{$Divisor *= 1000}
-                                                "blakecoin"{$Divisor *= 1000}
-                                                }
-
-                    
-                                    
-                                    $Result += [PSCustomObject]@{
-                                                    Algorithm =  get-algo-unified-name $_
-                                                    Info = $null
-                                                    Price = [Double]$Ita_Request.$_.estimate_current/$Divisor
-                                                    Price24h =[Double]$Ita_Request.$_.estimate_last24h/$Divisor
-                                                    Protocol = "stratum+tcp"
-                                                    Host = "italyiimp.com"
-                                                    Port = $Ita_Request.$_.port
-                                                    User = $CoinsWallets.get_item($Currency)
-                                                    Pass = "c=$Currency,$WorkerName,stats"
-                                                    Location = "US"
-                                                    SSL = $false
-                                                    AbbName = $AbbName
-                                                    ActiveOnManualMode    = $ActiveOnManualMode
-                                                    ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                                    PoolWorkers = $Ita_Request.$_.workers
-                                                    WalletMode=$WalletMode
-                                                    PoolName = $Name
-                                                    Fee = $Ita_Request.$_.Fees/100
-                                        
-                                    }
-                                }
-  remove-variable Ita_Request                
+        switch ($Pool_Algo) {
+            "sha256" {$Divisor *= 1000000}
+            "x11" {$Divisor *= 1000}
+            "qubit" {$Divisor *= 1000}
+            "quark" {$Divisor *= 1000}
+        }
+        if ( $coin.Workers -gt 0 -and [double]$coin.actual_last24h -gt 0) {
+            $Result += [PSCustomObject]@{
+                Algorithm             = $Pool_Algo
+                Info                  = $null
+                Price                 = $coin.estimate_current / $Divisor
+                Price24h              = $coin.estimate_last24h / $Divisor
+                Protocol              = "stratum+tcp"
+                Host                  = $MineUrl
+                Port                  = $coin.port
+                User                  = $CoinsWallets.get_item($Currency)
+                Pass                  = "c=$Currency,$WorkerName,stats"
+                Location              = $Location
+                SSL                   = $false
+                Symbol                = $null
+                AbbName               = $AbbName
+                ActiveOnManualMode    = $ActiveOnManualMode
+                ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                PoolWorkers           = $coin.Workers
+                PoolHashRate          = $coin.hashrate
+                WalletMode            = $WalletMode
+                PoolName              = $Name
+                Fee                   = $coin.Fees / 100
+            }
+        }
     }
+    remove-variable Request
+}
 
 
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
-    $Result |ConvertTo-Json | Set-Content ("$name.tmp")
-    remove-variable Result
-    
+$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+remove-variable Result

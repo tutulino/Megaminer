@@ -37,19 +37,19 @@ do {
         $Line = $_
 
 
-        if ($Line -like "*total speed:*" -or $Line -like "*accepted:*" -or   $Line -like "*Mining on #*" -or $line -like "*diff*yes!*" ) {
-            $Line = $Line -replace "\smh/s","mh/s" -replace "\skh/s","kh/s" -replace "\sgh/s","gh/s" -replace "\sth/s","th/s" -replace "\sph/s","ph/s" -replace "\sh/s"," h/s"
+        if ($Line -like "*total speed:*" -or $Line -like "*accepted:*" -or $Line -like "*Mining on #*" -or $line -like "*diff*yes!*" ) {
+            $Line = $Line -replace "\smh/s", "mh/s" -replace "\skh/s", "kh/s" -replace "\sgh/s", "gh/s" -replace "\sth/s", "th/s" -replace "\sph/s", "ph/s" -replace "\sh/s", " h/s"
             $Words = $Line -split " "
-            $Word =  $words -like "*/s*" | Select-Object -Last 1
-            $HashRate = [Decimal]($Word -replace "mh/s","" -replace "kh/s","" -replace "gh/s","" -replace "th/s","" -replace "ph/s","" -replace "h/s","" )
+            $Word = $words -like "*/s*" | Select-Object -Last 1
+            $HashRate = [Decimal]($Word -replace "mh/s", "" -replace "kh/s", "" -replace "gh/s", "" -replace "th/s", "" -replace "ph/s", "" -replace "h/s", "" )
 
-<#
-write-host 3332
-$Line | write-host
-$Word | write-host
-$HashRate | write-host
-start-sleep 50
-#>
+            <#
+            write-host 3332
+            $Line | write-host
+            $Word | write-host
+            $HashRate | write-host
+            start-sleep 50
+            #>
 
 
 
@@ -62,11 +62,11 @@ start-sleep 50
             }
 
             $HashRate | Set-Content ".\Wrapper_$Id.txt"
-<#
-write-host 4444
-$HashRate | write-host
-start-sleep 2
-#>
+            <#
+            write-host 4444
+            $HashRate | write-host
+            start-sleep 2
+            #>
 
         }
 

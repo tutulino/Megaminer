@@ -9,6 +9,7 @@ cd /d %~dp0
 
 :LOOP
 
-powershell -version 5.0 -noexit -executionpolicy bypass -command "&.\core.ps1 -MiningMode Automatic24h -PoolsName Zpool,Hash_Refinery,WhatToMine_Virtual
+powershell -version 5.0 -noexit -executionpolicy bypass -command ^
+    "&.\core.ps1 -MiningMode Automatic24h -PoolsName Zpool,Hash_Refinery,WhatToMine_Virtual
 
 GOTO LOOP
