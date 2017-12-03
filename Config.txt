@@ -12,7 +12,7 @@
 
 -- Time in seconds for recheck profit and select more profitable algorithm (less than 600 not recommended)
 
-@@INTERVAL=300
+@@INTERVAL=600
 
 -- Only NVIDIA tested, AMD must work, but not tested (for mixed rig set AMD,NVIDIA)
 
@@ -28,7 +28,7 @@
 
 -- Screen to be shown at start of program (WALLETS/CURRENT/HISTORY/PROFITS)
 
-@@STARTSCREEN=HISTORY
+@@STARTSCREEN=PROFITS
 
 -- Benchmarks interval time (less than 200 not recomended)
 
@@ -40,16 +40,16 @@
 
 -- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX (XXX=currency symbol)
 
-@@WALLET_NH-BTC=3PFC7i8VT3jQG3ppoFEQyYy2wrg9YNoLmj
--- WALLET_BTC=1Co1ZkrucaTKho7egxsjqf8c9Rhac5n365
+@@WALLET_BTC_NICE=3PFC7i8VT3jQG3ppoFEQyYy2wrg9YNoLmj
 @@WALLET_BTC=178YrJwP4RHUT1VxCzgUTBAgsLq1TsZbYo
-@@WALLET_XMG=9RDkTkKowYRcKgRKjHSgJN91VH2GW44581
-@@WALLET_YTN=YmMW8ZUwUfHtYGLFuBnTjSSdQL6FcgvwUm
-@@WALLET_PLYS=PCRmwsrUAKcC3UbF7fgw76ZRyRY48eWuen
-@@WALLET_GBX=Gf3RJExWWZV69KsRbNVft5Yf1NBQmAm81h
+-- @@WALLET_BTC=3FzmW9JMhgmRwipKkNnphxG73VPQMsYsN6
+@@WALLET_BTG=AdLbKEFQyKugXTduVAT1Z3KMMD7rhN8c6x
+@@WALLET_ETH=0x38973025136D1a5B773aE71c02cA24b365850A9A
+@@WALLET_LTC=MM8RmXUgxDwHJxrC54muF7KHciSCFS3gx3
 
 @@WALLET_PASL=3GhhbotqzjTq9mpXabpzqw4WLCZVp2SFG2CVs6Jfox4t3jCBgvAq92wiTVUEE5mCniN2zNDwhEZteq8QTk3cU7hHK6H6Jr3Aecpm1c
 @@WALLET_SUMO=Sumoo32iRyQi9saNjaW7hcL7jbxe7pQmh8Vvuzy5M5uuYdnscDiSqrwFFckdFc9TuhW1PFJ46Q6NM9gpbGzdJLpCBkC3cw3RhC6
+@@WALLET_KRB=KiKUUqi56RseQRp5Bh3FToeZNmw1Bnx9dPqDf9zsyxD9LgMyEUhypKmc7DdNmiQH8SLCLkNZcVzkJbJRMKNAxyWe9vYcckd
 
 -- API Keys, Non Anonymous pools (Suprnova, MPH) requires api key to get wallets info (format @@APIKEY_NAMEOFPOOL=XXXXXXXXXX)
 
