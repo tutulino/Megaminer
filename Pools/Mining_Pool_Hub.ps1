@@ -78,16 +78,19 @@ if ($Querymode -eq "APIKEY") {
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
+  $retries = 1
+  do {
+    try {
+      $MiningPoolHub_Request = Invoke-WebRequest "http://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+    } catch {start-sleep 2}
+    $retries++
+    if ($MiningPoolHub_Request -eq $null -or $MiningPoolHub_Request -eq "") {start-sleep 3}
+  } while ($MiningPoolHub_Request -eq $null -and $retries -le 3)
 
-  try {
-    $MiningPoolHub_Request = Invoke-WebRequest "http://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing | ConvertFrom-Json
-  } catch {
-    WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'
-    EXIT
+  if ($retries -gt 3) {
+    Write-Host $Name 'API NOT RESPONDING...ABORTING'
+    Exit
   }
-
-  if (-not $MiningPoolHub_Request.success) { WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'; EXIT}
-
 
   $Locations = "Europe", "US", "Asia"
 
