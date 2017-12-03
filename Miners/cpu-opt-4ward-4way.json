@@ -1,0 +1,20 @@
+﻿{
+    "Path" : ".\\Bin\\cpuminer-opt-4ward\\cpuminer-opt-3.7.4-4ward\\cpuminer-4way.exe",
+    "ExtractionPath" : ".\\Bin\\cpuminer-opt-4ward\\",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.4-4ward.7z",
+    "Types" : ["CPU"],
+    "Arguments" : "-b 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
+    "API" : "Ccminer",
+    "APIPort" : 4068,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"blake": "-a blake"},
+        {"keccak": "-a keccak"},
+        {"nist5": "-a nist5"},
+        {"skein": "-a skein"},
+        {"skein2": "-a skein2"},
+        {"tribus": "-a tribus"}
+    ]
+}
