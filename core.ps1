@@ -309,9 +309,6 @@ while ($true) {
                                                     $PoolAbbName += '|' + $PoolDual.Abbname
                                                     $PoolName += '|' + $PoolDual.name
                                                     if ($PoolDual.workers -ne $null) {$PoolWorkers += '|' + $PoolDual.workers}
-
-                                                    $AlgoNameDual=$AlgoNameDual.toupper()
-                                                    $PoolDual.Info=$PoolDual.Info.tolower()
                                                     }
 
 
@@ -722,7 +719,7 @@ while ($true) {
 
                     #Display profits  information
                     $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
-                        @{Label = "Pool"; Expression = {$_.PoolAbb}},
+                        @{Label = "Pool"; Expression = {$_.PoolAbbName}},
                         @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else  {$_.Algorithm+ '|' + $_.AlgorithmDual}}},
                         @{Label = "Coin"; Expression = {if ($_.CoinDual -eq $null) {$_.Coin} else  {$_.Coin+ '|' + $_.CoinDual}}},
                         @{Label = "Miner"; Expression = {$_.Name}},
