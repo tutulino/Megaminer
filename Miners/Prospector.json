@@ -1,18 +1,18 @@
 {
-"Path" : ".\\Bin\\Prospector\\prospector.exe",
-"ExtractionPath" : ".\\Bin\\Prospector\\",
-"Uri" : "https://github.com/semtexzv/Prospector/releases/download/0.0.13-ALPHA/prospector-0.0.13-ALPHA-win64.zip",
-"Types" : ["AMD"],
-"GenerateConfigFile" : ".\\Bin\\Prospector\\prospector.toml",
-"PatternConfigFile": ".\\Patterns\\ProspectorPattern.txt",
-"Arguments" : "-c prospector.toml",
-"API" : "prospector",
-"APIPort" : 42000,
-"Wrap" : false,
-"DualMining": false,
-"PrelaunchCommand":"",
-"Fee" : "0.01",
-"Algorithms": [
-                {"Skunk":"sigt"}
-              ]
+    "Path" : ".\\Bin\\Prospector\\prospector.exe",
+    "ExtractionPath" : ".\\Bin\\Prospector\\",
+    "Uri" : "https://github.com/semtexzv/Prospector/releases/download/0.0.13-ALPHA/prospector-0.0.13-ALPHA-win64.zip",
+    "Types" : ["AMD"],
+    "GenerateConfigFile" : ".\\Bin\\Prospector\\prospector.toml",
+    "PatternConfigFile": ".\\Patterns\\ProspectorPattern.txt",
+    "Arguments" : "-c prospector.toml",
+    "API" : "prospector",
+    "APIPort" : 42000,
+    "Wrap" : false,
+    "DualMining": false,
+    "PrelaunchCommand":"",
+    "Fee" : "0.01",
+    "Algorithms": [
+        {"Skunk":"sigt"}
+    ]
 }

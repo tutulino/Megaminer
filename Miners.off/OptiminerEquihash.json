@@ -1,17 +1,17 @@
 {
-"Path" : ".\\Bin\\AMD-OptiminerEquihash\\optiminer-equihash-win\\optiminer.exe",
-"ExtractionPath" : ".\\Bin\\AMD-Optiminerequihash\\",
-"Uri" : "https://github.com/Optiminer/OptiminerZcash/raw/master/optiminer-zcash-1.7.0.zip",
-"Types" : ["AMD"],
-"Arguments" : "--monitoring-port 4080 -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-"API" : "optiminer",
-"APIPort" : 4080,
-"Wrap" : false,
-"Dualmining":false,
-"PrelaunchCommand":"",
-"Algorithms": [
-                {"equihash":"-a equihash200_9"},
-                {"zero":"-a equihash192_7"},
-                {"mars":"-a equihash96_5"}
-              ]
+    "Path" : ".\\Bin\\AMD-OptiminerEquihash\\optiminer-equihash-win\\optiminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-OptiminerEquihash\\",
+    "Uri" : "",
+    "Types" : ["AMD"],
+    "Arguments" : "--monitoring-port 4080 -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API" : "optiminer",
+    "APIPort" : 4080,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"equihash":"-a equihash200_9"},
+        {"zero":"-a equihash192_7"},
+        {"mars":"-a equihash96_5"}
+    ]
 }

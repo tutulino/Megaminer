@@ -9,8 +9,6 @@
     "Wrap" : false,
     "Dualmining":false,
     "Algorithms": [
-                    {"groestl":"-a groestl"}
-                  ]
-    
-    }
-    
+        {"groestl":"-a groestl"}
+    ]
+}

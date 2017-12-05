@@ -1,20 +1,15 @@
 ﻿{
-"Path" : ".\\Bin\\AMD-SgminerSkein\\sgminer.exe",
-"ExtractionPath" : ".\\Bin\\AMD-SgminerSkein\\",
-"Uri" : "https://github.com/miningpoolhub/sgminer/releases/download/5.3.1/Release.zip",
-"Types" : ["AMD"],
-"Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-"API" : "Xgminer",
-"APIPort" : 4028,
-"Wrap" : false,
-"Dualmining":false,
-"PrelaunchCommand":"",
-"Algorithms": [
+    "Path" : ".\\Bin\\AMD-sgminerSkein\\sgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-sgminerSkein\\",
+    "Uri" : "https://github.com/miningpoolhub/sgminer/releases/download/5.3.1/Release.zip",
+    "Types" : ["AMD"],
+    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API" : "Xgminer",
+    "APIPort" : 4028,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
         {"skein":" -k skeincoin -g 2 -w 256 -I 23"}
-        ]
-
+    ]
 }
-
-
-
-

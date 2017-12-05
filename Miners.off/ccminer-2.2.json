@@ -1,20 +1,15 @@
 {
-"Path" : ".\\Bin\\NVIDIA-ccminer-2.2\\ccminer-x64.exe",
-"ExtractionPath" : ".\\Bin\\NVIDIA-ccminer-2.2\\",
-"Uri" : "http://ccminer.org/preview/ccminer-2.2-skunk.7z",
-"Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
-"API" : "Ccminer",
-"APIPort" : 4068,
-"Wrap" : false,
-"Dualmining":false,
-"PrelaunchCommand":"",
-"Algorithms": [
-                {"cryptonight":"-a cryptonight"}
-
-                
-
-
-              ]
-
+    "Path" : ".\\Bin\\NVIDIA-ccminer-2.2\\ccminer-x64.exe",
+    "ExtractionPath" : ".\\Bin\\NVIDIA-ccminer-2.2\\",
+    "Uri" : "http://ccminer.org/preview/ccminer-2.2-skunk.7z",
+    "Types" : ["NVIDIA"],
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
+    "API" : "Ccminer",
+    "APIPort" : 4068,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"cryptonight":"-a cryptonight"}
+    ]
 }

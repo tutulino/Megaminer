@@ -1,4 +1,4 @@
-{
+    {
     "Path" : ".\\Bin\\NVIDIA-alexis-hsr\\ccminer-alexis.exe",
     "ExtractionPath" : ".\\Bin\\NVIDIA-alexis-hsr\\",
     "Uri" : "http://ccminer.org/preview/ccminer-hsr-alexis-x86-cuda8.7z",
@@ -10,25 +10,13 @@
     "Dualmining":false,
     "PrelaunchCommand":"",
     "Algorithms": [
-                    
-
-        
-
-                    {"hsr":"-a hsr"},
-                    {"blake2s":"-a blake2s"},
-                    {"blakecoin":"-a blakecoin"},
-                    {"veltor":"-a veltor"},
-                    {"lyra2v2":"-a lyra2v2"},
-                    {"nist5":"-a nist5"},
-                    {"sib":"-a sib"},
-                    {"Keccak":"-a keccak"}
-
-
-
-                   
-                  ]
-    
-    }
-
-
-    
+        {"hsr":"-a hsr"},
+        {"blake2s":"-a blake2s"},
+        {"blakecoin":"-a blakecoin"},
+        {"veltor":"-a veltor"},
+        {"lyra2v2":"-a lyra2v2"},
+        {"nist5":"-a nist5"},
+        {"sib":"-a sib"},
+        {"Keccak":"-a keccak"}
+    ]
+}

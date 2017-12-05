@@ -1,15 +1,15 @@
 {
-"Path" : ".\\Bin\\AMD-XMR-Miner\\amdxmrminer\\AMDXMRMiner.exe",
-"ExtractionPath" : ".\\Bin\\AMD-XMR-Miner\\",
-"Uri" : "https://github.com/yuzi-co/miners/releases/download/1/amdxmrminer_v0.65b.zip",
-"Types" : ["AMD"],
-"Arguments" : "-wp 4664 -p #SERVER#:#PORT# -w #LOGIN# -psw #PASSWORD# -pidx #GPUPLATFORM# -do 0 #ALGORITHMPARAMETERS#",
-"API" : "xmrminer",
-"APIPort" : 4664,
-"Wrap" : false,
-"Dualmining":false,
-"PrelaunchCommand":"",
-"Algorithms": [
-                {"cryptonight":""}
-              ]
+    "Path" : ".\\Bin\\AMD-XMR-Miner\\amdxmrminer\\AMDXMRMiner.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-XMR-Miner\\",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/amdxmrminer_v0.65b.zip",
+    "Types" : ["AMD"],
+    "Arguments" : "-wp 4664 -p #SERVER#:#PORT# -w #LOGIN# -psw #PASSWORD# -pidx #GPUPLATFORM# -do 0 #ALGORITHMPARAMETERS#",
+    "API" : "xmrminer",
+    "APIPort" : 4664,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"cryptonight":""}
+    ]
 }

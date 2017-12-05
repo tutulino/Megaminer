@@ -1,16 +1,16 @@
 {
-  "Path" : ".\\Bin\\AMD-sgminerTribus\\sgminer.exe",
-  "ExtractionPath" : ".\\Bin\\AMD-sgminerTribus\\",
-  "Uri" : "http://ccminer.org/preview/sgminer-x64-5.3.8.zip",
-  "Types" : ["AMD"],
-  "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-  "API" : "Xgminer",
-  "APIPort" : 4028,
-  "Wrap" : false,
-  "Dualmining":false,
-  "PrelaunchCommand":"",
-  "Algorithms": [
-                  {"tribus":"-k tribus --shaders 2304 --lookup-gap 4 -I 21"},
-                  {"veltor":"-k veltor -I 21"}
-                ]
-  }
+    "Path" : ".\\Bin\\AMD-sgminerTribus\\sgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-sgminerTribus\\",
+    "Uri" : "http://ccminer.org/preview/sgminer-x64-5.3.8.zip",
+    "Types" : ["AMD"],
+    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API" : "Xgminer",
+    "APIPort" : 4028,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"tribus":"-k tribus --shaders 2304 --lookup-gap 4 -I 21"},
+        {"veltor":"-k veltor -I 21"}
+    ]
+}

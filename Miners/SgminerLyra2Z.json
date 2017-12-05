@@ -1,7 +1,7 @@
 {
-    "Path" : ".\\Bin\\AMD-sgminerHSR\\sgminer.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-sgminerHSR\\",
-    "Uri" : "https://github.com/Partiolainen/sgminer-gm/releases/download/5.5.5-part/sgminer-5.5.5-part-hsr.win.x64.zip",
+    "Path" : ".\\Bin\\AMD-sgminerLyra2z\\kernel\\sgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-sgminerLyra2z\\",
+    "Uri" : "https://github.com/djm34/sgminer-msvc2015/releases/download/v0.2-pre/kernel_and_binary.rar",
     "Types" : ["AMD"],
     "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",
@@ -10,7 +10,6 @@
     "Dualmining":false,
     "PrelaunchCommand":"",
     "Algorithms": [
-        {"hsr":"-k hsr -I 20"}
+        {"lyra2z":"-k lyra2z -w 32 -I 18"}
     ]
 }
-

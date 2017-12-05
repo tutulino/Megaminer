@@ -1,16 +1,15 @@
 {
-"Path" : ".\\Bin\\AMD-sgminerPolytimos\\sgminer-polytimos\\sgminer.exe",
-"ExtractionPath" : ".\\Bin\\AMD-sgminerPolytimos\\",
-"Uri" : "https://github.com/polytimos/release/raw/master/sgminer-polytimos.zip",
-"Types" : ["AMD"],
-"Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-"API" : "Xgminer",
-"APIPort" : 4028,
-"Wrap" : false,
-"Dualmining":false,
-"PrelaunchCommand":"",
-"Algorithms": [
-                {"polytimos":"-k polytimos -I 20 -T"}
-              ]
-
+    "Path" : ".\\Bin\\AMD-sgminerPolytimos\\sgminer-polytimos\\sgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-sgminerPolytimos\\",
+    "Uri" : "https://github.com/polytimos/release/raw/master/sgminer-polytimos.zip",
+    "Types" : ["AMD"],
+    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API" : "Xgminer",
+    "APIPort" : 4028,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"polytimos":"-k polytimos -I 20 -T"}
+    ]
 }

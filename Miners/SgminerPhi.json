@@ -1,15 +1,15 @@
 {
-"Path" : ".\\Bin\\AMD-sgminerPhi\\sgminer.exe",
-"ExtractionPath" : ".\\Bin\\AMD-sgminerPhi\\",
-"Uri" : "https://github.com/yuzi-co/miners/releases/download/1/sgminer-phi-5.6.1-1-windows-amd64.zip",
-"Types" : ["AMD"],
-"Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-"API" : "Xgminer",
-"APIPort" : 4028,
-"Wrap" : false,
-"Dualmining":false,
-"PrelaunchCommand":"",
-"Algorithms": [
-                {"phi":"-k phi -I 20"}
-              ]
+    "Path" : ".\\Bin\\AMD-sgminerPhi\\sgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-sgminerPhi\\",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/sgminer-phi-5.6.1-1-windows-amd64.zip",
+    "Types" : ["AMD"],
+    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API" : "Xgminer",
+    "APIPort" : 4028,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"phi":"-k phi -I 20"}
+    ]
 }

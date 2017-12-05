@@ -1,19 +1,16 @@
 {
-"Path" : ".\\Bin\\NVIDIA-skunkkrnlx\\ccminer-x64-80.exe",
-"ExtractionPath" : ".\\Bin\\NVIDIA-skunkkrnlx\\",
-"Uri" : "http://ccminer.org/preview/ccminer-skunk-krnlx-80.7z",
-"Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
-"API" : "Ccminer",
-"APIPort" : 4068,
-"Wrap" : false,
-"Dualmining":false,
-"PrelaunchCommand":"",
-"Algorithms": [
+    "Path" : ".\\Bin\\NVIDIA-skunkkrnlx\\ccminer-x64-80.exe",
+    "ExtractionPath" : ".\\Bin\\NVIDIA-skunkkrnlx\\",
+    "Uri" : "http://ccminer.org/preview/ccminer-skunk-krnlx-80.7z",
+    "Types" : ["NVIDIA"],
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 #ALGORITHMPARAMETERS#",
+    "API" : "Ccminer",
+    "APIPort" : 4068,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
         {"timetravel":"-a timetravel"},
         {"bitcore":"-a bitcore"}
-
-
-              ]
-
+    ]
 }
