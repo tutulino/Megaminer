@@ -1,0 +1,15 @@
+﻿{
+    "Path" : ".\\Bin\\nheqminer\\Release\\nheqminer.exe",
+    "ExtractionPath" : ".\\Bin\\nheqminer\\",
+    "Uri" : "https://luckpool.org/static/nheqminer_v0.6a_x64_win.zip",
+    "Types" : ["CPU"],
+    "Arguments" : "-a 14000 -t 4 -l #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
+    "API" : "nicehashequihash",
+    "APIPort" : 14000,
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"equihash": ""}
+    ]
+}
