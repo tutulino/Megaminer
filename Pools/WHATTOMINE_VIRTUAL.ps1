@@ -14,19 +14,15 @@ param(
 )
 
 
-#. .\..\Include.ps1
+# . .\..\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $false
 $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
 $WalletMode = "MIXED"
+$UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
-
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
 
 
 if ($Querymode -eq "info") {
@@ -42,12 +38,6 @@ if ($Querymode -eq "info") {
 }
 
 
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
-
 if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
     $PoolRealName = $null
     switch ($info.AbbName) {
@@ -57,27 +47,11 @@ if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
         "WTM-FAIR" {$PoolRealName = 'FairPool'  }
         "WTM-MY" {$PoolRealName = 'MyPools'  }
     }
-
     if ($PoolRealName -ne $null) {
         $Info.poolname = $PoolRealName
         $result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $PoolRealName -Info $Info   | select-object Pool, currency, balance
     }
-
-
 }
-
-
-
-
-
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
-
-
-
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
@@ -85,12 +59,23 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
 
     #Manual Pools zone (you cand add your pools here - wallet for that coins must exists on config.txt)
-
     #$Pools +=[pscustomobject]@{"coin" = "PIRL";"algo"="Ethash"; "symbol"= "PIRL";"server"="pirl.minerpool.net"; "port"= "8004";"location"="US";"User"="XXX";"Pass" = "YYY";"fee"="0";"Abbname"="MinerP";"WalletMode"="NONE"}
 
-
     #Data from WTM
-    try {$WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins} catch { WRITE-HOST 'WTM API NOT RESPONDING...ABORTING'; EXIT}
+    $retries = 1
+    do {
+        try {
+            $http = "https://whattomine.com/coins.json"
+            $WTMResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins
+        } catch {start-sleep 2}
+        $retries++
+        if ($WTMResponse -eq $null -or $WTMResponse -eq "") {start-sleep 3}
+    } while ($WTMResponse -eq $null -and $retries -le 3)
+
+    if ($retries -gt 3) {
+        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+        Exit
+    }
 
     $WTMResponse.psobject.properties.name | ForEach-Object {
 
@@ -102,7 +87,34 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $TempCoin = $WTMResponse.($_)
             $WTMResponse |add-member $NewCoinName $TempCoin
         }
+    }
 
+    # Coin IDs from http://whattomine.com/calculators
+    $CustomCoins = @(201, 202, 209, 210, 213)
+    foreach ($c in $CustomCoins) {
+        Start-Sleep -Seconds 1
+        $retries = 1
+        do {
+            try {
+                $http = "http://whattomine.com/coins/$c.json"
+                $WTMCoinResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+            } catch {start-sleep 2}
+            $retries++
+            if ($WTMCoinResponse -eq $null -or $WTMCoinResponse -eq "") {start-sleep 3}
+        } while ($WTMCoinResponse -eq $null -and $retries -le 3)
+        if ($retries -gt 3) {
+            Write-Host $Name 'API NOT RESPONDING...SKIPPING COIN'
+        }
+
+        $WTMCoinResponse.algorithm = get-algo-unified-name ($WTMCoinResponse.algorithm)
+        #not necessary delete bad names/algo, only necessary add correct name/algo
+        $NewCoinName = get-coin-unified-name $WTMCoinResponse.name
+        if ($NewCoinName -ne $WTMCoinResponse.name) {
+            $TempCoin = $WTMCoinResponse
+            $WTMCoinResponse | add-member $NewCoinName $TempCoin
+        }
+        try { $WTMResponse | Add-Member $NewCoinName $WTMCoinResponse -Force } catch {}
+        remove-variable WTMCoinResponse
     }
 
     #search on pools where to mine coins, switch sentence determines order to look, if one pool has one coin, no more pools for that coin are searched after.
@@ -140,7 +152,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                     "WalletMode" = $_.WalletMode
                 }
             }
-
         }
         $PoolOrder++
     }
@@ -148,15 +159,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     #add estimation data to selected pools
 
     $Pools |ForEach-Object {
-
         $WTMFactor = get-WhattomineFactor ($_.Algo)
-
-
         if ($WTMFactor -ne $null) {
             $Estimate = [Double]($WTMResponse.($_.coin).btc_revenue / $WTMFactor)
             $Estimate24h = [Double]($WTMResponse.($_.coin).btc_revenue24 / $WTMFactor)
         }
-
 
         $Result += [PSCustomObject]@{
             Algorithm             = $_.Algo
@@ -178,23 +185,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             WalletMode            = $_.WalletMode
             Fee                   = $_.Fee
         }
-
     }
-
-
     remove-variable WTMResponse
     remove-variable Pools
     remove-variable WTMcoin
     remove-variable HPools
-
-
 }
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
-
 
 $Result |ConvertTo-Json | Set-Content ("$name.tmp")
 remove-variable Result

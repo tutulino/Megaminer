@@ -569,6 +569,8 @@ function get-algo-unified-name ([string]$Algo) {
         "dagger" {$Result = "Ethash"}
         "hashimoto" {$Result = "Ethash"}
         "skunkhash" {$Result = "skunk"}
+        "TimeTravel10" {$Result = "bitcore"}
+        "PHI1612" {$Result = "phi"}
     }
     $Result
 
@@ -788,10 +790,9 @@ function get-WhattomineFactor ([string]$Algo) {
         "Blake14r" {$WTMFactor = 4200000000}
         "Pascal" {$WTMFactor = 2070000000}
         "skunk" {$WTMFactor = 54000000}
+        "xevan" {$WTMFactor = 4800000}
+        "bitcore" {$WTMFactor = 30000000}
+        "EquihashZero" {$WTMFactor = 18}
     }
-
-
-
     $WTMFactor
-
 }
