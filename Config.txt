@@ -6,6 +6,10 @@
 
 @@CURRENCY=BTC
 
+--Local Currency showed on profits screen. (USD,EUR,GBP)
+
+@@LOCALCURRENCY=USD
+
 --Pool username for not anonymous pools like SprNova, BlocksFactory or MiningPoolHub
 
 @@USERNAME=ffwd

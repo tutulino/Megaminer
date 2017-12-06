@@ -22,7 +22,17 @@ if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY 
 
 #--------------Load config.txt file
 
-$Location = (Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} ) -replace '@@LOCATION=', ''
+$LocalCurrency = (Get-Content config.txt | Where-Object {$_ -like '@@LOCALCURRENCY=*'} ) -replace '@@LOCALCURRENCY=', ''
+if ($LocalCurrency.length -eq 0) {
+    #for old config.txt compatibility
+    switch ($location) {
+        'Europe' {$LocalCurrency = "EUR"}
+        'US' {$LocalCurrency = "USD"}
+        'ASIA' {$LocalCurrency = "USD"}
+        'GB' {$LocalCurrency = "GBP"}
+    }
+}
+
 $CoinsWallets = @{} #needed for anonymous pools load
 (Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*', '' | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0], ($_ -split "=")[1])}
 
@@ -210,25 +220,12 @@ if ($MiningMode -eq "manual") {
                             $_.Reward = [double]([double]$WtmCoin.estimated_rewards * ([double]$_.YourHashRate / [double]$WTMFactor))
                             $_.BtcProfit = [double]([double]$WtmCoin.Btc_revenue * ([double]$_.YourHashRate / [double]$WTMFactor))
                         }
-
                     }
-
                 }
 
-
-                if ($location -eq 'Europe') {$_.LocalProfit = [double]$CDKResponse.eur.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.eur.rate * [double]$_.BtcPrice}
-                if ($location -eq 'US' -or $location -eq 'ASIA') {$_.LocalProfit = [double]$CDKResponse.usd.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.usd.rate * [double]$_.BtcPrice}
-                if ($location -eq 'GB') {$_.LocalProfit = [double]$CDKResponse.gbp.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.gbp.rate * [double]$_.BtcPrice}
-
-
-
-
-
+                $_.LocalProfit = $CDKResponse.$LocalCurrency.rate_float * [double]$_.BtcProfit
+                $_.LocalPrice = $CDKResponse.$LocalCurrency.rate_float * [double]$_.BtcPrice
             }
-
-
-
-
         }
 
         Clear-Host
@@ -241,13 +238,9 @@ if ($MiningMode -eq "manual") {
 
         if ($SelectedPool.ApiData -eq $false) {write-host        ----POOL API NOT EXISTS, SOME DATA NOT AVAILABLE---}
 
-        switch ($location) {
-            'Europe' {$LabelPrice = "EurPrice"; $LabelProfit = "EurProfit" ; $localBTCvalue = [double]$CDKResponse.eur.rate}
-            'US' {$LabelPrice = "UsdPrice" ; $LabelProfit = "UsdProfit" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
-            'GB' {$LabelPrice = "GbpPrice" ; $LabelProfit = "GbpProfit" ; $localBTCvalue = [double]$CDKResponse.gbp.rate}
-
-        }
-
+        $LabelPrice = "$LocalCurrency"+"Price"
+        $LabelProfit = "$LocalCurrency"+"Profit"
+        $localBTCvalue = $CDKResponse.$LocalCurrency.rate_float
 
 
         $CoinsPool  | Format-Table -Wrap (
