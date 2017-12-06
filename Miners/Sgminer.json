@@ -15,6 +15,6 @@
         {"blake":"-k blake"},
         {"keccak":"-k maxcoin -g 2 -I 10"},
         {"x11gost":"-k sibcoin-mod -g 2 -w 128 -I 20"},
-        {"lyra2v2":"-k lyra2rev2 -g 2 -w 64 -I d"}
+        {"lyra2v2":"-k lyra2rev2 -g 2 -w 64 -I 16"}
     ]
 }
