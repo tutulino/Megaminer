@@ -8,7 +8,7 @@
 #. .\..\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
-$ActiveOnManualMode    = $true
+$ActiveOnManualMode    = $false
 $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
 $AbbName = 'AHASH'
@@ -112,7 +112,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Host          = $_.name + ".mine.ahashpool.com"
                                 Port          = $coin.port
                                 User          = $CoinsWallets.get_item("BTC")
-                                Pass          = "c=BTC,$WorkerName,stats"
+                                Pass          = "c=BTC,$WorkerName"
                                 Location      = 'US'
                                 SSL           = $false
                                 Symbol        = $null

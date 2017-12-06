@@ -294,6 +294,8 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 4.8
 
 *Upgrade Dtsm-equihash to 0.5.6
+*Upgrade ccminer-tpruvot to 2.2.3
 *Excluded Blake2b for MPH due to different stratum protocol
 *Removed X13,X15,qubit algos: ASICS territory now.
 *Added option for set a exclusive nicehash wallet on config.txt
+*Added option for set local currency on config.txt (if not specified location is used)

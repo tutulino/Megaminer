@@ -160,8 +160,16 @@ while ($true) {
     $Currency=(Get-Content config.txt | Where-Object {$_ -like '@@CURRENCY=*'} )-replace '@@CURRENCY=',''
     $GpuPlatform=(Get-Content config.txt | Where-Object {$_ -like '@@GPUPLATFORM=*'} )-replace '@@GPUPLATFORM=',''
     $BechmarkintervalTime=(Get-Content config.txt | Where-Object {$_ -like '@@BENCHMARKTIME=*'} )-replace '@@BENCHMARKTIME=',''
+    $LocalCurrency=(Get-Content config.txt | Where-Object {$_ -like '@@LOCALCURRENCY=*'} )-replace '@@LOCALCURRENCY=',''
+    if ($LocalCurrency.length -eq 0) { #for old config.txt compatibility
+        switch ($location) {
+            'Europe' {$LocalCurrency="EURO"}
+            'US'     {$LocalCurrency="DOLLAR"}
+            'ASIA'   {$LocalCurrency="DOLLAR"}
+            'GB'     {$LocalCurrency="GBP"}
+            }
+        }
     
-
 
     #Donation
     $LastIntervalTime= (get-date) - $IntervalStartAt
@@ -177,11 +185,14 @@ while ($true) {
                 $DonationInterval = $true
                 $UserName = "tutulino"
                 $WorkerName = "Megaminer"
+                $CoinsWallets=@{} 
+                $CoinsWallets.add("BTC","1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM")
                 
+
                 $NextInterval=$DonateTime *60
 
                 $Algorithm=$null
-                $PoolsName="Mining_pool_Hub"
+                $PoolsName="Nicehash"
                 $CoinsName=$null
                 $MiningMode="Automatic"
 
@@ -588,11 +599,10 @@ while ($true) {
                 "COINDESK API NOT RESPONDING, NOT POSSIBLE LOCAL COIN CONVERSION" | Out-host 
                 }
                 
-                switch ($location) {
-                    'Europe' {$LabelProfit="EUR/Day" ; $localBTCvalue = [double]$CDKResponse.eur.rate}
-                    'US'     {$LabelProfit="USD/Day" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
-                    'ASIA'   {$LabelProfit="USD/Day" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
-                    'GB'     {$LabelProfit="GBP/Day" ; $localBTCvalue = [double]$CDKResponse.gbp.rate}
+                switch ($LocalCurrency) {
+                    'EURO' {$LabelProfit="EUR/Day" ; $localBTCvalue = [double]$CDKResponse.eur.rate}
+                    'DOLLAR'     {$LabelProfit="USD/Day" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
+                    'GBP'     {$LabelProfit="GBP/Day" ; $localBTCvalue = [double]$CDKResponse.gbp.rate}
 
                 }
 

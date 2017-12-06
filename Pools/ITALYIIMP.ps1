@@ -118,7 +118,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                                     Host = "italyiimp.com"
                                                     Port = $Ita_Request.$_.port
                                                     User = $CoinsWallets.get_item($Currency)
-                                                    Pass = "c=$Currency,$WorkerName,stats"
+                                                    Pass = "c=$Currency,$WorkerName "
                                                     Location = "US"
                                                     SSL = $false
                                                     AbbName = $AbbName

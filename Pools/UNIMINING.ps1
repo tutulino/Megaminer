@@ -118,7 +118,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Host          = "pool.unimining.net"
                                 Port          = $coin.port
                                 User          = $CoinsWallets.get_item($Uni_Simbol)
-                                Pass          = "c=$Uni_symbol,ID=$WorkerName,stats"
+                                Pass          = "c=$Uni_symbol,ID=$WorkerName"
                                 Location      = 'US'
                                 SSL           = $false
                                 Symbol        = $Uni_Simbol
