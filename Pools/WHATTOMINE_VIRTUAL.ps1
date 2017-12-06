@@ -90,9 +90,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
 
     # Coin IDs from http://whattomine.com/calculators
-    $CustomCoins = @(201, 202, 209, 210, 213)
+    $CustomCoins = @(192, 210, 213)
     foreach ($c in $CustomCoins) {
-        Start-Sleep -Seconds 1
+        # Start-Sleep -Seconds 1
         $retries = 1
         do {
             try {

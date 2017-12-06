@@ -54,6 +54,7 @@
 @@WALLET_PASL=3GhhbotqzjTq9mpXabpzqw4WLCZVp2SFG2CVs6Jfox4t3jCBgvAq92wiTVUEE5mCniN2zNDwhEZteq8QTk3cU7hHK6H6Jr3Aecpm1c
 @@WALLET_SUMO=Sumoo32iRyQi9saNjaW7hcL7jbxe7pQmh8Vvuzy5M5uuYdnscDiSqrwFFckdFc9TuhW1PFJ46Q6NM9gpbGzdJLpCBkC3cw3RhC6
 @@WALLET_KRB=KiKUUqi56RseQRp5Bh3FToeZNmw1Bnx9dPqDf9zsyxD9LgMyEUhypKmc7DdNmiQH8SLCLkNZcVzkJbJRMKNAxyWe9vYcckd
+@@WALLET_AEON=WmspZbxNAYubNL53fUfVuBSk3Eo3GzgKqbeEeC1Fq4QdEiQhQFE4so5CjkhDS8kRxGBesfRwGiSmDRPRKWvVVvqf2kNZdeguY
 
 -- API Keys, Non Anonymous pools (Suprnova, MPH) requires api key to get wallets info (format @@APIKEY_NAMEOFPOOL=XXXXXXXXXX)
 

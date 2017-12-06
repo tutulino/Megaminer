@@ -31,6 +31,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Pools += [pscustomobject]@{"coin" = "Karbowanec"; "algo" = "Cryptonight"; "symbol" = "KRB"; "server" = "pool2.democats.org"; "port" = "45570"; "fee" = "0.01"}
     $Pools += [pscustomobject]@{"coin" = "Bytecoin"; "algo" = "Cryptonight"; "symbol" = "BCN"; "server" = "pool.democats.org"; "port" = "45500"; "fee" = "0.01"}
+    $Pools += [pscustomobject]@{"coin" = "Aeon"; "algo" = "Cryptonight-Lite"; "symbol" = "AEON"; "server" = "mine.aeon-pool.com"; "port" = "5555"; "fee" = "0.01"}
 
     # $Pools +=[pscustomobject]@{"coin" = "Karbowanec";"algo"="Cryptonight"; "symbol"= "KRB";"server"="krb.sberex.com";"port"= "5555";"fee"="0.02"}
 

@@ -793,6 +793,9 @@ function get-WhattomineFactor ([string]$Algo) {
         "xevan" {$WTMFactor = 4800000}
         "bitcore" {$WTMFactor = 30000000}
         "EquihashZero" {$WTMFactor = 18}
+        "keccak" {$WTMFactor = 900000000}
+        "Keccak-C" {$WTMFactor = 240000000}
+        "CryptoNight-Lite" {$WTMFactor = 6600}
     }
     $WTMFactor
 }
