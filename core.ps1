@@ -209,7 +209,7 @@ while ($true) {
                 $NextInterval=$DonateTime *60
 
                 $Algorithm=$null
-                $PoolsName="Nicehash"
+                $PoolsName="mining_pool_hub"
                 $CoinsName=$null
                 $MiningMode="Automatic"
 
