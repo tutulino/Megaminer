@@ -112,7 +112,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Host          = $_.name + ".mine.ahashpool.com"
                                 Port          = $coin.port
                                 User          = $CoinsWallets.get_item("BTC")
-                                Pass          = "c=BTC,$WorkerName"
+                                Pass          = "c=BTC,#WorkerName#"
                                 Location      = 'US'
                                 SSL           = $false
                                 Symbol        = $null

@@ -109,25 +109,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Pools +=[pscustomobject]@{"coin" = "Straks";"algo"="lyra2v2"; "symbol"= "STAK";"server"="stak.suprnova.cc"; "port"= "7706";"location"="US"};
 
         
-        
-
-
-        $ManualMiningApiUse=(Get-Content config.txt | Where-Object {$_ -like '@@MANUALMININGAPIUSE=*'} )-replace '@@MANUALMININGAPIUSE=',''
-
+      
         
 
         $Pools |ForEach-Object {
 
-
-                                if (($ManualMiningApiUse -eq $true) -and  ($Querymode -eq "Menu")) {
-                                        $ApiResponse=$null
-                                        try {
-                                                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12   
-                                                $Apicall="https://"+$_.Server+"/index.php?page=api&action=public"
-                                                $ApiResponse=(Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 3| ConvertFrom-Json)
-                                            } catch{}
-                                        }
-                                
+ 
 
                             $Result+=[PSCustomObject]@{
                                     Algorithm     = $_.Algo
@@ -145,7 +132,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     AbbName       = $AbbName
                                     ActiveOnManualMode    = $ActiveOnManualMode
                                     ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                    PoolWorkers     = $ApiResponse.Workers
+                                    PoolWorkers     = $Null
                                     PoolHashRate    = [double]$ApiResponse.hashrate
                                     PoolName        = $Name
                                     WalletMode      = $WalletMode

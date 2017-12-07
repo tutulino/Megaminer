@@ -122,7 +122,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             Protocol      = "stratum+tcp"
                                             Host          = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
                                             Port          = $MiningPoolHub_Port
-                                            User          = "$UserName.$WorkerName"
+                                            User          = "$UserName.#WorkerName#"
                                             Pass          = "x"
                                             Location      = $Location
                                             SSL           = $false

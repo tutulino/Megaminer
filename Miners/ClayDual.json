@@ -1,0 +1,53 @@
+{
+"Path" : ".\\Bin\\Ethash-Claymore\\EthDcrMiner64.exe",
+"ExtractionPath" : ".\\Bin\\Ethash-Claymore\\",
+"Uri" : "https://github.com/tutulino/Claymore-Dual/releases/download/10.0/Claymore-Dual10.zip",
+"Types" : ["NVIDIA"],
+"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL# -wd 1 -di #DEVICESCLAYMODE# -mport #APIPORT# #ALGORITHMPARAMETERS#",
+"API" : "Claymore",
+"Wrap" : false,
+"DualMining": true,
+"Fee" : "0.02",
+"DualMiningMainCoin": "Ethereum",
+"PrelaunchCommand":"",
+"Algorithms": [
+                {"Ethash_Blake2b":" -dcoin sc -dcri 40"},
+                {"Ethash_Blake2b":" -dcoin sc -dcri 60"},
+                {"Ethash_Blake2b":" -dcoin sc -dcri 80"},
+                {"Ethash_Blake2b":" -dcoin sc -dcri 100"},
+                {"Ethash_Blake2b":" -dcoin sc -dcri 120"},
+                {"Ethash_Blake2b":" -dcoin sc -dcri 140"},
+                {"Ethash_Blake2b":" -dcoin sc -dcri 160"},
+
+
+
+                {"Ethash_Blake14r":" -dcoin dcr -dcri 40"},
+                {"Ethash_Blake14r":" -dcoin dcr -dcri 60"},
+                {"Ethash_Blake14r":" -dcoin dcr -dcri 80"},
+                {"Ethash_Blake14r":" -dcoin dcr -dcri 100"},
+                {"Ethash_Blake14r":" -dcoin dcr -dcri 120"},
+                {"Ethash_Blake14r":" -dcoin dcr -dcri 140"},
+                {"Ethash_Blake14r":" -dcoin dcr -dcri 160"},
+
+
+                {"Ethash_Pascal":" -dcoin pasc -dcri 40"},
+                {"Ethash_Pascal":" -dcoin pasc -dcri 60"},
+                {"Ethash_Pascal":" -dcoin pasc -dcri 80"},
+                {"Ethash_Pascal":" -dcoin pasc -dcri 100"},
+                {"Ethash_Pascal":" -dcoin pasc -dcri 120"},
+                {"Ethash_Pascal":" -dcoin pasc -dcri 140"},
+                {"Ethash_Pascal":" -dcoin pasc -dcri 160"},
+
+
+                {"Ethash_Lbry":" -dcoin lbc -dcri 40"},
+                {"Ethash_Lbry":" -dcoin lbc -dcri 60"},
+                {"Ethash_Lbry":" -dcoin lbc -dcri 80"},
+                {"Ethash_Lbry":" -dcoin lbc -dcri 100"},
+                {"Ethash_Lbry":" -dcoin lbc -dcri 120"},
+                {"Ethash_Lbry":" -dcoin lbc -dcri 140"},
+                {"Ethash_Lbry":" -dcoin lbc -dcri 160"}
+                
+              ]
+
+}
+

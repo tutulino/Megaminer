@@ -52,7 +52,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     Protocol      = "stratum+tcp"
                                     Host          = $_.Server
                                     Port          = $_.Port
-                                    User          = "$Username.$WorkerName"
+                                    User          = "$Username.#WorkerName#"
                                     Pass          = "x"
                                     Location      = $_.Location
                                     SSL           = $false

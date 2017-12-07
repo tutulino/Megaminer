@@ -10,25 +10,13 @@
 
 @@LOCALCURRENCY=EURO
 
---Pool username for not anonymous pools like SprNova, BlocksFactory or MiningPoolHub
-
-@@USERNAME=tutulino
-
--- Time in seconds for recheck profit and select more profitable algorithm (less than 600 not recommended)
-
-@@INTERVAL=600
-
--- Only NVIDIA tested, AMD must work, but not tested (for mixed rig set AMD,NVIDIA)
-
-@@TYPE=NVIDIA
-
 -- Location of your rig: EUROPE/US/ASIA/GB  (some pool may have no desired location, US will be selected then)
 
 @@LOCATION=EUROPE
 
--- Enabled or disabled call to apis (pools and traders) to help on manual coin selection, some pools has slow response and must delay show prompt to user
+-- Time in seconds for recheck profit and select more profitable algorithm (less than 600 not recommended)
 
-@@MANUALMININGAPIUSE=TRUE
+@@INTERVAL=600
 
 
 -- Screen to be shown at start of program (WALLETS/CURRENT/HISTORY/PROFITS)
@@ -39,10 +27,9 @@
 
 @@BENCHMARKTIME=200
 
+--Pool username for not anonymous pools like SprNova, BlocksFactory or MiningPoolHub
 
--- Gpu Platform, some miners (sgminer and prospector) needs specify gpu platform, usually this value is 0,1 (you must try, no automatic detection)
-
-@@GPUPLATFORM=1
+@@USERNAME=tutulino
 
 
 -- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX (XXX=currency symbol)
@@ -56,6 +43,16 @@
 
 @@APIKEY_MINING_POOL_HUB=a04e6330b38f7387833434ae40775f70eff6582e8ec37600216757554887ccbd36b4510b4
 @@APIKEY_SUPRNOVA=cd03834069c3314bb6d88d333408bc4342a51ec1d45f90577742e4e5275744a402e4afed
+
+
+-- Gpu Groups, you can group your cards as you want, my recomendation is a group for each model of card on your rig. Each group will be bechmarking and running separately
+-- You can identify your GPU platform and card id launching GpuList.bat 
+-- If you change this groups you must delete stats folder content for becnchmark run again
+-- Type must be NVIDIA or AMD 
+-- Example for rig with 5 nvidia identical cards @@GPUGROUPS=[{"GroupName" : "Rig1070","Type":"NVIDIA","GpuPlatform":"0","Gpus":"0,1,2,3,4"}]
+-- Example for rig with  7 nvidia (5x1080,2x1060) @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","GpuPlatform":"0","Gpus":"0,1,2,3,4"} , {"GroupName" : "1060","Type":"NVIDIA","GpuPlatform":"0","Gpus":"5,6"} ]
+
+@@GPUGROUPS=[{"GroupName" : "AllRig","Type":"NVIDIA","GpuPlatform":"0","Gpus":"0,1,2,3,4,5,6,7"}]
 
 
 -- Number of minutes each day (NOT PERCENT) of donation

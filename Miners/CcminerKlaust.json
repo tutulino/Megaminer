@@ -3,9 +3,8 @@
 "ExtractionPath" : ".\\Bin\\NVIDIA-CcminerKlaust\\",
 "Uri" : "https://github.com/KlausT/ccminer/releases/download/8.15/ccminer-815-cuda9-x64.zip",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R10 -r 4 #ALGORITHMPARAMETERS#",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
 "API" : "Ccminer",
-"APIPort" : 4068,
 "Wrap" : false,
 "Dualmining":false,
 "PrelaunchCommand":"",
@@ -14,7 +13,7 @@
                 {"sib" : "-a sib"},
                 {"blake2b":"-a sia"},
                 {"Myriad-Groestl" : "-a myr-gr"},
-
+                {"Keccak" : "-a Keccak"},
                 {"Neoscrypt":"-a Neoscrypt"}
                 
               ]

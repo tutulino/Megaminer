@@ -98,7 +98,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             Host          = "mine.zpool.ca"
                                             Port          = $coin.port
                                             User          = $CoinsWallets.get_item($Currency)
-                                            Pass          = "c=$Currency,$WorkerName"
+                                            Pass          = "c=$Currency,#Workername#"
                                             Location      = "US"
                                             SSL           = $false
                                             Symbol        = $null

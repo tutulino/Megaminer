@@ -116,7 +116,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         Protocol      = "stratum+tcp"
                                         Host          = ($_.name)+"."+$location.NhLocation+".nicehash.com"
                                         Port          = $_.port
-                                        User          = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')})+'.'+$Workername
+                                        User          = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')})+'.'+"#WorkerName#"
                                         Pass          = "x"
                                         Location      = $location.MMLocation
                                         SSL           = $false

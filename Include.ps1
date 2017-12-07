@@ -432,40 +432,6 @@ function Get-Pools {
 
  }
 
-#************************************************************************************************************************************************************************************
-#************************************************************************************************************************************************************************************
-#************************************************************************************************************************************************************************************
-
- 
-function Get-Best-Hashrate-Algo {
-    param(
-        [Parameter(Mandatory = $true)]
-        [String]$Algorithm
-    )
-
-
-    $Pattern="*_"+$Algorithm+"_HashRate.txt"
-
-    $Besthashrate=0
-
-    Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -like $Pattern | ForEach-Object {
-              $Content= ($_ | Get-Content | ConvertFrom-Json)
-              $Hrs=0
-              if ($content -ne $null) {$Hrs = [double]($Content[0])}
-
-              if ($Hrs -gt $Besthashrate) {
-                      $Besthashrate=$Hrs
-                      $Miner= ($_.pschildname -split '_')[0]
-                      }
-            $Return=[pscustomobject]@{
-                            Hashrate=$Besthashrate
-                            Miner=$Miner
-                          }
-
-      }
-
-    $Return
-}
 
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
@@ -598,12 +564,16 @@ function Get-Hashrates  {
         [Parameter(Mandatory = $true)]
         [String]$Algorithm,
         [Parameter(Mandatory = $true)]
-        [String]$MinerName
+        [String]$MinerName,
+        [Parameter(Mandatory = $true)]
+        [String]$GroupName
+        
 
     )
 
+    $Hrs=$null
 
-    $Pattern=$MinerName+"_"+$Algorithm+"_HashRate.txt"
+    $Pattern=$MinerName+"_"+$Algorithm+"_"+$GroupName+"_HashRate.txt"
 
     try {$Content=(Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {$Content=$null}
     
@@ -624,6 +594,8 @@ function Set-Hashrates {
         [Parameter(Mandatory = $true)]
         [String]$MinerName,
         [Parameter(Mandatory = $true)]
+        [String]$GroupName,
+        [Parameter(Mandatory = $true)]
         [long]$Value,
         [Parameter(Mandatory = $true)]
         [long]$ValueDual
@@ -631,7 +603,7 @@ function Set-Hashrates {
     )
 
 
-    $Path=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_HashRate.txt"
+    $Path=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_"+$GroupName+"_HashRate.txt"
 
     $Array=$Value,$valueDual
     $Array | Convertto-Json | Set-Content  -Path $Path

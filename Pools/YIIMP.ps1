@@ -92,7 +92,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Host          = $_.server
                                 Port          = $_.port
                                 User          = $CoinsWallets.get_item($Yiimp_symbol)
-                                Pass          = "c=$Yiimp_symbol,ID=$WorkerName"
+                                Pass          = "c=$Yiimp_symbol,ID=#WorkerName#"
                                 Location      = $_.location
                                 SSL           = $false
                                 Symbol        = $Yiimp_Symbol

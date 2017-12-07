@@ -24,19 +24,8 @@ if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY 
 
 $Location=(Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} )-replace '@@LOCATION=',''
 
-$LocalCurrency=(Get-Content config.txt | Where-Object {$_ -like '@@LOCALCURRENCY=*'} )-replace '@@LOCALCURRENCY=',''
-if ($LocalCurrency.length -eq 0) { #for old config.txt compatibility
-    switch ($location) {
-        'Europe' {$LocalCurrency="EURO"}
-        'US'     {$LocalCurrency="DOLLAR"}
-        'ASIA'   {$LocalCurrency="DOLLAR"}
-        'GB'     {$LocalCurrency="GBP"}
-        }
-    }
-
 $CoinsWallets=@{} #needed for anonymous pools load
      (Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','' | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
-
 
 $SelectedOption=""
 
@@ -153,100 +142,13 @@ if ($MiningMode -eq "manual"){
                     $CoinsPool=Get-Pools -Querymode "Menu" -PoolsFilterList $PoolsName -location $Location |Select-Object info,symbol,algorithm,Workers,PoolHashRate,Blocks_24h -unique | Sort-Object info
 
                     $CoinsPool | Add-Member Option "0"
-                    $CoinsPool | Add-Member YourHashRate ([Double]0.0)
-                    $CoinsPool | Add-Member BTCPrice ([Double]0.0)
-                    $CoinsPool | Add-Member BTCChange24h ([Double]0.0)
-                    $CoinsPool | Add-Member DiffChange24h ([Double]0.0)
-                    $CoinsPool | Add-Member Reward ([Double]0.0)
-                    $CoinsPool | Add-Member BtcProfit ([Double]0.0)
-                    $CoinsPool | Add-Member LocalProfit ([Double]0.0)
-                    $CoinsPool | Add-Member LocalPrice ([Double]0.0)
-                    
-                    
-                    
-                    $ManualMiningApiUse=(Get-Content config.txt | Where-Object {$_ -like '@@MANUALMININGAPIUSE=*'} )-replace '@@MANUALMININGAPIUSE=',''    
-                
-                
-                    
-
-                    if ($ManualMiningApiUse -eq $true){
-                                        try {
-                                                write-host CALLING WHATTOMINE API.........    
-                                                $WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing -TimeoutSec 3 | ConvertFrom-Json | Select-Object -ExpandProperty coins
-                                                write-host CALLING BITTREX API............
-                                                $BTXResponse = (Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -TimeoutSec 5| ConvertFrom-Json|Select-Object -ExpandProperty result)  
-                                                write-host CALLING COINDESK API............
-                                                $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing -TimeoutSec 3 | ConvertFrom-Json | Select-Object -ExpandProperty BPI
-                                            } catch{}
-                                } 
-
-                                
 
                     $Counter = 0
                     $CoinsPool | ForEach-Object {
-
                                                 $_.Option=$Counter                                                                
                                                 $counter++
-                                                $_.YourHashRate=(Get-Best-Hashrate-Algo $_.Algorithm).hashrate
-
-                                                if ($ManualMiningApiUse -eq $true -and $_.symbol -ne "" -and $_.symbol -ne $null){
-
-                                                                #Get data from bittrex global api call
-                                                                if ($BTXResponse -ne $null) {
-                                                                                            foreach ($BtxCoin in $BTXResponse)
-                                                                                                     {if ($BtxCoin.marketname -eq ("btc-"+$_.symbol)) {  $_.BTCPrice=$BtxCoin.Last}}
-                                                                                            }
-
-                                                               
-                                                                #If no data try with CRYPTOPIA                                    
-                                                                if ($_.BTCPrice -eq 0){
-                                                                                        $ApiResponse = $null
-                                                                                        "CALLING CRYPTOPIA API........"+$_.symbol+"_BTC" | out-Host
-                                                                                        try {
-                                                                                                $Apicall="https://www.cryptopia.co.nz/api/GetMarket/"+$_.symbol+'_BTC'
-                                                                                                $ApiResponse=(Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 2| ConvertFrom-Json|Select-Object -ExpandProperty data)
-                                                                                            } catch{}
-                                                                                        
-                                                                                        if ($ApiResponse -ne $null) {
-                                                                                                                    $_.BTCPrice=$ApiResponse.LastPrice
-                                                                                                                    #$_.BTCChange24h=$ApiResponse.Change
-                                                                                                                    }
-                                                                                    }
-                                                                
-                                                                
-                                                                #Data from WTM
-                                                                    if ($WTMResponse -ne $null) {
-                                                                                $WtmCoin=$WTMResponse.($_.Info)
-                                                                                if ($WtmCoin -ne $null)
-                                                                                    {
-                                                                                   
-                                                                                    if ($WtmCoin.difficulty24 -ne 0)  {$_.DiffChange24h=(1-($WtmCoin.difficulty/$WtmCoin.difficulty24))*100}
-                                                                                    $WTMFactor = get-WhattomineFactor ($_.Algo)
-
-                                                                                    if ($WTMFactor -ne $null) {
-                                                                                                    $_.Reward=[double]([double]$WtmCoin.estimated_rewards * ([double]$_.YourHashRate/[double]$WTMFactor))
-                                                                                                    $_.BtcProfit=[double]([double]$WtmCoin.Btc_revenue * ([double]$_.YourHashRate/[double]$WTMFactor))
-                                                                                                    }
-
-                                                                                    }
-
-                                                                                }
-                                                                 
-
-                                                                    if ($localCurrency -eq 'EURO') {$_.LocalProfit = [double]$CDKResponse.eur.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.eur.rate * [double]$_.BtcPrice}
-                                                                    if ($localCurrency -eq 'DOLLAR' -or $location -eq 'ASIA')     {$_.LocalProfit = [double]$CDKResponse.usd.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.usd.rate * [double]$_.BtcPrice}
-                                                                    if ($localCurrency -eq 'GBP')     {$_.LocalProfit = [double]$CDKResponse.gbp.rate * [double]$_.BtcProfit; $_.LocalPrice = [double]$CDKResponse.gbp.rate * [double]$_.BtcPrice}
-                                            
-                                                                    
-                                                                                                                            
-                                                                 
-
-                                                                }
-                                                                     
-                                                                
-
-                                              
-                                             }
+                  
+                                                }
                     
                     Clear-Host
                     write-host ....................................................................................................
@@ -254,34 +156,12 @@ if ($MiningMode -eq "manual"){
                     write-host ....................................................................................................
 
                     #Only one pool is allowed in manual mode at this point
-                    $SelectedPool=$Pools | where name -eq $PoolsName
-                    
-                    if ($SelectedPool.ApiData -eq $false)  {write-host        ----POOL API NOT EXISTS, SOME DATA NOT AVAILABLE---}
-
-                    switch ($localCurrency) {
-                        'Euro' {$LabelPrice="EurPrice"; $LabelProfit="EurProfit" ; $localBTCvalue = [double]$CDKResponse.eur.rate}
-                        'dollar'     {$LabelPrice="UsdPrice" ; $LabelProfit="UsdProfit" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
-                        'GBP'     {$LabelPrice="GbpPrice" ; $LabelProfit="GbpProfit" ; $localBTCvalue = [double]$CDKResponse.gbp.rate}
-
-                       }
-
-                 
 
                     $CoinsPool  | Format-Table -Wrap (
                                 @{Label = "Opt."; Expression = {$_.Option}; Align = 'right'} ,
                                 @{Label = "Name"; Expression = {$_.info.toupper()}; Align = 'left'} ,
                                 @{Label = "Symbol"; Expression = {$_.symbol}; Align = 'left'},   
-                                @{Label = "Algorithm"; Expression = {$_.algorithm.tolower()}; Align = 'left'},
-                                @{Label = "Workers"; Expression = {$_.Workers}; Align = 'right'},   
-                                #@{Label = "PoolHash"; Expression = {"$($_.PoolHashRate | ConvertTo-Hash)/s"}; Align = 'right'},   
-                                @{Label = "HashRate"; Expression = {(ConvertTo-Hash ($_.YourHashRate))+"/s"}; Align = 'right'},   
-                                #@{Label = "Blocks_24h"; Expression = {$_.Blocks_24h}; Align = 'right'},
-                                @{Label = "BTCPrice"; Expression = {[math]::Round($_.BTCPrice,6)}; Align = 'right'},
-                                @{Label = $LabelPrice; Expression = { [math]::Round($_.LocalPrice,2)}; Align = 'right'},
-                                #@{Label = "DiffChange24h"; Expression = {([math]::Round($_.DiffChange24h,1)).ToString()+'%'}; Align = 'right'},
-                                @{Label = "Reward"; Expression = {([math]::Round($_.Reward,3))}; Align = 'right'},
-                                @{Label = "BtcProfit"; Expression = {([math]::Round($_.BtcProfit,6))}; Align = 'right'},
-                                @{Label = $LabelProfit; Expression = {[math]::Round($_.LocalProfit,2)}; Align = 'right'}
+                                @{Label = "Algorithm"; Expression = {$_.algorithm.tolower()}; Align = 'left'}
                                 )  | out-host        
             
 
