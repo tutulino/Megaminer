@@ -28,14 +28,14 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
 ---- ALGOS/COINS SUPORTED (NVIDIA) -------------------------------
 
 **Mining Pool Hub, Yiimp, ZPOOL, AhashPool, Unimining, Italyiimp Nicehash and Hash Refinery (must be suported by pool)
-   skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, Myriad-Groestl, Lyra2v2, 
-   Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, Qubit , X13, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
-   cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r, PHI, HSR
+   skunk, jha, Blakecoin, c11, Groestl, veltor, blake, equihash, skein, sib, neoscrypt, lbry, Myriad-Groestl, Lyra2v2, 
+   Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
+   cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r, PHI, HSR, xevan
 
 **SUPRNOVA
    DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), ZCASH(ZEC),
    ZENCASH (ZEN), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB), SIBCOIN (SIB) ,UBIQ (UBQ), EXPANSE (EXP),
-   BITSEND (BSD),ELECTRONEUM (ETN),SMARTCASH (SMART),BITCOINZ (BTCZ),BITCOIN GOLD (BCG)
+   BITSEND (BSD),ELECTRONEUM (ETN),SMARTCASH (SMART),BITCOINZ (BTCZ),BITCOIN GOLD (BCG),STACKS (STACK), POLYTMOS (POLY)
 
 
 **BLOCKSFACTORY
@@ -73,8 +73,8 @@ Default donation is 5 minutes each day on automatic pools, you can change it at 
 ---- UPGRADE PROCEDURE ------------------------------------
 
 Safest way is download new software and copy from old version "stats" folders and "config.txt" file.
-If new verson haven´t miners update you can copy "bin" folder
-If there is a new version on some miner is recomended delete hasrate.txt files of that miner on miners folder to force benchmark again.
+If new verson has no miners update you can copy "bin" folder
+If there is a new miner version is recomended delete miner_algo_hashrate.txt files on miners folder to force benchmark again.
 
 
 -------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -----------
@@ -117,6 +117,8 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Miners and Pools fees are included in profit calculation
 
+-For mixed rigs (or for testing purpose on same cards rigs) you can group your cards allowing each group work at its best algo and difficulty
+
 
 
 ----- DISCLAIMER ---- ------------------------------------------
@@ -139,7 +141,7 @@ Local Currency exchange rate to BTC is taken from Coindesk, Local currency profi
 Based 70% on aaronsace, 30% is mine (aprox.) Donations to
 
 *Aaronsace - 1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH
-*Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+*Tutulino (Me)  - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 
 
