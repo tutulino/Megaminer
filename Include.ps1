@@ -1,8 +1,4 @@
-﻿
-
-
-
-function Get-Live-HashRate {
+﻿function Get-Live-HashRate {
     param(
         [Parameter(Mandatory = $true)]
         [String]$API,
@@ -26,11 +22,6 @@ function Get-Live-HashRate {
         switch ($API) {
 
             "Dtsm" {
-
-
-
-
-
                 $Client = New-Object System.Net.Sockets.TcpClient $server, $port
                 $Writer = New-Object System.IO.StreamWriter $Client.GetStream()
                 $Reader = New-Object System.IO.StreamReader $Client.GetStream()
@@ -42,14 +33,10 @@ function Get-Live-HashRate {
                 $Data = $Request | ConvertFrom-Json | Select-Object  -ExpandProperty result
 
                 $HashRate = [Double](($Data.sol_ps) | Measure-Object -Sum).Sum
-
-
-
-
             }
+
             "xgminer" {
                 $Message = @{command = "summary"; parameter = ""} | ConvertTo-Json -Compress
-
 
                 $Client = New-Object System.Net.Sockets.TcpClient $server, $port
                 $Writer = New-Object System.IO.StreamWriter $Client.GetStream()
@@ -76,11 +63,10 @@ function Get-Live-HashRate {
                     elseif ($Data.SUMMARY.THS_av -ne $null) {[Double]$Data.SUMMARY.THS_av * [Math]::Pow($Multiplier, 4)}
                     elseif ($Data.SUMMARY.PHS_av -ne $null) {[Double]$Data.SUMMARY.PHS_av * [Math]::Pow($Multiplier, 5)}
                 }
-
             }
+
             "ccminer" {
                 $Message = "summary"
-
 
                 $Client = New-Object System.Net.Sockets.TcpClient $server, $port
                 $Writer = New-Object System.IO.StreamWriter $Client.GetStream()
@@ -93,12 +79,8 @@ function Get-Live-HashRate {
                 $Data = $Request -split ";" | ConvertFrom-StringData
 
                 $HashRate = if ([Double]$Data.KHS -ne 0 -or [Double]$Data.ACC -ne 0) {[Double]$Data.KHS * $Multiplier}
-
-
-
-
-
             }
+
             "nicehashequihash" {
                 $Message = "status"
 
@@ -118,6 +100,7 @@ function Get-Live-HashRate {
                 if ($HashRate -eq $null) {$HashRate = $Data.result.speed_sps}
 
             }
+
             "excavator" {
                 $Message = @{id = 1; method = "algorithm.list"; params = @()} | ConvertTo-Json -Compress
 
@@ -132,10 +115,9 @@ function Get-Live-HashRate {
 
                 $Data = ($Request | ConvertFrom-Json).Algorithms
 
-
                 $HashRate = [Double](($Data.workers.speed) | Measure-Object -Sum).Sum
-
             }
+
             "ewbf" {
                 $Message = @{id = 1; method = "getstat"} | ConvertTo-Json -Compress
 
@@ -144,7 +126,6 @@ function Get-Live-HashRate {
                 $Reader = New-Object System.IO.StreamReader $Client.GetStream()
                 $Writer.AutoFlush = $true
 
-
                 $Writer.WriteLine($Message)
                 $Request = $Reader.ReadLine()
 
@@ -152,28 +133,22 @@ function Get-Live-HashRate {
 
                 $HashRate = [Double](($Data.result.speed_sps) | Measure-Object -Sum).Sum
             }
-            "claymore" {
 
+            "claymore" {
                 $Request = Invoke-WebRequest "http://$($Server):$Port" -UseBasicParsing
 
                 $Data = $Request.Content.Substring($Request.Content.IndexOf("{"), $Request.Content.LastIndexOf("}") - $Request.Content.IndexOf("{") + 1) | ConvertFrom-Json
 
                 $HashRate = [double]$Data.result[2].Split(";")[0] * $Multiplier
                 $HashRate_Dual = [double]$Data.result[4].Split(";")[0] * $Multiplier
-
-
-
-
             }
 
             "ClaymoreV2" {
-
                 $Request = Invoke-WebRequest "http://$($Server):$Port" -UseBasicParsing
 
                 $Data = $Request.Content.Substring($Request.Content.IndexOf("{"), $Request.Content.LastIndexOf("}") - $Request.Content.IndexOf("{") + 1) | ConvertFrom-Json
 
                 $HashRate = [double]$Data.result[2].Split(";")[0]
-
             }
 
             "prospector" {
@@ -183,7 +158,6 @@ function Get-Live-HashRate {
             }
 
             "fireice" {
-
                 $Request = Invoke-WebRequest "http://$($Server):$Port/h" -UseBasicParsing
 
                 $Data = $Request.Content -split "</tr>" -match "total*" -split "<td>" -replace "<[^>]*>", ""
@@ -191,17 +165,14 @@ function Get-Live-HashRate {
                 $HashRate = $Data[1]
                 if ($HashRate -eq "") {$HashRate = $Data[2]}
                 if ($HashRate -eq "") {$HashRate = $Data[3]}
-
-
             }
+
             "wrapper" {
                 $HashRate = ""
                 $HashRate = Get-Content ".\Wrapper_$Port.txt"
                 $HashRate = $HashRate -replace ',', '.'
-
-
-
             }
+
             "xmrminer" {
                 $Request = Invoke-WebRequest "http://$($Server):$Port/api.json" -UseBasicParsing
                 $Data = $Request | ConvertFrom-Json
@@ -214,6 +185,12 @@ function Get-Live-HashRate {
                 $Request = Invoke-WebRequest "http://$($Server):$Port/" -UseBasicParsing
                 $Data = $Request | ConvertFrom-Json
                 $HashRate = [Double]($Data.solution_rate.Total."5s" | Measure-Object -Sum).sum
+            }
+
+            "cast" {
+                $Request = Invoke-WebRequest "http://$($Server):$Port" -UseBasicParsing
+                $Data = $Request | ConvertFrom-Json
+                $HashRate = [Double]($Data.total_hash_rate_avg | Measure-Object -Sum).Sum / 1000
             }
         }
 
@@ -381,8 +358,8 @@ function Get-Pools {
         if (Test-Path $SharedFile) {
             $Content = Get-Content $SharedFile | ConvertFrom-Json
             Remove-Item $SharedFile
+            $Content | ForEach-Object {$ChildItems += [PSCustomObject]@{Name = $Name; Content = $_}}
         }
-        $Content | ForEach-Object {$ChildItems += [PSCustomObject]@{Name = $Name; Content = $_}}
     }
 
 
@@ -592,9 +569,7 @@ function get-coin-unified-name ([string]$Coin) {
         "Verge-*" {$Result = "Verge"}
         "EthereumClassic" {$Result = "Ethereum-Classic"}
     }
-
     $Result
-
 }
 
 function get-coin-symbol ([string]$Coin) {
