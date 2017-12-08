@@ -66,7 +66,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     do {
         try {
             $http = "https://whattomine.com/coins.json"
-            $WTMResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins
+            $WTMResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty coins
         } catch {start-sleep 2}
         $retries++
         if ($WTMResponse -eq $null -or $WTMResponse -eq "") {start-sleep 3}
@@ -90,14 +90,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
 
     # Coin IDs from http://whattomine.com/calculators
-    $CustomCoins = @(192, 210, 213)
+    # 192 - Aeon, 210 - Zero, 213 - ETN
+    $CustomCoins = @(192, 210)
     foreach ($c in $CustomCoins) {
         # Start-Sleep -Seconds 1
         $retries = 1
         do {
             try {
                 $http = "http://whattomine.com/coins/$c.json"
-                $WTMCoinResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+                $WTMCoinResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
             } catch {start-sleep 2}
             $retries++
             if ($WTMCoinResponse -eq $null -or $WTMCoinResponse -eq "") {start-sleep 3}
@@ -113,7 +114,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $TempCoin = $WTMCoinResponse
             $WTMCoinResponse | add-member $NewCoinName $TempCoin
         }
-        try { $WTMResponse | Add-Member $NewCoinName $WTMCoinResponse -Force } catch {}
+        try { $WTMResponse | Add-Member $NewCoinName $WTMCoinResponse } catch {}
         remove-variable WTMCoinResponse
     }
 

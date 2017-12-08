@@ -32,7 +32,7 @@ if ($Querymode -eq "wallet") {
     $Info.user = ($Info.user -split '\.')[0]
     try {
         $http = $ApiUrl + "?method=stats.provider&addr=" + $Info.user
-        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats
+        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats
     } catch {}
 
     if ($Request -ne $null -and $Request -ne "") {
@@ -52,7 +52,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     do {
         try {
             $http = $ApiUrl + "?method=simplemultialgo.info"
-            $Request = Invoke-WebRequest $http -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json |Select-Object -expand result |Select-Object -expand simplemultialgo
+            $Request = Invoke-WebRequest $http -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json |Select-Object -expand result |Select-Object -expand simplemultialgo
         } catch {start-sleep 2}
         $retries++
         if ($Request -eq $null -or $Request -eq "") {start-sleep 3}

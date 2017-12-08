@@ -36,7 +36,7 @@ if ($Querymode -eq "info") {
 if ($Querymode -eq "wallet") {
     try {
         $http = $ApiUrl + "/wallet?address=" + $Info.user
-        $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+        $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
     } catch {}
 
     if ($Request -ne $null -and $Request -ne "") {
@@ -55,7 +55,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     do {
         try {
             $http = $ApiUrl + "/currencies"
-            $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+            $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
         } catch {start-sleep 2}
         $retries++
         if ($Request -eq $null -or $Request -eq "") {start-sleep 3}

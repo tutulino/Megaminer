@@ -52,7 +52,7 @@ if ($Querymode -eq "APIKEY") {
 
         $http = "http://" + $Info.Coin + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $ApiKey + "&id="
         #$http |write-host
-        $MiningPoolHub_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
+        $MiningPoolHub_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
 
 
     } catch {}
@@ -81,7 +81,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $retries = 1
     do {
         try {
-            $MiningPoolHub_Request = Invoke-WebRequest "http://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+            $MiningPoolHub_Request = Invoke-WebRequest "http://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
         } catch {start-sleep 2}
         $retries++
         if ($MiningPoolHub_Request -eq $null -or $MiningPoolHub_Request -eq "") {start-sleep 3}
