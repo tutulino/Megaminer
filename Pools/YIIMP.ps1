@@ -65,6 +65,18 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
+    $retries = 1
+    do {
+        try {
+            $http = $ApiUrl + "/status"
+            $Request2 = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+        } catch {start-sleep 2}
+        $retries++
+        if ($Request2 -eq $null -or $Request -eq "") {start-sleep 3}
+    } while ($Request2 -eq $null -and $retries -le 3)
+    if ($retries -gt 3) {
+        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+    }
 
     $Request | Get-Member -MemberType Properties | ForEach-Object {
 
@@ -103,10 +115,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Blocks_24h            = $coin.'24h_blocks'
             WalletMode            = $WalletMode
             PoolName              = $Name
-            Fee                   = 0.02
+            Fee                   = $Request2.($coin.algo).Fees / 100
         }
     }
     remove-variable Request
+    remove-variable Request2
 }
 
 
