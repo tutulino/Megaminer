@@ -215,9 +215,8 @@ while ($true) {
     }
 
 
-    $Rates = [PSCustomObject]@{}
-    $Currency | ForEach-Object {$Rates | Add-Member $_ (Invoke-WebRequest "https://api.cryptonator.com/api/ticker/btc-$_" -UseBasicParsing | ConvertFrom-Json).ticker.price}
-
+    # $Rates = [PSCustomObject]@{}
+    # $Currency | ForEach-Object {$Rates | Add-Member $_ (Invoke-WebRequest "https://api.cryptonator.com/api/ticker/btc-$_" -UseBasicParsing | ConvertFrom-Json).ticker.price}
 
 
     #Load information about the Pools, only must read parameter passed files (not all as mph do), level is Pool-Algo-Coin
@@ -570,17 +569,18 @@ while ($true) {
     }
 
 
-
-
     #Call api to local currency conversion
-    try {
-        $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing -TimeoutSec 2 | ConvertFrom-Json | Select-Object -ExpandProperty BPI
-        Clear-Host
-    }
+    $retries = 1
+    do {
+        try {
+            $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json | Select-Object -ExpandProperty BPI
+        } catch {start-sleep 3}
+        $retries++
+        if ($CDKResponse -eq $null) {start-sleep 3}
+    } while ($CDKResponse -eq $null -and $retries -le 3)
 
-    catch {
-        Clear-Host
-        "COINDESK API NOT RESPONDING, NOT POSSIBLE LOCAL COIN CONVERSION" | Out-host
+    if ($retries -gt 3) {
+        Write-Host "COINDESK API NOT RESPONDING, NO LOCAL COIN CONVERSION"
     }
 
     $LabelProfit = "$LocalCurrency" + "/Day"
