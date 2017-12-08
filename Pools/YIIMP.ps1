@@ -79,9 +79,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $retries=1
                 do {
                         try {
-                            $Yiimp_Request = Invoke-WebRequest "http://api.yiimp.eu/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 
-                            $Yiimp_Request = $Yiimp_Request | ConvertFrom-Json 
-                             #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
+                            $Yiimp_Request = Invoke-WebRequest "http://api.yiimp.eu/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5  | ConvertFrom-Json 
+                            $Yiimp_Request2 = Invoke-WebRequest "http://api.yiimp.eu/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 | ConvertFrom-Json  
 
                         }
                         catch {}
@@ -108,7 +107,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     $Divisor = Get-Algo-Divisor $Yiimp_Algorithm
                     
                 
-
                     $Result+=[PSCustomObject]@{
                                 Algorithm     = $Yiimp_Algorithm
                                 Info          = $Yiimp_coin
@@ -130,13 +128,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Blocks_24h    = $coin."24h_blocks"
                                 WalletMode    = $WalletMode
                                 PoolName = $Name
-                                Fee = $coin.fees/100
+                                Fee = ($Yiimp_Request2.($coin.algo).Fees)/100
                                 }
                         
                 
                 }
 
-  remove-variable Yiimp_Request                
+        remove-variable Yiimp_Request                
+        remove-variable Yiimp_Request2                
     }
 
 
