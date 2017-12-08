@@ -77,9 +77,7 @@ If new verson has no miners update you can copy "bin" folder
 If there is a new miner version is recomended delete miner_algo_hashrate.txt files on miners folder to force benchmark again.
 
 
--------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -----------
-
-In this software you can get same features than Nemosminer (Zpool) and Multipoolminer (MiningPoolHub), and also:
+-------NEW FEATURES OVER BASE SOFTWARE -----------
 
 -Menus sytem to choose coin/algo/pool and start mining
 
@@ -87,9 +85,9 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. 
 
--Can mine on any of this pools (or all at same time): Ahashpool, Nicehash, Zpool, Unimining, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
+-Can mine on any of this pools (or all at same time): Ahashpool, YIIMP, Nicehash, Zpool, Unimining, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
 
--Can mine on Suprnova,Nicehash, MPH, YIIMP, Flypool or BlocksFactory pool without autochange or profit calculation, manual coin selection
+-Can mine on Suprnova,Nicehash, MPH, Flypool or BlocksFactory pool without autochange or profit calculation, manual coin selection
 
 -Fastest miner for each algo/coin preselected for Nvidia Pascal (08/01/2017) on all pools.
 

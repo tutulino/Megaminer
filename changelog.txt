@@ -299,3 +299,23 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Removed X13,X15,qubit algos: ASICS territory now.
 *Added option for set a exclusive nicehash wallet on config.txt
 *Added option for set local currency on config.txt (if not specified location is used)
+
+
+------------------------------------------------
+5.0
+
+*GPUs grouping on config.txt, now you can group your GPUs, each group will be bechmarked and will run independent. This is ideal for mixed model/brand rigs.
+	- If you want to use your old config.txt you must remove GPUPLATFORM and TYPES parameters and add GPUGROUPS from new config file
+	
+*Added parameter Groupnames to command line to allow mining on some gpu only
+	
+*Merged Claymore dual miner files (one for each platform)
+*Yiimp Automatic mode come back (API seems responsive now)
+
+*Removed prospector miner ¿someone is using?
+*Removed excavator miner ¿someone is using?
+*Removed pool API asistance on manual selection due to long waits.
+
+
+*THIS VERSION REQUIRES NEW CONFIG.TXT FILE, YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
+
