@@ -112,14 +112,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
 
     $Pools |ForEach-Object {
-        if (($ManualMiningApiUse -eq $true) -and ($Querymode -eq "Menu")) {
-            $ApiResponse = $null
-            try {
-                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-                $Apicall = "https://" + $_.Server + "/index.php?page=api&action=public"
-                $ApiResponse = (Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 3| ConvertFrom-Json)
-            } catch {}
-        }
+        # if (($ManualMiningApiUse -eq $true) -and ($Querymode -eq "Menu")) {
+        #     $ApiResponse = $null
+        #     try {
+        #         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        #         $Apicall = "https://" + $_.Server + "/index.php?page=api&action=public"
+        #         $ApiResponse = (Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 3| ConvertFrom-Json)
+        #     } catch {}
+        # }
 
 
         $Result += [PSCustomObject]@{
@@ -138,8 +138,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             AbbName               = $AbbName
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolWorkers           = $ApiResponse.Workers
-            PoolHashRate          = [double]$ApiResponse.hashrate
+            PoolWorkers           = $null #$ApiResponse.Workers
+            PoolHashRate          = $null #[double]$ApiResponse.hashrate
             PoolName              = $Name
             WalletMode            = $WalletMode
             OriginalAlgorithm     = $_.Algo
@@ -147,7 +147,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Fee                   = 0.01
         }
     }
-    if (($ManualMiningApiUse -eq $true) -and ($Querymode -eq "Menu")) {Remove-Variable ApiResponse}
+    #if (($ManualMiningApiUse -eq $true) -and ($Querymode -eq "Menu")) {Remove-Variable ApiResponse}
     Remove-Variable Pools
 }
 
