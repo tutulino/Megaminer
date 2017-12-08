@@ -64,7 +64,8 @@ Start-Transcript ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 
 $ActiveMinersIdCounter = 0
 $Activeminers = @()
-$ProfitsScreenLimit = 20
+$InitialProfitsScreenLimit = 20
+$ProfitsScreenLimit = $InitialProfitsScreenLimit
 $ShowBestMinersOnly = $true
 $FirstTotalExecution = $true
 $IntervalStartAt = (Get-Date)
@@ -582,7 +583,7 @@ while ($true) {
         "COINDESK API NOT RESPONDING, NOT POSSIBLE LOCAL COIN CONVERSION" | Out-host
     }
 
-    $LabelProfit = "$LocalCurrency"+"/Day"
+    $LabelProfit = "$LocalCurrency" + "/Day"
     $localBTCvalue = $CDKResponse.$LocalCurrency.rate_float
 
     $FirstLoopExecution = $True
@@ -655,7 +656,7 @@ while ($true) {
 
             Set-ConsolePosition 80 $YToWriteMessages
 
-            "(B)est Miners/All       (T)op 40/All" | Out-Host
+            "(B)est Miners/All       (T)op " + [string]$InitialProfitsScreenLimit + "/All" | Out-Host
 
             Set-ConsolePosition 0 $YToWriteData
 
@@ -663,7 +664,13 @@ while ($true) {
             if ($ShowBestMinersOnly) {
                 $ProfitMiners = @()
                 $ActiveMiners | Where-Object IsValid |ForEach-Object {
-                    $ExistsBest = $ActiveMiners | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object Coin -eq $_.Coin | Where-Object CoinDual -eq $_.CoinDual | Where-Object IsValid -eq $true | Where-Object Profits -gt $_.Profits
+                    $ExistsBest = $ActiveMiners |
+                        Where-Object Algorithm -eq $_.Algorithm |
+                        Where-Object AlgorithmDual -eq $_.AlgorithmDual |
+                        Where-Object Coin -eq $_.Coin |
+                        Where-Object CoinDual -eq $_.CoinDual |
+                        Where-Object IsValid -eq $true |
+                        Where-Object Profits -gt $_.Profits
                     if ($ExistsBest -eq $null -or $_.NeedBenchmark -eq $true) {$ProfitMiners += $_}
                 }
             } else
@@ -983,7 +990,7 @@ while ($true) {
             'E' {$ExitLoop = $true}
             'W' {$Screen = 'Wallets'}
             'U' {if ($Screen -eq "Wallets") {$WalletsUpdate = $null}}
-            'T' {if ($Screen -eq "Profits") {if ($ProfitsScreenLimit -eq 20) {$ProfitsScreenLimit = 1000} else {$ProfitsScreenLimit = 20}}}
+            'T' {if ($Screen -eq "Profits") {if ($ProfitsScreenLimit -eq $InitialProfitsScreenLimit) {$ProfitsScreenLimit = 1000} else {$ProfitsScreenLimit = $InitialProfitsScreenLimit}}}
             'B' {if ($Screen -eq "Profits") {if ($ShowBestMinersOnly -eq $true) {$ShowBestMinersOnly = $false} else {$ShowBestMinersOnly = $true}}}
 
         }
