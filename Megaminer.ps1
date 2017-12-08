@@ -171,6 +171,8 @@ if ($MiningMode -eq "manual") {
                 $BTXResponse = (Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -TimeoutSec 5| ConvertFrom-Json|Select-Object -ExpandProperty result)
                 write-host CALLING COINDESK API............
                 $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing -TimeoutSec 3 | ConvertFrom-Json | Select-Object -ExpandProperty BPI
+                write-host CALLING CoinMarketCap API............
+                $CMCResponse = Invoke-WebRequest "https://api.coinmarketcap.com/v1/ticker/?limit=0" -UseBasicParsing -TimeoutSec 3 | ConvertFrom-Json
             } catch {}
         }
 
@@ -191,6 +193,10 @@ if ($MiningMode -eq "manual") {
                     {if ($BtxCoin.marketname -eq ("btc-" + $_.symbol)) {  $_.BTCPrice = $BtxCoin.Last}}
                 }
 
+                if ($CMCResponse -ne $null) {
+                    foreach ($CMCCoin in $CMCResponse)
+                    {if ($CMCCoin.Symbol -eq $_.symbol) {  $_.BTCPrice = $CMCCoin.price_btc}}
+                }
 
                 #If no data try with CRYPTOPIA
                 if ($_.BTCPrice -eq 0) {
@@ -280,7 +286,9 @@ if ($MiningMode -eq "manual") {
 
 #-----------------Launch Command
 $command = "./core.ps1 -MiningMode $MiningMode -PoolsName $PoolsName"
-if ($MiningMode -eq "manual") {$command += " -Coinsname $CoinsName -Algorithm $AlgosName"}
+if ($MiningMode -eq "manual") {
+    $command += " $(if ($CoinsName.Length -gt 0) {"-Coinsname $CoinsName"}) -Algorithm $AlgosName"
+}
 
 #write-host $command
 Invoke-Expression $command
