@@ -4,7 +4,7 @@
 
 --Prefered Currency you will be pay, only for anonymous pools with autoexchange (Zpool, HR...), must set wallet for this currency on "Wallets Section"
 
-@@CURRENCY=BTC
+@@CURRENCY=LTC
 
 --Local Currency showed on profits screen. (USD,EUR,GBP)
 
