@@ -74,7 +74,7 @@ Start-Transcript ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 
 $ActiveMinersIdCounter=0
 $Activeminers=@()
-$InitialProfitsScreenLimit=30 / (((Get-Content config.txt | Where-Object {$_ -like '@@GPUGROUPS=*'}) -replace '@@GPUGROUPS=*','' |ConvertFrom-Json) | Measure-Object).count #screen adjust to number of groups
+$InitialProfitsScreenLimit=[Math]::Floor( 25 / (((Get-Content config.txt | Where-Object {$_ -like '@@GPUGROUPS=*'}) -replace '@@GPUGROUPS=*','' |ConvertFrom-Json) | Measure-Object).count) #screen adjust to number of groups
 $ProfitsScreenLimit=$InitialProfitsScreenLimit
 $ShowBestMinersOnly=$true
 $FirstTotalExecution =$true
