@@ -8,7 +8,7 @@
 #. .\..\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
-$ActiveOnManualMode = $false
+$ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
 $AbbName = 'H.RFRY'

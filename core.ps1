@@ -85,7 +85,7 @@ $Screen = (Get-Content config.txt | Where-Object {$_ -like '@@STARTSCREEN=*'} ) 
 
 #---Paraneters checking
 
-if ($MiningMode -ne 'Automatic' -and $MiningMode -ne 'Manual' -and $MiningMode -ne 'Automatic24h') {
+if ($MiningMode -notin @('Automatic', 'Manual', 'Automatic24h')) {
     "Parameter MiningMode not valid, valid options: Manual, Automatic, Automatic24h" |Out-host
     EXIT
 }
@@ -115,10 +115,10 @@ if ($MiningMode -eq 'Manual' -and ($Coinsname | Measure-Object).count -gt 1) {
 }
 
 
-if ($MiningMode -eq 'Manual' -and ($Coinsname | Measure-Object).count -eq 0) {
-    "On manual mode must select one coin" |Out-host
-    EXIT
-}
+# if ($MiningMode -eq 'Manual' -and ($Coinsname | Measure-Object).count -eq 0) {
+#     "On manual mode must select one coin" |Out-host
+#     EXIT
+# }
 
 if ($MiningMode -eq 'Manual' -and ($Algorithm | measure-object).count -gt 1) {
     "On manual mode only one algorithm must be selected" |Out-host
@@ -520,7 +520,7 @@ while ($true) {
     foreach ($Type in $Types) {
 
         $BestId = ($ActiveMiners |Where-Object IsValid | select-object NeedBenchmark, Profits, Id, Types, Algorithm | where-object {(Compare-Object $Type $_.Types -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0} | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits}, Algorithm | Select-Object -First 1 | Select-Object id)
-        $ActiveMiners[$BestId.PSObject.Properties.value].best = $true
+        if ($ActiveMiners -ne $null) { $ActiveMiners[$BestId.PSObject.Properties.value].best = $true }
     }
 
 
