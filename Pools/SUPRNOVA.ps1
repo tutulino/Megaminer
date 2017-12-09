@@ -11,7 +11,7 @@ $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $false
 $ActiveOnAutomatic24hMode=$false
-$AbbName='SNOVA'
+$AbbName='SNV'
 $WalletMode="APIKEY"
 $Result=@()
 
@@ -37,10 +37,7 @@ if ($Querymode -eq "info"){
                                 "DGB" {$Info.Symbol=$Info.Symbol+($Info.Algorithm.substring(0,1))}
                                }
 
-                               
-
-
-                            
+                        
                             try {
 
                                 $ApiKeyPattern='@@APIKEY_SUPRNOVA=*'
@@ -139,12 +136,13 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     OriginalAlgorithm =  $_.Algo
                                     OriginalCoin = $_.Coin
                                     Fee = 0.01
+                                    EthStMode = 3
 
 
                                 }
 
                         }
-                if (($ManualMiningApiUse -eq $true) -and  ($Querymode -eq "Menu")) {Remove-Variable ApiResponse}
+              
                 Remove-Variable Pools
         }
                   

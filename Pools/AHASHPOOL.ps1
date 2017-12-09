@@ -24,7 +24,7 @@ $Result = @()
 
 if ($Querymode -eq "info"){
     $Result = [PSCustomObject]@{
-                    Disclaimer = "Anonymous, autoexchange to selected coin in config.txt"
+                    Disclaimer =  "Autoexchange to @@currency coin specified in config.txt, no registration required"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
                     ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
@@ -111,8 +111,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Protocol      = "stratum+tcp"
                                 Host          = $_.name + ".mine.ahashpool.com"
                                 Port          = $coin.port
-                                User          = $CoinsWallets.get_item("BTC")
-                                Pass          = "c=BTC,#WorkerName#"
+                                User          = $CoinsWallets.get_item($currency)
+                                Pass          = "c=$currency,#WorkerName#"
                                 Location      = 'US'
                                 SSL           = $false
                                 Symbol        = $null
@@ -123,6 +123,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 PoolHashRate  = $coin.HashRate
                                 Blocks_24h    = $coin."24h_blocks"
                                 WalletMode    = $WalletMode
+                                WalletSymbol    = $currency
                                 PoolName = $Name
                                 Fee = $Coin.Fees / 100
                                 }

@@ -302,7 +302,7 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 
 
 ------------------------------------------------
-5.0
+5.0 beta 1
 
 *GPUs grouping on config.txt, now you can group your GPUs, each group will be bechmarked and will run independent. This is ideal for mixed model/brand rigs.
 	- If you want to use your old config.txt you must remove GPUPLATFORM and TYPES parameters and add GPUGROUPS from new config file
@@ -310,7 +310,7 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Added parameter Groupnames to command line to allow mining on some gpu only
 	
 *Merged Claymore dual miner files (one for each platform)
-*Yiimp Automatic mode come back (API seems responsive now)
+
 
 *Removed prospector miner ¿someone is using?
 *Removed excavator miner ¿someone is using?
@@ -318,4 +318,24 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 
 
 *THIS VERSION REQUIRES NEW CONFIG.TXT FILE, YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
+
+
+------------------------------------------------
+5.0 beta 2
+
+*Added Pool Nanopool
+*Removed Pool Nicehash until it works again
+*Yiimp Automatic mode come back (API seems responsive now)
+*Added more gpu info on current screen (Clocks, Pstate)
+*Enhaced ethash algo pools compatibility
+*Automatic Profit screen layout based on number of gpu groups
+*Removed dual mining with Pascal (Pasc), reason: dead coin
+*Added Start time in wallets screen
+*Added Mining mode in profits screen
+
+*Fixed: dualmining not working
+*Fixed: other small fixes
+
+
+*THIS VERSION REQUIRES 5.0 FORMAT CONFIG.TXT FILE, IF YOU UPGRADE FROM PREVIOUS RELEASE YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
 

@@ -101,7 +101,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                     $Yiimp_Algorithm = get-algo-unified-name $coin.algo
                     $Yiimp_coin =  get-coin-unified-name $coin.name
-                    $Yiimp_Simbol=$_.name
+                    $Yiimp_Symbol=$_.name
             
 
                     $Divisor = Get-Algo-Divisor $Yiimp_Algorithm
@@ -115,11 +115,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Protocol      = "stratum+tcp"
                                 Host          = "yiimp.eu"
                                 Port          = $coin.port
-                                User          = $CoinsWallets.get_item($Yiimp_Simbol)
+                                User          = $CoinsWallets.get_item($Yiimp_Symbol)
                                 Pass          = "c=$Yiimp_symbol,ID=#WorkerName#"
                                 Location      = 'US'
                                 SSL           = $false
-                                Symbol        = $Yiimp_Simbol
+                                Symbol        = $Yiimp_Symbol
                                 AbbName       = $AbbName
                                 ActiveOnManualMode    = $ActiveOnManualMode
                                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
@@ -127,6 +127,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 PoolHashRate  = $coin.HashRate
                                 Blocks_24h    = $coin."24h_blocks"
                                 WalletMode    = $WalletMode
+                                Walletsymbol = $Yiimp_Symbol
                                 PoolName = $Name
                                 Fee = ($Yiimp_Request2.($coin.algo).Fees)/100
                                 }

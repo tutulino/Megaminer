@@ -135,6 +135,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             OriginalAlgorithm = $MiningPoolHub_OriginalAlgorithm
                                             OriginalCoin = $MiningPoolHub_OriginalCoin
                                             Fee = 0.009
+                                            EthStMode = 3
                                             }
                                         }
                         }

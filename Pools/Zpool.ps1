@@ -107,6 +107,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                                             PoolWorkers = $coin.workers
                                             WalletMode=$WalletMode
+                                            WalletSymbol=$Currency
                                             PoolName = $Name
                                             Fee = $coin.Fees/100
                                             }

@@ -129,6 +129,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 PoolHashRate  = $coin.HashRate
                                 Blocks_24h    = $coin."24h_blocks"
                                 WalletMode    = $WalletMode
+                                WalletSymbol = $Uni_Simbol
                                 PoolName = $Name
                                 Fee = $coin.Fees/100
                                 }

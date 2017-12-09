@@ -16,6 +16,8 @@ YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
 
 NICEHASH-- Anonymous, autoexchange to BTC
 
+NANOPOOL -- Anonymous, no autoexchange, must set a wallet for each coin
+
 FLYPOOL -- Anonymous, manual mode only
 
 UNIMINING -- No registration, No autoexchange, need wallet for each coin on config.txt
@@ -37,6 +39,8 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
    ZENCASH (ZEN), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB), SIBCOIN (SIB) ,UBIQ (UBQ), EXPANSE (EXP),
    BITSEND (BSD),ELECTRONEUM (ETN),SMARTCASH (SMART),BITCOINZ (BTCZ),BITCOIN GOLD (BCG),STACKS (STACK), POLYTMOS (POLY)
 
+**NANOPOOL
+	ELECTRONEUM (ETN),ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LBRY(ETH+LBRY),ETHEREUM+SIACOIN(ETH+SIA), MONERO(XMR),  ZCASH(ZEC)
 
 **BLOCKSFACTORY
    DIGIBYTE-SKEIN(DGB), FEATHERCOIN(FTC), PHOENIXCOIN(PXC), ORBITCOIN(ORB), GUNCOIN(GUN)
@@ -45,14 +49,9 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
    ZCASH
 
 
-**WHATTOMINE (virtual)
-   DECRED(DCR),  HUSH(HUSH), LBRY(LBRY), MONACOIN (MONA), ZCASH(ZEC), ZENCASH (ZEN), ZCOIN(XZC), ZCLASSIC(ZCL), VERTCOIN (VTC)
-   KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB),SIBCOIN (SIB),UBIQ (UBQ), EXPANSE (EXP), ETHEREUM CLASSIC (ETC), MYRIAD-GROESTL (XMY), MUSICOIN (MUSIC),
-   ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LBRY(ETH+LBRY),BITCOINZ (BTCZ)
-
 
 **CROSSED BETWEEN POOLS
-    ETHEREUM+DECRED, ETHEREUM+LBRY, ETHEREUM+PASCAL, ETHEREUM+SIACOIN
+    ETHEREUM+DECRED, ETHEREUM+LBRY, ETHEREUM+SIACOIN
 
 
 ---- INSTRUCTIONS ----------------------------------------------
@@ -85,7 +84,7 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. 
 
--Can mine on any of this pools (or all at same time): Ahashpool, YIIMP, Nicehash, Zpool, Unimining, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
+-Can mine on any of this pools (or all at same time): Ahashpool, Nanopool, YIIMP, Nicehash, Zpool, Unimining, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
 
 -Can mine on Suprnova,Nicehash, MPH, Flypool or BlocksFactory pool without autochange or profit calculation, manual coin selection
 

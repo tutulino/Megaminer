@@ -24,7 +24,7 @@ $Result = @()
 
 if ($Querymode -eq "info"){
     $Result = [PSCustomObject]@{
-                    Disclaimer = "Anonymous, autoexchange to selected coin in config.txt"
+                    Disclaimer = "Autoexchange to @@currency coin specified in config.txt, no registration required"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
                     ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
@@ -126,6 +126,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                                     ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                                                     PoolWorkers = $Ita_Request.$_.workers
                                                     WalletMode=$WalletMode
+                                                    WalletSymbol=$Currency
+
                                                     PoolName = $Name
                                                     Fee = $Ita_Request.$_.Fees/100
                                         

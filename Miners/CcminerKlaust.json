@@ -11,7 +11,6 @@
 "Algorithms": [
                 {"groestl":"-a groestl"},
                 {"sib" : "-a sib"},
-                {"blake2b":"-a sia"},
                 {"Myriad-Groestl" : "-a myr-gr"},
                 {"Keccak" : "-a Keccak"},
                 {"Neoscrypt":"-a Neoscrypt"}
