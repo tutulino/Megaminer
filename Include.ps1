@@ -548,6 +548,7 @@ function get-algo-unified-name ([string]$Algo) {
         "skunkhash" {$Result = "skunk"}
         "TimeTravel10" {$Result = "bitcore"}
         "PHI1612" {$Result = "phi"}
+        "keccak-c" {$Result = "keccakc"}
     }
     $Result
 

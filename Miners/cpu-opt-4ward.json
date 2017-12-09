@@ -1,7 +1,7 @@
 ﻿{
-    "Path" : ".\\Bin\\cpuminer-opt-4ward\\cpuminer-opt-3.7.4-4ward\\cpuminer-aes-avx2.exe",
+    "Path" : ".\\Bin\\cpuminer-opt-4ward\\cpuminer-opt-3.7.5-4ward\\cpuminer-aes-avx2.exe",
     "ExtractionPath" : ".\\Bin\\cpuminer-opt-4ward\\",
-    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.4-4ward.7z",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.5-4ward.7z",
     "Types" : ["CPU"],
     "Arguments" : "-b 4068 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
     "API" : "Ccminer",
