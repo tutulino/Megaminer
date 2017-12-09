@@ -64,7 +64,7 @@ Start-Transcript ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 
 $ActiveMinersIdCounter = 0
 $Activeminers = @()
-$InitialProfitsScreenLimit = [int](40 / ((Get-Content config.txt | Where-Object {$_ -like '@@TYPE=*'}) -replace '@@TYPE=', '' -split ',').count) - 5
+$InitialProfitsScreenLimit = [int](45 / ((Get-Content config.txt | Where-Object {$_ -like '@@TYPE=*'}) -replace '@@TYPE=', '' -split ',').count) - 5
 $ProfitsScreenLimit = $InitialProfitsScreenLimit
 $ShowBestMinersOnly = $true
 $FirstTotalExecution = $true
@@ -657,7 +657,7 @@ while ($true) {
         #display donation message
         if ($DonationInterval) {
             " Donation period Active! You are donating $((Get-Content config.txt | Where-Object {$_ -like '@@DONATE=*'} ) -replace '@@DONATE=', '') minutes per day. Thank You for the support! :)"
-            " If You wish, you can change this value in config.txt."
+            " If You wish, you can change this value in config.txt"
         }
 
         #display current mining info
@@ -708,6 +708,7 @@ while ($true) {
                         Where-Object Types -Contains $Type |
                         ForEach-Object {
                         $ExistsBest = $ActiveMiners |
+                            Where-Object Types -Contains $Type |
                             Where-Object Algorithm -eq $_.Algorithm |
                             Where-Object AlgorithmDual -eq $_.AlgorithmDual |
                             Where-Object Coin -eq $_.Coin |
@@ -722,14 +723,14 @@ while ($true) {
                         Where-Object Types -Contains $Type
                 }
 
-                $inserted = 1
-                $ProfitMiners2 = @()
-                $ProfitMiners | Sort-Object -Descending Type, NeedBenchmark, Profits | ForEach-Object {
-                    if ($inserted -le $ProfitsScreenLimit) {$ProfitMiners2 += $_ ; $inserted++} #this can be done with select-object -first but then memory leak happens, ¿why?
-                }
+                # $inserted = 1
+                # $ProfitMiners2 = @()
+                # $ProfitMiners | Sort-Object -Descending Type, NeedBenchmark, Profits | ForEach-Object {
+                #     if ($inserted -le $ProfitsScreenLimit) {$ProfitMiners2 += $_ ; $inserted++} #this can be done with select-object -first but then memory leak happens, ¿why?
+                # }
 
                 #Display profits  information
-                $ProfitMiners2 | Format-Table -GroupBy Type (
+                $ProfitMiners | Sort-Object -Descending Type, NeedBenchmark, Profits | Select-Object -First $ProfitsScreenLimit | Format-Table -GroupBy Type (
                     @{Label = "Algo"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else {$_.Algorithm + '|' + $_.AlgorithmDual}}},
                     @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else {($_.coin) + '|' + ($_.CoinDual)}}},
                     @{Label = "Miner"; Expression = {$_.Name}},
@@ -744,7 +745,7 @@ while ($true) {
 
 
                 Remove-Variable ProfitMiners
-                Remove-Variable ProfitMiners2
+                # Remove-Variable ProfitMiners2
             }
         }
 
