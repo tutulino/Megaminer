@@ -10,8 +10,7 @@ function Get-Live-HashRate {
         [Int]$Port, 
         [Parameter(Mandatory = $false)]
         [Object]$Parameters = @{} 
-        #[Parameter(Mandatory = $false)]
-        #[Bool]$Safe = $false
+
     )
     
     $Server = "localhost"
@@ -193,26 +192,49 @@ function Get-Live-HashRate {
                     if ($HashRate -eq "") {$HashRate = $Data[3]}
 
                     
-            }
+                        }
             "wrapper" {
                     $HashRate = ""
                     $HashRate = Get-Content ".\Wrapper_$Port.txt"
                     $HashRate =  $HashRate -replace ',','.'
+                        }
 
+             "castXMR" {
+                    $Request = Invoke-WebRequest "http://$($Server):$Port" -UseBasicParsing
 
+                    $Data = $Request | ConvertFrom-Json 
+                    $HashRate =  [Double]($Data.devices.hash_rate | Measure-Object -Sum).Sum / 1000
 
-                }
-        }
+                    }
 
+            "XMrig" {
+                        $Request = Invoke-WebRequest "http://$($Server):$Port/api.json" -UseBasicParsing
+    
+                        $Data = $Request | ConvertFrom-Json 
+                        $HashRate =   [Double]$Data.hashrate.total[0]
+    
+                        }
+
+             }
+        
         $HashRates=@()
         $HashRates += [double]$HashRate
         $HashRates += [double]$HashRate_Dual
 
         $HashRates
     }
-    catch {
-    }
+    catch {}
 }
+
+
+
+
+
+
+
+
+  
+
 
 
 

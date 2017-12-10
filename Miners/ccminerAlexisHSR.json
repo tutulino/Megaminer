@@ -11,8 +11,6 @@
     "Algorithms": [
                     
 
-        
-
                     {"hsr":"-a hsr"},
                     {"blake2s":"-a blake2s"},
                     {"blakecoin":"-a blakecoin"},
@@ -20,11 +18,9 @@
                     {"lyra2v2":"-a lyra2v2"},
                     {"nist5":"-a nist5"},
                     {"sib":"-a sib"},
-                    {"Keccak":"-a keccak"}
+                    {"Keccak":"-a keccak"},
+                    {"lbry":"-a lbry"}
 
-
-
-                   
                   ]
     
     }

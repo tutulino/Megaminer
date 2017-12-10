@@ -27,32 +27,6 @@ ITALYIIMP -- Anonymous, autoexchange to selected coin in config.txt
 WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to us
 
 
----- ALGOS/COINS SUPORTED (NVIDIA) -------------------------------
-
-**Mining Pool Hub, Yiimp, ZPOOL, AhashPool, Unimining, Italyiimp Nicehash and Hash Refinery (must be suported by pool)
-   skunk, jha, Blakecoin, c11, Groestl, veltor, blake, equihash, skein, sib, neoscrypt, lbry, Myriad-Groestl, Lyra2v2, 
-   Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
-   cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r, PHI, HSR, xevan
-
-**SUPRNOVA
-   DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), ZCASH(ZEC),
-   ZENCASH (ZEN), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB), SIBCOIN (SIB) ,UBIQ (UBQ), EXPANSE (EXP),
-   BITSEND (BSD),ELECTRONEUM (ETN),SMARTCASH (SMART),BITCOINZ (BTCZ),BITCOIN GOLD (BCG),STACKS (STACK), POLYTMOS (POLY)
-
-**NANOPOOL
-	ELECTRONEUM (ETN),ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LBRY(ETH+LBRY),ETHEREUM+SIACOIN(ETH+SIA), MONERO(XMR),  ZCASH(ZEC)
-
-**BLOCKSFACTORY
-   DIGIBYTE-SKEIN(DGB), FEATHERCOIN(FTC), PHOENIXCOIN(PXC), ORBITCOIN(ORB), GUNCOIN(GUN)
-
-**FLYPOOL
-   ZCASH
-
-
-
-**CROSSED BETWEEN POOLS
-    ETHEREUM+DECRED, ETHEREUM+LBRY, ETHEREUM+SIACOIN
-
 
 ---- INSTRUCTIONS ----------------------------------------------
 
@@ -60,9 +34,19 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
 
 1. Edit CONFIG.TXT file before mining
 
-2. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt
+2. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt, you can use this parameters on your batch
+    *PoolsName = separated comma string of pools to run 
+	*MiningMode = Mode to check profit, note not all pools suport all modes (Automatic/Automatic24h/Manual). If manual mode is selected one coin must be passed on Coinsname parameter
+	*Algorithm = separated comma string of algorithms to run (optional)
+    *CoinsName = separated comma string of Coins to run (optional)
+    *Groupnames = Groups of gpu/cpu to run (based on your defined groups in config.txt @@Gpugroups section) (optional)
 
-3. Firt time, software will be donwloaded from miners github repositories and your system will be benchmarked
+3. Firt time, software will be donwloaded from miners github repositories and your system will be benchmarked (long process)
+
+4. Tuning (optional)
+	- you can edit miners folders content to delete miners or to assign/unassign algos to miners. 
+	- you can edit pools folders content to delete pools
+	- for advanced users, you can create miners or pools if are based on existing one.
 
 
 

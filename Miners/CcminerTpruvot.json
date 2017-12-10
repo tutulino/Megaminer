@@ -19,7 +19,8 @@
                 {"whirpool":"-a whirl"},
                 {"phi":"-a phi"},
                 {"polytimos": "-a polytimos"},
-                {"cryptonight":"-a cryptonight"}
+                {"cryptonight":"-a cryptonight"},
+                {"keccakc":"-a keccakc"}
                 
               ]
 

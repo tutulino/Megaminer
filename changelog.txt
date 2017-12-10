@@ -323,7 +323,12 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 ------------------------------------------------
 5.0 beta 2
 
+*Added CPU mining option	
+	- JayDdee miner 
+	- XMrig miner 
 *Added Pool Nanopool
+*Added CastXMR for Vega --> not tested, help needed
+*Added Claymore Cryptonote 9.7 (some people has problems with 10.2)
 *Removed Pool Nicehash until it works again
 *Yiimp Automatic mode come back (API seems responsive now)
 *Added more gpu info on current screen (Clocks, Pstate)
@@ -332,9 +337,14 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Removed dual mining with Pascal (Pasc), reason: dead coin
 *Added Start time in wallets screen
 *Added Mining mode in profits screen
+*Added best algo/miner combinations for NVIDIA Maxwell
+
 
 *Fixed: dualmining not working
-*Fixed: other small fixes
+*Fixed: error while benchmark not getting automatic cancelation
+*Fixed: other small reported bugs
+*Fixed: incorrect platform id shown on GPUlist.bat
+
 
 
 *THIS VERSION REQUIRES 5.0 FORMAT CONFIG.TXT FILE, IF YOU UPGRADE FROM PREVIOUS RELEASE YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!

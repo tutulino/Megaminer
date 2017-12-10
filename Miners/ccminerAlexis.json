@@ -15,7 +15,10 @@
                 {"skein" : "-a skein"},
                 {"x14" : "-a x14" },
                 {"x11evo" : "-a x11evo"},
-                {"x17" : "-a x17" }
+                {"x17" : "-a x17" },
+                {"nist5" : "-a nist5" },
+                {"blakecoin" : "-a blakecoin" }
+
                 
               ]
 

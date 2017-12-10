@@ -49,8 +49,6 @@ param(
 
 
 
-
-
 $StarTime=get-date
 
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
@@ -74,8 +72,6 @@ Start-Transcript ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 
 $ActiveMinersIdCounter=0
 $Activeminers=@()
-$InitialProfitsScreenLimit=[Math]::Floor( 25 / (((Get-Content config.txt | Where-Object {$_ -like '@@GPUGROUPS=*'}) -replace '@@GPUGROUPS=*','' |ConvertFrom-Json) | Measure-Object).count) #screen adjust to number of groups
-$ProfitsScreenLimit=$InitialProfitsScreenLimit
 $ShowBestMinersOnly=$true
 $FirstTotalExecution =$true
 $IntervalStartAt = (Get-Date)
@@ -159,7 +155,9 @@ while ($true) {
     $Types=@()
     $Currency=@()
     
-        
+    
+    
+    
     $Location=(Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} )-replace '@@LOCATION=',''
 
     
@@ -177,6 +175,12 @@ while ($true) {
                                             }
                              }
                              
+
+
+    $InitialProfitsScreenLimit=[Math]::Floor( 25 / (($Types | Measure-Object).count)) #screen adjust to number of groups
+    if ($FirstTotalExecution) {$ProfitsScreenLimit=$InitialProfitsScreenLimit}
+                         
+
     $Currency=(Get-Content config.txt | Where-Object {$_ -like '@@CURRENCY=*'} )-replace '@@CURRENCY=',''
     $BechmarkintervalTime=(Get-Content config.txt | Where-Object {$_ -like '@@BENCHMARKTIME=*'} )-replace '@@BENCHMARKTIME=',''
     $LocalCurrency=(Get-Content config.txt | Where-Object {$_ -like '@@LOCALCURRENCY=*'} )-replace '@@LOCALCURRENCY=',''
@@ -186,6 +190,7 @@ while ($true) {
             'US'     {$LocalCurrency="DOLLAR"}
             'ASIA'   {$LocalCurrency="DOLLAR"}
             'GB'     {$LocalCurrency="GBP"}
+            default {$LocalCurrency="DOLLAR"}
             }
         }
     
@@ -237,7 +242,7 @@ while ($true) {
         
 
     $Rates = [pscustomObject]@{}
-    $Currency | ForEach-Object {$Rates | Add-Member $_ (Invoke-WebRequest "https://api.cryptonator.com/api/ticker/btc-$_" -UseBasicParsing | ConvertFrom-Json).ticker.price}
+    try { $Currency | ForEach-Object {$Rates | Add-Member $_ (Invoke-WebRequest "https://api.cryptonator.com/api/ticker/btc-$_" -UseBasicParsing | ConvertFrom-Json).ticker.price}} catch {}
 
  
 
@@ -269,8 +274,8 @@ while ($true) {
                 Exit}
  
             #Only want algos selected types
-            If ($Types.Count -ne 0 -and (Compare-Object $Types.Type $Miner.types -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0)
-                {
+       #     If ($Types.Count -ne 0 -and (Compare-Object $Types.Type $Miner.types -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0)
+        #        {
 
                     foreach ($Algo in ($Miner.Algorithms))
                         {
@@ -290,10 +295,10 @@ while ($true) {
                             $Hrs=$null
                             
     
-                            #generate pools for each type group
+                            #generate pools for each gpu group
                             ForEach ( $TypeGroup in $types) {
-
-                                $Pools | where-object Algorithm -eq $AlgoName | ForEach-Object {                         #Only want algos pools has  
+                              if  ((Compare-object $TypeGroup.type $Miner.Types -IncludeEqual -ExcludeDifferent | Measure-Object).count -gt 0) { #check group and miner types are the same
+                                $Pools | where-object Algorithm -eq $AlgoName | ForEach-Object {   #Search pools for that algo
                                     
                                         if ((($Pools | Where-Object Algorithm -eq $AlgoNameDual) -ne  $null) -or ($Miner.Dualmining -eq $false)){
                                            $DualMiningMainCoin=$Miner.DualMiningMainCoin -replace $null,""
@@ -328,7 +333,7 @@ while ($true) {
 
                                                 $PoolAbbName=$_.Abbname
                                                 $PoolName = $_.name
-                                                $PoolWorkers = $_.Poolworkers.tostring()
+                                                if ($_.PoolWorkers -eq $null) {$PoolWorkers=""} else {$PoolWorkers=$_.Poolworkers.tostring()}
                                                 $MinerProfitDual = $null
                                                 $PoolDual = $null
                                                 
@@ -411,14 +416,14 @@ while ($true) {
                                             }                       
                                          }          
      
-                            }        
-                            
+                            }  #end foreach pool
+                        } #  end if types 
                             
 
                         }
 
                         }
-                }            
+               # }            
         }
              
 
@@ -581,7 +586,7 @@ while ($true) {
                                                 
     $ActiveMiners | ForEach-Object {
 
-        if ($_.BenchmarkedTimes -lt 4 -and $_.isvalid -and ($_.Hashrate -eq 0 -or ($_.AlgorithmDual -ne $null -and $_.HashrateDual -eq 0)))
+        if ($_.BenchmarkedTimes -le 2 -and $_.isvalid -and ($_.Hashrate -eq 0 -or ($_.AlgorithmDual -ne $null -and $_.HashrateDual -eq 0)))
             {$_.NeedBenchmark=$true} 
         }
 
@@ -589,7 +594,7 @@ while ($true) {
     foreach ($TypeId in $Types.Id) {
 
         $BestId=($ActiveMiners |Where-Object IsValid | where-object GroupId -eq $TypeId | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object id)
-        $ActiveMiners[$BestId.PSObject.Properties.value].best=$true
+        if ($BestId -ne $null) {$ActiveMiners[$BestId.PSObject.Properties.value].best=$true}
         }
 
 
@@ -659,6 +664,7 @@ while ($true) {
                     'EURO' {$LabelProfit="EUR/Day" ; $localBTCvalue = [double]$CDKResponse.eur.rate}
                     'DOLLAR'     {$LabelProfit="USD/Day" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
                     'GBP'     {$LabelProfit="GBP/Day" ; $localBTCvalue = [double]$CDKResponse.gbp.rate}
+                    default {$LabelProfit="USD/Day" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
 
                 }
 
@@ -674,12 +680,13 @@ while ($true) {
 
     while ($Host.UI.RawUI.KeyAvailable)  {$host.ui.RawUi.Flushinputbuffer()} #keyb buffer flush
 
-    #loop to update info and check if miner is running                        
+    
+    #loop to update info and check if miner is running, exit loop is forced inside                        
     While (1 -eq 1) 
         {
 
         $ExitLoop = $false
-        if ($FirstLoopExecution -and $_.NeedBenchmark) {$_.BenchmarkedTimes++}
+        
         Clear-host
 
         #display interval
@@ -708,7 +715,7 @@ while ($true) {
   
           $ActiveMiners | Where-Object Status -eq 'Running'| Sort-Object GroupId | Format-Table -Wrap  (
               @{Label = "GroupName"; Expression = {$_.GroupName}}, 
-              @{Label = "Speed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive))+'s'} else {(ConvertTo-Hash  ($_.SpeedLive))+'/s|'+(ConvertTo-Hash ($_.SpeedLiveDual))+'/s'} }; Align = 'right'},     
+              @{Label = "Speed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive))+'/s'} else {(ConvertTo-Hash  ($_.SpeedLive))+'/s|'+(ConvertTo-Hash ($_.SpeedLiveDual))+'/s'} }; Align = 'right'},     
               @{Label = "BTC/Day"; Expression = {$_.ProfitLive.tostring("n5")}; Align = 'right'}, 
               @{Label = $LabelProfit; Expression = {(([double]$_.ProfitLive + [double]$_.ProfitLiveDual) *  [double]$localBTCvalue ).tostring("n2")}; Align = 'right'}, 
               @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm+$_.AlgoLabel       } else  {$_.Algorithm+$_.AlgoLabel+ '|' + $_.AlgorithmDual}}},   
@@ -746,7 +753,8 @@ while ($true) {
                     if ($ShowBestMinersOnly) {
                         $ProfitMiners=@()
                         $ActiveMiners | Where-Object IsValid |ForEach-Object {
-                                           $ExistsBest=$ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object Coin -eq $_.Coin | Where-Object CoinDual -eq $_.CoinDual | Where-Object IsValid -eq $true | Where-Object Profits -gt $_.Profits
+                            $ExistsBest=$ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object Coin -eq $_.Coin | Where-Object CoinDual -eq $_.CoinDual | Where-Object IsValid -eq $true | Where-Object Profits -gt $_.Profits 
+                                           if ($ExistsBest -eq $null -and $_.Profits -eq 0) {$ExistsBest=$ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object Coin -eq $_.Coin | Where-Object CoinDual -eq $_.CoinDual | Where-Object IsValid -eq $true | Where-Object hashrate -gt $_.hashrate}
                                            if ($ExistsBest -eq $null -or $_.NeedBenchmark -eq $true) {$ProfitMiners += $_}
                                            }
                            }
@@ -771,8 +779,8 @@ while ($true) {
                         @{Label = "Speed"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Hashrates}}}, 
                         @{Label = "BTC/Day"; Expression = {if ($_.NeedBenchmark) {"-------"} else {$_.Profits.tostring("n5")}}; Align = 'right'}, 
                         @{Label = $LabelProfit; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n2") } ; Align = 'right'},
-                        @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:P1}" -f $_.PoolFee}}; Align = 'right'},
-                        @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:P1}" -f $_.MinerFee}}; Align = 'right'},
+                        @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:P2}" -f $_.PoolFee}}; Align = 'right'},
+                        @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:P2}" -f $_.MinerFee}}; Align = 'right'},
                         @{Label = "Pool"; Expression = {$_.PoolAbbName}},
                         @{Label = "Location"; Expression = {$_.Location}}
                         
@@ -926,7 +934,7 @@ while ($true) {
                                         } 
 
 
-                            if ($FirstTotalExecution -eq $true) {$WalletStatusAtStart= $WalletStatus;$FirstTotalExecution=$false}
+                            if ($FirstTotalExecution -eq $true) {$WalletStatusAtStart= $WalletStatus}
  
                             $WalletStatus | Add-Member BalanceAtStart [double]$null
                             $WalletStatus | ForEach-Object{
@@ -982,6 +990,7 @@ while ($true) {
                    
 
                 $ActiveMiners | Where-Object Best -eq $true | ForEach-Object {
+                                if ($FirstLoopExecution -and $_.NeedBenchmark) {$_.BenchmarkedTimes++}
                                 $_.SpeedLive = 0
                                 $_.SpeedLiveDual = 0
                                 $_.ProfitLive = 0
@@ -1042,7 +1051,7 @@ while ($true) {
                 
                                         
                                 #Benchmark timeout
-                                if ($_.BenchmarketTimes -ge 3) {
+                                if ($_.BenchmarketTimes -ge 2) {
                                     $_.Status='Cancelled'
                                     $_.Best= $false
                                     $ExitLoop = $true
@@ -1096,9 +1105,7 @@ while ($true) {
     Remove-variable pools
     Get-Job -State Completed | Remove-Job
     [GC]::Collect() #force garbage recollector for free memory
-   
-
-
+    $FirstTotalExecution =$False
 }
 
 #-----------------------------------------------------------------------------------------------------------------------------------------

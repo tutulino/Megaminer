@@ -1,5 +1,23 @@
 
+Add-Type -Path .\OpenCL\*.cs
 
+
+$OCLPlatforms = @()
+$counter=0
+
+[OpenCl.Platform]::GetPlatformIDs() | ForEach-Object {
+    $OCLPlatforms+=[pscustomobject]@{
+            PlatformId=$counter
+            Name=$_.Name
+            Vendor=$_.vendor
+            }
+            $counter++
+       }
+       
+
+$OCLPlatforms | out-host
+
+<#
 
 
 #Get GPUPlatforms
@@ -19,7 +37,7 @@ $counter=0
 
 $GpuPlatforms | Out-Host
 
-<#
+ 
 
 #Get SMI info for nvidia cards
 $NvidiaCards=@()

@@ -35,11 +35,12 @@
 @@STARTSCREEN=PROFITS
 
 -- Gpu Groups, you can group your cards as you want, my recomendation is a group for each model of card on your rig. Each group will be bechmarking and running separately
--- You can identify your GPU platform and card id launching GpuList.bat 
+-- You can identify your GPUs id launching GpuList.bat. For NVIDIA, GPUPlatform is irrelevant, for AMD, try 0,1,2
 -- If you change this groups you must delete stats folder content for becnchmark run again
 -- Type must be NVIDIA or AMD 
 -- Example for rig with 5 nvidia identical cards @@GPUGROUPS=[{"GroupName" : "Rig1070","Type":"NVIDIA","GpuPlatform":"0","Gpus":"0,1,2,3,4"}]
 -- Example for rig with  7 nvidia (5x1080,2x1060) @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","GpuPlatform":"0","Gpus":"0,1,2,3,4"} , {"GroupName" : "1060","Type":"NVIDIA","GpuPlatform":"0","Gpus":"5,6"} ]
+-- For CPU Mining you must add a group with Type "CPU", example {"GroupName" : "CPU","Type":"CPU"}
 
 @@GPUGROUPS=[{"GroupName" : "1080ti","Type":"NVIDIA","GpuPlatform":"0","Gpus":"0"} , {"GroupName" : "1060","Type":"NVIDIA","GpuPlatform":"0","Gpus":"1"} ]
 

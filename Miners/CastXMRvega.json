@@ -1,0 +1,18 @@
+{
+"Path" : ".\\Bin\\AMD-CastXMRVega\\cast_xmr-vega.exe",
+"ExtractionPath" : ".\\Bin\\AMD-CastXMRVega\\",
+"Uri" : "http://www.gandalph3000.com/download/cast_xmr-vega-win64_070.zip",
+"Types" : ["AMD"],
+"Arguments" : "--remoteaccess -S #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --opencl #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+"API" : "castXMR",
+"Wrap" : false,
+"Dualmining":false,
+"PrelaunchCommand":"",
+"Algorithms": [
+                {"CryptoNight ":""}
+              ]
+
+}
+
+
+ 
