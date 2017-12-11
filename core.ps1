@@ -44,7 +44,7 @@ param(
 
 #--------------Load config.txt file
 
-
+$DEBUG = $false
 
 
 Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
@@ -265,7 +265,8 @@ while ($true) {
 
                     if ((($Pools | Where-Object Algorithm -eq $AlgoNameDual) -ne $null) -or ($Miner.Dualmining -eq $false)) {
 
-                        if ($_.info -eq $Miner.DualMiningMainCoin -or $Miner.Dualmining -eq $false) {
+                        if ($_.Algorithm -eq $Miner.DualMiningMainAlgo -or $Miner.Dualmining -eq $false) {
+                            # if ($_.info -eq $Miner.DualMiningMainCoin -or $Miner.Dualmining -eq $false) {
                             #not allow dualmining if main coin not coincide
 
                             $Arguments = $Miner.Arguments -replace '#PORT#', $_.Port `
@@ -363,7 +364,7 @@ while ($true) {
                                 Path                = $Miner.Path
                                 HashRate            = $HashRateValue
                                 HashRateDual        = $HashrateValueDual
-                                Hashrates           = if ($Miner.Dualmining) {(ConvertTo-Hash ($HashRateValue)) + "/s|" + (ConvertTo-Hash $HashrateValueDual) + "/s"} else {(ConvertTo-Hash $HashRateValue) + "/s"}
+                                Hashrates           = if ($Miner.Dualmining) {(ConvertTo-Hash ($HashRateValue)) + "s|" + (ConvertTo-Hash $HashrateValueDual) + "s"} else {(ConvertTo-Hash $HashRateValue) + "s"}
                                 API                 = $Miner.API
                                 Port                = $Miner.APIPort
                                 Wrap                = $Miner.Wrap
@@ -651,7 +652,7 @@ while ($true) {
 
         #display header
         "-----------------------------------------------------------------------------------------------------------------------"| Out-host
-        "  (E)nd Interval   (P)rofits    (C)urrent    (H)istory    (W)allets                       | Next Interval:  $TimetoNextIntervalSeconds secs" | Out-host
+        "  (E)nd Interval   (P)rofits    (C)urrent    (H)istory    (W)allets                       |  Next Interval:  $TimetoNextIntervalSeconds secs" | Out-host
         "-----------------------------------------------------------------------------------------------------------------------"| Out-host
 
         #display donation message
@@ -665,7 +666,7 @@ while ($true) {
         "------------------------------------------------ACTIVE MINERS----------------------------------------------------------"| Out-host
 
         $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
-            @{Label = "Speed"; Expression = {if ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive)) + 's'} else {(ConvertTo-Hash  ($_.SpeedLive)) + '/s|' + (ConvertTo-Hash ($_.SpeedLiveDual)) + '/s'} }; Align = 'right'},
+            @{Label = "Speed"; Expression = {if ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive)) + 's'} else {(ConvertTo-Hash  ($_.SpeedLive)) + 's|' + (ConvertTo-Hash ($_.SpeedLiveDual)) + 's'} }; Align = 'right'},
             @{Label = "mBTC/Day"; Expression = {($_.ProfitLive * 1000).tostring("n5")}; Align = 'right'},
             @{Label = $LabelProfit; Expression = {(([double]$_.ProfitLive + [double]$_.ProfitLiveDual) * [double]$localBTCvalue ).tostring("n2")}; Align = 'right'},
             @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else {$_.Algorithm + '|' + $_.AlgorithmDual}}},
@@ -688,66 +689,50 @@ while ($true) {
 
 
         #display profits screen
-        if ($Screen -eq "Profits") {
-            "----------------------------------------------------PROFITS------------------------------------------------------------"| Out-host
+        $TimeTaken = Measure-Command {
+            if ($Screen -eq "Profits") {
+                "----------------------------------------------------PROFITS------------------------------------------------------------"| Out-host
 
 
-            Set-ConsolePosition 80 $YToWriteMessages
+                Set-ConsolePosition 80 $YToWriteMessages
 
-            "(B)est Miners/All       (T)op " + [string]$InitialProfitsScreenLimit + "/All" | Out-Host
+                "(B)est Miners/All       (T)op " + [string]$InitialProfitsScreenLimit + "/All" | Out-Host
 
-            Set-ConsolePosition 0 $YToWriteData
+                Set-ConsolePosition 0 $YToWriteData
 
-            foreach ($Type in $Types) {
-                Write-Output "Type: $Type"
+                foreach ($Type in $Types) {
+                    Write-Output "Type: $Type"
 
-                if ($ShowBestMinersOnly) {
-                    $ProfitMiners = @()
-                    $ActiveMiners |
-                        Where-Object IsValid |
-                        Where-Object Types -Contains $Type |
-                        ForEach-Object {
-                        $ExistsBest = $ActiveMiners |
+                    if ($ShowBestMinersOnly) {
+                        $ProfitMiners = $ActiveMiners |
+                            Where-Object IsValid |
                             Where-Object Types -Contains $Type |
-                            Where-Object Algorithm -eq $_.Algorithm |
-                            Where-Object AlgorithmDual -eq $_.AlgorithmDual |
-                            Where-Object Coin -eq $_.Coin |
-                            Where-Object CoinDual -eq $_.CoinDual |
-                            Where-Object IsValid -eq $true |
-                            Where-Object Profits -gt $_.Profits
-                        if ($ExistsBest -eq $null -or $_.NeedBenchmark -eq $true) {$ProfitMiners += $_}
+                            Group-Object NeedBenchmark, Algorithm, AlgorithmDual, Coin, CoinDual |
+                            ForEach-Object { $_.Group | Sort-Object -Descending Profits | Select-Object -First 1}
+                    } else {
+                        $ProfitMiners = $ActiveMiners |
+                            Where-Object IsValid |
+                            Where-Object Types -Contains $Type
                     }
-                } else {
-                    $ProfitMiners = $ActiveMiners |
-                        Where-Object IsValid |
-                        Where-Object Types -Contains $Type
+
+                    #Display profits  information
+                    $ProfitMiners | Where-Object Types -Contains $Type | Sort-Object -Descending NeedBenchmark, Profits | Select-Object -First $ProfitsScreenLimit | Format-Table -GroupBy Type (
+                        @{Label = "Algo"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else {$_.Algorithm + '|' + $_.AlgorithmDual}}},
+                        @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else {($_.coin) + '|' + ($_.CoinDual)}}},
+                        @{Label = "Miner"; Expression = {$_.Name}},
+                        @{Label = "Speed"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Hashrates}}},
+                        @{Label = "mBTC/Day"; Expression = {if ($_.NeedBenchmark) {"-------"} else {($_.Profits * 1000).tostring("n5")}}; Align = 'right'},
+                        @{Label = $LabelProfit; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n2") } ; Align = 'right'},
+                        @{Label = "Pool"; Expression = {if ($_.PoolFee -ne $null) {"{0:P1}" -f $_.PoolFee}}; Align = 'right'},
+                        @{Label = "Miner"; Expression = {if ($_.MinerFee -ne $null) {"{0:P1}" -f $_.MinerFee}}; Align = 'right'},
+                        @{Label = "Pool"; Expression = {$_.PoolAbbName}},
+                        @{Label = "Location"; Expression = {$_.Location}}
+                    ) | Out-Host
+                    Remove-Variable ProfitMiners
                 }
-
-                # $inserted = 1
-                # $ProfitMiners2 = @()
-                # $ProfitMiners | Sort-Object -Descending Type, NeedBenchmark, Profits | ForEach-Object {
-                #     if ($inserted -le $ProfitsScreenLimit) {$ProfitMiners2 += $_ ; $inserted++} #this can be done with select-object -first but then memory leak happens, ¿why?
-                # }
-
-                #Display profits  information
-                $ProfitMiners | Sort-Object -Descending Type, NeedBenchmark, Profits | Select-Object -First $ProfitsScreenLimit | Format-Table -GroupBy Type (
-                    @{Label = "Algo"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else {$_.Algorithm + '|' + $_.AlgorithmDual}}},
-                    @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else {($_.coin) + '|' + ($_.CoinDual)}}},
-                    @{Label = "Miner"; Expression = {$_.Name}},
-                    @{Label = "Speed"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Hashrates}}},
-                    @{Label = "mBTC/Day"; Expression = {if ($_.NeedBenchmark) {"-------"} else {($_.Profits * 1000).tostring("n5")}}; Align = 'right'},
-                    @{Label = $LabelProfit; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n2") } ; Align = 'right'},
-                    @{Label = "Pool"; Expression = {if ($_.PoolFee -ne $null) {"{0:P1}" -f $_.PoolFee}}; Align = 'right'},
-                    @{Label = "Miner"; Expression = {if ($_.MinerFee -ne $null) {"{0:P1}" -f $_.MinerFee}}; Align = 'right'},
-                    @{Label = "Pool"; Expression = {$_.PoolAbbName}},
-                    @{Label = "Location"; Expression = {$_.Location}}
-                ) | Out-Host
-
-
-                Remove-Variable ProfitMiners
-                # Remove-Variable ProfitMiners2
             }
         }
+        If ($DEBUG) {Write-Output "DEBUG: Time Taken: $($TimeTaken.TotalMilliseconds) ms"}
 
 
 
@@ -928,7 +913,7 @@ while ($true) {
             $ActiveMiners | Where-Object ActivatedTimes -GT 0 | Sort-Object -Descending Status, {if ($_.Process -eq $null) {[DateTime]0}else {$_.Process.StartTime}} | Select-Object -First (1 + 6 + 6) | Format-Table -Wrap -GroupBy Status (
                 @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else {$_.Algorithm + '|' + $_.AlgorithmDual}}},
                 @{Label = "Coin"; Expression = {if ($_.CoinDual -eq $null) {$_.Coin} else {$_.Coin + '|' + $_.CoinDual}}},
-                @{Label = "Speed"; Expression = {if ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive)) + 's'} else {(ConvertTo-Hash  ($_.SpeedLive)) + '/s|' + (ConvertTo-Hash ($_.SpeedLiveDual)) + '/s'} }; Align = 'right'},
+                @{Label = "Speed"; Expression = {if ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive)) + 's'} else {(ConvertTo-Hash  ($_.SpeedLive)) + 's|' + (ConvertTo-Hash ($_.SpeedLiveDual)) + 's'} }; Align = 'right'},
                 @{Label = "Active"; Expression = {"{0:dd}:{0:hh}:{0:mm}" -f $_.ActiveTime}},
                 @{Label = "Command"; Expression = {"$($_.Path.TrimStart((Convert-Path ".\"))) $($_.Arguments)"}}
             ) | Out-Host

@@ -9,6 +9,7 @@
     "Wrap" : false,
     "DualMining": true,
     "DualMiningMainCoin": "Ethereum",
+    "DualMiningMainAlgo": "Ethash",
     "PrelaunchCommand":"",
     "Fee" : "0.02",
     "Algorithms": [
