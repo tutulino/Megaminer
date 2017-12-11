@@ -26,7 +26,7 @@ param(
 
 ##Parameters for testing, must be commented on real use
 
-#$MiningMode='Automatic'
+$MiningMode='Automatic'
 #$MiningMode='Automatic24h'
 #$MiningMode='Manual'
 
@@ -35,7 +35,7 @@ param(
 #$PoolsName='yiimp'
 #$PoolsName='nanopool'
 #$PoolsName=('hash_refinery','zpool')
-#$PoolsName='mining_pool_hub'
+$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
 #$PoolsName='hash_refinery'
 #$PoolsName='ahashpool'
@@ -171,6 +171,9 @@ while ($true) {
                                             $c=$c+1
                                             $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
                                             $_ | Add-Member GpusETHMode ($_.gpus -replace ',',' ')
+
+                                            $_ | Add-Member GpuPlatform (Get-Gpu-Platform $_.Type)
+
                                             $Types+=$_
                                             }
                              }
@@ -877,32 +880,40 @@ while ($true) {
                             $WalletsToCheck=@()
                             
                             $Pools  | where-object WalletMode -eq 'WALLET' | Select-Object PoolName,AbbName,User,WalletMode,WalletSymbol -unique  | ForEach-Object {
-                                $WalletsToCheck += [pscustomObject]@{
-                                            PoolName   = $_.PoolName
-                                            AbbName = $_.AbbName
-                                            WalletMode = $_.WalletMode
-                                            User       = ($_.User -split '\.')[0] #to allow payment id after wallet
-                                            Coin = $null
-                                            Algorithm = $null
-                                            OriginalAlgorithm =$null
-                                            OriginalCoin = $null
-                                            Host = $null
-                                            Symbol = $_.WalletSymbol
-                                            }
+                                    $WalletsToCheck += [pscustomObject]@{
+                                                PoolName   = $_.PoolName
+                                                AbbName = $_.AbbName
+                                                WalletMode = $_.WalletMode
+                                                User       = ($_.User -split '\.')[0] #to allow payment id after wallet
+                                                Coin = $null
+                                                Algorithm = $null
+                                                OriginalAlgorithm =$null
+                                                OriginalCoin = $null
+                                                Host = $null
+                                                Symbol = $_.WalletSymbol
+                                                }
                                 }
-                            $Pools  | where-object WalletMode -eq 'APIKEY' | Select-Object PoolName,AbbName,info,Algorithm,OriginalAlgorithm,OriginalCoin,Symbol,WalletMode  -unique  | ForEach-Object {
-                                $WalletsToCheck += [pscustomObject]@{
-                                            PoolName   = $_.PoolName
-                                            AbbName = $_.AbbName
-                                            WalletMode = $_.WalletMode
-                                            User       = $null
-                                            Coin = $_.Info
-                                            Algorithm =$_.Algorithm
-                                            OriginalAlgorithm =$_.OriginalAlgorithm
-                                            OriginalCoin = $_.OriginalCoin
-                                            Symbol = $_.Symbol
-                                            }
-                                }
+                            $Pools  | where-object WalletMode -eq 'APIKEY' | Select-Object PoolName,AbbName,info,Algorithm,OriginalAlgorithm,OriginalCoin,Symbol,WalletMode,WalletSymbol  -unique  | ForEach-Object {
+                                    
+
+                                    $ApiKeyPattern="@@APIKEY_"+$_.PoolName+"=*"
+                                    $ApiKey = (Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} )-replace $ApiKeyPattern,''
+                                
+                                    if ($Apikey -ne "") {
+                                            $WalletsToCheck += [pscustomObject]@{
+                                                        PoolName   = $_.PoolName
+                                                        AbbName = $_.AbbName
+                                                        WalletMode = $_.WalletMode
+                                                        User       = $null
+                                                        Coin = $_.Info
+                                                        Algorithm =$_.Algorithm
+                                                        OriginalAlgorithm =$_.OriginalAlgorithm
+                                                        OriginalCoin = $_.OriginalCoin
+                                                        Symbol = $_.WalletSymbol
+                                                        ApiKey = $ApiKey
+                                                        }
+                                                    }
+                                      }
 
                             $WalletStatus=@()
                             $WalletsToCheck |ForEach-Object {
@@ -951,7 +962,7 @@ while ($true) {
                             "Start Time: $StarTime" |out-host
 
                             $WalletStatus | where-object Balance -gt 0 | Sort-Object poolname | Format-Table -Wrap -groupby poolname (
-                                @{Label = "Symbol"; Expression = {$_.WalletSymbol}}, 
+                                @{Label = "Coin"; Expression = {$_.WalletSymbol}}, 
                                 @{Label = "Balance"; Expression = {$_.balance.tostring("n5")}; Align = 'right'},
                                 @{Label = "IncFromStart"; Expression = {($_.balance - $_.BalanceAtStart).tostring("n5")}; Align = 'right'}
                                 

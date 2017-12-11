@@ -39,11 +39,7 @@ if ($Querymode -eq "info"){
 
                         
                             try {
-
-                                $ApiKeyPattern='@@APIKEY_SUPRNOVA=*'
-                                $ApiKey = (Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} )-replace $ApiKeyPattern,''
-
-                                $http="http://"+$Info.Symbol+".suprnova.cc/index.php?page=api&action=getuserbalance&api_key="+$ApiKey+"&id="
+                                $http="http://"+$Info.Symbol+".suprnova.cc/index.php?page=api&action=getuserbalance&api_key="+$Info.ApiKey+"&id="
                                 #$http |write-host  
                                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12                              
                                 $Suprnova_Request =  Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5
@@ -133,6 +129,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     PoolHashRate    = [double]$ApiResponse.hashrate
                                     PoolName        = $Name
                                     WalletMode      = $WalletMode
+                                    WalletSymbol= $_.Coin #not symbol available
                                     OriginalAlgorithm =  $_.Algo
                                     OriginalCoin = $_.Coin
                                     Fee = 0.01

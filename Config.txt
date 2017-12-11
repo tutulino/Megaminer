@@ -42,7 +42,7 @@
 -- Example for rig with  7 nvidia (5x1080,2x1060) @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","GpuPlatform":"0","Gpus":"0,1,2,3,4"} , {"GroupName" : "1060","Type":"NVIDIA","GpuPlatform":"0","Gpus":"5,6"} ]
 -- For CPU Mining you must add a group with Type "CPU", example {"GroupName" : "CPU","Type":"CPU"}
 
-@@GPUGROUPS=[{"GroupName" : "1080ti","Type":"NVIDIA","GpuPlatform":"0","Gpus":"0"} , {"GroupName" : "1060","Type":"NVIDIA","GpuPlatform":"0","Gpus":"1"} ]
+@@GPUGROUPS=[{"GroupName" : "1080ti","Type":"NVIDIA","Gpus":"0"} , {"GroupName" : "1060","Type":"NVIDIA","Gpus":"1"} ]
 
 
 -- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX = YYYYY (XXX=currency symbol; YYYYY= your wallet)
