@@ -42,11 +42,13 @@
 
 @@GPUPLATFORM=0
 
+-- Coin IDs from http://whattomine.com/calculators 192 - Aeon, 210 - Zero, 213 - ETN
+@@CUSTOM_WTM_COINS=210
+
 -- WALLETS, for autoexchange pools you only need set a wallet for prefered currency (@@currency), other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining, you can add wallets while pattern @@WALLET_XXX (XXX=currency symbol)
 
 @@WALLET_BTC_NICE=3PFC7i8VT3jQG3ppoFEQyYy2wrg9YNoLmj
-@@WALLET_BTC=178YrJwP4RHUT1VxCzgUTBAgsLq1TsZbYo
--- @@WALLET_BTC=3FzmW9JMhgmRwipKkNnphxG73VPQMsYsN6
+@@WALLET_BTC=3FzmW9JMhgmRwipKkNnphxG73VPQMsYsN6
 @@WALLET_BTG=AdLbKEFQyKugXTduVAT1Z3KMMD7rhN8c6x
 @@WALLET_ETH=0x38973025136D1a5B773aE71c02cA24b365850A9A
 @@WALLET_LTC=MM8RmXUgxDwHJxrC54muF7KHciSCFS3gx3

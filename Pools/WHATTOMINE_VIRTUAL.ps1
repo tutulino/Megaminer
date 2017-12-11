@@ -89,11 +89,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         }
     }
 
-    # Coin IDs from http://whattomine.com/calculators
-    # 192 - Aeon, 210 - Zero, 213 - ETN
-    $CustomCoins = @(192, 210)
+    try {$CustomCoins = (Get-Content config.txt | Where-Object {$_ -like '@@CUSTOM_WTM_COINS=*'}) -replace '@@CUSTOM_WTM_COINS=', '' -split ','} catch {$CustomCoins = @()}
     foreach ($c in $CustomCoins) {
-        # Start-Sleep -Seconds 1
         $retries = 1
         do {
             try {
@@ -169,8 +166,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Result += [PSCustomObject]@{
             Algorithm             = $_.Algo
             Info                  = $_.Coin
-            Price                 = $Estimate * 0.95
-            Price24h              = $Estimate24h * 0.95
+            Price                 = $Estimate
+            Price24h              = $Estimate24h
             Protocol              = $_.Protocol
             Host                  = $_.Server
             Port                  = $_.Port
