@@ -614,7 +614,7 @@ while ($true) {
     $retries = 1
     do {
         try {
-            $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json | Select-Object -ExpandProperty BPI
+            $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json | Select-Object -ExpandProperty BPI
         } catch {start-sleep 3}
         $retries++
         if ($CDKResponse -eq $null) {start-sleep 3}
