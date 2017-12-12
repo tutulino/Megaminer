@@ -26,7 +26,7 @@ param(
 
 ##Parameters for testing, must be commented on real use
 
-#$MiningMode='Automatic'
+$MiningMode='Automatic'
 #$MiningMode='Automatic24h'
 #$MiningMode='Manual'
 
@@ -38,7 +38,7 @@ param(
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
 #$PoolsName='hash_refinery'
-#$PoolsName='ahashpool'
+$PoolsName='ahashpool'
 #$PoolsName='suprnova'
 
 #$PoolsName="Nicehash"
@@ -64,9 +64,9 @@ else {$PSDefaultParameterValues["*:Proxy"] = $Proxy}
 
 $ActiveMiners = @()
 
-#Start the log
+$LogFile=".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
+Start-Transcript $LogFile
 
-Start-Transcript ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 
 
 
@@ -77,7 +77,7 @@ $FirstTotalExecution =$true
 $StartTime=get-date
 
 
-Clear-Host
+
 set-WindowSize 120 60 
 
 
@@ -150,8 +150,7 @@ if ($MiningMode -eq 'Manual' -and ($Algorithm | measure-object).count -gt 1){
 #----------------------------------------------------------------------------------------------------------------------------
 
 $IntervalStartAt = (Get-Date)
-Clear-Host
-$repaintScreen=$true
+Clear-Host;$repaintScreen=$true
 
 while ($true) {
 
@@ -440,7 +439,7 @@ while ($true) {
              
 
         
-
+     
     #Launch download of miners    
     $Miners |
         where-object URI -ne $null | 
@@ -487,7 +486,7 @@ while ($true) {
 
                    
                     if (($Miner | Measure-Object).count -gt 1) {
-                            Clear-Host
+                            Clear-Host;$repaintScreen=$true
                             "DUPLICATED ALGO "+$MINER.ALGORITHM+" ON "+$MINER.NAME | Out-host 
                             EXIT}                 
 
@@ -668,11 +667,11 @@ while ($true) {
          #Call api to local currency conversion
         try {
                 $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing -TimeoutSec 2 | ConvertFrom-Json | Select-Object -ExpandProperty BPI
-                Clear-Host
+                Clear-Host;$repaintScreen=$true
             } 
                 
             catch {
-                Clear-Host
+                Clear-Host;$repaintScreen=$true
                 "COINDESK API NOT RESPONDING, NOT POSSIBLE LOCAL COIN CONVERSION" | Out-host 
                 }
                 
@@ -710,15 +709,14 @@ while ($true) {
             $TimetoNextIntervalSeconds=($TimetoNextInterval.Hours*3600)+($TimetoNextInterval.Minutes*60)+$TimetoNextInterval.Seconds
             if ($TimetoNextIntervalSeconds -lt 0) {$TimetoNextIntervalSeconds = 0}
 
-            Set-ConsolePosition 93 1
+            Set-ConsolePosition 93 2
             "Next Interval:  $TimetoNextIntervalSeconds secs" | Out-host
             Set-ConsolePosition 0 0
 
         #display header        
+        "-------------------------------------------   MegaMiner 5.0 beta 4   --------------------------------------------------"| Out-host
         "-----------------------------------------------------------------------------------------------------------------------"| Out-host
         "  (E)nd Interval   (P)rofits    (C)urrent    (H)istory    (W)allets                       |" | Out-host
-        "-----------------------------------------------------------------------------------------------------------------------"| Out-host
-        "" | Out-Host
       
         #display donation message
         
@@ -726,7 +724,7 @@ while ($true) {
 
         #display current mining info
 
-        "------------------------------------------------ACTIVE MINERS----------------------------------------------------------"| Out-host
+        "-----------------------------------------------------------------------------------------------------------------------"| Out-host
   
           $ActiveMiners | Where-Object Status -eq 'Running'| Sort-Object GroupId | Format-Table -Wrap  (
               @{Label = "GroupName"; Expression = {$_.GroupName}}, 
@@ -1149,5 +1147,6 @@ while ($true) {
 
 
 
-#Stop the log
+
+
 Stop-Transcript

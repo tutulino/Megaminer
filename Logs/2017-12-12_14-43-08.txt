@@ -1,0 +1,1439 @@
+﻿**********************
+Inicio de la transcripción de Windows PowerShell
+Hora de inicio: 20171212144308
+Nombre de usuario: HABITACION\admin
+Usuario RunAs: HABITACION\admin
+Nombre de la configuración: 
+Máquina: HABITACION (Microsoft Windows NT 10.0.16299.0)
+Aplicación host: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command & 'C:\Users\admin\.vscode\extensions\ms-vscode.powershell-1.5.1\scripts\Start-EditorServices.ps1' -EditorServicesVersion '1.5.1' -HostName 'Visual Studio Code Host' -HostProfileId 'Microsoft.VSCode' -HostVersion '1.5.1' -AdditionalModules @('PowerShellEditorServices.VSCode') -BundledModulesPath 'C:\Users\admin\.vscode\extensions\ms-vscode.powershell-1.5.1\modules' -EnableConsoleRepl -LogLevel 'Normal' -LogPath 'C:\Users\admin\.vscode\extensions\ms-vscode.powershell-1.5.1\logs\1513086079-7c1aa62a-a36d-44df-ba0b-e837be2b945e1513086077455\EditorServices.log' -SessionDetailsPath 'C:\Users\admin\.vscode\extensions\ms-vscode.powershell-1.5.1\sessions\PSES-VSCode-9592-474404' -FeatureFlags @()
+Id. de proceso: 12580
+PSVersion: 5.1.16299.64
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.64
+BuildVersion: 10.0.16299.64
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+La transcripción ha comenzado. El archivo de salida es .\Logs\2017-12-12_14-43-08.txt
+Parameter MiningMode not valid, valid options: Manual, Automatic, Automatic24h
+PS>@{ 'computerName' = $env:ComputerName; 'processId' = $PID; 'instanceId' = $host.InstanceId }
+
+Name                           Value
+----                           -----
+processId                      12580
+computerName                   HABITACION
+instanceId                     c8c34733-9cd7-40a2-83a5-4b7a83e7fd1b
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-PSBreakpoint): "Get-PSBreakpoint"
+>> CommandInvocation(Remove-PSBreakpoint): "Remove-PSBreakpoint"
+>> EnlaceDeParámetros(Remove-PSBreakpoint): nombre="Breakpoint"; valor="Punto de interrupción de línea en 'C:\Users\admin\Desktop\Megaminer\core.ps1:153'"
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Set-PSBreakpoint): "Set-PSBreakpoint"
+>> EnlaceDeParámetros(Set-PSBreakpoint): nombre="Script"; valor="c:\Users\admin\Desktop\Megaminer\core.ps1"
+>> EnlaceDeParámetros(Set-PSBreakpoint): nombre="Line"; valor="153"
+
+  ID Script                                                           Line Command                                                         Variable                                                        Action
+  -- ------                                                           ---- -------                                                         --------                                                        ------
+   1 core.ps1                                                          153
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-PSBreakpoint): "Get-PSBreakpoint"
+>> EnlaceDeParámetros(Get-PSBreakpoint): nombre="Type"; valor="Command"
+>> CommandInvocation(Remove-PSBreakpoint): "Remove-PSBreakpoint"
+La transcripción ha comenzado. El archivo de salida es .\Logs\2017-12-12_14-43-19.txt
+PS C:\Users\admin\Desktop\Megaminer> @{ 'computerName' = $env:ComputerName; 'processId' = $PID; 'instanceId' = $host.InstanceId }
+
+Name                           Value
+----                           -----
+processId                      12580
+computerName                   HABITACION
+instanceId                     c8c34733-9cd7-40a2-83a5-4b7a83e7fd1b
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="Global"
+
+Name                           Value
+----                           -----
+$
+?                              True
+^
+_
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algorithm
+CoinsName
+ConfirmPreference              High
+ConsoleFileName
+DebugPreference                SilentlyContinue
+Error                          {}
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+FormatEnumerationLimit         4
+Groupnames                     {}
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+InformationPreference          SilentlyContinue
+input                          {}
+IntervalStartAt                12/12/2017 14:43:19
+LASTEXITCODE                   0
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Megaminer
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace
+StartTime                      12/12/2017 14:43:19
+switch
+true                           True
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="Script"
+
+Name                           Value
+----                           -----
+$
+?                              True
+^
+_
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algorithm
+CoinsName
+ConfirmPreference              High
+ConsoleFileName
+DebugPreference                SilentlyContinue
+Error                          {}
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+FormatEnumerationLimit         4
+Groupnames                     {}
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+InformationPreference          SilentlyContinue
+input                          {}
+IntervalStartAt                12/12/2017 14:43:19
+LASTEXITCODE                   0
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Megaminer
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace
+StartTime                      12/12/2017 14:43:19
+switch
+true                           True
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+
+
+PS C:\Users\admin\Desktop\Megaminer> $global:__psEditorServices_CallStack = Get-PSCallStack; $global:__psEditorServices_CallStack
+
+Command  Arguments Location
+-------  --------- --------
+core.ps1 {}        core.ps1: línea 153
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="0"
+
+Name                           Value
+----                           -----
+$                              }
+?                              True
+^                              @{
+_
+__psEditorServices_CallStack   en <ScriptBlock>, C:\Users\admin\Desktop\Megaminer\core.ps1: línea 153
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algorithm
+CoinsName
+ConfirmPreference              High
+ConsoleFileName
+DebugPreference                SilentlyContinue
+Error                          {}
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+FormatEnumerationLimit         4
+Groupnames                     {}
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+InformationPreference          SilentlyContinue
+input                          {}
+IntervalStartAt                12/12/2017 14:43:19
+LASTEXITCODE                   0
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Megaminer
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace
+StartTime                      12/12/2017 14:43:19
+switch
+true                           True
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+
+
+Clean-screen : El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa 
+ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es 
+correcta e inténtelo de nuevo.
+En C:\Users\admin\Desktop\Megaminer\core.ps1: 153 Carácter: 1
++ Clean-screen
++ ~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (Clean-screen:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+Clean-screen : El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correcta e inténtelo de
+nuevo.
+En C:\Users\admin\Desktop\Megaminer\core.ps1: 153 Carácter: 1
++ Clean-screen
++ ~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (Clean-screen:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+>> @{ 'computerName' = $env:ComputerName; 'processId' = $PID; 'instanceId' = $host.InstanceId }
+
+Name                           Value
+----                           -----
+processId                      12580
+computerName                   HABITACION
+instanceId                     c8c34733-9cd7-40a2-83a5-4b7a83e7fd1b
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="Global"
+
+Name                           Value
+----                           -----
+$                              $global:__psEditorServices_CallStack
+?                              True
+^                              $global:__psEditorServices_CallStack
+_
+__psEditorServices_CallStack   en <ScriptBlock>, C:\Users\admin\Desktop\Megaminer\core.ps1: línea 153
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algorithm
+CoinsName
+ConfirmPreference              High
+ConsoleFileName
+DebugPreference                SilentlyContinue
+Error                          {El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correc...
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+FormatEnumerationLimit         4
+Groupnames                     {}
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+InformationPreference          SilentlyContinue
+input                          {}
+IntervalStartAt                12/12/2017 14:43:19
+LASTEXITCODE                   0
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Megaminer
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace                        en System.Management.Automation.CommandDiscovery.LookupCommandInfo(String commandName, CommandTypes commandTypes, SearchResolutionOptions searchResolutionOptions, CommandOrigin commandOrigin, ExecutionContext context)...
+StartTime                      12/12/2017 14:43:19
+switch
+true                           True
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="Script"
+
+Name                           Value
+----                           -----
+$                              $global:__psEditorServices_CallStack
+?                              True
+^                              $global:__psEditorServices_CallStack
+_
+__psEditorServices_CallStack   en <ScriptBlock>, C:\Users\admin\Desktop\Megaminer\core.ps1: línea 153
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algorithm
+CoinsName
+ConfirmPreference              High
+ConsoleFileName
+DebugPreference                SilentlyContinue
+Error                          {El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correc...
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+FormatEnumerationLimit         4
+Groupnames                     {}
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+InformationPreference          SilentlyContinue
+input                          {}
+IntervalStartAt                12/12/2017 14:43:19
+LASTEXITCODE                   0
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Megaminer
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace                        en System.Management.Automation.CommandDiscovery.LookupCommandInfo(String commandName, CommandTypes commandTypes, SearchResolutionOptions searchResolutionOptions, CommandOrigin commandOrigin, ExecutionContext context)...
+StartTime                      12/12/2017 14:43:19
+switch
+true                           True
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+
+
+PS C:\Users\admin\Desktop\Megaminer> $global:__psEditorServices_CallStack = Get-PSCallStack; $global:__psEditorServices_CallStack
+
+Command  Arguments Location
+-------  --------- --------
+core.ps1 {}        core.ps1: línea 155
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="0"
+
+Name                           Value
+----                           -----
+$                              }
+?                              True
+^                              @{
+_
+__psEditorServices_CallStack   en <ScriptBlock>, C:\Users\admin\Desktop\Megaminer\core.ps1: línea 155
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algorithm
+CoinsName
+ConfirmPreference              High
+ConsoleFileName
+DebugPreference                SilentlyContinue
+Error                          {El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correc...
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+FormatEnumerationLimit         4
+Groupnames                     {}
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+InformationPreference          SilentlyContinue
+input                          {}
+IntervalStartAt                12/12/2017 14:43:19
+LASTEXITCODE                   0
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Megaminer
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace                        en System.Management.Automation.CommandDiscovery.LookupCommandInfo(String commandName, CommandTypes commandTypes, SearchResolutionOptions searchResolutionOptions, CommandOrigin commandOrigin, ExecutionContext context)...
+StartTime                      12/12/2017 14:43:19
+switch
+true                           True
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Set-PSBreakpoint): "Set-PSBreakpoint"
+>> EnlaceDeParámetros(Set-PSBreakpoint): nombre="Script"; valor="c:\Users\admin\Desktop\Copia Megaminer Desarrollo\core.ps1"
+>> EnlaceDeParámetros(Set-PSBreakpoint): nombre="Line"; valor="153"
+
+  ID Script                                                           Line Command                                                         Variable                                                        Action
+  -- ------                                                           ---- -------                                                         --------                                                        ------
+   2 core.ps1                                                          153
+
+
+PS C:\Users\admin\Desktop\Megaminer> ErrorTerminación(): "Se ha detenido la canalización."
+>> ErrorTerminación(): "Se ha detenido la canalización."
+>> @{ 'computerName' = $env:ComputerName; 'processId' = $PID; 'instanceId' = $host.InstanceId }
+
+Name                           Value
+----                           -----
+processId                      12580
+computerName                   HABITACION
+instanceId                     c8c34733-9cd7-40a2-83a5-4b7a83e7fd1b
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-PSBreakpoint): "Get-PSBreakpoint"
+>> CommandInvocation(Remove-PSBreakpoint): "Remove-PSBreakpoint"
+>> EnlaceDeParámetros(Remove-PSBreakpoint): nombre="Breakpoint"; valor="Punto de interrupción de línea en 'C:\Users\admin\Desktop\Megaminer\core.ps1:153'"
+>> EnlaceDeParámetros(Remove-PSBreakpoint): nombre="Breakpoint"; valor="Punto de interrupción de línea en 'C:\Users\admin\Desktop\Copia Megaminer Desarrollo\core.ps1:153'"
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Set-PSBreakpoint): "Set-PSBreakpoint"
+>> EnlaceDeParámetros(Set-PSBreakpoint): nombre="Script"; valor="c:\Users\admin\Desktop\Megaminer\core.ps1"
+>> EnlaceDeParámetros(Set-PSBreakpoint): nombre="Line"; valor="153"
+
+  ID Script                                                           Line Command                                                         Variable                                                        Action
+  -- ------                                                           ---- -------                                                         --------                                                        ------
+   3 core.ps1                                                          153
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Set-PSBreakpoint): "Set-PSBreakpoint"
+>> EnlaceDeParámetros(Set-PSBreakpoint): nombre="Script"; valor="c:\Users\admin\Desktop\Copia Megaminer Desarrollo\core.ps1"
+>> EnlaceDeParámetros(Set-PSBreakpoint): nombre="Line"; valor="153"
+
+  ID Script                                                           Line Command                                                         Variable                                                        Action
+  -- ------                                                           ---- -------                                                         --------                                                        ------
+   4 core.ps1                                                          153
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-PSBreakpoint): "Get-PSBreakpoint"
+>> EnlaceDeParámetros(Get-PSBreakpoint): nombre="Type"; valor="Command"
+>> CommandInvocation(Remove-PSBreakpoint): "Remove-PSBreakpoint"
+La transcripción ha comenzado. El archivo de salida es .\Logs\2017-12-12_14-44-23.txt
+PS C:\Users\admin\Desktop\Megaminer> @{ 'computerName' = $env:ComputerName; 'processId' = $PID; 'instanceId' = $host.InstanceId }
+
+Name                           Value
+----                           -----
+processId                      12580
+computerName                   HABITACION
+instanceId                     c8c34733-9cd7-40a2-83a5-4b7a83e7fd1b
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="Global"
+
+Name                           Value
+----                           -----
+$                              $global:__psEditorServices_CallStack
+?                              True
+^                              $global:__psEditorServices_CallStack
+_
+__psEditorServices_CallStack   en <ScriptBlock>, C:\Users\admin\Desktop\Megaminer\core.ps1: línea 155
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algo                           @{Neoscrypt=-a Neoscrypt}
+AlgoLabel
+AlgoName                       NEOSCRYPT
+AlgoNameDual
+Algorithm
+Algorithms                     NEOSCRYPT
+ApiInitialPort                 2510
+ApiPort                        2500
+Arguments                      -o stratum+tcp://neoscrypt.mine.ahashpool.com:4233 -u 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM -p c=BTC,HAB_1080ti -R 10 -r 4 -b 2500 -d 0 -a Neoscrypt
+BechmarkintervalTime           200
+c                              2
+CoinsName
+CoinsWallets                   {PIRL, VTC, XVG, ZEC...}
+ConfirmPreference              High
+ConsoleFileName
+Currency                       BTC
+DebugPreference                SilentlyContinue
+DonateTime                     0
+DonationInterval               False
+DualMiningMainCoin
+ElapsedDonationTime            1
+Error                          {El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correc...
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+foreach
+FormatEnumerationLimit         4
+Groupnames                     {}
+HashrateValue                  0
+HashrateValueDual              0
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+Hrs
+InformationPreference          SilentlyContinue
+InitialProfitsScreenLimit      12
+input                          {}
+IntervalStartAt                12/12/2017 14:44:23
+LASTEXITCODE                   0
+LastIntervalTime               00:01:00.0435448
+LocalCurrency                  EURO
+location                       EUROPE
+LogFile                        .\Logs\2017-12-12_14-44-23.txt
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+Miner                          @{Path=.\Bin\NVIDIA-CcminerKlaust\ccminer.exe; ExtractionPath=.\Bin\NVIDIA-CcminerKlaust\; Uri=https://github.com/KlausT/ccminer/releases/download/8.15/ccminer-815-cuda9-x64.zip; Types=System.Object[]; Arguments=-o #PROTOCOL#://#SER...
+MinerFile                      CcminerKlaust.json
+MinerProfit                    0
+MinerProfitDual
+Miners                         {@{GroupName=1080ti; GroupId=0; Algorithm=BITCORE; AlgorithmDual=; Algorithms=BITCORE; AlgoLabel=; Coin=; CoinDual=; Symbol=; SymbolDual=; Name=ccminer-2.2; Path=.\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe; HashRate=0; HashRateDual=0; ...
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+NextInterval                   600
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolAbbName                    AHASH
+PoolDual
+PoolName                       AHASHPOOL
+Pools                          {@{Algorithm=bitcore; Info=; Price=1,424E-11; Price24h=1,192E-11; Protocol=stratum+tcp; Host=bitcore.mine.ahashpool.com; Port=3556; User=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM; Pass=c=BTC,#WorkerName#; Location=US; SSL=False; Symbol=; A...
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+PoolWorkers                    186
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProfitsScreenLimit             12
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Copia Megaminer Desarrollo
+Rates                          @{BTC=}
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace                        en System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)...
+StartTime                      12/12/2017 14:44:23
+switch
+true                           True
+TypeGroup                      @{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}
+Types                          {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+Types0                         {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+UserName                       tutulino
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+WorkerName                     HAB
+WorkerName2                    HAB_1080ti
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="Script"
+
+Name                           Value
+----                           -----
+$                              $global:__psEditorServices_CallStack
+?                              True
+^                              $global:__psEditorServices_CallStack
+_
+__psEditorServices_CallStack   en <ScriptBlock>, C:\Users\admin\Desktop\Megaminer\core.ps1: línea 155
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algo                           @{Neoscrypt=-a Neoscrypt}
+AlgoLabel
+AlgoName                       NEOSCRYPT
+AlgoNameDual
+Algorithm
+Algorithms                     NEOSCRYPT
+ApiInitialPort                 2510
+ApiPort                        2500
+Arguments                      -o stratum+tcp://neoscrypt.mine.ahashpool.com:4233 -u 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM -p c=BTC,HAB_1080ti -R 10 -r 4 -b 2500 -d 0 -a Neoscrypt
+BechmarkintervalTime           200
+c                              2
+CoinsName
+CoinsWallets                   {PIRL, VTC, XVG, ZEC...}
+ConfirmPreference              High
+ConsoleFileName
+Currency                       BTC
+DebugPreference                SilentlyContinue
+DonateTime                     0
+DonationInterval               False
+DualMiningMainCoin
+ElapsedDonationTime            1
+Error                          {El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correc...
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+foreach
+FormatEnumerationLimit         4
+Groupnames                     {}
+HashrateValue                  0
+HashrateValueDual              0
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+Hrs
+InformationPreference          SilentlyContinue
+InitialProfitsScreenLimit      12
+input                          {}
+IntervalStartAt                12/12/2017 14:44:23
+LASTEXITCODE                   0
+LastIntervalTime               00:01:00.0435448
+LocalCurrency                  EURO
+location                       EUROPE
+LogFile                        .\Logs\2017-12-12_14-44-23.txt
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+Miner                          @{Path=.\Bin\NVIDIA-CcminerKlaust\ccminer.exe; ExtractionPath=.\Bin\NVIDIA-CcminerKlaust\; Uri=https://github.com/KlausT/ccminer/releases/download/8.15/ccminer-815-cuda9-x64.zip; Types=System.Object[]; Arguments=-o #PROTOCOL#://#SER...
+MinerFile                      CcminerKlaust.json
+MinerProfit                    0
+MinerProfitDual
+Miners                         {@{GroupName=1080ti; GroupId=0; Algorithm=BITCORE; AlgorithmDual=; Algorithms=BITCORE; AlgoLabel=; Coin=; CoinDual=; Symbol=; SymbolDual=; Name=ccminer-2.2; Path=.\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe; HashRate=0; HashRateDual=0; ...
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+NextInterval                   600
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolAbbName                    AHASH
+PoolDual
+PoolName                       AHASHPOOL
+Pools                          {@{Algorithm=bitcore; Info=; Price=1,424E-11; Price24h=1,192E-11; Protocol=stratum+tcp; Host=bitcore.mine.ahashpool.com; Port=3556; User=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM; Pass=c=BTC,#WorkerName#; Location=US; SSL=False; Symbol=; A...
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+PoolWorkers                    186
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProfitsScreenLimit             12
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Copia Megaminer Desarrollo
+Rates                          @{BTC=}
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace                        en System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)...
+StartTime                      12/12/2017 14:44:23
+switch
+true                           True
+TypeGroup                      @{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}
+Types                          {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+Types0                         {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+UserName                       tutulino
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+WorkerName                     HAB
+WorkerName2                    HAB_1080ti
+
+
+PS C:\Users\admin\Desktop\Megaminer> $global:__psEditorServices_CallStack = Get-PSCallStack; $global:__psEditorServices_CallStack
+
+Command  Arguments Location
+-------  --------- --------
+core.ps1 {}        core.ps1: línea 153
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="0"
+
+Name                           Value
+----                           -----
+$                              }
+?                              True
+^                              @{
+_
+__psEditorServices_CallStack   en <ScriptBlock>, C:\Users\admin\Desktop\Copia Megaminer Desarrollo\core.ps1: línea 153
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algo                           @{Neoscrypt=-a Neoscrypt}
+AlgoLabel
+AlgoName                       NEOSCRYPT
+AlgoNameDual
+Algorithm
+Algorithms                     NEOSCRYPT
+ApiInitialPort                 2510
+ApiPort                        2500
+Arguments                      -o stratum+tcp://neoscrypt.mine.ahashpool.com:4233 -u 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM -p c=BTC,HAB_1080ti -R 10 -r 4 -b 2500 -d 0 -a Neoscrypt
+BechmarkintervalTime           200
+c                              2
+CoinsName
+CoinsWallets                   {PIRL, VTC, XVG, ZEC...}
+ConfirmPreference              High
+ConsoleFileName
+Currency                       BTC
+DebugPreference                SilentlyContinue
+DonateTime                     0
+DonationInterval               False
+DualMiningMainCoin
+ElapsedDonationTime            1
+Error                          {El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correc...
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+foreach
+FormatEnumerationLimit         4
+Groupnames                     {}
+HashrateValue                  0
+HashrateValueDual              0
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+Hrs
+InformationPreference          SilentlyContinue
+InitialProfitsScreenLimit      12
+input                          {}
+IntervalStartAt                12/12/2017 14:44:23
+LASTEXITCODE                   0
+LastIntervalTime               00:01:00.0435448
+LocalCurrency                  EURO
+location                       EUROPE
+LogFile                        .\Logs\2017-12-12_14-44-23.txt
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+Miner                          @{Path=.\Bin\NVIDIA-CcminerKlaust\ccminer.exe; ExtractionPath=.\Bin\NVIDIA-CcminerKlaust\; Uri=https://github.com/KlausT/ccminer/releases/download/8.15/ccminer-815-cuda9-x64.zip; Types=System.Object[]; Arguments=-o #PROTOCOL#://#SER...
+MinerFile                      CcminerKlaust.json
+MinerProfit                    0
+MinerProfitDual
+Miners                         {@{GroupName=1080ti; GroupId=0; Algorithm=BITCORE; AlgorithmDual=; Algorithms=BITCORE; AlgoLabel=; Coin=; CoinDual=; Symbol=; SymbolDual=; Name=ccminer-2.2; Path=.\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe; HashRate=0; HashRateDual=0; ...
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+NextInterval                   600
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolAbbName                    AHASH
+PoolDual
+PoolName                       AHASHPOOL
+Pools                          {@{Algorithm=bitcore; Info=; Price=1,424E-11; Price24h=1,192E-11; Protocol=stratum+tcp; Host=bitcore.mine.ahashpool.com; Port=3556; User=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM; Pass=c=BTC,#WorkerName#; Location=US; SSL=False; Symbol=; A...
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+PoolWorkers                    186
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProfitsScreenLimit             12
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Copia Megaminer Desarrollo
+Rates                          @{BTC=}
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace                        en System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)...
+StartTime                      12/12/2017 14:44:23
+switch
+true                           True
+TypeGroup                      @{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}
+Types                          {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+Types0                         {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+UserName                       tutulino
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+WorkerName                     HAB
+WorkerName2                    HAB_1080ti
+
+
+PS C:\Users\admin\Desktop\Megaminer> @{ 'computerName' = $env:ComputerName; 'processId' = $PID; 'instanceId' = $host.InstanceId }
+
+Name                           Value
+----                           -----
+processId                      12580
+computerName                   HABITACION
+instanceId                     c8c34733-9cd7-40a2-83a5-4b7a83e7fd1b
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="Global"
+
+Name                           Value
+----                           -----
+$                              $global:__psEditorServices_CallStack
+?                              True
+^                              $global:__psEditorServices_CallStack
+_
+__psEditorServices_CallStack   en <ScriptBlock>, C:\Users\admin\Desktop\Copia Megaminer Desarrollo\core.ps1: línea 153
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algo                           @{Neoscrypt=-a Neoscrypt}
+AlgoLabel
+AlgoName                       NEOSCRYPT
+AlgoNameDual
+Algorithm
+Algorithms                     NEOSCRYPT
+ApiInitialPort                 2510
+ApiPort                        2500
+Arguments                      -o stratum+tcp://neoscrypt.mine.ahashpool.com:4233 -u 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM -p c=BTC,HAB_1080ti -R 10 -r 4 -b 2500 -d 0 -a Neoscrypt
+BechmarkintervalTime           200
+c                              2
+CoinsName
+CoinsWallets                   {PIRL, VTC, XVG, ZEC...}
+ConfirmPreference              High
+ConsoleFileName
+Currency                       BTC
+DebugPreference                SilentlyContinue
+DonateTime                     0
+DonationInterval               False
+DualMiningMainCoin
+ElapsedDonationTime            1
+Error                          {El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correc...
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+foreach
+FormatEnumerationLimit         4
+Groupnames                     {}
+HashrateValue                  0
+HashrateValueDual              0
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+Hrs
+InformationPreference          SilentlyContinue
+InitialProfitsScreenLimit      12
+input                          {}
+IntervalStartAt                12/12/2017 14:44:23
+LASTEXITCODE                   0
+LastIntervalTime               00:01:00.0435448
+LocalCurrency                  EURO
+location                       EUROPE
+LogFile                        .\Logs\2017-12-12_14-44-23.txt
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+Miner                          @{Path=.\Bin\NVIDIA-CcminerKlaust\ccminer.exe; ExtractionPath=.\Bin\NVIDIA-CcminerKlaust\; Uri=https://github.com/KlausT/ccminer/releases/download/8.15/ccminer-815-cuda9-x64.zip; Types=System.Object[]; Arguments=-o #PROTOCOL#://#SER...
+MinerFile                      CcminerKlaust.json
+MinerProfit                    0
+MinerProfitDual
+Miners                         {@{GroupName=1080ti; GroupId=0; Algorithm=BITCORE; AlgorithmDual=; Algorithms=BITCORE; AlgoLabel=; Coin=; CoinDual=; Symbol=; SymbolDual=; Name=ccminer-2.2; Path=.\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe; HashRate=0; HashRateDual=0; ...
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+NextInterval                   600
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolAbbName                    AHASH
+PoolDual
+PoolName                       AHASHPOOL
+Pools                          {@{Algorithm=bitcore; Info=; Price=1,424E-11; Price24h=1,192E-11; Protocol=stratum+tcp; Host=bitcore.mine.ahashpool.com; Port=3556; User=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM; Pass=c=BTC,#WorkerName#; Location=US; SSL=False; Symbol=; A...
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+PoolWorkers                    186
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProfitsScreenLimit             12
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Copia Megaminer Desarrollo
+Rates                          @{BTC=}
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace                        en System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)...
+StartTime                      12/12/2017 14:44:23
+switch
+true                           True
+TypeGroup                      @{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}
+Types                          {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+Types0                         {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+UserName                       tutulino
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+WorkerName                     HAB
+WorkerName2                    HAB_1080ti
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="Script"
+
+Name                           Value
+----                           -----
+$                              $global:__psEditorServices_CallStack
+?                              True
+^                              $global:__psEditorServices_CallStack
+_
+__psEditorServices_CallStack   en <ScriptBlock>, C:\Users\admin\Desktop\Copia Megaminer Desarrollo\core.ps1: línea 153
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algo                           @{Neoscrypt=-a Neoscrypt}
+AlgoLabel
+AlgoName                       NEOSCRYPT
+AlgoNameDual
+Algorithm
+Algorithms                     NEOSCRYPT
+ApiInitialPort                 2510
+ApiPort                        2500
+Arguments                      -o stratum+tcp://neoscrypt.mine.ahashpool.com:4233 -u 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM -p c=BTC,HAB_1080ti -R 10 -r 4 -b 2500 -d 0 -a Neoscrypt
+BechmarkintervalTime           200
+c                              2
+CoinsName
+CoinsWallets                   {PIRL, VTC, XVG, ZEC...}
+ConfirmPreference              High
+ConsoleFileName
+Currency                       BTC
+DebugPreference                SilentlyContinue
+DonateTime                     0
+DonationInterval               False
+DualMiningMainCoin
+ElapsedDonationTime            1
+Error                          {El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correc...
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+foreach
+FormatEnumerationLimit         4
+Groupnames                     {}
+HashrateValue                  0
+HashrateValueDual              0
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+Hrs
+InformationPreference          SilentlyContinue
+InitialProfitsScreenLimit      12
+input                          {}
+IntervalStartAt                12/12/2017 14:44:23
+LASTEXITCODE                   0
+LastIntervalTime               00:01:00.0435448
+LocalCurrency                  EURO
+location                       EUROPE
+LogFile                        .\Logs\2017-12-12_14-44-23.txt
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+Miner                          @{Path=.\Bin\NVIDIA-CcminerKlaust\ccminer.exe; ExtractionPath=.\Bin\NVIDIA-CcminerKlaust\; Uri=https://github.com/KlausT/ccminer/releases/download/8.15/ccminer-815-cuda9-x64.zip; Types=System.Object[]; Arguments=-o #PROTOCOL#://#SER...
+MinerFile                      CcminerKlaust.json
+MinerProfit                    0
+MinerProfitDual
+Miners                         {@{GroupName=1080ti; GroupId=0; Algorithm=BITCORE; AlgorithmDual=; Algorithms=BITCORE; AlgoLabel=; Coin=; CoinDual=; Symbol=; SymbolDual=; Name=ccminer-2.2; Path=.\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe; HashRate=0; HashRateDual=0; ...
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+NextInterval                   600
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolAbbName                    AHASH
+PoolDual
+PoolName                       AHASHPOOL
+Pools                          {@{Algorithm=bitcore; Info=; Price=1,424E-11; Price24h=1,192E-11; Protocol=stratum+tcp; Host=bitcore.mine.ahashpool.com; Port=3556; User=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM; Pass=c=BTC,#WorkerName#; Location=US; SSL=False; Symbol=; A...
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+PoolWorkers                    186
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProfitsScreenLimit             12
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Copia Megaminer Desarrollo
+Rates                          @{BTC=}
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace                        en System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)...
+StartTime                      12/12/2017 14:44:23
+switch
+true                           True
+TypeGroup                      @{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}
+Types                          {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+Types0                         {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+UserName                       tutulino
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+WorkerName                     HAB
+WorkerName2                    HAB_1080ti
+
+
+PS C:\Users\admin\Desktop\Megaminer> $global:__psEditorServices_CallStack = Get-PSCallStack; $global:__psEditorServices_CallStack
+
+Command  Arguments Location
+-------  --------- --------
+core.ps1 {}        core.ps1: línea 155
+
+
+PS C:\Users\admin\Desktop\Megaminer> CommandInvocation(Get-Variable): "Get-Variable"
+>> EnlaceDeParámetros(Get-Variable): nombre="Scope"; valor="0"
+
+Name                           Value
+----                           -----
+$                              }
+?                              True
+^                              @{
+_
+__psEditorServices_CallStack   en <ScriptBlock>, C:\Users\admin\Desktop\Copia Megaminer Desarrollo\core.ps1: línea 155
+ActiveMiners                   {}
+ActiveMinersIdCounter          0
+Algo                           @{Neoscrypt=-a Neoscrypt}
+AlgoLabel
+AlgoName                       NEOSCRYPT
+AlgoNameDual
+Algorithm
+Algorithms                     NEOSCRYPT
+ApiInitialPort                 2510
+ApiPort                        2500
+Arguments                      -o stratum+tcp://neoscrypt.mine.ahashpool.com:4233 -u 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM -p c=BTC,HAB_1080ti -R 10 -r 4 -b 2500 -d 0 -a Neoscrypt
+BechmarkintervalTime           200
+c                              2
+CoinsName
+CoinsWallets                   {PIRL, VTC, XVG, ZEC...}
+ConfirmPreference              High
+ConsoleFileName
+Currency                       BTC
+DebugPreference                SilentlyContinue
+DonateTime                     0
+DonationInterval               False
+DualMiningMainCoin
+ElapsedDonationTime            1
+Error                          {El término 'Clean-screen' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correc...
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+ExecutionContext               System.Management.Automation.EngineIntrinsics
+false                          False
+FirstTotalExecution            True
+foreach
+FormatEnumerationLimit         4
+Groupnames                     {}
+HashrateValue                  0
+HashrateValueDual              0
+HOME                           C:\Users\admin
+Host                           System.Management.Automation.Internal.Host.InternalHost
+Hrs
+InformationPreference          SilentlyContinue
+InitialProfitsScreenLimit      12
+input                          {}
+IntervalStartAt                12/12/2017 14:44:23
+LASTEXITCODE                   0
+LastIntervalTime               00:01:00.0435448
+LocalCurrency                  EURO
+location                       EUROPE
+LogFile                        .\Logs\2017-12-12_14-44-23.txt
+MaximumAliasCount              4096
+MaximumDriveCount              4096
+MaximumErrorCount              256
+MaximumFunctionCount           4096
+MaximumHistoryCount            4096
+MaximumVariableCount           4096
+Miner                          @{Path=.\Bin\NVIDIA-CcminerKlaust\ccminer.exe; ExtractionPath=.\Bin\NVIDIA-CcminerKlaust\; Uri=https://github.com/KlausT/ccminer/releases/download/8.15/ccminer-815-cuda9-x64.zip; Types=System.Object[]; Arguments=-o #PROTOCOL#://#SER...
+MinerFile                      CcminerKlaust.json
+MinerProfit                    0
+MinerProfitDual
+Miners                         {@{GroupName=1080ti; GroupId=0; Algorithm=BITCORE; AlgorithmDual=; Algorithms=BITCORE; AlgoLabel=; Coin=; CoinDual=; Symbol=; SymbolDual=; Name=ccminer-2.2; Path=.\Bin\NVIDIA-ccminer-2.2\ccminer-x64.exe; HashRate=0; HashRateDual=0; ...
+MiningMode                     Automatic
+MyInvocation                   System.Management.Automation.InvocationInfo
+NestedPromptLevel              0
+NextInterval                   600
+null
+OutputEncoding                 System.Text.ASCIIEncoding
+ParamAlgorithmBCK
+ParamCoinsNameBCK
+ParamMiningModeBCK             Automatic
+ParamPoolsNameBCK              ahashpool
+PID                            12580
+PoolAbbName                    AHASH
+PoolDual
+PoolName                       AHASHPOOL
+Pools                          {@{Algorithm=bitcore; Info=; Price=1,424E-11; Price24h=1,192E-11; Protocol=stratum+tcp; Host=bitcore.mine.ahashpool.com; Port=3556; User=1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM; Pass=c=BTC,#WorkerName#; Location=US; SSL=False; Symbol=; A...
+PoolsChecking                  @{Disclaimer=Autoexchange to @@currency coin specified in config.txt, no registration required; ActiveOnManualMode=False; ActiveOnAutomaticMode=True; ActiveOnAutomatic24hMode=True; ApiData=True; AbbName=AHASH; WalletMode=WALLET; Nam...
+PoolsErrors
+PoolsName                      ahashpool
+PoolWorkers                    186
+profile                        C:\Users\admin\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
+ProfitsScreenLimit             12
+ProgressPreference             Continue
+Proxy
+PSBoundParameters              {}
+PSCmdlet                       System.Management.Automation.PSScriptCmdlet
+PSCommandPath                  C:\Users\admin\Desktop\Megaminer\core.ps1
+PSCulture                      es-ES
+PSDebugContext                 System.Management.Automation.PSDebugContext
+PSDefaultParameterValues       {}
+PSEdition                      Desktop
+psEditor                       Microsoft.PowerShell.EditorServices.Extensions.EditorObject
+PSEmailServer
+PSHOME                         C:\Windows\SysWOW64\WindowsPowerShell\v1.0
+PSItem
+PSScriptRoot                   C:\Users\admin\Desktop\Megaminer
+PSSessionApplicationName       wsman
+PSSessionConfigurationName     http://schemas.microsoft.com/powershell/Microsoft.PowerShell
+PSSessionOption                System.Management.Automation.Remoting.PSSessionOption
+PSUICulture                    es-ES
+PSVersionTable                 {PSVersion, PSEdition, PSCompatibleVersions, BuildVersion...}
+PWD                            C:\Users\admin\Desktop\Copia Megaminer Desarrollo
+Rates                          @{BTC=}
+Screen                         PROFITS
+ShellId                        Microsoft.PowerShell
+ShowBestMinersOnly             True
+StackTrace                        en System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)...
+StartTime                      12/12/2017 14:44:23
+switch
+true                           True
+TypeGroup                      @{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}
+Types                          {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+Types0                         {@{GroupName=1080ti; Type=NVIDIA; Gpus=0; Id=0; GpusClayMode=0; GpusETHMode=0; GpusNsgMode=-d 0; GpuPlatform=0}, @{GroupName=1060; Type=NVIDIA; Gpus=1; Id=1; GpusClayMode=1; GpusETHMode=1; GpusNsgMode=-d 1; GpuPlatform=0}}
+UserName                       tutulino
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+WorkerName                     HAB
+WorkerName2                    HAB_1080ti
+
+
+PS C:\Users\admin\Desktop\Megaminer> ErrorTerminación(): "Se ha detenido la canalización."
+>> @{ 'computerName' = $env:ComputerName; 'processId' = $PID; 'instanceId' = $host.InstanceId }
+
+Name                           Value
+----                           -----
+processId                      12580
+computerName                   HABITACION
+instanceId                     c8c34733-9cd7-40a2-83a5-4b7a83e7fd1b
+
+
