@@ -665,7 +665,8 @@ while ($true) {
 
         "------------------------------------------------ACTIVE MINERS----------------------------------------------------------"| Out-host
 
-        $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
+        $ActiveMiners | Where-Object Best | Format-Table -Wrap  (
+        # $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
             @{Label = "Speed"; Expression = {if ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive)) + 's'} else {(ConvertTo-Hash  ($_.SpeedLive)) + 's|' + (ConvertTo-Hash ($_.SpeedLiveDual)) + 's'} }; Align = 'right'},
             @{Label = "mBTC/Day"; Expression = {($_.ProfitLive * 1000).tostring("n5")}; Align = 'right'},
             @{Label = $LabelProfit; Expression = {(([double]$_.ProfitLive + [double]$_.ProfitLiveDual) * [double]$localBTCvalue ).tostring("n2")}; Align = 'right'},
