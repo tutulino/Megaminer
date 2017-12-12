@@ -74,14 +74,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         $Divisor = 1000000000
 
-        switch ($Algo) {
-            "Ethash" {$coin = "Ethereum"} #must force to allow dualmining Ethereum+?
-            "Lbry" {$coin = "Lbry"}
-            "Pascal" {$coin = "Pascal"}
-            "Blake2b" {$coin = "Siacoin"}
-            "Blake14r" {$coin = "Decred"}
-            default {$coin = $Algo}
-        }
+        # switch ($Algo) {
+        #     "Ethash" {$coin = "Ethereum"} #must force to allow dualmining Ethereum+?
+        #     "Lbry" {$coin = "Lbry"}
+        #     "Pascal" {$coin = "Pascal"}
+        #     "Blake2b" {$coin = "Siacoin"}
+        #     "Blake14r" {$coin = "Decred"}
+        #     default {$coin = $Algo}
+        # }
 
         foreach ($location in $Locations) {
 
