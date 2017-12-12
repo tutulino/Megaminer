@@ -108,7 +108,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 $Locations | ForEach-Object {
                         $Location = $_
 
-                        if ($MiningPoolHub_Algorithm -ne 'Blake2b') { #mph has different stratum protocol for blake2b, it has problem with some miners
+
                                 $Result+=[PSCustomObject]@{
                                             Algorithm     = $MiningPoolHub_Algorithm
                                             Info          = $MiningPoolHub_Coin
@@ -133,7 +133,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             Fee = 0.009
                                             EthStMode = 3
                                             }
-                                        }
                         }
 
             }
