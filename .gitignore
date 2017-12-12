@@ -1,6 +1,8 @@
 Bin/**/
 Logs/*-*.txt
 Stats/*_HashRate.txt
+Cache/*
 
 .vscode/
 Donation.ctr
+!empty.txt

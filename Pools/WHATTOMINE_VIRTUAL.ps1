@@ -66,15 +66,19 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     do {
         try {
             $http = "https://whattomine.com/coins.json"
-            $WTMResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty coins
+            $Response = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5
+            If ($Response.StatusCode -eq 200) {
+                $Response.Content | Set-Content .\Cache\wtm-coins.json
+                $WTMResponse = $Response.Content | ConvertFrom-Json | Select-Object -ExpandProperty coins
+            }
         } catch {start-sleep 2}
         $retries++
         if ($WTMResponse -eq $null -or $WTMResponse -eq "") {start-sleep 3}
     } while ($WTMResponse -eq $null -and $retries -le 3)
 
     if ($retries -gt 3) {
-        Write-Host $Name 'API NOT RESPONDING...ABORTING'
-        Exit
+        Write-Host $Name 'API NOT RESPONDING...USING CACHE'
+        try { $WTMResponse = (Get-Content -Path ".\Cache\wtm-coins.json") | ConvertFrom-Json | Select-Object -ExpandProperty coins } catch { Write-Host "No Cache. Exiting"; Exit}
     }
 
     $WTMResponse.psobject.properties.name | ForEach-Object {
@@ -95,13 +99,18 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         do {
             try {
                 $http = "http://whattomine.com/coins/$c.json"
-                $WTMCoinResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+                $Response = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5
+                If ($Response.StatusCode -eq 200) {
+                    $Response.Content | Set-Content ".\Cache\wtm-$c.json"
+                    $WTMCoinResponse = $Response.Content | ConvertFrom-Json
+                }
             } catch {start-sleep 2}
             $retries++
             if ($WTMCoinResponse -eq $null -or $WTMCoinResponse -eq "") {start-sleep 3}
         } while ($WTMCoinResponse -eq $null -and $retries -le 3)
         if ($retries -gt 3) {
-            Write-Host $Name 'API NOT RESPONDING...SKIPPING COIN'
+            Write-Host $Name 'COIN API NOT RESPONDING...USING CACHE'
+            try { $WTMCoinResponse = (Get-Content -Path ".\Cache\wtm-$c.json") | ConvertFrom-Json } catch { Write-Host "No Cache. Skipping" }
         }
 
         $WTMCoinResponse.algorithm = get-algo-unified-name ($WTMCoinResponse.algorithm)
@@ -113,6 +122,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         }
         try { $WTMResponse | Add-Member $NewCoinName $WTMCoinResponse } catch {}
         remove-variable WTMCoinResponse
+
     }
 
     #search on pools where to mine coins, switch sentence determines order to look, if one pool has one coin, no more pools for that coin are searched after.
@@ -185,6 +195,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         }
     }
     remove-variable WTMResponse
+    remove-variable Response
     remove-variable Pools
     remove-variable WTMcoin
     remove-variable HPools
