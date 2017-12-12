@@ -176,8 +176,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Result += [PSCustomObject]@{
             Algorithm             = $_.Algo
             Info                  = $_.Coin
-            Price                 = $Estimate
-            Price24h              = $Estimate24h
+            Price                 = $Estimate * 0.9
+            Price24h              = $Estimate24h * 0.9
             Protocol              = $_.Protocol
             Host                  = $_.Server
             Port                  = $_.Port
