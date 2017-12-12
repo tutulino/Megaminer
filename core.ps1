@@ -381,6 +381,7 @@ while ($true) {
                                 Wrap                = $Miner.Wrap
                                 URI                 = $Miner.URI
                                 Arguments           = $Arguments
+                                BenchmarkArg        = $Miner.BenchmarkArg
                                 Profit              = $MinerProfit
                                 ProfitDual          = $MinerProfitDual
                                 PoolPrice           = if ($MiningMode -eq 'Automatic24h') {[double]$_.Price24h} else {[double]$_.Price}
@@ -490,7 +491,6 @@ while ($true) {
             Where-Object CoinDual -eq $_.CoinDual |
             Where-Object AlgorithmDual -eq $_.AlgorithmDual |
             Where-Object PoolAbbName -eq $_.PoolAbbName |
-            Where-Object Arguments -eq $_.Arguments|
             Where-Object Arguments -eq $_.Arguments |
             Where-Object Location -eq $_.Location |
             Where-Object ConfigFileArguments -eq $_.ConfigFileArguments
@@ -507,6 +507,7 @@ while ($true) {
                 CoinDual             = $_.CoinDual
                 Path                 = Convert-Path $_.Path
                 Arguments            = $_.Arguments
+                BenchmarkArg         = $_.BenchmarkArg
                 Wrap                 = $_.Wrap
                 API                  = $_.API
                 Port                 = $_.Port
@@ -605,8 +606,11 @@ while ($true) {
             #run prelaunch command
             if ($_.PrelaunchCommand -ne $null -and $_.PrelaunchCommand -ne "") {Start-Process -FilePath $_.PrelaunchCommand}
 
-            if ($_.Wrap) {$_.Process = Start-Process -FilePath "PowerShell" -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$($_.Arguments)' -WorkingDirectory '$(Split-Path $_.Path)'" -PassThru}
-            else {$_.Process = Start-SubProcess -FilePath $_.Path -ArgumentList $_.Arguments -WorkingDirectory (Split-Path $_.Path)}
+            $Arguments = $_.Arguments
+            if ($_.NeedBenchmark -and ($_.BenchmarkArg).length -gt 0 ) {$Arguments += (" " + $_.BenchmarkArg) }
+
+            if ($_.Wrap) {$_.Process = Start-Process -FilePath "PowerShell" -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$Arguments' -WorkingDirectory '$(Split-Path $_.Path)'" -PassThru}
+            else {$_.Process = Start-SubProcess -FilePath $_.Path -ArgumentList $Arguments -WorkingDirectory (Split-Path $_.Path)}
 
             if ($_.NeedBenchmark) {$NextInterval = $BechmarkintervalTime} #if one need benchmark next interval will be short
 
