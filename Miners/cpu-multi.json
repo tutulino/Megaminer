@@ -4,7 +4,8 @@
     "Uri" : "https://github.com/tpruvot/cpuminer-multi/releases/download/v1.3.1-multi/cpuminer-multi-rel1.3.1-x64.zip",
     "Types" : ["CPU"],
     "Arguments" : "-b #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
-    "API" : "Ccminer",    "Wrap" : false,
+    "API" : "Ccminer",
+    "Wrap" : false,
     "Dualmining":false,
     "PrelaunchCommand":"",
     "Algorithms": [

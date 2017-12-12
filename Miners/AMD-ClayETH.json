@@ -5,7 +5,8 @@
     "Types" : ["AMD"],
     "Arguments" : "-mport -#APIPORT# -epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 -wd 1 -mode 1  #ALGORITHMPARAMETERS#",
     "API" : "Claymore",
-    "Fee" : "0.01",    "Wrap" : false,
+    "Fee" : "0.01",
+    "Wrap" : false,
     "DualMining": false,
     "PrelaunchCommand":"",
     "Algorithms": [
