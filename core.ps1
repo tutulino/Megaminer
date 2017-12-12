@@ -62,9 +62,11 @@ $ActiveMiners = @()
 Clear-log
 Start-Transcript ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 
+$Config = try { Get-Content config.txt } catch { Write-Output "Config File not found!"; Exit}
+
 $ActiveMinersIdCounter = 0
 $Activeminers = @()
-$InitialProfitsScreenLimit = [int](45 / ((Get-Content config.txt | Where-Object {$_ -like '@@TYPE=*'}) -replace '@@TYPE=', '' -split ',').count) - 5
+$InitialProfitsScreenLimit = [int](45 / (($Config | Where-Object {$_ -like '@@TYPE=*'}) -replace '@@TYPE=', '' -split ',').count) - 5
 $ProfitsScreenLimit = $InitialProfitsScreenLimit
 $ShowBestMinersOnly = $true
 $FirstTotalExecution = $true
@@ -78,7 +80,7 @@ $GpuPlatform= $([array]::IndexOf((Get-WmiObject -class CIM_VideoController | Sel
  if ($GpuPlatform -eq -1) {$GpuPlatform= $([array]::IndexOf((Get-WmiObject -class CIM_VideoController | Select-Object -ExpandProperty AdapterCompatibility), 'NVIDIA')) } #For testing amd miners on nvidia
 #>
 
-$Screen = (Get-Content config.txt | Where-Object {$_ -like '@@STARTSCREEN=*'} ) -replace '@@STARTSCREEN=', ''
+$Screen = ($Config | Where-Object {$_ -like '@@STARTSCREEN=*'} ) -replace '@@STARTSCREEN=', ''
 
 
 
@@ -152,13 +154,13 @@ while ($true) {
     $Types = @()
     $Currency = @()
 
-
-    $Location = (Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} ) -replace '@@LOCATION=', ''
-    $Types = (Get-Content config.txt | Where-Object {$_ -like '@@TYPE=*'}) -replace '@@TYPE=', '' -split ','
-    $Currency = (Get-Content config.txt | Where-Object {$_ -like '@@CURRENCY=*'} ) -replace '@@CURRENCY=', ''
-    $GpuPlatform = (Get-Content config.txt | Where-Object {$_ -like '@@GPUPLATFORM=*'} ) -replace '@@GPUPLATFORM=', ''
-    $BechmarkintervalTime = (Get-Content config.txt | Where-Object {$_ -like '@@BENCHMARKTIME=*'} ) -replace '@@BENCHMARKTIME=', ''
-    $LocalCurrency = (Get-Content config.txt | Where-Object {$_ -like '@@LOCALCURRENCY=*'} ) -replace '@@LOCALCURRENCY=', ''
+    $Config = try { Get-Content config.txt } catch { Write-Output "Config File not found!"; Exit}
+    $Location = ($Config | Where-Object {$_ -like '@@LOCATION=*'} ) -replace '@@LOCATION=', ''
+    $Types = ($Config | Where-Object {$_ -like '@@TYPE=*'}) -replace '@@TYPE=', '' -split ','
+    $Currency = ($Config | Where-Object {$_ -like '@@CURRENCY=*'} ) -replace '@@CURRENCY=', ''
+    $GpuPlatform = ($Config | Where-Object {$_ -like '@@GPUPLATFORM=*'} ) -replace '@@GPUPLATFORM=', ''
+    $BechmarkintervalTime = ($Config | Where-Object {$_ -like '@@BENCHMARKTIME=*'} ) -replace '@@BENCHMARKTIME=', ''
+    $LocalCurrency = ($Config | Where-Object {$_ -like '@@LOCALCURRENCY=*'} ) -replace '@@LOCALCURRENCY=', ''
     if ($LocalCurrency.length -eq 0) {
         #for old config.txt compatibility
         switch ($location) {
@@ -176,7 +178,7 @@ while ($true) {
     $ElapsedDonationTime = [int](Get-Content Donation.ctr) + $LastIntervalTime.minutes + ($LastIntervalTime.hours * 60)
 
 
-    $DonateTime = [int]((Get-Content config.txt | Where-Object {$_ -like '@@DONATE=*'} ) -replace '@@DONATE=', '')
+    $DonateTime = [int](($Config | Where-Object {$_ -like '@@DONATE=*'} ) -replace '@@DONATE=', '')
 
     #Activate or deactivate donation
     if ($ElapsedDonationTime -gt 1440 -and $DonateTime -gt 0) {
@@ -198,16 +200,17 @@ while ($true) {
     } else {
         #NOT donation interval
         $DonationInterval = $false
-        $NextInterval = [int]((Get-Content config.txt | Where-Object {$_ -like '@@INTERVAL=*'}) -replace '@@INTERVAL=', '')
+        $NextInterval = [int](($Config | Where-Object {$_ -like '@@INTERVAL=*'}) -replace '@@INTERVAL=', '')
 
         $Algorithm = $ParamAlgorithmBCK
         $PoolsName = $ParamPoolsNameBCK
         $CoinsName = $ParamCoinsNameBCK
         $MiningMode = $ParamMiningModeBCK
-        $UserName = (Get-Content config.txt | Where-Object {$_ -like '@@USERNAME=*'} ) -replace '@@USERNAME=', ''
-        $WorkerName = (Get-Content config.txt | Where-Object {$_ -like '@@WORKERNAME=*'} ) -replace '@@WORKERNAME=', ''
+        $UserName = ($Config | Where-Object {$_ -like '@@USERNAME=*'} ) -replace '@@USERNAME=', ''
+        $WorkerName = ($Config | Where-Object {$_ -like '@@WORKERNAME=*'} ) -replace '@@WORKERNAME=', ''
+        if ($WorkerName.Length -eq 0) {$WorkerName = $env:COMPUTERNAME}
         $CoinsWallets = @{}
-        (Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*', '' | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0], ($_ -split "=")[1])}
+        ($Config | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*', '' | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0], ($_ -split "=")[1])}
 
         $ElapsedDonationTime | Set-Content  -Path Donation.ctr
 
@@ -657,7 +660,7 @@ while ($true) {
 
         #display donation message
         if ($DonationInterval) {
-            " Donation period Active! You are donating $((Get-Content config.txt | Where-Object {$_ -like '@@DONATE=*'} ) -replace '@@DONATE=', '') minutes per day. Thank You for the support! :)"
+            " Donation period Active! You are donating $(($Config | Where-Object {$_ -like '@@DONATE=*'} ) -replace '@@DONATE=', '') minutes per day. Thank You for the support! :)"
             " If You wish, you can change this value in config.txt"
         }
 
@@ -756,11 +759,10 @@ while ($true) {
             #Nvidia SMI-info
             if ( $types -Contains "NVIDIA" ) {
                 $NvidiaCards = @()
-                invoke-expression "./bin/nvidia-smi.exe --query-gpu=gpu_name,driver_version,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed  --format=csv,noheader"  | foreach {
-
+                invoke-expression "./bin/nvidia-smi.exe --query-gpu=gpu_name,driver_version,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed  --format=csv,noheader"  |
+                    ForEach-Object {
                     $SMIresultSplit = $_ -split (",")
                     $NvidiaCards += [PSCustomObject]@{
-
                         gpu_name           = $SMIresultSplit[0]
                         driver_version     = $SMIresultSplit[1]
                         utilization_gpu    = $SMIresultSplit[2]
@@ -771,8 +773,6 @@ while ($true) {
                         FanSpeed           = $SMIresultSplit[7]
                     }
                 }
-
-
                 $NvidiaCards | Format-Table -Wrap  (
                     @{Label = "GPU"; Expression = {$_.gpu_name}},
                     @{Label = "GPU%"; Expression = {$_.utilization_gpu}},
@@ -785,7 +785,8 @@ while ($true) {
             }
             if ( $types -Contains "AMD" ) {
                 $AMDCards = @()
-                invoke-expression "./bin/adli.exe --noheader"  | foreach {
+                invoke-expression "./bin/adli.exe --noheader"  |
+                    ForEach-Object {
                     $SMIresultSplit = $_ -split (",")
                     $AMDCards += [PSCustomObject]@{
                         gpu_index       = $SMIresultSplit[0]
@@ -972,7 +973,7 @@ while ($true) {
 
 
 
-            if ($_.ConsecutiveZeroSpeed -gt 30) {
+            if ($_.ConsecutiveZeroSpeed -gt 10) {
                 #to prevent miner hangs
                 $ExitLoop = 'true'
                 $_.FailedTimes++
