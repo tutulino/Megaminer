@@ -26,7 +26,7 @@ param(
 
 ##Parameters for testing, must be commented on real use
 
-$MiningMode='Automatic'
+#$MiningMode='Automatic'
 #$MiningMode='Automatic24h'
 #$MiningMode='Manual'
 
@@ -38,7 +38,7 @@ $MiningMode='Automatic'
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
 #$PoolsName='hash_refinery'
-$PoolsName='ahashpool'
+#$PoolsName='ahashpool'
 #$PoolsName='suprnova'
 
 #$PoolsName="Nicehash"
