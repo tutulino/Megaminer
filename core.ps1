@@ -234,7 +234,7 @@ while ($true) {
     #Load information about the Miner asociated to each Coin-Algo-Miner
 
     $Miners = @()
-
+    $ApiInitialPort = 20000
 
     foreach ($MinerFile in (Get-ChildItem "Miners" | Where-Object extension -eq '.json')) {
         try { $Miner = $MinerFile | Get-Content | ConvertFrom-Json }
@@ -260,7 +260,13 @@ while ($true) {
                 $HashrateValue = [long]($Hrs -split ("_"))[0]
                 $HashrateValueDual = [long]($Hrs -split ("_"))[1]
 
-
+                if ($miner.ApiPort -eq $null) {
+                    #if no apiport specified, assign automatically, if port is specified, more than one group will have problems
+                    $ApiPort = $ApiInitialPort
+                    $ApiInitialPort += 10
+                } else {
+                    $ApiPort = $miner.ApiPort
+                }
 
                 #Only want algos pools has
 
@@ -280,7 +286,8 @@ while ($true) {
                                 -replace "#GpuPlatform#", $GpuPlatform `
                                 -replace '#ALGORITHM#', $Algoname `
                                 -replace '#ALGORITHMPARAMETERS#', $Algo.PSObject.Properties.Value `
-                                -replace '#WORKERNAME#', $WorkerName
+                                -replace '#WORKERNAME#', $WorkerName `
+                                -replace '#APIPORT#', $ApiPort
                             if ($Miner.PatternConfigFile -ne $null) {
                                 $ConfigFileArguments = (get-content $Miner.PatternConfigFile -raw) `
                                     -replace '#PORT#', $_.Port `
@@ -291,7 +298,8 @@ while ($true) {
                                     -replace "#GpuPlatform#", $GpuPlatform `
                                     -replace '#ALGORITHM#', $Algoname `
                                     -replace '#ALGORITHMPARAMETERS#', $Algo.PSObject.Properties.Value `
-                                    -replace '#WORKERNAME#', $WorkerName
+                                    -replace '#WORKERNAME#', $WorkerName `
+                                    -replace '#APIPORT#', $ApiPort
                             }
 
 
@@ -369,7 +377,7 @@ while ($true) {
                                 HashRateDual        = $HashrateValueDual
                                 Hashrates           = if ($Miner.Dualmining) {(ConvertTo-Hash ($HashRateValue)) + "s|" + (ConvertTo-Hash $HashrateValueDual) + "s"} else {(ConvertTo-Hash $HashRateValue) + "s"}
                                 API                 = $Miner.API
-                                Port                = $Miner.APIPort
+                                Port                = $ApiPort
                                 Wrap                = $Miner.Wrap
                                 URI                 = $Miner.URI
                                 Arguments           = $Arguments
@@ -669,7 +677,7 @@ while ($true) {
         "------------------------------------------------ACTIVE MINERS----------------------------------------------------------"| Out-host
 
         $ActiveMiners | Where-Object Best | Format-Table -Wrap  (
-        # $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
+            # $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
             @{Label = "Speed"; Expression = {if ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive)) + 's'} else {(ConvertTo-Hash  ($_.SpeedLive)) + 's|' + (ConvertTo-Hash ($_.SpeedLiveDual)) + 's'} }; Align = 'right'},
             @{Label = "mBTC/Day"; Expression = {($_.ProfitLive * 1000).tostring("n5")}; Align = 'right'},
             @{Label = $LabelProfit; Expression = {(([double]$_.ProfitLive + [double]$_.ProfitLiveDual) * [double]$localBTCvalue ).tostring("n2")}; Align = 'right'},

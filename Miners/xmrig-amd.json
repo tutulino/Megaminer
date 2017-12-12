@@ -3,15 +3,13 @@
     "ExtractionPath" : ".\\Bin\\AMD-xmrig\\",
     "Uri" : "https://github.com/xmrig/xmrig-amd/releases/download/v2.4.3-beta2/xmrig-amd-2.4.3-beta2-win64.zip",
     "Types" : ["AMD"],
-    "Arguments" : "--api-port 4028 -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --donate-level=1 #ALGORITHMPARAMETERS#",
-    "API" : "xmrminer",
-    "APIPort" : 4028,
-    "Wrap" : false,
+    "Arguments" : "--api-port #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --donate-level=1 #ALGORITHMPARAMETERS#",
+    "API" : "xmrminer",    "Wrap" : false,
     "Dualmining":false,
     "Fee":"0.01",
     "PrelaunchCommand":"",
     "Algorithms": [
         {"cryptonight": "-a cryptonight"},
         {"cryptonight-lite": "-a cryptonight-lite"}
-	]
+    ]
 }

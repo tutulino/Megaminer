@@ -1,11 +1,10 @@
 {
     "Path" : ".\\Bin\\AMD-OptiminerEquihash\\optiminer-equihash-win\\optiminer.exe",
     "ExtractionPath" : ".\\Bin\\AMD-OptiminerEquihash\\",
-    "Uri" : "",
+    "Uri" : "THIS_IS_A_PLACEHOLDER_FILE_SINCE_THERE_IS_NO_WINDOWS_VERSION",
     "Types" : ["AMD"],
-    "Arguments" : "--monitoring-port 4028 -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments" : "--monitoring-port #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "optiminer",
-    "APIPort" : 4028,
     "Wrap" : false,
     "Dualmining":false,
     "PrelaunchCommand":"",
