@@ -18,15 +18,14 @@
               {"keccak":"-a keccak"},
               {"keccakc":"-a keccakc"},
               {"m7m":"-a m7m"},
-              {"x17":"-a x17"},
               {"timetravel ":"-a timetravel"},  
               {"veltor":"-a veltor"},
               {"lyra2v2":"-a lyra2rev2"},  
               {"phi":"-a phi1612"},      
               {"polytimos":"-a polytimos"},    
               {"blakecoin":"-a blakecoin"},  
-              {"neoscrypt":"-a neoscrypt"},
-              {"tribus":"-a tribus"}
+              {"neoscrypt":"-a neoscrypt"}
+              
               ]
 
 }

@@ -42,6 +42,7 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
     *Groupnames = Groups of gpu/cpu to run (based on your defined groups in config.txt @@Gpugroups section) (optional)
 
 3. Firt time, software will be donwloaded from miners github repositories and your system will be benchmarked (long process)
+	- As usual, some miners are detected as virus by Windows Defender, to avoid this you must set your instalation directory as excluded on Windows Defender 
 
 4. Tuning (optional)
 	- you can edit miners folders content to delete miners or to assign/unassign algos to miners. 

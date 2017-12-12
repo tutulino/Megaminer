@@ -171,7 +171,7 @@ while ($true) {
                                             $c=$c+1
                                             $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
                                             $_ | Add-Member GpusETHMode ($_.gpus -replace ',',' ')
-
+                                            $_ | Add-Member GpusNsgMode ("-d "+$_.gpus -replace ',',' -d ')
                                             $_ | Add-Member GpuPlatform (Get-Gpu-Platform $_.Type)
 
                                             $Types+=$_
@@ -293,9 +293,14 @@ while ($true) {
                             $AlgoLabel = ($Algo.PSObject.Properties.Name -split ("_"))[2]
                             if ($AlgoNameDual -eq $null) {$Algorithms=$AlgoName} else {$Algorithms=$AlgoName+"_"+$AlgoNameDual}
                             
-                            $ApiPort=$ApiInitialPort
-                            $ApiInitialPort+=20
-                            $Hrs=$null
+                            if ($miner.ApiPort -eq $null) { #if no apiport specified, assign automatically, if port is specified, more than one group will have problems
+                                        $ApiPort=$ApiInitialPort
+                                        $ApiInitialPort+=10
+                                        $Hrs=$null
+                                        }
+                            else {
+                                $ApiPort=$miner.ApiPort
+                                 }
                             
     
                             #generate pools for each gpu group
@@ -317,9 +322,9 @@ while ($true) {
                                             if (($Types | Measure-Object).Count -gt 1) {$WorkerName2=$WorkerName+'_'+$TypeGroup.GroupName} else  {$WorkerName2=$WorkerName} 
 
 
-                                             $Arguments = $Miner.Arguments  -replace '#PORT#',$_.Port -replace '#SERVER#',$_.Host -replace '#PROTOCOL#',$_.Protocol -replace '#LOGIN#',$_.user -replace '#PASSWORD#',$_.Pass -replace "#GpuPlatform#",$TypeGroup.GpuPlatform  -replace '#ALGORITHM#',$Algoname -replace '#ALGORITHMPARAMETERS#',$Algo.PSObject.Properties.Value -replace '#WORKERNAME#',$WorkerName2 -replace '#APIPORT#',$APIPORT  -replace '#DEVICES#',$TypeGroup.Gpus   -replace '#DEVICESCLAYMODE#',$TypeGroup.GpusClayMode -replace '#DEVICESETHMODE#',$TypeGroup.GpusETHMode -replace '#GROUPNAME#',$TypeGroup.Groupname -replace "#ETHSTMODE#",$_.EthStMode
+                                             $Arguments = $Miner.Arguments  -replace '#PORT#',$_.Port -replace '#SERVER#',$_.Host -replace '#PROTOCOL#',$_.Protocol -replace '#LOGIN#',$_.user -replace '#PASSWORD#',$_.Pass -replace "#GpuPlatform#",$TypeGroup.GpuPlatform  -replace '#ALGORITHM#',$Algoname -replace '#ALGORITHMPARAMETERS#',$Algo.PSObject.Properties.Value -replace '#WORKERNAME#',$WorkerName2 -replace '#APIPORT#',$APIPORT  -replace '#DEVICES#',$TypeGroup.Gpus   -replace '#DEVICESCLAYMODE#',$TypeGroup.GpusClayMode -replace '#DEVICESETHMODE#',$TypeGroup.GpusETHMode -replace '#GROUPNAME#',$TypeGroup.Groupname -replace "#ETHSTMODE#",$_.EthStMode -replace "#DEVICESNSGMODE#",$TypeGroup.GpusNsgMode                   
                                              if ($Miner.PatternConfigFile -ne $null) {
-                                                             $ConfigFileArguments = (get-content $Miner.PatternConfigFile -raw)  -replace '#PORT#',$_.Port -replace '#SERVER#',$_.Host -replace '#PROTOCOL#',$_.Protocol -replace '#LOGIN#',$_.user -replace '#PASSWORD#',$_.Pass -replace "#GpuPlatform#",$TypeGroup.GpuPlatform   -replace '#ALGORITHM#',$Algoname -replace '#ALGORITHMPARAMETERS#',$Algo.PSObject.Properties.Value -replace '#WORKERNAME#',$WorkerName2 -replace '#APIPORT#',$APIPORT -replace '#DEVICES#',$TypeGroup.Gpus -replace '#DEVICESCLAYMODE#',$TypeGroup.GpusClayMode  -replace '#DEVICESETHMODE#',$TypeGroup.GpusETHMode -replace '#GROUPNAME#',$TypeGroup.Groupname -replace "#ETHSTMODE#",$_.EthStMode
+                                                             $ConfigFileArguments = (get-content $Miner.PatternConfigFile -raw)  -replace '#PORT#',$_.Port -replace '#SERVER#',$_.Host -replace '#PROTOCOL#',$_.Protocol -replace '#LOGIN#',$_.user -replace '#PASSWORD#',$_.Pass -replace "#GpuPlatform#",$TypeGroup.GpuPlatform   -replace '#ALGORITHM#',$Algoname -replace '#ALGORITHMPARAMETERS#',$Algo.PSObject.Properties.Value -replace '#WORKERNAME#',$WorkerName2 -replace '#APIPORT#',$APIPORT -replace '#DEVICES#',$TypeGroup.Gpus -replace '#DEVICESCLAYMODE#',$TypeGroup.GpusClayMode  -replace '#DEVICESETHMODE#',$TypeGroup.GpusETHMode -replace '#GROUPNAME#',$TypeGroup.Groupname -replace "#ETHSTMODE#",$_.EthStMode -replace "#DEVICESNSGMODE#",$TypeGroup.GpusNsgMode                   
                                                         }
 
                                                         
@@ -357,9 +362,9 @@ while ($true) {
                                                      if ($Miner.Fee -gt 0) {$MinerProfitDual=$MinerProfitDual -($MinerProfitDual*[double]$Miner.fee)}             
                                                      if ($PoolDual.Fee -gt 0) {$MinerProfitDual=$MinerProfitDual -($MinerProfitDual*[double]$PoolDual.fee)}             
 
-                                                    $Arguments = $Arguments -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass  -replace '#ALGORITHMDUAL#',$AlgonameDual -replace '#WORKERNAME#',$WorkerName2 -replace '#APIPORT#',$APIPORT  -replace '#DEVICES#',$TypeGroup.Gpus   -replace '#DEVICESCLAYMODE#',$TypeGroup.GpusClayMode -replace '#DEVICESETHMODE#',$TypeGroup.GpusETHMode -replace '#GROUPNAME#',$TypeGroup.Groupname 
+                                                    $Arguments = $Arguments -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass  -replace '#ALGORITHMDUAL#',$AlgonameDual -replace '#WORKERNAME#',$WorkerName2 -replace '#APIPORT#',$APIPORT  -replace '#DEVICES#',$TypeGroup.Gpus   -replace '#DEVICESCLAYMODE#',$TypeGroup.GpusClayMode -replace '#DEVICESETHMODE#',$TypeGroup.GpusETHMode -replace '#GROUPNAME#',$TypeGroup.Groupname -replace "#DEVICESNSGMODE#",$TypeGroup.GpusNsgMode                   
                                                     if ($Miner.PatternConfigFile -ne $null) {
-                                                                        $ConfigFileArguments = (get-content $Miner.PatternConfigFile -raw) -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass -replace '#ALGORITHMDUAL#',$AlgonameDual -replace '#WORKERNAME#',$WorkerName2 -replace '#APIPORT#',$APIPORT  -replace '#DEVICES#',$TypeGroup.Gpus   -replace '#DEVICESCLAYMODE#',$TypeGroup.GpusClayMode -replace '#DEVICESETHMODE#',$TypeGroup.GpusETHMode -replace '#GROUPNAME#',$TypeGroup.Groupname
+                                                                        $ConfigFileArguments = (get-content $Miner.PatternConfigFile -raw) -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass -replace '#ALGORITHMDUAL#',$AlgonameDual -replace '#WORKERNAME#',$WorkerName2 -replace '#APIPORT#',$APIPORT  -replace '#DEVICES#',$TypeGroup.Gpus   -replace '#DEVICESCLAYMODE#',$TypeGroup.GpusClayMode -replace '#DEVICESETHMODE#',$TypeGroup.GpusETHMode -replace '#GROUPNAME#',$TypeGroup.Groupname -replace "#DEVICESNSGMODE#",$TypeGroup.GpusNsgMode                   
                                                                         }
 
                                                     $PoolAbbName += '|' + $PoolDual.Abbname
@@ -470,13 +475,12 @@ while ($true) {
                     $_.Best = $false
                     $_.NeedBenchmark = $false
                     $_.ConsecutiveZeroSpeed=0
-                    #Mark as cancelled if more than 3 fails and running less than 180 secs, if no other alternative option, try forerever
+                    if ($_.BenchmarkedTimes -ge 2 -and $_.AnyNonZeroSpeed -eq $false) {$_.Status='Cancelled'}
+                    $_.AnyNonZeroSpeed  = $false
 
                     $TimeActive=($_.ActiveTime.Hours*3600)+($_.ActiveTime.Minutes*60)+$_.ActiveTime.Seconds
-                    if (($_.FailedTimes -gt 3) -and ($TimeActive -lt 180) -and (($ActiveMiners | Measure-Object).count -gt 1)){
-                            $_.IsValid=$False 
-                            $_.Status='Cancelled'
-                        }
+                    if (($_.FailedTimes -gt 3) -and ($TimeActive -lt 180) -and (($ActiveMiners | Measure-Object).count -gt 1)){$_.Status='Cancelled'} #Mark as cancelled if more than 3 fails and running less than 180 secs, if no other alternative option, try forerever
+
                    
                     if (($Miner | Measure-Object).count -gt 1) {
                             Clear-Host
@@ -495,8 +499,6 @@ while ($true) {
                             $_.Hashrates   = $miner.hashrates
                             $_.PoolWorkers = $Miner.PoolWorkers
                             $_.PoolFee= $Miner.PoolFee
-                            if ($_.Status -ne 'Cancelled') {$_.IsValid=$true} 
-                    
                             }
                     else {
                             $_.IsValid = $false #simulates a delete
@@ -571,6 +573,7 @@ while ($true) {
                             ConfigFileArguments  = $_.ConfigFileArguments
                             GenerateConfigFile   = $_.GenerateConfigFile
                             ConsecutiveZeroSpeed = 0
+                            AnyNonZeroSpeed      = $false
                             Location             = $_.Location
                             PrelaunchCommand     = $_.PrelaunchCommand
                             MinerFee             = $_.MinerFee
@@ -578,6 +581,7 @@ while ($true) {
                             AlgoLabel            = $_.AlgoLabel
                             Symbol               = $_.Symbol
                             SymbolDual           = $_.SymbolDual
+                            
                             
 
                         }
@@ -596,7 +600,7 @@ while ($true) {
     #For each type, select most profitable miner, not benchmarked has priority
     foreach ($TypeId in $Types.Id) {
 
-        $BestId=($ActiveMiners |Where-Object IsValid | where-object GroupId -eq $TypeId | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object id)
+        $BestId=($ActiveMiners |Where-Object IsValid | Where-Object status -ne "Canceled" | where-object GroupId -eq $TypeId | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object id)
         if ($BestId -ne $null) {$ActiveMiners[$BestId.PSObject.Properties.value].best=$true}
         }
 
@@ -606,6 +610,7 @@ while ($true) {
     $ActiveMiners | Where-Object Best -EQ $false | ForEach-Object {
         if ($_.Process -eq $null) {
             $_.Status = "Failed"
+            $_.failedtimes++
         }
         elseif ($_.Process.HasExited -eq $false) {
             $_.Process.CloseMainWindow() | Out-Null
@@ -621,7 +626,11 @@ while ($true) {
 
     #Start all Miners marked as Best
 
-    $ActiveMiners | Where-Object Best -EQ $true | ForEach-Object {
+    $ActiveMiners | Where-Object Best -eq $true | ForEach-Object {
+        
+        if ($_.NeedBenchmark) {$NextInterval=$BechmarkintervalTime} #if one need benchmark next interval will be short
+        $_.Status = "Running"
+
         if ($_.Process -eq $null -or $_.Process.HasExited -ne $false) {
 
             $_.ActivatedTimes++
@@ -634,7 +643,7 @@ while ($true) {
             if ($_.Wrap) {$_.Process = Start-Process -FilePath "PowerShell" -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$($_.Arguments)' -WorkingDirectory '$(Split-Path $_.Path)'" -PassThru}
               else {$_.Process = Start-SubProcess -FilePath $_.Path -ArgumentList $_.Arguments -WorkingDirectory (Split-Path $_.Path)}
           
-            if ($_.NeedBenchmark) {$NextInterval=$BechmarkintervalTime} #if one need benchmark next interval will be short
+        
 
             if ($_.Process -eq $null) {
                     $_.Status = "Failed"
@@ -727,6 +736,18 @@ while ($true) {
               @{Label = "Pool"; Expression = {$_.PoolAbbName}},
               @{Label = "Location"; Expression = {$_.Location}},
               @{Label = "PoolWorkers"; Expression = {$_.PoolWorkers}}
+<#
+              @{Label = "BmkT"; Expression = {$_.BenchmarkedTimes}},
+              @{Label = "FailT"; Expression = {$_.FailedTimes}},
+              @{Label = "Nbmk"; Expression = {$_.NeedBenchmark}},
+              @{Label = "CZero"; Expression = {$_.ConsecutiveZeroSpeed}}
+              @{Label = "Port"; Expression = {$_.Port}}
+ #>             
+
+
+              
+
+
           ) | Out-Host
           
 
@@ -1030,7 +1051,7 @@ while ($true) {
                                             $_.ProfitLive = $_.SpeedLive * $_.PoolPrice 
                                         
 
-                                            if ($Miner_HashRates[0] -gt 0) {$_.ConsecutiveZeroSpeed=0} else {$_.ConsecutiveZeroSpeed++}
+                                            if ($Miner_HashRates[0] -gt 0) {$_.ConsecutiveZeroSpeed=0;$_.AnyNonZeroSpeed = $true} else {$_.ConsecutiveZeroSpeed++}
                                             
                                                 
                                             if ($_.DualMining){     
@@ -1053,20 +1074,14 @@ while ($true) {
 
                                     
 
-                                if ($_.ConsecutiveZeroSpeed -gt 20) { #to prevent miner hangs
+                                if ($_.ConsecutiveZeroSpeed -gt 25) { #avoid  miner hangs and wait interval ends
                                     $_.FailedTimes++
-                                    $_.Status='Failed'
-                                    $_.Best= $false
+                                    $_.status="Failed"
+                                    #$_.Best= $false
                                     $ExitLoop='true'
                                     }
                 
                                         
-                                #Benchmark timeout
-                                if ($_.BenchmarketTimes -ge 2) {
-                                    $_.Status='Cancelled'
-                                    $_.Best= $false
-                                    $ExitLoop = $true
-                                    }
 
                         }
 
@@ -1104,8 +1119,14 @@ while ($true) {
 
 
            
-                if (((Get-Date) -ge ($IntervalStartTime.AddSeconds($NextInterval))) -or ($ExitLoop)  ) {break} #If time of interval has over, exit of main loop
+                if (((Get-Date) -ge ($IntervalStartTime.AddSeconds($NextInterval)))  ) { #If time of interval has over, exit of main loop
+                                $ActiveMiners | Where-Object Best -eq $true | ForEach-Object { #if a miner ends inteval without speed reading mark as failed
+                                       if ($_.AnyNonZeroSpeed -eq $false) {$_.FailedTimes++;$_.status="Failed"}
+                                    }
+                                 break
+                            } 
 
+                if ($ExitLoop) {break} #forced exit
            
     
         }

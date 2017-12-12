@@ -349,3 +349,28 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 
 *THIS VERSION REQUIRES 5.0 FORMAT CONFIG.TXT FILE, IF YOU UPGRADE FROM PREVIOUS RELEASE YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
 
+
+------------------------------------------------
+5.0 beta 3
+
+* Added automatic detection of gpu platform  --> For upgrade from 5.X you must delete this atribute from @@GPUGROUPS groups 
+* Added more algos for cpumining
+* Upgraded Claymore ETH to 10.2
+
+*Fixed: MPH and Suprnova not showing coin name/symbol on wallet screen
+*Fixed: MPH and Suprnova also checks wallets without APIKEY specified in config.txt
+*Fixed: -esm parameter missing on ClaymoreETH
+
+
+------------------------------------------------
+5.0 beta 4
+
+*Added "hidden" option to force miner apiport instead of dinamic port asignation (this options can be used only if one group is defined on your rig) 
+*Reactivated MPH sia pool, this pool is not compatible with ccminer, Blake2b must not be added to any ccminer
+
+*Fixed: nsgminer not receiving rigth devices parameter 
+*Fixed: claymore 9.7 not receiving rigth parameter 
+
+
+
+
