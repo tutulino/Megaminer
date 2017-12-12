@@ -26,7 +26,7 @@ param(
 
 ##Parameters for testing, must be commented on real use
 
-#$MiningMode='Automatic'
+$MiningMode='Automatic'
 #$MiningMode='Automatic24h'
 #$MiningMode='Manual'
 
@@ -38,7 +38,7 @@ param(
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
 #$PoolsName='hash_refinery'
-#$PoolsName='ahashpool'
+$PoolsName='ahashpool'
 #$PoolsName='suprnova'
 
 #$PoolsName="Nicehash"
@@ -49,7 +49,7 @@ param(
 
 
 
-$StarTime=get-date
+
 
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
 
@@ -65,7 +65,7 @@ else {$PSDefaultParameterValues["*:Proxy"] = $Proxy}
 $ActiveMiners = @()
 
 #Start the log
-Clear-log
+
 Start-Transcript ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 
 
@@ -74,7 +74,7 @@ $ActiveMinersIdCounter=0
 $Activeminers=@()
 $ShowBestMinersOnly=$true
 $FirstTotalExecution =$true
-$IntervalStartAt = (Get-Date)
+$StartTime=get-date
 
 
 Clear-Host
@@ -148,6 +148,10 @@ if ($MiningMode -eq 'Manual' -and ($Algorithm | measure-object).count -gt 1){
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
+
+$IntervalStartAt = (Get-Date)
+Clear-Host
+$repaintScreen=$true
 
 while ($true) {
 
@@ -699,17 +703,16 @@ while ($true) {
 
         $ExitLoop = $false
         
-        Clear-host
+       
 
         #display interval
-        
-        $TimetoNextInterval= NEW-TIMESPAN (Get-Date) ($IntervalStartTime.AddSeconds($NextInterval))
-        $TimetoNextIntervalSeconds=($TimetoNextInterval.Hours*3600)+($TimetoNextInterval.Minutes*60)+$TimetoNextInterval.Seconds
-        if ($TimetoNextIntervalSeconds -lt 0) {$TimetoNextIntervalSeconds = 0}
+            $TimetoNextInterval= NEW-TIMESPAN (Get-Date) ($IntervalStartTime.AddSeconds($NextInterval))
+            $TimetoNextIntervalSeconds=($TimetoNextInterval.Hours*3600)+($TimetoNextInterval.Minutes*60)+$TimetoNextInterval.Seconds
+            if ($TimetoNextIntervalSeconds -lt 0) {$TimetoNextIntervalSeconds = 0}
 
-        Set-ConsolePosition 93 1
-        "Next Interval:  $TimetoNextIntervalSeconds secs" | Out-host
-        Set-ConsolePosition 0 0
+            Set-ConsolePosition 93 1
+            "Next Interval:  $TimetoNextIntervalSeconds secs" | Out-host
+            Set-ConsolePosition 0 0
 
         #display header        
         "-----------------------------------------------------------------------------------------------------------------------"| Out-host
@@ -762,15 +765,16 @@ while ($true) {
 
 
         #display profits screen
-        if ($Screen -eq "Profits") {
+        if ($Screen -eq "Profits" -and $repaintScreen) {
 
                     "----------------------------------------------------PROFITS------------------------------------------------------------"| Out-host            
 
-
+                 
                     Set-ConsolePosition 80 $YToWriteMessages
                     
                     "(B)est Miners/All       (T)op "+[string]$InitialProfitsScreenLimit+"/All" | Out-Host
 
+                    
                     Set-ConsolePosition 0 $YToWriteData
 
 
@@ -794,6 +798,7 @@ while ($true) {
                                     }
                         }
 
+                        
 
                     #Display profits  information
                     $ProfitMiners2 | Sort-Object -Descending GroupName,NeedBenchmark,Profits | Format-Table (
@@ -815,7 +820,7 @@ while ($true) {
                     Remove-Variable ProfitMiners
                     Remove-Variable ProfitMiners2
                     
-
+                    $repaintScreen=$false
                 }
   
 
@@ -824,7 +829,8 @@ while ($true) {
         if ($Screen -eq "Current") {
                     
                     "----------------------------------------------------CURRENT------------------------------------------------------------"| Out-host            
-            
+                    
+                    
                     Set-ConsolePosition 0 $YToWriteData
 
                     #Display profits  information
@@ -879,6 +885,7 @@ while ($true) {
 
 
                                 }
+
                 }
                                     
                 
@@ -887,10 +894,12 @@ while ($true) {
 
 
 
-            if ($Screen -eq "Wallets") {
+            if ($Screen -eq "Wallets" -and $repaintScreen) {
                              "----------------------------------------------------WALLETS (slow)-----------------------------------------------------"| Out-host   
-                             Set-ConsolePosition 85 $YToWriteMessages
-                            "(U)pdate  - $WalletsUpdate  " | Out-Host
+                             
+                             Set-ConsolePosition 0 $YToWriteMessages
+                             "Start Time: $StartTime                                                       (U)pdate  - $WalletsUpdate  " | Out-Host
+                                                       
                         }
 
 
@@ -978,9 +987,7 @@ while ($true) {
 
                          if ($Screen -eq "Wallets") {  
 
-                            Set-ConsolePosition 0 $YToWriteData
-
-                            "Start Time: $StarTime" |out-host
+                            
 
                             $WalletStatus | where-object Balance -gt 0 | Sort-Object poolname | Format-Table -Wrap -groupby poolname (
                                 @{Label = "Coin"; Expression = {$_.WalletSymbol}}, 
@@ -995,18 +1002,19 @@ while ($true) {
                                 }  
 
                             }
-                            
+                        
+                            $repaintScreen=$false
                         }
 
                 
-        if ($Screen -eq "History") {                        
+        if ($Screen -eq "History" ) {                        
 
                     "--------------------------------------------------HISTORY------------------------------------------------------------"| Out-host            
+                    
+                    Set-ConsolePosition 0 $YToWriteMessages
+                    "Running Mode: $MiningMode" |out-host
 
                     Set-ConsolePosition 0 $YToWriteData
-
-
-                    "Running Mode: $MiningMode" |out-host
 
                     #Display activated miners list
                     $ActiveMiners | Where-Object ActivatedTimes -GT 0 | Sort-Object -Descending Status, {if ($_.Process -eq $null) {[DateTime]0}else {$_.Process.StartTime}} | Select-Object -First (1 + 6 + 6) | Format-Table -Wrap -GroupBy Status (
@@ -1015,75 +1023,78 @@ while ($true) {
                         @{Label = "Launched"; Expression = {Switch ($_.ActivatedTimes) {0 {"Never"} 1 {"Once"} Default {"$_ Times"}}}}, 
                         @{Label = "Command"; Expression = {"$($_.Path.TrimStart((Convert-Path ".\"))) $($_.Arguments)"}}
                     ) | Out-Host
+
+
+                    $repaintScreen=$false
                 }
 
   
                  
                    
+            #Check Live Speed and record benchmark if necessary
+            $ActiveMiners | Where-Object Best -eq $true | ForEach-Object {
+                            if ($FirstLoopExecution -and $_.NeedBenchmark) {$_.BenchmarkedTimes++}
+                            $_.SpeedLive = 0
+                            $_.SpeedLiveDual = 0
+                            $_.ProfitLive = 0
+                            $_.ProfitLiveDual = 0
+                            $Miner_HashRates = $null
 
-                $ActiveMiners | Where-Object Best -eq $true | ForEach-Object {
-                                if ($FirstLoopExecution -and $_.NeedBenchmark) {$_.BenchmarkedTimes++}
-                                $_.SpeedLive = 0
-                                $_.SpeedLiveDual = 0
-                                $_.ProfitLive = 0
-                                $_.ProfitLiveDual = 0
-                                $Miner_HashRates = $null
 
-
-                                if ($_.Process -eq $null -or $_.Process.HasExited) {
-                                        if ($_.Status -eq "Running") {
-                                                    $_.Status = "Failed"
-                                                    $_.FailedTimes++
-                                                    $ExitLoop = $true
-                                                    }
-                                        else
-                                            { $ExitLoop = $true}         
-                                        }
-
-                                else {
-                                        $_.ActiveTime += (get-date) - $_.LastActiveCheck 
-                                        $_.LastActiveCheck=get-date
-
-                                        $Miner_HashRates = Get-Live-HashRate $_.API $_.Port 
-
-                                        if ($Miner_HashRates -ne $null){
-                                            $_.SpeedLive = [double]($Miner_HashRates[0])
-                                            $_.ProfitLive = $_.SpeedLive * $_.PoolPrice 
-                                        
-
-                                            if ($Miner_HashRates[0] -gt 0) {$_.ConsecutiveZeroSpeed=0;$_.AnyNonZeroSpeed = $true} else {$_.ConsecutiveZeroSpeed++}
-                                            
-                                                
-                                            if ($_.DualMining){     
-                                                $_.SpeedLiveDual = [double]($Miner_HashRates[1])
-                                                $_.ProfitLiveDual = $_.SpeedLiveDual * $_.PoolPriceDual
+                            if ($_.Process -eq $null -or $_.Process.HasExited) {
+                                    if ($_.Status -eq "Running") {
+                                                $_.Status = "Failed"
+                                                $_.FailedTimes++
+                                                $ExitLoop = $true
                                                 }
-
-
-                                            $Value=[long]($Miner_HashRates[0] * 0.95)
-                                            $ValueDual=[long]($Miner_HashRates[1] * 0.95)
-
-                                            if ($Value -gt $_.Hashrate -and $_.NeedBenchmark -and ($valueDual -gt 0 -or $_.Dualmining -eq $false)) {
-                                                
-                                                $_.Hashrate= $Value
-                                                $_.HashrateDual= $ValueDual
-                                                Set-Hashrates -algorithm $_.Algorithms -minername $_.Name -GroupName $_.GroupName -AlgoLabel $_.AlgoLabel -value  $Value -valueDual $ValueDual
-                                                }
-                                            }          
+                                    else
+                                        { $ExitLoop = $true}         
                                     }
 
+                            else {
+                                    $_.ActiveTime += (get-date) - $_.LastActiveCheck 
+                                    $_.LastActiveCheck=get-date
+
+                                    $Miner_HashRates = Get-Live-HashRate $_.API $_.Port 
+
+                                    if ($Miner_HashRates -ne $null){
+                                        $_.SpeedLive = [double]($Miner_HashRates[0])
+                                        $_.ProfitLive = $_.SpeedLive * $_.PoolPrice 
                                     
 
-                                if ($_.ConsecutiveZeroSpeed -gt 25) { #avoid  miner hangs and wait interval ends
-                                    $_.FailedTimes++
-                                    $_.status="Failed"
-                                    #$_.Best= $false
-                                    $ExitLoop='true'
-                                    }
-                
+                                        if ($Miner_HashRates[0] -gt 0) {$_.ConsecutiveZeroSpeed=0;$_.AnyNonZeroSpeed = $true} else {$_.ConsecutiveZeroSpeed++}
                                         
+                                            
+                                        if ($_.DualMining){     
+                                            $_.SpeedLiveDual = [double]($Miner_HashRates[1])
+                                            $_.ProfitLiveDual = $_.SpeedLiveDual * $_.PoolPriceDual
+                                            }
 
-                        }
+
+                                        $Value=[long]($Miner_HashRates[0] * 0.95)
+                                        $ValueDual=[long]($Miner_HashRates[1] * 0.95)
+
+                                        if ($Value -gt $_.Hashrate -and $_.NeedBenchmark -and ($valueDual -gt 0 -or $_.Dualmining -eq $false)) {
+                                            
+                                            $_.Hashrate= $Value
+                                            $_.HashrateDual= $ValueDual
+                                            Set-Hashrates -algorithm $_.Algorithms -minername $_.Name -GroupName $_.GroupName -AlgoLabel $_.AlgoLabel -value  $Value -valueDual $ValueDual
+                                            }
+                                        }          
+                                }
+
+                                
+
+                            if ($_.ConsecutiveZeroSpeed -gt 25) { #avoid  miner hangs and wait interval ends
+                                $_.FailedTimes++
+                                $_.status="Failed"
+                                #$_.Best= $false
+                                $ExitLoop='true'
+                                }
+            
+                                    
+
+                    }
 
                     
 
@@ -1091,20 +1102,13 @@ while ($true) {
                 $FirstLoopExecution=$False
 
                 #Loop for reading key and wait
-                $Loopstart=get-date 
-                $KeyPressed=$null    
-
              
-                while ((NEW-TIMESPAN $Loopstart (get-date)).Seconds -lt 4 -and $KeyPressed -ne 'P'-and $KeyPressed -ne 'C'-and $KeyPressed -ne 'H'-and $KeyPressedkey -ne 'E' -and $KeyPressedkey -ne 'W'  -and $KeyPressedkey -ne 'U'  -and $KeyPressedkey -ne 'T' -and $KeyPressedkey -ne 'B'){
-                            
-                            if ($host.ui.RawUi.KeyAvailable) {
-                                        $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyUp")
-                                        $KeyPressed=$Key.character
-                                        while ($Host.UI.RawUI.KeyAvailable)  {$host.ui.RawUi.Flushinputbuffer()} #keyb buffer flush
-                                        
-                                        }
-                       }  
+                $KeyPressed=Timed-ReadKb 3 ('P','C','H','E','W','U','T','B')
+
                 
+
+
+            
                 switch ($KeyPressed){
                     'P' {$Screen='profits'}
                     'C' {$Screen='current'}
@@ -1114,10 +1118,9 @@ while ($true) {
                     'U' {if ($Screen -eq "Wallets") {$WalletsUpdate=$null}}
                     'T' {if ($Screen -eq "Profits") {if ($ProfitsScreenLimit -eq $InitialProfitsScreenLimit) {$ProfitsScreenLimit=1000} else {$ProfitsScreenLimit=$InitialProfitsScreenLimit}}}
                     'B' {if ($Screen -eq "Profits") {if ($ShowBestMinersOnly -eq $true) {$ShowBestMinersOnly=$false} else {$ShowBestMinersOnly=$true}}}
-                    
-                }
+                    }
 
-
+                if ($KeyPressed) {Clear-host;$repaintScreen=$true}
            
                 if (((Get-Date) -ge ($IntervalStartTime.AddSeconds($NextInterval)))  ) { #If time of interval has over, exit of main loop
                                 $ActiveMiners | Where-Object Best -eq $true | ForEach-Object { #if a miner ends inteval without speed reading mark as failed
@@ -1130,8 +1133,6 @@ while ($true) {
            
     
         }
-     
-        
     
     Remove-variable miners
     Remove-variable pools

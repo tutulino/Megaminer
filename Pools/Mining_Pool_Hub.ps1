@@ -108,7 +108,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 $Locations | ForEach-Object {
                         $Location = $_
 
-
                                 $Result+=[PSCustomObject]@{
                                             Algorithm     = $MiningPoolHub_Algorithm
                                             Info          = $MiningPoolHub_Coin
