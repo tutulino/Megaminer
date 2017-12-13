@@ -39,17 +39,9 @@ if ($Querymode -eq "info") {
 
 
 if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
-    $PoolRealName = $null
-    switch ($info.AbbName) {
-        "WTM-SNOVA" {$PoolRealName = 'SUPRNOVA'  }
-        "WTM-MPH" {$PoolRealName = 'MINING_POOL_HUB'  }
-        "WTM-YI" {$PoolRealName = 'YIIMP'  }
-        "WTM-FAIR" {$PoolRealName = 'FairPool'  }
-        "WTM-MY" {$PoolRealName = 'MyPools'  }
-    }
     if ($PoolRealName -ne $null) {
         $Info.poolname = $PoolRealName
-        $result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $PoolRealName -Info $Info   | select-object Pool, currency, balance
+        $result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $Info.PoolName -Info $Info   | select-object Pool, currency, balance
     }
 }
 
@@ -138,7 +130,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             # "4"{$PoolToSearch='YIIMP'}
         }
 
-        $HPools = Get-Pools -Querymode "core" -PoolsFilterList $PoolToSearch -location $Info.Location
+        $HPools = Get-Pools -Querymode "core" -PoolsFilterList $Pool -location $Info.Location
 
         $HPools | ForEach-Object {
 
@@ -146,18 +138,20 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
             if (($WTMcoin.Algorithm -eq $_.Algorithm) -and (($Pools | where-object coin -eq $_.info |where-object Algo -eq $_.Algorithm) -eq $null)) {
                 $Pools += [pscustomobject]@{
-                    "coin"       = $_.Info
-                    "algo"       = $_.Algorithm
-                    "symbol"     = $WTMResponse.($_.Info).tag
-                    "server"     = $_.host
-                    "port"       = $_.port
-                    "location"   = $_.location
-                    "Fee"        = $_.Fee
-                    "User"       = $_.User
-                    "Pass"       = $_.Pass
-                    "protocol"   = $_.Protocol
-                    "Abbname"    = $_.Abbname
-                    "WalletMode" = $_.WalletMode
+                    coin         = $_.Info
+                    algo         = $_.Algorithm
+                    symbol       = $WTMResponse.($_.Info).tag
+                    server       = $_.host
+                    port         = $_.port
+                    location     = $_.location
+                    Fee          = $_.Fee
+                    User         = $_.User
+                    Pass         = $_.Pass
+                    protocol     = $_.Protocol
+                    Abbname      = $_.Abbname
+                    WalletMode   = $_.WalletMode
+                    WalletSymbol = $_.WalletSymbol
+                    PoolName     = $_.PoolName
                 }
             }
         }
@@ -189,7 +183,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             AbbName               = "WTM-" + $_.Abbname
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolName              = $Name
+            PoolName              = $_.PoolName
             WalletMode            = $_.WalletMode
             Fee                   = $_.Fee
         }
