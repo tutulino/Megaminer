@@ -1,7 +1,7 @@
-﻿{
-"Path" : ".\\Bin\\AMD-SgminerSkein\\sgminer.exe",
-"ExtractionPath" : ".\\Bin\\AMD-SgminerSkein\\",
-"Uri" : "https://github.com/miningpoolhub/sgminer/releases/download/5.3.1/Release.zip",
+{
+"Path" : ".\\Bin\\AMD-SgminerHSR\\sgminer.exe",
+"ExtractionPath" : ".\\Bin\\AMD-SgminerHSR\\",
+"Uri" : "https://github.com/Partiolainen/sgminer-gm/releases/download/5.5.5-part/sgminer-5.5.5-part-hsr.win.x64.zip",
 "Types" : ["AMD"],
 "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
 "API" : "Xgminer",
@@ -9,7 +9,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"skein":" -k skeincoin --gpu-threads 2 --worksize 256 --intensity d"}
+                {"hsr":"-k hsr -I 20"}
               ]
 
 }

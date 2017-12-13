@@ -1,7 +1,7 @@
 {
-"Path" : ".\\Bin\\AMD-sgminerTribus\\sgminer.exe",
-"ExtractionPath" : ".\\Bin\\AMD-sgminerTribus\\",
-"Uri" : "http://ccminer.org/preview/sgminer-x64-5.3.8.zip",
+"Path" : ".\\Bin\\AMD-SgminerHmq1725\\sgminer_build\\sgminer.exe",
+"ExtractionPath" : ".\\Bin\\AMD-SgminerHmq1725\\",
+"Uri" : "https://github.com/CryptoCoderz/sgminer_HMQ1725/raw/2f959266a1bbcadf948a1f7a9da0e75a8e32399e/release/sgminer_build_HMQ1725.zip",
 "Types" : ["AMD"],
 "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
 "API" : "Xgminer",
@@ -9,8 +9,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"tribus":"-k tribus --shaders 1792 --lookup-gap 4 --intensity 19"},
-                {"veltor":"-k veltor --intensity 19"}
+                {"hmq1725":"-k hmq1725 -w 128 -I 18"}
               ]
 
 }
