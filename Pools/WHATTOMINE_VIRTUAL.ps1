@@ -119,16 +119,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     #search on pools where to mine coins, switch sentence determines order to look, if one pool has one coin, no more pools for that coin are searched after.
 
-    $PoolOrder = 1
-    while ($PoolOrder -le 4) {
-
-        switch ($PoolOrder) {
-            "1" {$PoolToSearch = 'MINING_POOL_HUB'}
-            "2" {$PoolToSearch = 'Suprnova'}
-            "3" {$PoolToSearch = 'FairPool'}
-            "4" {$PoolToSearch = 'MyPools'}
-            # "4"{$PoolToSearch='YIIMP'}
-        }
+    $PoolsList = @(
+        'Mining_Pool_Hub'
+        'Suprnova'
+        # 'FairPool'
+        # 'MyPools'
+        # 'YIIMP'
+    )
+    foreach ($Pool in $PoolsList) {
 
         $HPools = Get-Pools -Querymode "core" -PoolsFilterList $Pool -location $Info.Location
 
@@ -155,7 +153,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 }
             }
         }
-        $PoolOrder++
     }
 
     #add estimation data to selected pools
@@ -170,8 +167,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Result += [PSCustomObject]@{
             Algorithm             = $_.Algo
             Info                  = $_.Coin
-            Price                 = $Estimate * 0.9
-            Price24h              = $Estimate24h * 0.9
+            Price                 = $Estimate * 0.95
+            Price24h              = $Estimate24h * 0.95
             Protocol              = $_.Protocol
             Host                  = $_.Server
             Port                  = $_.Port
@@ -191,6 +188,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     remove-variable WTMResponse
     remove-variable Response
     remove-variable Pools
+    remove-variable PoolsList
     remove-variable WTMcoin
     remove-variable HPools
 }
