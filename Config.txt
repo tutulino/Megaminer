@@ -32,10 +32,6 @@
 @@WALLET_ETH=0x38973025136D1a5B773aE71c02cA24b365850A9A
 @@WALLET_LTC=MM8RmXUgxDwHJxrC54muF7KHciSCFS3gx3
 
-@@WALLET_PASL=3GhhbotqzjTq9mpXabpzqw4WLCZVp2SFG2CVs6Jfox4t3jCBgvAq92wiTVUEE5mCniN2zNDwhEZteq8QTk3cU7hHK6H6Jr3Aecpm1c
-@@WALLET_SUMO=Sumoo32iRyQi9saNjaW7hcL7jbxe7pQmh8Vvuzy5M5uuYdnscDiSqrwFFckdFc9TuhW1PFJ46Q6NM9gpbGzdJLpCBkC3cw3RhC6
-@@WALLET_KRB=KiKUUqi56RseQRp5Bh3FToeZNmw1Bnx9dPqDf9zsyxD9LgMyEUhypKmc7DdNmiQH8SLCLkNZcVzkJbJRMKNAxyWe9vYcckd
-@@WALLET_AEON=WmspZbxNAYubNL53fUfVuBSk3Eo3GzgKqbeEeC1Fq4QdEiQhQFE4so5CjkhDS8kRxGBesfRwGiSmDRPRKWvVVvqf2kNZdeguY
 
 -- API Keys, Non Anonymous pools (Suprnova, MPH) requires api key to get wallets info (format @@APIKEY_NAMEOFPOOL=XXXXXXXXXX)
 @@APIKEY_MINING_POOL_HUB=903106f05fddd0222af24e20312d14dff08ccbb6914855d5fe552c8c88cb3425
@@ -44,7 +40,7 @@
 -- Time in seconds for recheck profit and select more profitable algorithm (less than 600 not recommended)
 @@INTERVAL=600
 
--- Benchmarks interval time (less than 200 not recomended)
+-- Benchmarks interval time (less than 200 not recommended)
 @@BENCHMARKTIME=200
 
 -- Enabled or disabled call to apis (pools and exchanges) to help on manual coin selection,
@@ -55,7 +51,7 @@
 @@STARTSCREEN=PROFITS
 
 -- Coin IDs from http://whattomine.com/calculators, separated by ",". 192 - Aeon, 210 - Zero, 213 - ETN
-@@CUSTOM_WTM_COINS=210
+-- @@CUSTOM_WTM_COINS=210
 
 -- Dual Mining Ratio reduces calculated profitability due to higher power usage.
 -- Set 0 to ignore, real ratio for AMD is normally between 20 to 30 (%)
