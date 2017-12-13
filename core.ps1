@@ -26,7 +26,7 @@ param(
 
 ##Parameters for testing, must be commented on real use
 
-$MiningMode='Automatic'
+#$MiningMode='Automatic'
 #$MiningMode='Automatic24h'
 #$MiningMode='Manual'
 
@@ -38,7 +38,7 @@ $MiningMode='Automatic'
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
 #$PoolsName='hash_refinery'
-$PoolsName='ahashpool'
+#$PoolsName='ahashpool'
 #$PoolsName='suprnova'
 
 #$PoolsName="Nicehash"
@@ -161,7 +161,7 @@ while ($true) {
     
     
     
-    $Location=(Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} )-replace '@@LOCATION=',''
+    $Location=((Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} )-replace '@@LOCATION=','').TrimEnd()
 
     
 
@@ -187,9 +187,9 @@ while ($true) {
     if ($FirstTotalExecution) {$ProfitsScreenLimit=$InitialProfitsScreenLimit}
                          
 
-    $Currency=(Get-Content config.txt | Where-Object {$_ -like '@@CURRENCY=*'} )-replace '@@CURRENCY=',''
+    $Currency=((Get-Content config.txt | Where-Object {$_ -like '@@CURRENCY=*'} )-replace '@@CURRENCY=','').TrimEnd()
     $BechmarkintervalTime=(Get-Content config.txt | Where-Object {$_ -like '@@BENCHMARKTIME=*'} )-replace '@@BENCHMARKTIME=',''
-    $LocalCurrency=(Get-Content config.txt | Where-Object {$_ -like '@@LOCALCURRENCY=*'} )-replace '@@LOCALCURRENCY=',''
+    $LocalCurrency=((Get-Content config.txt | Where-Object {$_ -like '@@LOCALCURRENCY=*'} )-replace '@@LOCALCURRENCY=','').TrimEnd()
     if ($LocalCurrency.length -eq 0) { #for old config.txt compatibility
         switch ($location) {
             'Europe' {$LocalCurrency="EURO"}
@@ -207,8 +207,8 @@ while ($true) {
     $ElapsedDonationTime = [int](Get-Content Donation.ctr) + $LastIntervalTime.minutes + ($LastIntervalTime.hours *60)
 
 
-    $DonateTime=[int]((Get-Content config.txt | Where-Object {$_ -like '@@DONATE=*'} )-replace '@@DONATE=','')
-
+    $Dt=((Get-Content config.txt | Where-Object {$_ -like '@@DONATE=*'} )-replace '@@DONATE=','')
+    $DonateTime=if ($Dt -gt 0) {[int]$Dt} else {0}
     #Activate or deactivate donation
     if ($ElapsedDonationTime -gt 1440 -and $DonateTime -gt 0) { # donation interval
 
@@ -237,10 +237,10 @@ while ($true) {
                     $PoolsName=$ParamPoolsNameBCK
                     $CoinsName=$ParamCoinsNameBCK
                     $MiningMode=$ParamMiningModeBCK
-                    $UserName=(Get-Content config.txt | Where-Object {$_ -like '@@USERNAME=*'} )-replace '@@USERNAME=',''
-                    $WorkerName=(Get-Content config.txt | Where-Object {$_ -like '@@WORKERNAME=*'} )-replace '@@WORKERNAME=',''
+                    $UserName=((Get-Content config.txt | Where-Object {$_ -like '@@USERNAME=*'} )-replace '@@USERNAME=','').TrimEnd()
+                    $WorkerName=((Get-Content config.txt | Where-Object {$_ -like '@@WORKERNAME=*'} )-replace '@@WORKERNAME=','').TrimEnd()
                     $CoinsWallets=@{} 
-                    (Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','' | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
+                    ((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','').TrimEnd() | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
                 
                     $ElapsedDonationTime | Set-Content  -Path Donation.ctr
 

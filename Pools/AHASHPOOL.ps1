@@ -111,8 +111,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Protocol      = "stratum+tcp"
                                 Host          = $_.name + ".mine.ahashpool.com"
                                 Port          = $coin.port
-                                User          = $CoinsWallets.get_item($currency)
-                                Pass          = "c=$currency,#WorkerName#"
+                                User          = $CoinsWallets.get_item("BTC")
+                                Pass          = "c=BTC,#WorkerName#"
                                 Location      = 'US'
                                 SSL           = $false
                                 Symbol        = $null

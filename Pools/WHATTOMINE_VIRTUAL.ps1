@@ -49,16 +49,10 @@ if ($Querymode -eq "info"){
 
 
     if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY"))    {
-                                $PoolRealName=$null
-                                switch($info.AbbName) {
-                                                "WTM-SNOVA" {$PoolRealName = 'SUPRNOVA'  }
-                                                "WTM-MPH" {$PoolRealName = 'MINING_POOL_HUB'  }
-                                                "WTM-YI" {$PoolRealName = 'YIIMP'  }
-                                }
                                 
                                 if ($PoolRealName -ne $null){
                                         $Info.poolname = $PoolRealName     
-                                        $result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $PoolRealName -Info $Info   | select-object Pool,currency,balance
+                                        $result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $Info.poolname -Info $Info   | select-object Pool,currency,balance
                                         }
                              
                         
@@ -125,18 +119,24 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                                 if (($WTMcoin.Algorithm -eq $_.Algorithm) -and (($Pools | where-object coin -eq $_.info |where-object Algo -eq $_.Algorithm) -eq $null)) {
                                                         $Pools +=[pscustomobject]@{
-                                                                "coin" = $_.Info
-                                                                "algo"=  $_.Algorithm
-                                                                "symbol"= $WTMResponse.($_.Info).tag
-                                                                "server"= $_.host
-                                                                "port"=  $_.port
-                                                                "location"= $_.location
-                                                                "Fee" = $_.Fee
-                                                                "User"= $_.User
-                                                                "Password"= $_.Password
-                                                                "protocol"= $_.Protocol
-                                                                "Abbname"= $_.Abbname
-                                                                "WalletMode" = $_.WalletMode
+                                                                coin = $_.Info
+                                                                algo=  $_.Algorithm
+                                                                symbol= $WTMResponse.($_.Info).tag
+                                                                server= $_.host
+                                                                port=  $_.port
+                                                                location=$_.location
+                                                                Fee = $_.Fee
+                                                                User= $_.User
+                                                                Pass= $_.Pass
+                                                                protocol= $_.Protocol
+                                                                Abbname= $_.Abbname
+                                                                WalletMode = $_.WalletMode
+                                                                EthStMode = $_.EthStMode
+                                                                WalletSymbol= $_.WalletSymbol
+                                                                PoolName =$_.PoolName
+
+
+
                                                                 }
                                         }
 
@@ -166,16 +166,18 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Host          = $_.Server
                                 Port          = $_.Port
                                 User          = $_.User
-                                Pass          = $_.Password
+                                Pass          = $_.Pass
                                 Location      = $_.Location
                                 SSL           = $false
                                 Symbol        = $_.symbol
                                 AbbName       = "WTM-"+$_.Abbname
                                 ActiveOnManualMode    = $ActiveOnManualMode
                                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                PoolName = $Name
+                                PoolName =$_.PoolName
                                 WalletMode = $_.WalletMode
                                 Fee = $_.Fee
+                                EthStMode = $_.EthStMode
+                                WalletSymbol= $_.WalletSymbol
                                 }
 
                         }
