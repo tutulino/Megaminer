@@ -57,5 +57,9 @@
 -- Coin IDs from http://whattomine.com/calculators, separated by ",". 192 - Aeon, 210 - Zero, 213 - ETN
 @@CUSTOM_WTM_COINS=210
 
+-- Dual Mining Ratio reduces calculated profitability due to higher power usage.
+-- Set 0 to ignore, real ratio for AMD is normally between 20 to 30 (%)
+@@DUAL_MINING_RATIO=25
+
 -- Number of minutes each day (NOT PERCENT) of donation
 @@DONATE=10

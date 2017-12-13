@@ -160,6 +160,7 @@ while ($true) {
     $Currency = ($Config | Where-Object {$_ -like '@@CURRENCY=*'} ) -replace '@@CURRENCY=', ''
     $GpuPlatform = ($Config | Where-Object {$_ -like '@@GPUPLATFORM=*'} ) -replace '@@GPUPLATFORM=', ''
     $BechmarkintervalTime = ($Config | Where-Object {$_ -like '@@BENCHMARKTIME=*'} ) -replace '@@BENCHMARKTIME=', ''
+    $DualMiningRatio = ($Config | Where-Object {$_ -like '@@DUAL_MINING_RATIO=*'} ) -replace '@@DUAL_MINING_RATIO=', ''
     $LocalCurrency = ($Config | Where-Object {$_ -like '@@LOCALCURRENCY=*'} ) -replace '@@LOCALCURRENCY=', ''
     if ($LocalCurrency.length -eq 0) {
         #for old config.txt compatibility
@@ -337,6 +338,10 @@ while ($true) {
                                         Select-Object -First 1
                                     $MinerProfitDual = [Double]([double]$HashrateValueDual * [double]$PoolDual.Price)
                                 }
+
+                                #apply dual mining profit modifier
+                                $MinerProfit *= (100 - $DualMiningRatio)/100
+                                $MinerProfitDual *= (100 - $DualMiningRatio)/100
 
                                 #apply fee to profit
                                 if ($Miner.Fee -gt 0) {$MinerProfitDual *= (1 - [double]$Miner.fee)}
