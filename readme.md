@@ -35,11 +35,11 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
 1. Edit CONFIG.TXT file before mining
 
 2. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt, you can use this parameters on your batch
-    *PoolsName = separated comma string of pools to run 
-	*MiningMode = Mode to check profit, note not all pools suport all modes (Automatic/Automatic24h/Manual). If manual mode is selected one coin must be passed on Coinsname parameter
-	*Algorithm = separated comma string of algorithms to run (optional)
-    *CoinsName = separated comma string of Coins to run (optional)
-    *Groupnames = Groups of gpu/cpu to run (based on your defined groups in config.txt @@Gpugroups section) (optional)
+    - PoolsName = separated comma string of pools to run 
+	- MiningMode = Mode to check profit, note not all pools suport all modes (Automatic/Automatic24h/Manual). If manual mode is selected one coin must be passed on Coinsname parameter
+	- Algorithm = separated comma string of algorithms to run (optional)
+    - CoinsName = separated comma string of Coins to run (optional)
+    - Groupnames = Groups of gpu/cpu to run (based on your defined groups in config.txt @@Gpugroups section) (optional)
 
 3. Firt time, software will be donwloaded from miners github repositories and your system will be benchmarked (long process)
 	- As usual, some miners are detected as virus by Windows Defender, to avoid this you must set your instalation directory as excluded on Windows Defender 
@@ -107,15 +107,15 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 Only tested on nvidia pascal (10X0) , sorry I haven't AMD card for testing purposes.
 
-Only for Windows (at this moment)
+Only for Windows
 
 Miners for AMD are included but not tested , ¡¡¡ AMD TESTERS NEEDED !!!
 
 Core for auto change pools is forked from AaronSace MultipoolMiner, you can read info at https://github.com/aaronsace/MultiPoolMiner
 
-Profit calculations are estimates based on info provided by Pools/Whattomine for your bechmarked hashrate extrapolated to 24h. No real profit warranty.
+Profit calculations are estimates based on info provided by Pools/Whattomine for your bechmarked hashrate extrapolated to 24h. No real profit warranty except nicehash, where you are selling your power at indicated price.
 
-Pools/Whattomine statistics are based on past (luck, difficulty, exchange-rate, pool hashrte, network hashrate, etc), it can be not very accurate.
+Pools or Whattomine statistics are based on past (luck, difficulty, exchange-rate, pool hashrte, network hashrate, etc), it can be not very accurate, usually expected profit is near 50% pool indicates.
 
 Local Currency exchange rate to BTC is taken from Coindesk, Local currency profit can vary from whattomine revenue (instant), BTC revenue must be exact.
 
