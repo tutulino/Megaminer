@@ -369,9 +369,12 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Reactivated MPH sia pool, this pool is not compatible with ccminer, Blake2b must not be added to any ccminer
 *Eliminated screen Flickering
 *Reduced CPU usage
+*Upgrades dtsm nvdia equihash miner to 0.5.7
 
 *Fixed: nsgminer not receiving rigth devices parameter 
-*Fixed: claymore 9.7 not receiving rigth parameter 
+*Fixed: claymore 9.7 not receiving rigth parameters
+*Fixed: dualmining not working on Whattomine virtual Pool
+*Fixed: wallets not showing on Whattomine virtual Pool
 
 
 
