@@ -466,17 +466,20 @@ function Get-Algo-Divisor {
         [String]$Algo
     )
 
-    $Divisor = 1000000000
+    $Divisor = 1000000
 
     switch ($Algo) {
-        "skein" {$Divisor *= 100}
+        "sha256" {$Divisor *= 1000000}
+        "x11" {$Divisor *= 1000}
+        "qubit" {$Divisor *= 1000}
+        "quark" {$Divisor *= 1000}
         "equihash" {$Divisor /= 1000}
         "blake2s" {$Divisor *= 1000}
         "blakecoin" {$Divisor *= 1000}
         "decred" {$Divisor *= 1000}
         "blake14r" {$Divisor *= 1000}
+        "yescrypt" {$Divisor /= 1000}
     }
-
     $Divisor
 }
 

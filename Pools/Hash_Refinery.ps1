@@ -71,13 +71,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $coin = $Request | Select-Object -ExpandProperty $_.name
         $Pool_Algo = get-algo-unified-name $coin.name
 
-        $Divisor = (Get-Algo-Divisor $Pool_Algo) / 1000
+        $Divisor = Get-Algo-Divisor $Pool_Algo
 
         switch ($Pool_Algo) {
-            "sha256" {$Divisor *= 1000000}
-            "x11" {$Divisor *= 1000}
-            "qubit" {$Divisor *= 1000}
-            "quark" {$Divisor *= 1000}
+            "yescrypt" {$Divisor *= 1000}
         }
         if ( $coin.Workers -gt 0 -and [double]$coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0) {
             $Result += [PSCustomObject]@{
