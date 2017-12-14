@@ -9,12 +9,8 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"xevan":""}
+                {"xevan":"-k xevan"},
+                {"nist5":"-k nist5 --gpu-threads 2 -I 19"}
               ]
 
 }
-
- 
- 
-  
-     
