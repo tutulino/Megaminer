@@ -17,7 +17,7 @@
                     {"lbry":"-a lbry"},
                     {"lyra2v2":"-a lyra2v2"},
                     {"Myriad-Groestl" : "-a myr-gr"},
-                    {"polytimos": "-a polytimos"},
+                    {"polytimos": "-a poly"},
                     {"skein" : "-a skein"},
                     {"veltor":"-a veltor"},
                     {"nist5" : "-a nist5" }
