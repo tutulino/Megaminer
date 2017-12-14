@@ -13,7 +13,7 @@
                     {"polytimos" : "-a poly"},
                     {"blake2s":"-a blake2s"},
                     {"blakecoin":"-a blakecoin"},
-                    {"Keccak":"-a keccak"},
+                    {"Keccak":"-a keccak -m 2"},
                     {"lbry":"-a lbry"},
                     {"lyra2v2":"-a lyra2v2"},
                     {"Myriad-Groestl" : "-a myr-gr"},

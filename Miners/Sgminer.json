@@ -17,7 +17,6 @@
                 {"Keccak":"-k maxcoin"},
                 {"lbry":"-k lbry"},
                 {"Pascal":"-k pascal"},
-                {"Qubit":"-k qubitcoin --gpu-threads 2 --worksize 128 --intensity d"},
                 {"blake2s":"-k sia"},
                 {"darkcoin-mod":"-k darkcoin-mod --gpu-threads 2 --worksize 128 --intensity d"},
                 {"x11gost":"-k sibcoin-mod --gpu-threads 2 --worksize 64 --intensity 16"},

@@ -47,7 +47,7 @@ if ($Querymode -eq "info"){
                             
                             try {
                                 $http="http://pool.hashrefinery.com/api/wallet?address="+$Info.user
-                                $HR_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+                                $HR_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
                             }
                             catch {}
         
@@ -75,7 +75,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         try
         {
-            $HR_Request = Invoke-WebRequest "http://pool.hashrefinery.com/api/status" -UseBasicParsing | ConvertFrom-Json
+            $HR_Request = Invoke-WebRequest "http://pool.hashrefinery.com/api/status" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
         }
         catch
         {

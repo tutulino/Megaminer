@@ -11,7 +11,6 @@
 "Algorithms": [
             
             {"neoscrypt":"-k neoscrypt --gpu-threads 1 --worksize 256 --intensity 13"},
-            {"ethash":"-k ethash-new --gpu-threads 2 --worksize 192 --intensity 19"},
             {"cryptonight":"-k cryptonight --gpu-threads 1 --worksize 4 --rawintensity 720"},
             {"equihash":"-k equihash --gpu-threads 2 --worksize 256"}
 	 ]
