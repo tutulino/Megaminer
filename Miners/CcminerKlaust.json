@@ -12,7 +12,7 @@
                 {"groestl":"-a groestl"},
                 {"sib" : "-a sib"},
                 {"Myriad-Groestl" : "-a myr-gr"},
-                {"Keccak" : "-a Keccak"},
+                {"Keccak" : "-a Keccak -m 2"},
                 {"Neoscrypt":"-a Neoscrypt"}
                 
               ]
