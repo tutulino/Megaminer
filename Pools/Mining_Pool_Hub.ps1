@@ -94,7 +94,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Locations = "Europe", "US", "Asia"
 
-    $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0 -and $_.time_since_last_block -lt 3600} | ForEach-Object {
+    $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0 -and $_.time_since_last_block -lt 86400} | ForEach-Object {
 
         $MiningPoolHub_Algorithm = get-algo-unified-name $_.algo
         $MiningPoolHub_Coin = get-coin-unified-name $_.coin_name
