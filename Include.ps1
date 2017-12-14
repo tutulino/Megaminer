@@ -1,7 +1,222 @@
 ﻿
 Add-Type -Path .\OpenCL\*.cs
 
- 
+
+
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
+function get-gpu-information {
+    
+   
+    
+    
+     #NVIDIA DEVICES
+    
+        $NvidiaCards=@()
+        $GpuId=0
+        invoke-expression "./nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory  --format=csv,noheader"  | ForEach-Object {
+    
+                    $SMIresultSplit = $_ -split (",")   
+                    
+                    $NvidiaCards +=[pscustomObject]@{
+                                GpuId              = $GpuId
+                                gpu_name           = $SMIresultSplit[0] 
+                                utilization_gpu    = $SMIresultSplit[1]
+                                utilization_memory = $SMIresultSplit[2]
+                                temperature_gpu    = $SMIresultSplit[3]
+                                power_draw         = $SMIresultSplit[4]
+                                power_limit        = $SMIresultSplit[5]
+                                FanSpeed           = $SMIresultSplit[6]
+                                pstate             = $SMIresultSplit[7]
+                                ClockGpu           = $SMIresultSplit[8]
+                                ClockMem           = $SMIresultSplit[9]
+                            }
+                    $GpuId+=1
+    
+            }               
+    
+    
+    
+            $NvidiaCards | Format-Table -Wrap  (
+                @{Label = "GpuId"; Expression = {$_.gpuId}},
+                @{Label = "Type"; Expression = {"NVIDIA"}},
+                @{Label = "Name"; Expression = {$_.gpu_name}},
+                @{Label = "Gpu%"; Expression = {$_.utilization_gpu}},   
+                @{Label = "Mem%"; Expression = {$_.utilization_memory}}, 
+                @{Label = "Temp"; Expression = {$_.temperature_gpu}}, 
+                @{Label = "FanSpeed"; Expression = {$_.FanSpeed}},
+                @{Label = "Power"; Expression = {$_.power_draw+" /"+$_.power_limit}},
+                @{Label = "pstate"; Expression = {$_.pstate}},
+                @{Label = "ClockGpu"; Expression = {$_.ClockGpu}},
+                @{Label = "ClockMem"; Expression = {$_.ClockMem}}
+                
+            ) | Out-Host
+    
+      # AMD DEVICES
+      $OCLDevicesScreen = @()
+      
+          $AMDPlatform=[OpenCl.Platform]::GetPlatformIDs() | Where-Object name -like "*AMD*"
+          if ($AMDPlatform -ne $null) {
+                          $OCLDevices = [OpenCl.Device]::GetDeviceIDs($AMDPlatform[0],"ALL") 
+      
+                          $counter=0
+                          $OCLDevices| ForEach-Object {
+                                  $OCLDevicesScreen+=[pscustomobject]@{
+                                          GpuId=$counter
+                                          Type=if ($_.vendor -like "*AMD*") {"AMD"} else {"NVIDIA"}
+                                          Name=$_.Name
+                                          }
+                                          $counter++
+                                  }
+                              
+                          $OCLDevicesScreen |out-host
+      
+                      }
+    
+                      
+                                
+        }
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
+function get-comma-separated-string {
+        param(
+            [Parameter(Mandatory = $true)]
+            [int]$start,
+            [Parameter(Mandatory = $true)]
+            [int]$lenght
+            )
+
+            $result=$null
+            
+
+        for ($i=$start;$i-$start -lt $lenght;$i++) {
+
+            if ($result -ne $null) {$result+=","}
+            
+            $result=$result + [string]$i
+            }
+
+        $result
+    
+
+}
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
+Function get-config-variable {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$VarName
+        )
+        
+        $Var=[string]$null
+        $content=@()
+
+        
+        $SearchPattern="@@"+$VarName+"=*"
+
+        $A=Get-Content config.txt | Where-Object {$_ -like $SearchPattern} 
+        $A | ForEach-Object {$content += ($_ -split '=')[1]}
+        if (($content | Measure-Object).count -gt 1) {$var=$content} else {$var=[string]$content}
+        if ($Var -ne $null) {($Var.TrimEnd()).TrimStart()}
+       
+        
+}
+
+
+
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+Function Get-Mining-Types () {
+    param(
+        [Parameter(Mandatory = $false)]
+        [array]$Filter=$null
+        )
+
+
+        if ($Filter -eq $null) {$Filter=@()} # to allow comparation after
+        
+        $Types0=@()
+        $Types=@()
+
+        $Types0=get-config-variable "GPUGROUPS" |ConvertFrom-Json
+
+        $OCLPlatforms = [OpenCl.Platform]::GetPlatformIDs()
+        $OCLDevices = [OpenCl.Device]::GetDeviceIDs($OCLPlatforms[0],"ALL")
+
+        $NumberNvidiaGPU=  ($OCLDevices | Where-Object Vendor -like '*NVIDIA*' |Measure-Object).count
+        $NumberAmdGPU=  ($OCLDevices | Where-Object Vendor -like '*AMD*' |Measure-Object).count
+
+
+        if ($Types0 -eq $null) { #Autodetection on, must add types manually
+            
+            if ($NumberNvidiaGPU -gt 0) {
+                                    $Types0+=[pscustomobject]@{
+                                                    GroupName="NVIDIA"
+                                                    Type="NVIDIA"
+                                                    Gpus=get-comma-separated-string 0 $NumberNvidiaGPU 
+                                                    }
+                                        }
+
+            if ($NumberAmdGPU -gt 0) {
+                                    $Types0+=[pscustomobject]@{
+                                                    GroupName="AMD"
+                                                    Type="AMD"
+                                                    Gpus=get-comma-separated-string 0 $NumberAmdGPU 
+                                                            }
+                                                }
+                                                
+
+            }
+
+
+        if ((get-config-variable "CPUMINING") -eq 'ENABLED') {$Types+=[pscustomobject]@{GroupName="CPU";Type="CPU"}} #if cpu mining is enabled add a new group           
+
+
+        $c=0
+        $Types0 | foreach-object {
+                            if (((compare-object $_.Groupname $Filter -IncludeEqual -ExcludeDifferent  | Measure-Object).Count -gt 0) -or (($Filter | Measure-Object).count -eq 0)) {
+                                        $_ | Add-Member Id $c
+                                        $c=$c+1
+                                        
+
+
+                                        if ($_.type -eq "NVIDIA" -or $OCLPlatforms[0].Name -like "*AMD*") {  #claymore needs global openclid, when Nvidia platform is first, this not coincide with AMD devices only order, some miners like sgminer needs AMD devices only order, others like claymore needs global position
+                                            $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
+                                                }
+                                            else {
+                                                    $gpust=$_.gpus -split ',' 
+                                                    for ($i=0; $i -lt $gpust.length; $i++) {$gpust[$i]=[int]$gpust[$i]+$NumberNvidiaGPU} 
+                                                    $_ | Add-Member GpusClayMode ($_.gpust -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
+
+                                                }
+                                        $_ | Add-Member GpusETHMode ($_.gpus -replace ',',' ')
+                                        $_ | Add-Member GpusNsgMode ("-d "+$_.gpus -replace ',',' -d ')
+                                        $_ | Add-Member GpuPlatform (Get-Gpu-Platform $_.Type)
+
+                                        $Types+=$_
+                                        }
+                        }
+                        
+    $Types #return
+    }
 
 
 #************************************************************************************************************************************************************************************
@@ -51,6 +266,7 @@ Function Timed-ReadKb{
 
    $KeyPressed
 }
+
 
 
 

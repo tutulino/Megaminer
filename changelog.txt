@@ -370,11 +370,15 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Eliminated screen Flickering
 *Reduced CPU usage
 *Upgrades dtsm nvdia equihash miner to 0.5.7
+*Added SgminerHmq1725, SgminerHSR, SgminerBitcore,SgminerPhi (thx MikeBuzz)
+*Reorganized and corrected config.txt, I expect more noob friendly
 
 *Fixed: nsgminer not receiving rigth devices parameter 
 *Fixed: claymore 9.7 not receiving rigth parameters
 *Fixed: dualmining not working on Whattomine virtual Pool
 *Fixed: wallets not showing on Whattomine virtual Pool
+*Fixed: duplicated wallets on wallet screen
+
 
 
 

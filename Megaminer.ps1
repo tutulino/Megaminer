@@ -22,10 +22,11 @@ if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY 
 
 #--------------Load config.txt file
 
-$Location=(Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} )-replace '@@LOCATION=',''
+$Location= get-config-variable "LOCATION"
 
 $CoinsWallets=@{} #needed for anonymous pools load
-     (Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','' | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
+((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','').TrimEnd() | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
+
 
 $SelectedOption=""
 

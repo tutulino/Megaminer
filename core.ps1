@@ -16,7 +16,8 @@ param(
 
 
     [Parameter(Mandatory = $false)]
-    [array]$Groupnames = @()
+    [array]$Groupnames = $null
+    
 
 
 )
@@ -26,7 +27,7 @@ param(
 
 ##Parameters for testing, must be commented on real use
 
-#$MiningMode='Automatic'
+$MiningMode='Automatic'
 #$MiningMode='Automatic24h'
 #$MiningMode='Manual'
 
@@ -38,7 +39,7 @@ param(
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
 #$PoolsName='hash_refinery'
-#$PoolsName='ahashpool'
+$PoolsName='ahashpool'
 #$PoolsName='suprnova'
 
 #$PoolsName="Nicehash"
@@ -68,21 +69,16 @@ $LogFile=".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 Start-Transcript $LogFile
 
 
-
-
 $ActiveMinersIdCounter=0
 $Activeminers=@()
 $ShowBestMinersOnly=$true
 $FirstTotalExecution =$true
 $StartTime=get-date
 
-
-
 set-WindowSize 120 60 
 
-
-$Screen=(Get-Content config.txt | Where-Object {$_ -like '@@STARTSCREEN=*'} )-replace '@@STARTSCREEN=',''
-    
+$Screen = get-config-variable "STARTSCREEN"
+  
 
 
 #---Paraneters checking
@@ -149,47 +145,24 @@ if ($MiningMode -eq 'Manual' -and ($Algorithm | measure-object).count -gt 1){
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
 
-$IntervalStartAt = (Get-Date)
-Clear-Host;$repaintScreen=$true
 
 while ($true) {
 
-    $location=@()
-    $Types=@()
-    $Currency=@()
+    $IntervalStartAt = (Get-Date)
+    Clear-Host;$repaintScreen=$true
+  
+
+    $Location=get-config-variable "LOCATION"
     
+    $Types=Get-Mining-Types -filter $Groupnames
     
-    
-    
-    $Location=((Get-Content config.txt | Where-Object {$_ -like '@@LOCATION=*'} )-replace '@@LOCATION=','').TrimEnd()
-
-    
-
-    $Types0=(Get-Content config.txt | Where-Object {$_ -like '@@GPUGROUPS=*'}) -replace '@@GPUGROUPS=*','' |ConvertFrom-Json
-     $c=0
-     $Types0 | foreach-object {
-
-                                if (((compare-object $_.Groupname $Groupnames -IncludeEqual -ExcludeDifferent  | Measure-Object).Count -gt 0) -or (($Groupnames | Measure-Object).count -eq 0)) {
-                                            $_ | Add-Member Id $c
-                                            $c=$c+1
-                                            $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
-                                            $_ | Add-Member GpusETHMode ($_.gpus -replace ',',' ')
-                                            $_ | Add-Member GpusNsgMode ("-d "+$_.gpus -replace ',',' -d ')
-                                            $_ | Add-Member GpuPlatform (Get-Gpu-Platform $_.Type)
-
-                                            $Types+=$_
-                                            }
-                             }
-                             
-
-
     $InitialProfitsScreenLimit=[Math]::Floor( 25 / (($Types | Measure-Object).count)) #screen adjust to number of groups
     if ($FirstTotalExecution) {$ProfitsScreenLimit=$InitialProfitsScreenLimit}
                          
 
-    $Currency=((Get-Content config.txt | Where-Object {$_ -like '@@CURRENCY=*'} )-replace '@@CURRENCY=','').TrimEnd()
-    $BechmarkintervalTime=(Get-Content config.txt | Where-Object {$_ -like '@@BENCHMARKTIME=*'} )-replace '@@BENCHMARKTIME=',''
-    $LocalCurrency=((Get-Content config.txt | Where-Object {$_ -like '@@LOCALCURRENCY=*'} )-replace '@@LOCALCURRENCY=','').TrimEnd()
+    $Currency= get-config-variable "CURRENCY"
+    $BechmarkintervalTime=[int](get-config-variable "BENCHMARKTIME" )
+    $LocalCurrency= get-config-variable "LOCALCURRENCY"
     if ($LocalCurrency.length -eq 0) { #for old config.txt compatibility
         switch ($location) {
             'Europe' {$LocalCurrency="EURO"}
@@ -204,10 +177,12 @@ while ($true) {
     #Donation
     $LastIntervalTime= (get-date) - $IntervalStartAt
     $IntervalStartAt = (Get-Date)
-    $ElapsedDonationTime = [int](Get-Content Donation.ctr) + $LastIntervalTime.minutes + ($LastIntervalTime.hours *60)
+    $DonationPastTime= (Get-Content Donation.ctr)
+    If ($DonationPastTime -eq $null -or $DonationPastTime -eq "" ) {$DonationPastTime=0}
+    $ElapsedDonationTime = [int]($DonationPastTime) + $LastIntervalTime.minutes + ($LastIntervalTime.hours *60)
 
-
-    $Dt=((Get-Content config.txt | Where-Object {$_ -like '@@DONATE=*'} )-replace '@@DONATE=','')
+    
+    $Dt= [int](get-config-variable "DONATE")
     $DonateTime=if ($Dt -gt 0) {[int]$Dt} else {0}
     #Activate or deactivate donation
     if ($ElapsedDonationTime -gt 1440 -and $DonateTime -gt 0) { # donation interval
@@ -231,14 +206,14 @@ while ($true) {
             }
             else { #NOT donation interval
                     $DonationInterval = $false
-                    $NextInterval=[int]((Get-Content config.txt | Where-Object {$_ -like '@@INTERVAL=*'}) -replace '@@INTERVAL=','')
+                    $NextInterval=get-config-variable "INTERVAL"
 
                     $Algorithm=$ParamAlgorithmBCK
                     $PoolsName=$ParamPoolsNameBCK
                     $CoinsName=$ParamCoinsNameBCK
                     $MiningMode=$ParamMiningModeBCK
-                    $UserName=((Get-Content config.txt | Where-Object {$_ -like '@@USERNAME=*'} )-replace '@@USERNAME=','').TrimEnd()
-                    $WorkerName=((Get-Content config.txt | Where-Object {$_ -like '@@WORKERNAME=*'} )-replace '@@WORKERNAME=','').TrimEnd()
+                    $UserName= get-config-variable "USERNAME"
+                    $WorkerName= get-config-variable "WORKERNAME"
                     $CoinsWallets=@{} 
                     ((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','').TrimEnd() | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
                 
@@ -255,7 +230,7 @@ while ($true) {
     #Load information about the Pools, only must read parameter passed files (not all as mph do), level is Pool-Algo-Coin
      do
         {
-        $Pools=Get-Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm
+        $Pools=Get-Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $Location -AlgoFilterList $Algorithm
         if  ($Pools.Count -eq 0) {
                 "NO POOLS!....retry in 10 sec" | Out-Host
                 "REMEMBER, IF YOUR ARE MINING ON ANONYMOUS WITHOUT AUTOEXCHANGE POOLS LIKE YIIMP, NANOPOOL, ETC. YOU MUST SET WALLET FOR AT LEAST ONE POOL COIN IN CONFIG.TXT" | Out-Host
@@ -831,7 +806,7 @@ while ($true) {
                     
                     Set-ConsolePosition 0 $YToWriteData
 
-                    #Display profits  information
+                    #Display lauched commands information
                     $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
                         @{Label = "GroupName"; Expression = {$_.GroupName}}, 
                         @{Label = "Pool"; Expression = {$_.PoolAbbName}},
@@ -840,49 +815,10 @@ while ($true) {
                         @{Label = "Command"; Expression = {"$($_.Path.TrimStart((Convert-Path ".\"))) $($_.Arguments)"}}
                     ) | Out-Host
                     
-                    #Nvidia SMI-info
-                    if ((Compare-Object "NVIDIA" $types.Type -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0) {
-                                $NvidiaCards=@()
-                                $GpuId=0
-                                invoke-expression "./nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory  --format=csv,noheader"  | ForEach-Object {
-                            
-                                            $SMIresultSplit = $_ -split (",")   
-                                            
-                                            $NvidiaCards +=[pscustomObject]@{
-                                                        GpuId              = $GpuId
-                                                        gpu_name           = $SMIresultSplit[0] 
-                                                        utilization_gpu    = $SMIresultSplit[1]
-                                                        utilization_memory = $SMIresultSplit[2]
-                                                        temperature_gpu    = $SMIresultSplit[3]
-                                                        power_draw         = $SMIresultSplit[4]
-                                                        power_limit        = $SMIresultSplit[5]
-                                                        FanSpeed           = $SMIresultSplit[6]
-                                                        pstate             = $SMIresultSplit[7]
-                                                        ClockGpu           = $SMIresultSplit[8]
-                                                        ClockMem           = $SMIresultSplit[9]
-                                                    }
-                                            $GpuId+=1
+                    # Display devices info
+                    get-gpu-information
 
-                                    }               
-
-
-
-                                    $NvidiaCards | Format-Table -Wrap  (
-                                        @{Label = "GpuId"; Expression = {$_.gpuId}},
-                                        @{Label = "Gpu"; Expression = {$_.gpu_name}},
-                                        @{Label = "Gpu%"; Expression = {$_.utilization_gpu}},   
-                                        @{Label = "Mem%"; Expression = {$_.utilization_memory}}, 
-                                        @{Label = "Temp"; Expression = {$_.temperature_gpu}}, 
-                                        @{Label = "FanSpeed"; Expression = {$_.FanSpeed}},
-                                        @{Label = "Power"; Expression = {$_.power_draw+" /"+$_.power_limit}},
-                                        @{Label = "pstate"; Expression = {$_.pstate}},
-                                        @{Label = "ClockGpu"; Expression = {$_.ClockGpu}},
-                                        @{Label = "ClockMem"; Expression = {$_.ClockMem}}
-                                        
-                                    ) | Out-Host
-
-
-                                }
+                  
 
                 }
                                     
@@ -891,17 +827,7 @@ while ($true) {
         if ($Screen -eq "Wallets" -or $FirstTotalExecution -eq $true) {         
 
 
-
-            if ($Screen -eq "Wallets" -and $repaintScreen) {
-                             "----------------------------------------------------WALLETS (slow)-----------------------------------------------------"| Out-host   
-                             
-                             Set-ConsolePosition 0 $YToWriteMessages
-                             "Start Time: $StartTime                                                       (U)pdate  - $WalletsUpdate  " | Out-Host
-                                                       
-                        }
-
-
-                    if ($WalletsUpdate -eq $null) { #wallets only refresh one time each interval, not each loop iteration
+                    if ($WalletsUpdate -eq $null) { #wallets only refresh for manual request
 
                             $WalletsUpdate=get-date
 
@@ -925,7 +851,7 @@ while ($true) {
                                     
 
                                     $ApiKeyPattern="@@APIKEY_"+$_.PoolName+"=*"
-                                    $ApiKey = (Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} )-replace $ApiKeyPattern,''
+                                    $ApiKey = get-config-variable $ApiKeyPattern
                                 
                                     if ($Apikey -ne "") {
                                             $WalletsToCheck += [pscustomObject]@{
@@ -952,8 +878,7 @@ while ($true) {
 
                                             if ($_.WalletMode -eq "WALLET") {"Checking "+$_.Abbname+" - "+$_.symbol | Out-host}
                                                else {"Checking "+$_.Abbname+" - "+$_.coin+' ('+$_.Algorithm+')' | Out-host}
-
-                                          
+                                         
                                           
                                             $Ws = Get-Pools -Querymode $_.WalletMode -PoolsFilterList $_.Poolname -Info ($_)
                                             
@@ -967,9 +892,7 @@ while ($true) {
                                             $WalletStatus += $Ws
 
                                             start-sleep 1 #no saturation of pool api
-                                            Set-ConsolePosition 0 $YToWriteMessages
-                                            "                                                                         "| Out-host     
-
+                                            
                                         } 
 
 
@@ -983,9 +906,15 @@ while ($true) {
                          }
 
 
-                         if ($Screen -eq "Wallets") {  
 
+
+                         if ($Screen -eq "Wallets" -and $repaintScreen) {
+                            "----------------------------------------------------WALLETS (slow)-----------------------------------------------------"| Out-host   
                             
+                            Set-ConsolePosition 0 $YToWriteMessages
+                            "Start Time: $StartTime                                                       (U)pdate  - $WalletsUpdate  " | Out-Host
+                            "" | Out-Host 
+                                                    
 
                             $WalletStatus | where-object Balance -gt 0 | Sort-Object poolname | Format-Table -Wrap -groupby poolname (
                                 @{Label = "Coin"; Expression = {$_.WalletSymbol}}, 
