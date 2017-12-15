@@ -1,7 +1,7 @@
 ﻿{
-    "Path" : ".\\Bin\\cpuminer-opt-4ward\\cpuminer-opt-3.7.4-4ward\\cpuminer-4way.exe",
+    "Path" : ".\\Bin\\cpuminer-opt-4ward\\cpuminer-opt-3.7.6-4ward\\cpuminer-4way.exe",
     "ExtractionPath" : ".\\Bin\\cpuminer-opt-4ward\\",
-    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.5-4ward.7z",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.6-4ward.7z",
     "Types" : ["CPU"],
     "Arguments" : "-b #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
     "BenchmarkArg": "--benchmark",
@@ -10,12 +10,19 @@
     "Dualmining":false,
     "PrelaunchCommand":"",
     "Algorithms": [
-        {"blake": "-a blake"},
+        {"skein": "-a skein"},
         {"keccak": "-a keccak"},
         {"keccakc": "-a keccakc"},
         {"nist5": "-a nist5"},
-        {"skein": "-a skein"},
+        {"tribus": "-a tribus"},
+
         {"skein2": "-a skein2"},
-        {"tribus": "-a tribus"}
+        {"jha": "-a jha"},
+        {"whirlpool": "-a whirlpool"},
+        {"pentablake": "-a pentablake"},
+
+        {"blake": "-a blake"},
+        {"lyra2z": "-a lyra2z"},
+        {"blake14r": "-a decred"}
     ]
 }

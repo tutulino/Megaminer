@@ -1,7 +1,7 @@
 ﻿{
-    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.5-windows\\cpuminer-aes-avx2.exe",
+    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.6-windows\\cpuminer-aes-avx2.exe",
     "ExtractionPath" : ".\\Bin\\cpuminer-opt\\",
-    "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1543780/cpuminer-opt-3.7.5-windows.zip",
+    "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1561103/cpuminer-opt-3.7.6-windows.zip",
     "Types" : ["CPU"],
     "Arguments" : "-b #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
     "BenchmarkArg": "--benchmark",
