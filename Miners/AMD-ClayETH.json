@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\Claymore-Dual\\",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore-Dual-10.2.zip",
     "Types" : ["AMD"],
-    "Arguments" : "-mport -#APIPORT# -epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 -allpools 1 -wd 1 -mode 1  #ALGORITHMPARAMETERS#",
+    "Arguments" : "-mport -#APIPORT# -epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 --platform 1 -allpools 1 1 -wd 1 -mode 1  #ALGORITHMPARAMETERS#",
     "API" : "Claymore",
     "Fee" : "0.01",
     "Wrap" : false,

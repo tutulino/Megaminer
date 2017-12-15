@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\AMD-cast\\",
     "Uri" : "http://www.gandalph3000.com/download/cast_xmr-vega-win64_070.zip",
     "Types" : ["AMD"],
-    "Arguments" : "-R --remoteport #APIPORT# -S #SERVER#:#PORT# -O #GPUPLATFORM# -u #LOGIN# -p #PASSWORD#",
+    "Arguments" : "-R --remoteport #APIPORT# -O #GPUPLATFORM# -S #SERVER#:#PORT# -O #GPUPLATFORM# -u #LOGIN# -p #PASSWORD#",
     "API" : "cast",
     "Wrap" : false,
     "Dualmining":false,
