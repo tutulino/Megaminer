@@ -589,12 +589,12 @@ while ($true) {
         elseif ($_.Process.HasExited -eq $false) {
             try {
                 $_.Process.CloseMainWindow() | Out-Null
-                Stop-Process $_.Process.Id | Out-Null
+                #Stop-Process $_.Process.Id | Out-Null
                 } catch{}
             $_.Status = "Idle"
         }
         
-        try {$_.Process.CloseMainWindow() | Out-Null;Stop-Process $_.Process.Id | Out-Null} catch {} #security closing
+        try {$_.Process.CloseMainWindow() | Out-Null<#;Stop-Process $_.Process.Id | Out-Null#>} catch {} #security closing
     }
    
     #$ActiveMiners | Where-Object Best -EQ $true  | Out-Host
@@ -1079,10 +1079,9 @@ while ($true) {
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------------------------
 
-Stop-Process 
 
 $ActiveMiners | ForEach-Object {try {
         $_.Process.CloseMainWindow() | Out-Null
-        Stop-Process $_.Process.Id | Out-Null
+        #Stop-Process $_.Process.Id | Out-Null
 } catch {}}
 Stop-Transcript
