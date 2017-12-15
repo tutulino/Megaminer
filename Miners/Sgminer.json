@@ -12,6 +12,8 @@
         {"myriad-groestl":"-k myriadcoin-groestl -I 28"},
         {"groestl":"-k groestlcoin -I 22"},
         {"blake":"-k blake"},
+        {"blake14r":"-k decred -g 2 -w 64 -I 21"},
+        {"lbry":"-k lbry -g 4 -w 256 -I 21"},
         {"keccak":"-k maxcoin -g 2 -I 10"},
         {"nist5": "-k talkcoin-mod -I 20"},
         {"x11gost":"-k sibcoin-mod -g 2 -w 128 -I 20"},
