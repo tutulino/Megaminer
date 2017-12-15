@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\AMD-OptiminerZcash\\",
     "Uri" : "https://github.com/Optiminer/OptiminerZcash/raw/master/optiminer-zcash-1.7.0.zip",
     "Types" : ["AMD"],
-    "Arguments" : "--monitoring-port #APIPORT# -s #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments" : "--monitoring-port #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "optiminer",
     "Wrap" : false,
     "Dualmining":false,
