@@ -470,14 +470,15 @@ function Get-Algo-Divisor {
 
     switch ($Algo) {
         "sha256" {$Divisor *= 1000000}
+        "scrypt" {$Divisor *= 1000}
         "x11" {$Divisor *= 1000}
         "qubit" {$Divisor *= 1000}
         "quark" {$Divisor *= 1000}
-        "equihash" {$Divisor /= 1000}
         "blake2s" {$Divisor *= 1000}
         "blakecoin" {$Divisor *= 1000}
         "decred" {$Divisor *= 1000}
         "blake14r" {$Divisor *= 1000}
+        "equihash" {$Divisor /= 1000}
         "yescrypt" {$Divisor /= 1000}
     }
     $Divisor
@@ -571,6 +572,7 @@ function get-coin-unified-name ([string]$Coin) {
         "Dgb-*" {$Result = "Digibyte"}
         "Digibyte-*" {$Result = "Digibyte"}
         "Verge-*" {$Result = "Verge"}
+        "Auroracoin-*" {$Result = "Auroracoin"}
         "EthereumClassic" {$Result = "Ethereum-Classic"}
     }
     $Result
