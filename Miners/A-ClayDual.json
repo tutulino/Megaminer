@@ -1,0 +1,45 @@
+{
+"Path" : ".\\Bin\\Claymore's Dual Ethereum+Decred_Siacoin_Lbry_Pascal AMD+NVIDIA GPU Miner v10.2\\EthDcrMiner64.exe",
+"ExtractionPath" : ".\\Bin\\",
+"Uri" : "https://github.com/tutulino/Claymore-Dual/releases/download/10.0/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.2.-.Catalyst.15.12-17.x.-.CUDA.8.0_7.5_6.5.zip","Types" : ["AMD"],
+"Types" : ["AMD"],
+"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL# -wd 1 -di #DEVICESCLAYMODE# -mport #APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
+"API" : "Claymore",
+"Wrap" : false,
+"DualMining": true,
+"DualMiningMainCoin": ["Ethereum","ETHEREUMCLASIC"],
+"Fee" : "0.02",
+"Algorithms": [
+          {"Ethash_Blake2b_5":" -dcoin sc -dcri 5"},
+          {"Ethash_Blake2b_7":" -dcoin sc -dcri 7"},
+          {"Ethash_Blake2b_9":" -dcoin sc -dcri 9"},
+          {"Ethash_Blake2b_11":" -dcoin sc -dcri 11"},
+          {"Ethash_Blake2b_15":" -dcoin sc -dcri 15"},
+          {"Ethash_Blake2b_20":" -dcoin sc -dcri 20"},
+          {"Ethash_Blake2b_25":" -dcoin sc -dcri 25"},
+          {"Ethash_Blake2b_35":" -dcoin sc -dcri 35"},
+
+
+
+          {"Ethash_Blake14r_5":" -dcoin dcr -dcri 5"},
+          {"Ethash_Blake14r_7":" -dcoin dcr -dcri 7"},
+          {"Ethash_Blake14r_9":" -dcoin dcr -dcri 9"},
+          {"Ethash_Blake14r_11":" -dcoin dcr -dcri 11"},
+          {"Ethash_Blake14r_15":" -dcoin dcr -dcri 15"},
+          {"Ethash_Blake14r_20":" -dcoin dcr -dcri 20"},
+          {"Ethash_Blake14r_25":" -dcoin dcr -dcri 25"},
+          {"Ethash_Blake14r_35":" -dcoin dcr -dcri 35"},
+
+
+          {"Ethash_Lbry_5":" -dcoin lbc -dcri 5"},
+          {"Ethash_Lbry_7":" -dcoin lbc -dcri 7"},
+          {"Ethash_Lbry_9":" -dcoin lbc -dcri 9"},
+          {"Ethash_Lbry_11":" -dcoin lbc -dcri 11"},
+          {"Ethash_Lbry_15":" -dcoin lbc -dcri 15"},
+          {"Ethash_Lbry_20":" -dcoin lbc -dcri 20"},
+          {"Ethash_Lbry_25":" -dcoin lbc -dcri 25"},
+          {"Ethash_Lbry_35":" -dcoin lbc -dcri 35"}
+              ]
+
+}
+

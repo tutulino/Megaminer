@@ -113,7 +113,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Algorithm     = $Uni_Algorithm
                                 Info          = $Uni_coin
                                 Price         = [Double]$coin.estimate / $Divisor
-                                Price24h      = [Double]$coin.actual_last24h / $Divisor
+                                Price24h      = [Double]$coin."24h_btc" / $Divisor
                                 Protocol      = "stratum+tcp"
                                 Host          = "pool.unimining.net"
                                 Port          = $coin.port

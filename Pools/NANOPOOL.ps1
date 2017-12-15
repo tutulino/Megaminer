@@ -53,12 +53,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
 
         $PrePools=@()
-        $PrePools +=[pscustomobject]@{"coin" = "ETHEREUMCLASIC";"algo"="ETHASH"; "symbol"= "ETC";"port"= "19999";"Fee"=0.01;"Divisor"=1000000};
-        $PrePools +=[pscustomobject]@{"coin" = "ETHEREUM";"algo"="ETHASH"; "symbol"= "ETH";"port"= "9999";"Fee"=0.01;"Divisor"=1000000};
-        $PrePools +=[pscustomobject]@{"coin" = "SIA";"algo"="BLAKE2B"; "symbol"= "SIA";"port"= "7777";"Fee"=0.02;"Divisor"=1000000};
-        $PrePools +=[pscustomobject]@{"coin" = "ZCASH";"algo"="Equihash"; "symbol"= "ZEC";"port"= "6666";"Fee"=0.01;"Divisor"=1};
-        $PrePools +=[pscustomobject]@{"coin" = "MONERO";"algo"="CRYPTONIGHT"; "symbol"= "XMR";"port"= "14444";"Fee"=0.01;"Divisor"=1};
-        $PrePools +=[pscustomobject]@{"coin" = "ELECTRONEUM";"algo"="CRYPTONIGHT"; "symbol"= "ETN";"port"= "13333";"Fee"=0.02;"Divisor"=1};
+        $PrePools +=[pscustomobject]@{"coin" = "ETHEREUMCLASIC";"algo"="ETHASH"; "symbol"= "ETC";"port"= "19999";"Fee"=0.01;"Divisor"=1000000;"protocol"="stratum+tcp"};
+        $PrePools +=[pscustomobject]@{"coin" = "ETHEREUM";"algo"="ETHASH"; "symbol"= "ETH";"port"= "9999";"Fee"=0.01;"Divisor"=1000000;"protocol"="stratum+tcp"};
+        $PrePools +=[pscustomobject]@{"coin" = "SIA";"algo"="BLAKE2B"; "symbol"= "SIA";"port"= "7777";"Fee"=0.02;"Divisor"=1000000;"protocol"="stratum+tcp"};
+        $PrePools +=[pscustomobject]@{"coin" = "ZCASH";"algo"="Equihash"; "symbol"= "ZEC";"port"= "6666";"Fee"=0.01;"Divisor"=1;"protocol"="stratum+ssl"};
+        $PrePools +=[pscustomobject]@{"coin" = "MONERO";"algo"="CRYPTONIGHT"; "symbol"= "XMR";"port"= "14444";"Fee"=0.01;"Divisor"=1;"protocol"="stratum+ssl"};
+        $PrePools +=[pscustomobject]@{"coin" = "ELECTRONEUM";"algo"="CRYPTONIGHT"; "symbol"= "ETN";"port"= "13333";"Fee"=0.02;"Divisor"=1;"protocol"="stratum+ssl"};
 
 
 
@@ -88,7 +88,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         Info = $_.Coin
                                         Price = ($NP_RequestP.bitcoins / $_.Divisor)
                                         Price24h = $null
-                                        Protocol      = "stratum+tcp"
+                                        Protocol      = "stratum+tcp" #$_.Protocol
                                         Host          = $loc.server
                                         Port          = $_.Port
                                         User          = $CoinsWallets.get_item($_.symbol)

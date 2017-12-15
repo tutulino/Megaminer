@@ -365,19 +365,28 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 ------------------------------------------------
 5.0 beta 4
 
-*Added "hidden" option to force miner apiport instead of dinamic port asignation (this options can be used only if one group is defined on your rig) 
+
 *Reactivated MPH sia pool, this pool is not compatible with ccminer, Blake2b must not be added to any ccminer
 *Eliminated screen Flickering
-*Reduced CPU usage
+*Reduced CPU usage 
 *Upgrades dtsm nvdia equihash miner to 0.5.7
 *Added SgminerHmq1725, SgminerHSR, SgminerBitcore,SgminerPhi (thx MikeBuzz)
-*Reorganized and corrected config.txt, I expect more noob friendly
+*Added CastXMR 0.8 for AMD
+*Reorganized and corrected config.txt, I expect more noob friendly (thx MikeBuzz & jbonifacio)
+*Added ClaymoreETH 10.2 for AMD
+*Renamed miners files for best type identification
+*New "additional miners" folder, this folder will contain miners deactivated but useful for some people, you must move file/s to miners folder to activate
+*Added "hidden" option to force miner apiport instead of dinamic port asignation (this option can be used only if one group of that type is defined on your rig). To use you must set "APIPORT"=PORT in miner file.
+
 
 *Fixed: nsgminer not receiving rigth devices parameter 
-*Fixed: claymore 9.7 not receiving rigth parameters
+*Fixed: ewbf/dtsm not receiving rigth devices parameter 
+*Fixed: claymore miners not receiving rigth devices parameters
 *Fixed: dualmining not working on Whattomine virtual Pool
 *Fixed: wallets not showing on Whattomine virtual Pool
 *Fixed: duplicated wallets on wallet screen
+*Fixed: low difficulty share error for kecckak algo
+*Fixed: Unimining pool 24h mode not showing profit
 
 
 

@@ -1,0 +1,15 @@
+{
+"Path" : ".\\Bin\\AMD-sgminerPhi\\SgminerPhi\\sgminer.exe",
+"ExtractionPath" : ".\\Bin\\AMD-sgminerPhi\\",
+"Uri" : "https://github.com/Fedeparma74/Miners/releases/download/1.0/SgminerPhi.rar",
+"Types" : ["AMD"],
+"Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+"API" : "Xgminer",
+"Wrap" : false,
+"Dualmining":false,
+"PrelaunchCommand":"",
+"Algorithms": [
+                {"phi":"--kernel phi -I 21"}
+              ]
+
+}

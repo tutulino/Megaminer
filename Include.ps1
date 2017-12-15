@@ -12,8 +12,6 @@ Add-Type -Path .\OpenCL\*.cs
 
 function get-gpu-information {
     
-   
-    
     
      #NVIDIA DEVICES
     
@@ -60,16 +58,20 @@ function get-gpu-information {
       # AMD DEVICES
       $OCLDevicesScreen = @()
       
-          $AMDPlatform=[OpenCl.Platform]::GetPlatformIDs() | Where-Object name -like "*Advanced Micro Devices*"
+          $AMDPlatform=[OpenCl.Platform]::GetPlatformIDs() | Where-Object vendor -like "*Advanced Micro Devices*"
           if ($AMDPlatform -ne $null) {
-                          $OCLDevices = [OpenCl.Device]::GetDeviceIDs($AMDPlatform[0],"ALL") 
+                          $OCLDevices = [OpenCl.Device]::GetDeviceIDs($AMDPlatform[0],"ALL") | Where-Object vendor -like "*Advanced Micro Devices*"  #exclude integrated INTEL gpu
       
                           $counter=0
                           $OCLDevices| ForEach-Object {
-                                  $OCLDevicesScreen+=[pscustomobject]@{
-                                          GpuId=$counter
-                                          Type=if ($_.vendor -like "*Advanced Micro Devices*") {"AMD"} else {"NVIDIA"}
-                                          Name=$_.Name
+                                    if ($_.vendor -like "*Advanced Micro Devices*") {$type="AMD"} 
+                                    if ($_.vendor -like "*NVDIA*") {$type="NVIDIA"}
+                                    if ($_.vendor -like "*INTEL*") {$type="INTEL"}
+
+                                    $OCLDevicesScreen+=[pscustomobject]@{
+                                            GpuId=$counter
+                                            Type= $type
+                                            Name=$_.Name
                                           }
                                           $counter++
                                   }
@@ -165,6 +167,7 @@ Function Get-Mining-Types () {
 
         $NumberNvidiaGPU=  ($OCLDevices | Where-Object Vendor -like '*NVIDIA*' |Measure-Object).count
         $NumberAmdGPU=  ($OCLDevices | Where-Object Vendor -like '*Advanced Micro Devices*' |Measure-Object).count
+        $NumberAmdGPU=  ($OCLDevices | Where-Object Vendor -like '*Advanced Micro Devices*' |Measure-Object).count
 
 
         if ($Types0 -eq $null) { #Autodetection on, must add types manually
@@ -199,8 +202,8 @@ Function Get-Mining-Types () {
                                         $_ | Add-Member Id $c
                                         $c=$c+1
                                         
-
-
+    $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
+<#
                                         if ($_.type -eq "NVIDIA" -or $OCLPlatforms[0].Name -like "*NVIDIA*") {  #claymore needs global openclid, when Nvidia platform is first, this not coincide with AMD devices only order, some miners like sgminer needs AMD devices only order, others like claymore needs global position
                                             $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
                                                 }
@@ -211,6 +214,7 @@ Function Get-Mining-Types () {
                                                     $_ | Add-Member GpusClayMode (($gpust -join ',') -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
 
                                                 }
+#>                                                
                                         $_ | Add-Member GpusETHMode ($_.gpus -replace ',',' ')
                                         $_ | Add-Member GpusNsgMode ("-d "+$_.gpus -replace ',',' -d ')
                                         $_ | Add-Member GpuPlatform (Get-Gpu-Platform $_.Type)

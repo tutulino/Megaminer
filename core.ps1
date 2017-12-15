@@ -9,9 +9,6 @@ param(
     [array]$CoinsName= $null,
 
     [Parameter(Mandatory = $false)]
-    [String]$Proxy = "", #i.e http://192.0.0.1:8080 
-
-    [Parameter(Mandatory = $false)]
     [String]$MiningMode = $null,
 
 
@@ -59,8 +56,6 @@ Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
 Get-ChildItem . -Recurse | Unblock-File
 try {if ((Get-MpPreference).ExclusionPath -notcontains (Convert-Path .)) {Start-Process powershell -Verb runAs -ArgumentList "Add-MpPreference -ExclusionPath '$(Convert-Path .)'"}}catch {}
 
-if ($Proxy -eq "") {$PSDefaultParameterValues.Remove("*:Proxy")}
-else {$PSDefaultParameterValues["*:Proxy"] = $Proxy}
 
 
 $ActiveMiners = @()
@@ -75,7 +70,7 @@ $ShowBestMinersOnly=$true
 $FirstTotalExecution =$true
 $StartTime=get-date
 
-set-WindowSize 120 60 
+
 
 $Screen = get-config-variable "STARTSCREEN"
   
@@ -133,6 +128,7 @@ if ($MiningMode -eq 'Manual' -and ($Algorithm | measure-object).count -gt 1){
     $ParamMiningModeBCK=$MiningMode
 
 
+set-WindowSize 120 60 
     
 
 #----------------------------------------------------------------------------------------------------------------------------
@@ -150,6 +146,7 @@ while ($true) {
 
     $IntervalStartAt = (Get-Date)
     Clear-Host;$repaintScreen=$true
+    
   
 
     $Location=get-config-variable "LOCATION"
@@ -254,10 +251,7 @@ while ($true) {
                 {   "-------BAD FORMED JSON: $MinerFile" | Out-host 
                 Exit}
  
-            #Only want algos selected types
-       #     If ($Types.Count -ne 0 -and (Compare-Object $Types.Type $Miner.types -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0)
-        #        {
-
+   
                     foreach ($Algo in ($Miner.Algorithms))
                         {
                             $HashrateValue= 0
@@ -265,7 +259,7 @@ while ($true) {
                             $Hrs=$null
 
                             ##Algoname contains real name for dual and no dual miners
-                            $AlgoName =  (($Algo.PSObject.Properties.Name -split ("_"))[0]).toupper()
+                            $AlgoName =  (($Algo.PSObject.Properties.Name -split ("_"))[0]).toupper().trimend()
                             $AlgoNameDual = (($Algo.PSObject.Properties.Name -split ("_"))[1])
                             if ($AlgoNameDual -ne $null) {$AlgoNameDual=$AlgoNameDual.toupper()}
                             $AlgoLabel = ($Algo.PSObject.Properties.Name -split ("_"))[2]
@@ -283,6 +277,7 @@ while ($true) {
     
                             #generate pools for each gpu group
                             ForEach ( $TypeGroup in $types) {
+                             
                               if  ((Compare-object $TypeGroup.type $Miner.Types -IncludeEqual -ExcludeDifferent | Measure-Object).count -gt 0) { #check group and miner types are the same
                                 $Pools | where-object Algorithm -eq $AlgoName | ForEach-Object {   #Search pools for that algo
                                     
@@ -314,8 +309,8 @@ while ($true) {
                                                         $MinerProfit=[Double]([double]$HashrateValue * [double]$_.Price)}
 
                                                 #apply fee to profit       
-                                                if ($Miner.Fee -gt 0) {$MinerProfit=$MinerProfit -($minerProfit*[double]$Miner.fee)}
-                                                if ($_.Fee -gt 0) {$MinerProfit=$MinerProfit -($minerProfit*[double]$_.fee)}
+                                                if ([double]$Miner.Fee -gt 0) {$MinerProfit=$MinerProfit -($minerProfit*[double]$Miner.fee)}
+                                                if ([double]$_.Fee -gt 0) {$MinerProfit=$MinerProfit -($minerProfit*[double]$_.fee)}
 
                                                 $PoolAbbName=$_.Abbname
                                                 $PoolName = $_.name
@@ -417,12 +412,7 @@ while ($true) {
      
     #Launch download of miners    
     $Miners |
-        where-object URI -ne $null | 
-        where-object ExtractionPath -ne $null | 
-        where-object Path -ne $null | 
-        where-object URI -ne "" | 
-        where-object ExtractionPath -ne "" | 
-        where-object Path -ne "" | 
+        where-object {$_.URI -ne $null -and $_.ExtractionPath -ne $null -and $_.Path -ne $null -and $_.URI -ne "" -and $_.ExtractionPath -ne "" -and $_.Path -ne ""} |
         Select-Object URI, ExtractionPath,Path -Unique | ForEach-Object {Start-Downloader -URI $_.URI  -ExtractionPath $_.ExtractionPath -Path $_.Path}
     
 
@@ -578,14 +568,19 @@ while ($true) {
     #For each type, select most profitable miner, not benchmarked has priority
     foreach ($TypeId in $Types.Id) {
 
-        $BestId=($ActiveMiners |Where-Object IsValid | Where-Object status -ne "Canceled" | where-object GroupId -eq $TypeId | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object id)
+        $BestId=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and  $_.GroupId -eq $TypeId} | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object id)
         if ($BestId -ne $null) {$ActiveMiners[$BestId.PSObject.Properties.value].best=$true}
         }
 
 
 
+
+    #Stop miners running if failed
+
+    
+
     #Stop miners running if they arent best now
-    $ActiveMiners | Where-Object Best -EQ $false | ForEach-Object {
+    $ActiveMiners | Where-Object {$_.Best -eq $false -or $_.Status -eq "failed" -or $_.status -eq "cancelled"} | ForEach-Object {
         if ($_.Process -eq $null) {
             $_.Status = "Failed"
             $_.failedtimes++
@@ -684,8 +679,8 @@ while ($true) {
             $TimetoNextIntervalSeconds=($TimetoNextInterval.Hours*3600)+($TimetoNextInterval.Minutes*60)+$TimetoNextInterval.Seconds
             if ($TimetoNextIntervalSeconds -lt 0) {$TimetoNextIntervalSeconds = 0}
 
-            Set-ConsolePosition 93 2
-            "Next Interval:  $TimetoNextIntervalSeconds secs" | Out-host
+            Set-ConsolePosition 92 2
+            "Next Interval:  $TimetoNextIntervalSeconds secs..." | Out-host
             Set-ConsolePosition 0 0
 
         #display header        
@@ -754,7 +749,7 @@ while ($true) {
                     if ($ShowBestMinersOnly) {
                         $ProfitMiners=@()
                         $ActiveMiners | Where-Object IsValid |ForEach-Object {
-                            $ExistsBest=$ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object Coin -eq $_.Coin | Where-Object CoinDual -eq $_.CoinDual | Where-Object IsValid -eq $true | Where-Object Profits -gt $_.Profits 
+                            $ExistsBest=$ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object Coin -eq $_.Coin | Where-Object CoinDual -eq $_.CoinDual | Where-Object IsValid -eq $true | Where-Object Profits -gt $_.Profits
                                            if ($ExistsBest -eq $null -and $_.Profits -eq 0) {$ExistsBest=$ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object Coin -eq $_.Coin | Where-Object CoinDual -eq $_.CoinDual | Where-Object IsValid -eq $true | Where-Object hashrate -gt $_.hashrate}
                                            if ($ExistsBest -eq $null -or $_.NeedBenchmark -eq $true) {$ProfitMiners += $_}
                                            }
@@ -850,7 +845,7 @@ while ($true) {
                             $Pools  | where-object WalletMode -eq 'APIKEY' | Select-Object PoolName,AbbName,info,Algorithm,OriginalAlgorithm,OriginalCoin,Symbol,WalletMode,WalletSymbol  -unique  | ForEach-Object {
                                     
 
-                                    $ApiKeyPattern="@@APIKEY_"+$_.PoolName+"=*"
+                                    $ApiKeyPattern="APIKEY_"+$_.PoolName
                                     $ApiKey = get-config-variable $ApiKeyPattern
                                 
                                     if ($Apikey -ne "") {
@@ -891,7 +886,12 @@ while ($true) {
                                             
                                             $WalletStatus += $Ws
 
+                                            Set-ConsolePosition 0 $YToWriteMessages
+                                            "                                                                         "| Out-host 
+
                                             start-sleep 1 #no saturation of pool api
+
+
                                             
                                         } 
 
@@ -1030,7 +1030,7 @@ while ($true) {
 
                 #Loop for reading key and wait
              
-                $KeyPressed=Timed-ReadKb 3 ('P','C','H','E','W','U','T','B')
+                $KeyPressed=Timed-ReadKb 3 ('P','C','H','E','W','U','T','B','S')
 
                 
 
@@ -1045,6 +1045,7 @@ while ($true) {
                     'U' {if ($Screen -eq "Wallets") {$WalletsUpdate=$null}}
                     'T' {if ($Screen -eq "Profits") {if ($ProfitsScreenLimit -eq $InitialProfitsScreenLimit) {$ProfitsScreenLimit=1000} else {$ProfitsScreenLimit=$InitialProfitsScreenLimit}}}
                     'B' {if ($Screen -eq "Profits") {if ($ShowBestMinersOnly -eq $true) {$ShowBestMinersOnly=$false} else {$ShowBestMinersOnly=$true}}}
+                    'S' {set-WindowSize 120 60}
                     }
 
                 if ($KeyPressed) {Clear-host;$repaintScreen=$true}
@@ -1076,6 +1077,5 @@ while ($true) {
 
 
 
-
-
+$ActiveMiners | ForEach-Object {try {$_.Process.CloseMainWindow() | Out-Null} catch {}}
 Stop-Transcript
