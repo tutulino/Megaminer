@@ -39,35 +39,24 @@ if ($Querymode -eq "info") {
 
 if ($Querymode -eq "APIKEY") {
 
-    Switch ($Info.coin) {
-        "DigiByte" {$Info.Coin = $Info.coin + '-' + $Info.Algorithm}
-        "Myriad" {$Info.Coin = $Info.coin + '-' + $Info.Algorithm}
-        "Verge" {$Info.Coin = $Info.coin + '-' + $Info.Algorithm}
-    }
-
-
     try {
-        $ApiKeyPattern = '@@APIKEY_MINING_POOL_HUB=*'
+        $ApiKeyPattern = "@@APIKEY_$Name=*"
         $ApiKey = (Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} ) -replace $ApiKeyPattern, ''
 
-        $http = "http://" + $Info.Coin + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $ApiKey + "&id="
+        $http = "http://" + $Info.OriginalCoin + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $ApiKey + "&id="
         #$http |write-host
         $MiningPoolHub_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
-
-
     } catch {}
 
 
     if ($MiningPoolHub_Request -ne $null -and $MiningPoolHub_Request -ne "") {
         $Result = [PSCustomObject]@{
             Pool     = $name
-            currency = $Info.OriginalCoin
+            currency = $Info.Symbol
             balance  = $MiningPoolHub_Request.balance.confirmed + $MiningPoolHub_Request.balance.unconfirmed + $MiningPoolHub_Request.balance_for_auto_exchange.confirmed + $MiningPoolHub_Request.balance_for_auto_exchange.unconfirmed
         }
         Remove-variable MiningPoolHub_Request
     }
-
-
 }
 
 #****************************************************************************************************************************************************************************************

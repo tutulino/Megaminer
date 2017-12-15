@@ -27,24 +27,40 @@ if ($Querymode -eq "info") {
 
 
 if ($Querymode -eq "APIKEY") {
-    Switch ($Info.Symbol) {
-        "DGB" {$Info.Symbol = $Info.Symbol + ($Info.Algorithm.substring(0, 1))}
-    }
     try {
-        $ApiKeyPattern = '@@APIKEY_SUPRNOVA=*'
-        $ApiKey = (Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} ) -replace $ApiKeyPattern, ''
+        $ApiKeyPattern = "@@APIKEY_$Name=*"
+        $ApiKey = ($Config | Where-Object {$_ -like $ApiKeyPattern} ) -replace $ApiKeyPattern, ''
 
-        $http = "http://" + $Info.Symbol + ".suprnova.cc/index.php?page=api&action=getuserbalance&api_key=" + $ApiKey + "&id="
-        #$http |write-host
+        switch ($Info.Symbol) {
+            'BCH' { $apiUrl = "http://bcc.suprnova.cc" }
+            'GAME' { $apiUrl = "http://gmc.suprnova.cc" }
+            'XMY' { $apiUrl = "http://myrgrs.suprnova.cc" }
+            'PLYS' { $apiUrl = "http://poly.suprnova.cc" }
+            'UBQ' { $apiUrl = "http://ubiq.suprnova.cc" }
+            'VLT' { $apiUrl = "http://veltor.suprnova.cc" }
+            'ZER' { $apiUrl = "http://zero.suprnova.cc" }
+            'ETN' { $apiUrl = "https://etn.sup.rnova.cc" }
+            'DGB' {
+                switch ($Info.Algorithm) {
+                    "qubit" { $apiUrl = "http://dgbq.suprnova.cc"  }
+                    "skein" { $apiUrl = "http://dgbs.suprnova.cc"  }
+                    "myriad-groestl" { $apiUrl = "http://dgbg.suprnova.cc"  }
+                }
+            }
+            Default { $apiUrl = "http://" + $Info.Symbol + ".suprnova.cc" }
+        }
+
+        $http = $apiUrl + "/index.php?page=api&action=getuserbalance&api_key=" + $ApiKey + "&id="
+
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $Suprnova_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5
+        $Suprnova_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10
         $Suprnova_Request = $Suprnova_Request | ConvertFrom-Json | Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
     } catch {
     }
 
     $Result = [PSCustomObject]@{
         Pool     = $name
-        currency = $Info.OriginalCoin
+        currency = $Info.Symbol
         balance  = $Suprnova_Request.confirmed + $Suprnova_Request.unconfirmed
     }
 }
@@ -106,21 +122,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "Zcoin"; "algo" = "Lyra2Z"; "symbol" = "XZC"; "server" = "xzc.suprnova.cc"; "port" = "1569"; "location" = "Europe"};
     $Pools += [pscustomobject]@{"coin" = "Zcoin"; "algo" = "Lyra2Z"; "symbol" = "XZC"; "server" = "xzc.suprnova.cc"; "port" = "1569"; "location" = "US"};
 
-
-    $ManualMiningApiUse = (Get-Content config.txt | Where-Object {$_ -like '@@MANUALMININGAPIUSE=*'} ) -replace '@@MANUALMININGAPIUSE=', ''
-
-
-
     $Pools |ForEach-Object {
-        # if (($ManualMiningApiUse -eq $true) -and ($Querymode -eq "Menu")) {
-        #     $ApiResponse = $null
-        #     try {
-        #         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        #         $Apicall = "https://" + $_.Server + "/index.php?page=api&action=public"
-        #         $ApiResponse = (Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 3| ConvertFrom-Json)
-        #     } catch {}
-        # }
-
 
         $Result += [PSCustomObject]@{
             Algorithm             = $_.Algo
@@ -138,8 +140,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             AbbName               = $AbbName
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolWorkers           = $null #$ApiResponse.Workers
-            PoolHashRate          = $null #[double]$ApiResponse.hashrate
+            PoolWorkers           = $null
+            PoolHashRate          = $null
             PoolName              = $Name
             WalletMode            = $WalletMode
             OriginalAlgorithm     = $_.Algo
@@ -147,7 +149,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Fee                   = 0.01
         }
     }
-    #if (($ManualMiningApiUse -eq $true) -and ($Querymode -eq "Menu")) {Remove-Variable ApiResponse}
     Remove-Variable Pools
 }
 

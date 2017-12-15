@@ -122,9 +122,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $PoolsList = @(
         'Mining_Pool_Hub'
         'Suprnova'
-        # 'FairPool'
-        # 'MyPools'
-        # 'YIIMP'
+        'FairPool'
+        'MyPools'
+        'YIIMP'
     )
     foreach ($Pool in $PoolsList) {
 
@@ -136,20 +136,22 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
             if (($WTMcoin.Algorithm -eq $_.Algorithm) -and (($Pools | where-object coin -eq $_.info |where-object Algo -eq $_.Algorithm) -eq $null)) {
                 $Pools += [pscustomobject]@{
-                    coin         = $_.Info
-                    algo         = $_.Algorithm
-                    symbol       = $WTMResponse.($_.Info).tag
-                    server       = $_.host
-                    port         = $_.port
-                    location     = $_.location
-                    Fee          = $_.Fee
-                    User         = $_.User
-                    Pass         = $_.Pass
-                    protocol     = $_.Protocol
-                    Abbname      = $_.Abbname
-                    WalletMode   = $_.WalletMode
-                    WalletSymbol = $_.WalletSymbol
-                    PoolName     = $_.PoolName
+                    coin              = $_.Info
+                    algo              = $_.Algorithm
+                    symbol            = $WTMResponse.($_.Info).tag
+                    server            = $_.host
+                    port              = $_.port
+                    location          = $_.location
+                    Fee               = $_.Fee
+                    User              = $_.User
+                    Pass              = $_.Pass
+                    protocol          = $_.Protocol
+                    Abbname           = $_.Abbname
+                    WalletMode        = $_.WalletMode
+                    WalletSymbol      = $_.WalletSymbol
+                    PoolName          = $_.PoolName
+                    OriginalAlgorithm = $_.OriginalAlgorithm
+                    OriginalCoin      = $_.OriginalCoin
                 }
             }
         }
@@ -182,6 +184,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
             PoolName              = $_.PoolName
             WalletMode            = $_.WalletMode
+            OriginalAlgorithm     = $_.OriginalAlgorithm
+            OriginalCoin          = $_.OriginalCoin
             Fee                   = $_.Fee
         }
     }
