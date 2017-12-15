@@ -24,7 +24,7 @@ param(
 
 ##Parameters for testing, must be commented on real use
 
-#$MiningMode='Automatic'
+$MiningMode='Automatic'
 #$MiningMode='Automatic24h'
 #$MiningMode='Manual'
 
@@ -36,7 +36,7 @@ param(
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
 #$PoolsName='hash_refinery'
-#$PoolsName='ahashpool'
+$PoolsName='ahashpool'
 #$PoolsName='suprnova'
 
 #$PoolsName="Nicehash"
@@ -130,6 +130,7 @@ if ($MiningMode -eq 'Manual' -and ($Algorithm | measure-object).count -gt 1){
 
 set-WindowSize 120 60 
     
+$IntervalStartAt = (Get-Date) #first inicialization, must be outside loop
 
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
@@ -144,7 +145,7 @@ set-WindowSize 120 60
 
 while ($true) {
 
-    $IntervalStartAt = (Get-Date)
+   
     Clear-Host;$repaintScreen=$true
     
   
@@ -384,7 +385,7 @@ while ($true) {
                                                                     WalletSymbol = $_.WalletSymbol
                                                                     Host =$_.Host
                                                                     ExtractionPath = $Miner.ExtractionPath
-                                                                    GenerateConfigFile = $miner.GenerateConfigFile
+                                                                    GenerateConfigFile = $miner.GenerateConfigFile -replace '#GROUPNAME#',$TypeGroup.Groupname
                                                                     ConfigFileArguments = $ConfigFileArguments
                                                                     Location = $_.location
                                                                     PrelaunchCommand = $Miner.PrelaunchCommand
@@ -586,11 +587,14 @@ while ($true) {
             $_.failedtimes++
         }
         elseif ($_.Process.HasExited -eq $false) {
-            $_.Process.CloseMainWindow() | Out-Null
+            try {
+                $_.Process.CloseMainWindow() | Out-Null
+                Stop-Process $_.Process.Id | Out-Null
+                } catch{}
             $_.Status = "Idle"
         }
         
-        try {$_.Process.CloseMainWindow() | Out-Null} catch {} #security closing
+        try {$_.Process.CloseMainWindow() | Out-Null;Stop-Process $_.Process.Id | Out-Null} catch {} #security closing
     }
    
     #$ActiveMiners | Where-Object Best -EQ $true  | Out-Host
@@ -608,7 +612,7 @@ while ($true) {
 
             $_.ActivatedTimes++
 
-            if ($_.GenerateConfigFile -ne $null) {$_.ConfigFileArguments | Set-Content ($_.GenerateConfigFile)}
+            if ($_.GenerateConfigFile -ne "") {$_.ConfigFileArguments | Set-Content ($_.GenerateConfigFile)}
 
             #run prelaunch command
             if ($_.PrelaunchCommand -ne $null -and $_.PrelaunchCommand -ne "") {Start-Process -FilePath $_.PrelaunchCommand}
@@ -1075,7 +1079,10 @@ while ($true) {
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------------------------
 
+Stop-Process 
 
-
-$ActiveMiners | ForEach-Object {try {$_.Process.CloseMainWindow() | Out-Null} catch {}}
+$ActiveMiners | ForEach-Object {try {
+        $_.Process.CloseMainWindow() | Out-Null
+        Stop-Process $_.Process.Id | Out-Null
+} catch {}}
 Stop-Transcript
