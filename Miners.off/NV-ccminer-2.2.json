@@ -9,6 +9,8 @@
     "Dualmining":false,
     "PrelaunchCommand":"",
     "Algorithms": [
-        {"cryptonight":"-a cryptonight"}
+        {"cryptonight":"-a cryptonight"},
+        {"bitcore":"-a bitcore"},
+        {"timetravel":"-a timetravel"}
     ]
 }

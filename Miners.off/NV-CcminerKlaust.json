@@ -13,6 +13,7 @@
         {"sib" : "-a sib"},
         {"blake2b":"-a sia"},
         {"Myriad-Groestl" : "-a myr-gr"},
+        {"Keccak" : "-a Keccak -m 2"},
         {"Neoscrypt":"-a Neoscrypt"}
     ]
 }
