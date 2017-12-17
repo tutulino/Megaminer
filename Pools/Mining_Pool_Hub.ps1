@@ -37,34 +37,6 @@ if ($Querymode -eq "info") {
 
 
 
-if ($Querymode -eq "APIKEY") {
-
-    try {
-        $ApiKeyPattern = "@@APIKEY_$Name=*"
-        $ApiKey = (Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} ) -replace $ApiKeyPattern, ''
-
-        $http = "http://" + $Info.OriginalCoin + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $ApiKey + "&id="
-        #$http |write-host
-        $MiningPoolHub_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
-    } catch {}
-
-
-    if ($MiningPoolHub_Request -ne $null -and $MiningPoolHub_Request -ne "") {
-        $Result = [PSCustomObject]@{
-            Pool     = $name
-            currency = $Info.Symbol
-            balance  = $MiningPoolHub_Request.balance.confirmed + $MiningPoolHub_Request.balance.unconfirmed + $MiningPoolHub_Request.balance_for_auto_exchange.confirmed + $MiningPoolHub_Request.balance_for_auto_exchange.unconfirmed
-        }
-        Remove-variable MiningPoolHub_Request
-    }
-}
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
-
-
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $retries = 1
@@ -83,14 +55,13 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Locations = "Europe", "US", "Asia"
 
-    $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0 -and $_.time_since_last_block -lt 86400} | ForEach-Object {
+    $MiningPoolHub_Request.return |
+        Where-Object {$_.time_since_last_block -gt 0 -and $_.time_since_last_block -lt 86400} |
+        Group-Object algo |
+        ForEach-Object { $_.Group | Sort-Object -Descending profit | Select-Object -First 1} |
+        ForEach-Object {
 
         $MiningPoolHub_Algorithm = get-algo-unified-name $_.algo
-        $MiningPoolHub_Coin = get-coin-unified-name $_.coin_name
-
-        $MiningPoolHub_OriginalAlgorithm = $_.algo
-        $MiningPoolHub_OriginalCoin = $_.coin_name
-
 
         $MiningPoolHub_Hosts = $_.direct_mining_host_list.split(";")
         $MiningPoolHub_Port = $_.direct_mining_algo_port
@@ -104,7 +75,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $MiningPoolHub_Algorithm
-                Info                  = $MiningPoolHub_Coin
+                Info                  = $null
                 Price                 = $MiningPoolHub_Price
                 Price24h              = $null #MPH not send this on api
                 Protocol              = "stratum+tcp"
@@ -114,14 +85,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Pass                  = "x"
                 Location              = $Location
                 SSL                   = $false
-                Symbol                = get-coin-symbol -Coin $MiningPoolHub_Coin
+                Symbol                = $null
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                 WalletMode            = $WalletMode
                 PoolName              = $Name
-                OriginalAlgorithm     = $MiningPoolHub_OriginalAlgorithm
-                OriginalCoin          = $MiningPoolHub_OriginalCoin
                 Fee                   = 0.009
             }
         }
