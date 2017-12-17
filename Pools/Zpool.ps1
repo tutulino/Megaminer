@@ -86,6 +86,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     "X11"{$Divisor *= 1000}
                                     "qubit"{$Divisor *= 1000}
                                     "quark"{$Divisor *= 1000}
+                                    "keccak"{$Divisor *= 1000}
                                     }
 
                                 

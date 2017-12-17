@@ -430,7 +430,6 @@ while ($true) {
                             Where-Object CoinDual -eq $_.CoinDual | 
                             Where-Object AlgorithmDual -eq $_.AlgorithmDual | 
                             Where-Object PoolAbbName -eq $_.PoolAbbName |
-                            Where-Object Arguments -eq $_.Arguments |
                             Where-Object Location -eq $_.Location |
                             Where-Object GroupId -eq $_.GroupId |
                             Where-Object AlgoLabel -eq $_.AlgoLabel
@@ -483,7 +482,6 @@ while ($true) {
                             Where-Object CoinDual -eq $_.CoinDual | 
                             Where-Object AlgorithmDual -eq $_.AlgorithmDual | 
                             Where-Object PoolAbbName -eq $_.PoolAbbName |
-                            Where-Object Arguments -eq $_.Arguments|
                             Where-Object Location -eq $_.Location |
                             Where-Object GroupId -eq $_.GroupId |
                             Where-Object AlgoLabel -eq $_.AlgoLabel
@@ -1018,7 +1016,7 @@ while ($true) {
 
                                 
 
-                            if ($_.ConsecutiveZeroSpeed -gt 25) { #avoid  miner hangs and wait interval ends
+                            if ($_.ConsecutiveZeroSpeed -gt 25 -and $_.NeedBenchmark -ne $true ) { #avoid  miner hangs and wait interval ends
                                 $_.FailedTimes++
                                 $_.status="Failed"
                                 #$_.Best= $false

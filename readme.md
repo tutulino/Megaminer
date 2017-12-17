@@ -41,10 +41,16 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
     - CoinsName = separated comma string of Coins to run (optional)
     - Groupnames = Groups of gpu/cpu to run (based on your defined groups in config.txt @@Gpugroups section) (optional)
 
-3. Firt time, software will be donwloaded from miners github repositories and your system will be benchmarked (long process)
+3. Firt time, software will be donwloaded from miners github repositories and 
 	- As usual, some miners are detected as virus by Windows Defender, to avoid this you must set your instalation directory as excluded on Windows Defender 
 
-4. Tuning (optional)
+4. Your system will be benchmarked (long process)
+	- After benchmark check profits are razonables, sometimes miner return hashrates peaks. If you need repeat benchmark delete file from stats folder
+
+5. Make profit
+	- Except Nicehash (where you sell your power to indicated price), pools always overstimated profit, you must understand profit column as a way to get best algoritmh. Your real profit will be lower.
+
+6. Tuning (optional)
 	- you can edit miners folders content to delete miners or to assign/unassign algos to miners. 
 	- you can edit pools folders content to delete pools
 	- for advanced users, you can create miners or pools if are based on existing one.

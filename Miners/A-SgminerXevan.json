@@ -9,7 +9,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"xevan":"-k xevan"}
+                {"xevan":"-k xevan -i 18"}
                
               ]
 

@@ -56,7 +56,7 @@
 
 @@INTERVAL=600
 
--- Benchmarks interval time (less than 200 not recommended)
+-- Benchmarks interval time (less than 200 not recommended for GPU, 300 for CPU)
 
 @@BENCHMARKTIME=200
 

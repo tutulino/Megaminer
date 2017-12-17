@@ -401,4 +401,5 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 
 
 Fixed: xmrcast not selecting devices
+Fixed: New zpool api profit units for keccak
 
