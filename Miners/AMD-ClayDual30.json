@@ -14,7 +14,6 @@
     "Algorithms": [
         {"Ethash_Blake2b":" -dcoin sc"},
         {"Ethash_Blake14r":" -dcoin dcr"},
-        {"Ethash_Pascal":" -dcoin pasc"},
         {"Ethash_Lbry":" -dcoin lbc"}
     ]
 }
