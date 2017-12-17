@@ -1,7 +1,7 @@
 ﻿{
-    "Path" : ".\\Bin\\cpuminer-opt-4ward\\cpuminer-opt-3.7.6-4ward\\cpuminer-4way.exe",
+    "Path" : ".\\Bin\\cpuminer-opt-4ward\\cpuminer-opt-3.7.7-4ward\\cpuminer-4way.exe",
     "ExtractionPath" : ".\\Bin\\cpuminer-opt-4ward\\",
-    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.6-4ward.7z",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-opt-3.7.7-4ward.7z",
     "Types" : ["CPU"],
     "Arguments" : "-b #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
     "BenchmarkArg": "--benchmark",
