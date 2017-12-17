@@ -86,12 +86,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Pool_coin = get-coin-unified-name $coin.name
         $Pool_symbol = $_.name
 
-        $Divisor = (Get-Algo-Divisor $Pool_Algo) / 1000
+        $Divisor = 1000000
 
         switch ($Pool_Algo) {
-            "X11" {$Divisor *= 1000}
-            "qubit" {$Divisor *= 1000}
-            "quark" {$Divisor *= 1000}
+            "sha256" {$Divisor *= 1000}
+            "blake2s" {$Divisor *= 1000}
+            "blakecoin" {$Divisor *= 1000}
         }
 
         $Result += [PSCustomObject]@{
