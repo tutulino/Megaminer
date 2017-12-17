@@ -18,7 +18,7 @@
                 {"Tribus":"-a tribus"},
                 {"lyra2z" : "-a lyra2z" },
                 {"whirpool":"-a whirl"},
-                {"phi":"-a phi"},
+                {"phi":"-a phi -i 25"},
                 {"polytimos": "-a polytimos"},
                 {"cryptonight":"-a cryptonight"},
                 {"keccakc":"-a keccakc"}

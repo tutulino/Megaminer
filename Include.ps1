@@ -4,6 +4,114 @@ Add-Type -Path .\OpenCL\*.cs
 
 
 
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+function replace_foreach_gpu {
+    
+      param(
+            [Parameter(Mandatory = $true)]
+            [string]$ConfigFileArguments,
+            [Parameter(Mandatory = $true)]
+            [string]$Gpus
+            )
+    
+
+
+        #search string to replace
+
+        $ConfigFileArguments= $ConfigFileArguments  -replace  [Environment]::NewLine,"#NL#" #replace carriage return for Select-string search (only search in each line)
+
+        $Match=$ConfigFileArguments | Select-String -Pattern "#FOR_EACH_GPU#.*?#END_FOR_EACH_GPU#"
+        if ($Match -ne $null){
+
+            $Match.Matches |ForEach-Object {
+
+            $Base=$_.value -replace "#FOR_EACH_GPU#","" -replace "#END_FOR_EACH_GPU#",""
+            $Final=""
+            $Gpus -split ',' |foreach-object {$Final+=($base -replace "#GPUID#",$_)}
+            $ConfigFileArguments=$ConfigFileArguments.Substring(0,$_.index)+$final+$ConfigFileArguments.Substring($_.index+$_.Length,$ConfigFileArguments.Length-($_.index+$_.Length))
+            }
+        }
+
+
+        $Match=$ConfigFileArguments | Select-String -Pattern "#REMOVE_LAST_CHARACTER#"
+        if ($Match -ne $null){
+
+            $Match.Matches |ForEach-Object {
+
+            $ConfigFileArguments=$ConfigFileArguments.Substring(0,$_.index-1)+$ConfigFileArguments.Substring($_.index+$_.Length,$ConfigFileArguments.Length-($_.index+$_.Length))
+
+            }
+        }
+
+        $ConfigFileArguments= $ConfigFileArguments  -replace "#NL#", [Environment]::NewLine #replace carriage return for Select-string search (only search in each line)
+
+        $ConfigFileArguments
+}
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
+function get_next_free_port {
+
+  param(
+        [Parameter(Mandatory = $true)]
+        [int]$LastUsedPort
+        )
+
+
+    if ($LastUsedPort -lt 2000) {$FreePort=2001} else {$FreePort=$LastUsedPort+1} #not allow use of <2000 ports
+
+    while (Query-TCPPort -Server 127.0.0.1 -Port $FreePort -timeout 100) {$FreePort=$LastUsedPort+1}
+
+    $FreePort
+
+
+    }
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+function Query-TCPPort {
+    param([string]$Server, [int]$Port, [int]$Timeout)
+    
+    $Connection = New-Object System.Net.Sockets.TCPClient
+        
+        try {
+            $Connection.SendTimeout = $Timeout
+            $Connection.ReceiveTimeout = $Timeout
+            $Connection.Connect($Server,$Port)
+            return $true
+            }
+
+        catch {
+            return $false
+            }
+    }
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
+function Kill_ProcessId {
+
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$ProcessId
+        )
+
+    try {
+        #$_.Process.CloseMainWindow() | Out-Null
+        Stop-Process $ProcessId -force -wa SilentlyContinue -ea SilentlyContinue 
+    } catch {}
+}
+
 
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
@@ -97,8 +205,8 @@ function get-comma-separated-string {
             [Parameter(Mandatory = $true)]
             [int]$lenght
             )
-
-            $result=$null
+        
+        $result=$null
             
 
         for ($i=$start;$i-$start -lt $lenght;$i++) {
@@ -171,29 +279,32 @@ Function Get-Mining-Types () {
 
 
         if ($Types0 -eq $null) { #Autodetection on, must add types manually
-            $Types0=@()
-            
-            if ($NumberNvidiaGPU -gt 0) {
-                                    $Types0 += [pscustomobject] @{ 
-                                                    GroupName ="NVIDIA"
-                                                    Type = "NVIDIA"
-                                                    Gpus = (get-comma-separated-string 0 $NumberNvidiaGPU)
-                                                    }
-                                        }
-
-            if ($NumberAmdGPU -gt 0) {
-                                    $Types0 += [pscustomobject] @{ 
-                                                    GroupName = "AMD"
-                                                    Type = "AMD"
-                                                    Gpus = (get-comma-separated-string 0 $NumberAmdGPU )
+                    $Types0=@()
+                    
+                    if ($NumberNvidiaGPU -gt 0) {
+                                            $Types0 += [pscustomobject] @{ 
+                                                            GroupName ="NVIDIA"
+                                                            Type = "NVIDIA"
+                                                            Gpus = (get-comma-separated-string 0 $NumberNvidiaGPU)
                                                             }
                                                 }
-                                                
 
-            }
+                    if ($NumberAmdGPU -gt 0) {
+                                            $Types0 += [pscustomobject] @{ 
+                                                            GroupName = "AMD"
+                                                            Type = "AMD"
+                                                            Gpus = (get-comma-separated-string 0 $NumberAmdGPU )
+                                                                    }
+                                                        }
+                                                        
 
+                    }
 
-        if ((get-config-variable "CPUMINING") -eq 'ENABLED') {$Types+=[pscustomobject]@{GroupName="CPU";Type="CPU"}} #if cpu mining is enabled add a new group           
+        #if cpu mining is enabled add a new group   
+        if  (
+                ((get-config-variable "CPUMINING") -eq 'ENABLED' -and ($Filter |Measure-Object).count -eq 0)   -or  ((compare-object "CPU" $Filter -IncludeEqual -ExcludeDifferent |Measure-Object).count -gt 0)
+            ) 
+            {$Types0+=[pscustomobject]@{GroupName="CPU";Type="CPU"}}         
 
 
         $c=0
@@ -203,7 +314,7 @@ Function Get-Mining-Types () {
                                         $c=$c+1
                                         
     $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
-<#
+                                                 <#
                                         if ($_.type -eq "NVIDIA" -or $OCLPlatforms[0].Name -like "*NVIDIA*") {  #claymore needs global openclid, when Nvidia platform is first, this not coincide with AMD devices only order, some miners like sgminer needs AMD devices only order, others like claymore needs global position
                                             $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
                                                 }
@@ -214,7 +325,7 @@ Function Get-Mining-Types () {
                                                     $_ | Add-Member GpusClayMode (($gpust -join ',') -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
 
                                                 }
-#>                                                
+                                                    #>                                                
                                         $_ | Add-Member GpusETHMode ($_.gpus -replace ',',' ')
                                         $_ | Add-Member GpusNsgMode ("-d "+$_.gpus -replace ',',' -d ')
                                         $_ | Add-Member GpuPlatform (Get-Gpu-Platform $_.Type)
@@ -599,6 +710,7 @@ function Start-SubProcess {
         [String]$ArgumentList = "", 
         [Parameter(Mandatory = $false)]
         [String]$WorkingDirectory = ""
+        
     )
 
     $Job = Start-Job -ArgumentList $PID, $FilePath, $ArgumentList, $WorkingDirectory {
@@ -612,7 +724,7 @@ function Start-SubProcess {
         $ProcessParam.Add("WindowStyle", 'Minimized')
         if ($ArgumentList -ne "") {$ProcessParam.Add("ArgumentList", $ArgumentList)}
         if ($WorkingDirectory -ne "") {$ProcessParam.Add("WorkingDirectory", $WorkingDirectory)}
-        $Process = Start-Process @ProcessParam -PassThru
+        $Process = Start-Process @ProcessParam -PassThru 
         if ($Process -eq $null) {
             [PSCustomObject]@{ProcessId = $null}
             return        

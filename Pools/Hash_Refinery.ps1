@@ -83,39 +83,39 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         }
 
 
+        if ($HR_Request -ne $null) {
+                        $HR_Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | ForEach-Object {
 
-        $HR_Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | ForEach-Object {
+                                        $Divisor = (Get-Algo-Divisor $_) / 1000
+                                    
 
-                        $Divisor = (Get-Algo-Divisor $_) / 1000
-                    
-
-                
-                $Result += [PSCustomObject]@{
-                                Algorithm =  get-algo-unified-name $_
-                                Info = $null
-                                Price = [Double]$HR_Request.$_.estimate_current/$Divisor
-                                Price24h =[Double]$HR_Request.$_.estimate_last24h/$Divisor
-                                Protocol = "stratum+tcp"
-                                Host = $_+".us.hashrefinery.com"
-                                Port = $HR_Request.$_.port
-                                User = $CoinsWallets.get_item($currency)
-                                Pass = "c=$Currency,#WorkerName#"
-                                Location = "US"
-                                SSL = $false
-                                AbbName = $AbbName
-                                ActiveOnManualMode    = $ActiveOnManualMode
-                                ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                PoolWorkers = $HR_Request.$_.workers
-                                WalletMode=$WalletMode
-                                WalletSymbol    = $currency
-                                PoolName = $Name
-                                Fee = $HR_Request.$_.Fees/100
-                    
-                }
-            
-                
-        }
-
+                                
+                                $Result += [PSCustomObject]@{
+                                                Algorithm =  get-algo-unified-name $_
+                                                Info = $null
+                                                Price = [Double]$HR_Request.$_.estimate_current/$Divisor
+                                                Price24h =[Double]$HR_Request.$_.estimate_last24h/$Divisor
+                                                Protocol = "stratum+tcp"
+                                                Host = $_+".us.hashrefinery.com"
+                                                Port = $HR_Request.$_.port
+                                                User = $CoinsWallets.get_item($currency)
+                                                Pass = "c=$Currency,#WorkerName#"
+                                                Location = "US"
+                                                SSL = $false
+                                                AbbName = $AbbName
+                                                ActiveOnManualMode    = $ActiveOnManualMode
+                                                ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                                                PoolWorkers = $HR_Request.$_.workers
+                                                WalletMode=$WalletMode
+                                                WalletSymbol    = $currency
+                                                PoolName = $Name
+                                                Fee = $HR_Request.$_.Fees/100
+                                    
+                                }
+                            
+                                
+                        }
+       }
 
 }
 

@@ -3,7 +3,7 @@
 "ExtractionPath" : ".\\Bin\\AMD-CastXMR\\",
 "Uri" : "http://www.gandalph3000.com/download/cast_xmr-vega-win64_080.zip",
 "Types" : ["AMD"],
-"Arguments" : "--remoteaccess -S #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --remoteport #APIPORT# --opencl #GPUPLATFORM# --forcecompute --fastjobswitch #ALGORITHMPARAMETERS#",
+"Arguments" : "--remoteaccess -S #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -G #DEVICES# --remoteport #APIPORT# --opencl #GPUPLATFORM# --forcecompute --fastjobswitch #ALGORITHMPARAMETERS#",
 "API" : "castXMR",
 "Wrap" : false,
 "Dualmining":false,

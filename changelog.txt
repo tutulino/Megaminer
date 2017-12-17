@@ -365,8 +365,7 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 ------------------------------------------------
 5.0 beta 4
 
-
-*Reactivated MPH sia pool, this pool is not compatible with ccminer, Blake2b must not be added to any ccminer
+*Gpugroups now are optional
 *Eliminated screen Flickering
 *Reduced CPU usage 
 *Upgrades dtsm nvdia equihash miner to 0.5.7
@@ -377,7 +376,8 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Renamed miners files for best type identification
 *New "additional miners" folder, this folder will contain miners deactivated but useful for some people, you must move file/s to miners folder to activate
 *Added "hidden" option to force miner apiport instead of dinamic port asignation (this option can be used only if one group of that type is defined on your rig). To use you must set "APIPORT"=PORT in miner file.
-
+*Added "hidden" key (S) for restore screen size
+*Reactivated MPH sia pool, this pool is not compatible with ccminer, Blake2b must not be added to any ccminer
 
 *Fixed: nsgminer not receiving rigth devices parameter 
 *Fixed: ewbf/dtsm not receiving rigth devices parameter 
@@ -390,6 +390,15 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 
 
 
+------------------------------------------------
+5.0
 
 
+*Added Excavator for NVIDIA
+*Updated klaust to 8.16
+*Better miners "closer" mechanism (safer)
+*Enhanced dynamic api port assignation, now is possible to run more than one instance of MM without ports conflicts.
+
+
+Fixed: xmrcast not selecting devices
 
