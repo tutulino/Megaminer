@@ -40,7 +40,7 @@
 
 @@DONATE=5
 
--- Use your cpu to mine: ENABLED = yes, DISABLED = no
+-- Use your cpu to mine: ENABLED = yes, DISABLED = no (you can start cpu alone mining also using -groupnames parameter in batch file)
 
 @@CPUMINING=DISABLED
 

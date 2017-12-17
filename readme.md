@@ -30,7 +30,7 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
 
 ---- INSTRUCTIONS ----------------------------------------------
 
-0. Download latest Release from github
+0. Download source code from latest Release from github (you dont need executable file)
 
 1. Edit CONFIG.TXT file before mining
 
