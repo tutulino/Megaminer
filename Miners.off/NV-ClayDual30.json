@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\Claymore-Dual\\",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore-Dual-10.2.zip",
     "Types" : ["NVIDIA"],
-    "Arguments" : "-mport -#APIPORT# -epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 --platform 2 -allpools 1 1 -dpool #PROTOCOLDUAL#://#SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL# -dpsw #PASSWORDDUAL# -wd 1 -dcri 30 #ALGORITHMPARAMETERS#",
+    "Arguments" : "-mport -#APIPORT# -epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm 3 --platform 2 -allpools 1 -allcoins 1 -dpool #PROTOCOLDUAL#://#SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL# -dpsw #PASSWORDDUAL# -wd 1 -dcri 30 #ALGORITHMPARAMETERS#",
     "API" : "Claymore",
     "Wrap" : false,
     "DualMining": true,
