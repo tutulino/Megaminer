@@ -1,7 +1,7 @@
 {
-    "Path" : ".\\Bin\\cpu-Claymore-Crypto\\Claymore CryptoNote CPU Miner v3.8 - POOL\\NsCpuCNMiner64.exe",
+    "Path" : ".\\Bin\\cpu-Claymore-Crypto\\Claymore CryptoNote CPU Miner v3.9 - POOL\\NsCpuCNMiner64.exe",
     "ExtractionPath" : ".\\Bin\\cpu-Claymore-Crypto\\",
-    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore.CryptoNote.CPU.Miner.v3.8.-.POOL.zip",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore.CryptoNote.CPU.Miner.v3.9.-.POOL.zip",
     "Types" : ["CPU"],
     "Arguments" : "-mport -#APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -allpools 1 #ALGORITHMPARAMETERS#",
     "API" : "ClaymoreV2",
