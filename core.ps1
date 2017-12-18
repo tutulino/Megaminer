@@ -605,12 +605,11 @@ while ($true) {
                     $_.Status = "Running"
                     
                     #assign a free random api port (not if it is forced in miner file or calculated before)
-                    if ($_.Port -eq $null) {$NextPort =Get-Random -minimum 2000 -maximum 48000} else {$NextPort=$_.Port}
-                    #$NextPort=get_next_free_port ($NextPort) #check it is free
-                    $_.Port=$NextPort  # will try 
-                    $_.Arguments = $_.Arguments -replace '#APIPORT#',$NextPort
+                    if ($_.Port -eq $null) { $_.Port = get_next_free_port (Get-Random -minimum 2000 -maximum 48000)} 
+
+                    $_.Arguments = $_.Arguments -replace '#APIPORT#',$_.Port
                     
-                    $_.ConfigFileArguments = $_.ConfigFileArguments -replace '#APIPORT#',$NextPort
+                    $_.ConfigFileArguments = $_.ConfigFileArguments -replace '#APIPORT#',$_.Port
 
                     $_.ActivatedTimes++
 
