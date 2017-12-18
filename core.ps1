@@ -364,8 +364,7 @@ while ($true) {
                                                                     HashRateDual = $HashrateValueDual
                                                                     Hashrates   = if ($Miner.Dualmining) {(ConvertTo-Hash ($HashRateValue)) + "/s|"+(ConvertTo-Hash $HashrateValueDual) + "/s"} else {(ConvertTo-Hash $HashRateValue) +"/s"}
                                                                     API = $Miner.API
-                                                                    Port = [int]$Null #assigned dat launch moment
-                                                                    ForcedPort=$miner.ApiPort
+                                                                    Port = $miner.ApiPort
                                                                     Wrap =$Miner.Wrap
                                                                     URI = $Miner.URI
                                                                     Arguments=$Arguments
@@ -547,7 +546,6 @@ while ($true) {
                             AlgoLabel            = $_.AlgoLabel
                             Symbol               = $_.Symbol
                             SymbolDual           = $_.SymbolDual
-                            ForcedPort           = $_.ForcedPort
                             
                             
 
@@ -600,17 +598,19 @@ while ($true) {
         
                 if ($_.NeedBenchmark) {$NextInterval=$BechmarkintervalTime} #if one need benchmark next interval will be short
 
-                $_.Status = "Running"
-
-                #assign a free api port (not if it is forced in miner file)
-                $NextPort =Get-Random -minimum 2000 -maximum 48000  #search one port random
-                if ($ForcedPort -eq $null) {$NextPort=get_next_free_port ($NextPort)} else {$NextPort=$ForcedPort} #check it is free
-                $_.Port=$NextPort 
-                $_.Arguments = $_.Arguments -replace '#APIPORT#',$NextPort
-                $_.ConfigFileArguments = $_.ConfigFileArguments -replace '#APIPORT#',$NextPort
-
                 #Launch
                 if ($_.Process -eq $null -or $_.Process.HasExited -ne $false) {
+
+
+                    $_.Status = "Running"
+                    
+                    #assign a free random api port (not if it is forced in miner file or calculated before)
+                    if ($_.Port -eq $null) {$NextPort =Get-Random -minimum 2000 -maximum 48000} else {$NextPort=$_.Port}
+                    #$NextPort=get_next_free_port ($NextPort) #check it is free
+                    $_.Port=$NextPort  # will try 
+                    $_.Arguments = $_.Arguments -replace '#APIPORT#',$NextPort
+                    
+                    $_.ConfigFileArguments = $_.ConfigFileArguments -replace '#APIPORT#',$NextPort
 
                     $_.ActivatedTimes++
 
