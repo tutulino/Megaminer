@@ -12,7 +12,8 @@
 "PrelaunchCommand":"",
 "Fee":"0",
 "Algorithms": [
-              {"Lyra2v2":"lyra2rev2"}
+          {"Lyra2v2":"lyra2rev2"}
+              
               
              
            

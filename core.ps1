@@ -57,12 +57,13 @@ try {if ((Get-MpPreference).ExclusionPath -notcontains (Convert-Path .)) {Start-
 
 
 
-$ActiveMiners = @()
 
+Clear-log
 $LogFile=".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 Start-Transcript $LogFile
 
 
+$ActiveMiners = @()
 $ActiveMinersIdCounter=0
 $Activeminers=@()
 $ShowBestMinersOnly=$true
@@ -464,6 +465,7 @@ while ($true) {
                             $_.Hashrates   = $miner.hashrates
                             $_.PoolWorkers = $Miner.PoolWorkers
                             $_.PoolFee= $Miner.PoolFee
+                            $_.IsValid = $true #not remove, necessary if pool fail and is operative again
                             }
                     else {
                             $_.IsValid = $false #simulates a delete

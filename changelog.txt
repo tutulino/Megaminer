@@ -396,10 +396,11 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 
 *Added Excavator for NVIDIA
 *Updated klaust to 8.16
-*Better miners "closer" mechanism (safer)
+*Better miners "closer" mechanism (safer and more agrresive)
 *Enhanced dynamic api port assignation, now is possible to run more than one instance of MM without ports conflicts.
 
 
 Fixed: xmrcast not selecting devices
 Fixed: New zpool api profit units for keccak
+Fixed: automatic log folder deletion not working
 
