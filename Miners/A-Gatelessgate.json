@@ -12,6 +12,8 @@
             
             {"neoscrypt":"-k neoscrypt --gpu-threads 1 --worksize 256 --intensity 13"},
             {"cryptonight":"-k cryptonight --gpu-threads 1 --worksize 4 --rawintensity 720"},
-            {"equihash":"-k equihash --gpu-threads 2 --worksize 256"}
+            {"equihash":"-k equihash --gpu-threads 2 --worksize 256"},
+            {"Nist5":"-k Nist5 --gpu-threads 2 --worksize 256"}
+
 	 ]
 }
