@@ -81,7 +81,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "quark" {$Divisor *= 1000}
             "blake2s" {$Divisor *= 1000}
             "blakecoin" {$Divisor *= 1000}
-            "decred" {$Divisor *= 1000}
+            "blake14r" {$Divisor *= 1000}
             "keccak" {$Divisor *= 1000}
             "equihash" {$Divisor /= 1000}
             "yescrypt" {$Divisor /= 1000}
