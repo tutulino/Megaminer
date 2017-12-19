@@ -66,7 +66,7 @@ $Config = try { Get-Content config.txt } catch { Write-Output "Config File not f
 
 $ActiveMinersIdCounter = 0
 $Activeminers = @()
-$InitialProfitsScreenLimit = [int](45 / (($Config | Where-Object {$_ -like '@@TYPE=*'}) -replace '@@TYPE=', '' -split ',').count) - 5
+$InitialProfitsScreenLimit = [int](45 / (($Config | Where-Object {$_ -like '@@TYPE=*'}) -replace '@@TYPE=', '' -split ',').count) - 4
 $ProfitsScreenLimit = $InitialProfitsScreenLimit
 $ShowBestMinersOnly = $true
 $FirstTotalExecution = $true
@@ -340,8 +340,8 @@ while ($true) {
                                 }
 
                                 #apply dual mining profit modifier
-                                $MinerProfit *= (100 - $DualMiningRatio)/100
-                                $MinerProfitDual *= (100 - $DualMiningRatio)/100
+                                $MinerProfit *= (100 - $DualMiningRatio) / 100
+                                $MinerProfitDual *= (100 - $DualMiningRatio) / 100
 
                                 #apply fee to profit
                                 if ($Miner.Fee -gt 0) {$MinerProfitDual *= (1 - [double]$Miner.fee)}
@@ -673,17 +673,15 @@ while ($true) {
         #display header
         "-----------------------------------------------------------------------------------------------------------------------"| Out-host
         "  (E)nd Interval   (P)rofits    (C)urrent    (H)istory    (W)allets                       |  Next Interval:  $TimetoNextIntervalSeconds secs" | Out-host
-        "-----------------------------------------------------------------------------------------------------------------------"| Out-host
 
         #display donation message
         if ($DonationInterval) {
-            " Donation period Active! You are donating $(($Config | Where-Object {$_ -like '@@DONATE=*'} ) -replace '@@DONATE=', '') minutes per day. Thank You for the support! :)"
-            " If You wish, you can change this value in config.txt"
+            " Donation period! You are donating $(($Config | Where-Object {$_ -like '@@DONATE=*'} ) -replace '@@DONATE=', '') mins/day. Thank You for the support! :) You can change this value in config.txt"
         }
 
         #display current mining info
 
-        "------------------------------------------------ACTIVE MINERS----------------------------------------------------------"| Out-host
+        "-----------------------------------------------------------------------------------------------------------------------"| Out-host
 
         $ActiveMiners | Where-Object Best | Format-Table -Wrap  (
             # $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
@@ -722,8 +720,6 @@ while ($true) {
                 Set-ConsolePosition 0 $YToWriteData
 
                 foreach ($Type in $Types) {
-                    Write-Output "Type: $Type"
-
                     if ($ShowBestMinersOnly) {
                         $ProfitMiners = $ActiveMiners |
                             Where-Object IsValid |
@@ -736,8 +732,14 @@ while ($true) {
                             Where-Object Types -Contains $Type
                     }
 
+                    $ProfitMiners2 = @()
+                    $inserted = 1
+                    $ProfitMiners | Where-Object Types -eq $Type | Sort-Object -Descending GroupName, NeedBenchmark, Profits | ForEach-Object {
+                        if ($inserted -le $ProfitsScreenLimit) { $ProfitMiners2 += $_ ; $inserted++ } #this can be done with select-object -first but then memory leak happens, ¿why?
+                    }
+
                     #Display profits  information
-                    $ProfitMiners | Where-Object Types -Contains $Type | Sort-Object -Descending NeedBenchmark, Profits | Select-Object -First $ProfitsScreenLimit | Format-Table -GroupBy Type (
+                    $ProfitMiners2 | Format-Table -GroupBy Type (
                         @{Label = "Algo"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm} else {$_.Algorithm + '|' + $_.AlgorithmDual}}},
                         @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else {($_.coin) + '|' + ($_.CoinDual)}}},
                         @{Label = "Miner"; Expression = {$_.Name}},
@@ -750,6 +752,7 @@ while ($true) {
                         @{Label = "Location"; Expression = {$_.Location}}
                     ) | Out-Host
                     Remove-Variable ProfitMiners
+                    Remove-Variable ProfitMiners2
                 }
             }
         }
