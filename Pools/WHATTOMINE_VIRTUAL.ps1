@@ -134,7 +134,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
             $WTMcoin = $WTMResponse.($_.Info)
 
-            if (($WTMcoin.Algorithm -eq $_.Algorithm) -and (($Pools | where-object coin -eq $_.info |where-object Algo -eq $_.Algorithm) -eq $null)) {
+            if (($WTMcoin.Algorithm -eq $_.Algorithm -and $WTMcoin.lagging -eq $false) -and (($Pools | where-object coin -eq $_.info |where-object Algo -eq $_.Algorithm) -eq $null)) {
                 $Pools += [pscustomobject]@{
                     coin              = $_.Info
                     algo              = $_.Algorithm
