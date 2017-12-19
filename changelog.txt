@@ -397,10 +397,14 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Better miners "closer" mechanism (safer and more agrresive)
 *Enhanced dynamic api port assignation, now is possible to run more than one instance of MM without ports conflicts.
 *Added Excavator for NVIDIA
+*Added Ccminer Nanashi
 *Added XMrig msvc for CPU
-*Updated klaust to 8.16
+*Updated ccminer klaust to 8.16
+*Updated claymore crypto to 11.0
 
+*Fixed: pool not recovering from fail when multiple pools running
 *Fixed: xmrcast not selecting devices
 *Fixed: new zpool api profit units for keccak
 *Fixed: automatic log folder deletion not working
+*Fixed: ccminer polytmos not allowing more than one instance
 
