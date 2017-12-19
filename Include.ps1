@@ -165,26 +165,70 @@ function get-gpu-information {
     
       # AMD DEVICES
       $OCLDevicesScreen = @()
+      $AdlDevices = @()
       
           $AMDPlatform=[OpenCl.Platform]::GetPlatformIDs() | Where-Object vendor -like "*Advanced Micro Devices*"
           if ($AMDPlatform -ne $null) {
-                          $OCLDevices = [OpenCl.Device]::GetDeviceIDs($AMDPlatform[0],"ALL") | Where-Object vendor -like "*Advanced Micro Devices*"  #exclude integrated INTEL gpu
-      
-                          $counter=0
-                          $OCLDevices| ForEach-Object {
-                                    if ($_.vendor -like "*Advanced Micro Devices*") {$type="AMD"} 
-                                    if ($_.vendor -like "*NVDIA*") {$type="NVIDIA"}
-                                    if ($_.vendor -like "*INTEL*") {$type="INTEL"}
 
-                                    $OCLDevicesScreen+=[pscustomobject]@{
-                                            GpuId=$counter
-                                            Type= $type
-                                            Name=$_.Name
-                                          }
-                                          $counter++
-                                  }
-                              
-                          $OCLDevicesScreen |out-host
+
+                    #ADL
+                      invoke-expression "./OverdriveN"  | ForEach-Object {
+                
+                        $AdlResultSplit = $_ -split (",")   
+                        
+                        $AdlDevices +=[pscustomObject]@{
+                                    GpuId              = $AdlResultSplit[0] 
+                                    FanSpeed           = [string][int]([int]$AdlResultSplit[1] /[int]$AdlResultSplit[2]*100) + " %"
+                                    ClockGpu           = [string]([int]($AdlResultSplit[3] / 100)) + " MHZ"
+                                    ClockMem           = [string]([int]($AdlResultSplit[4] / 100)) + " MHZ"
+                                    utilization_gpu    = $AdlResultSplit[5]+ " %"
+                                    temperature_gpu    = [int]$AdlResultSplit[6] /1000
+                                    TdpLimit           = $AdlResultSplit[7]+ " %"
+                                }
+                        
+                
+                        }               
+                
+
+                        #Open CL
+                            $OCLDevices = [OpenCl.Device]::GetDeviceIDs($AMDPlatform[0],"ALL") | Where-Object vendor -like "*Advanced Micro Devices*"  #exclude integrated INTEL gpu
+        
+                            $counter=0
+                            $OCLDevices| ForEach-Object {
+                                        if ($_.vendor -like "*Advanced Micro Devices*") {$type="AMD"} 
+                                        if ($_.vendor -like "*NVDIA*") {$type="NVIDIA"}
+                                        if ($_.vendor -like "*INTEL*") {$type="INTEL"}
+
+                                        
+                                        $AdlDevice=$AdlDevices |Where-Object GpuId -eq $Counter| Select-Object -first 1
+                                        
+                                        $OCLDevicesScreen+=[pscustomobject]@{
+                                                GpuId=$counter
+                                                Type= $type
+                                                Name=$_.Name
+                                                FanSpeed=$AdlDevice.FanSpeed
+                                                ClockGpu=$AdlDevice.ClockGpu
+                                                ClockMem=$AdlDevice.ClockMem
+                                                utilization_gpu=$AdlDevice.utilization_gpu
+                                                temperature_gpu=$AdlDevice.temperature_gpu
+                                                TdpLimit=$AdlDevice.TdpLimit
+
+                                            }
+                                            $counter++
+                                    }
+                                
+
+                            $OCLDevicesScreen | Format-Table -Wrap  (
+                                @{Label = "GpuId"; Expression = {$_.gpuId}},
+                                @{Label = "Type"; Expression = {$_.Type}},
+                                @{Label = "Name"; Expression = {$_.name}},
+                                @{Label = "Gpu%"; Expression = {$_.utilization_gpu}},   
+                                @{Label = "Temp"; Expression = {$_.temperature_gpu}}, 
+                                @{Label = "FanSpeed"; Expression = {$_.FanSpeed}},
+                                @{Label = "ClockGpu"; Expression = {$_.ClockGpu}},
+                                @{Label = "ClockMem"; Expression = {$_.ClockMem}}
+                                
+                            ) | Out-Host
       
                       }
     

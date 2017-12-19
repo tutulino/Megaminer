@@ -401,6 +401,7 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Added XMrig msvc for CPU
 *Updated ccminer klaust to 8.16
 *Updated claymore crypto to 11.0
+*Added AMD gpu info on current screen (experimental)
 
 *Fixed: pool not recovering from fail when multiple pools running
 *Fixed: xmrcast not selecting devices
