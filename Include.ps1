@@ -955,6 +955,7 @@ function Get-Algo-Divisor {
                         "blakecoin"{$Divisor *= 1000}
                         "decred"{$Divisor *= 1000}
                         "blake14r"{$Divisor *= 1000}
+                        "keccakc"{$Divisor *= 1000}
                     }
 
     $Divisor

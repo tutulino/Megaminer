@@ -12,7 +12,10 @@ param(
     [String]$MiningMode = $null,
 
     [Parameter(Mandatory = $false)]
-    [array]$Groupnames = $null
+    [array]$Groupnames = $null,
+
+    [Parameter(Mandatory = $false)]
+    [int]$PercentToSwitch = $null
 
 
 )
@@ -152,6 +155,10 @@ while ($true) {
   
 
     $Location=get-config-variable "LOCATION"
+
+
+    if ($PercentToSwitch -eq $null) {$PercentToSwitch = get-config-variable "PERCENTTOSWITCH"}
+    
     
     $Types=Get-Mining-Types -filter $Groupnames
     
@@ -332,9 +339,9 @@ while ($true) {
                                                      if ($Miner.Fee -gt 0) {$MinerProfitDual=$MinerProfitDual -($MinerProfitDual*[double]$Miner.fee)}             
                                                      if ($PoolDual.Fee -gt 0) {$MinerProfitDual=$MinerProfitDual -($MinerProfitDual*[double]$PoolDual.fee)}             
 
-                                                    $Arguments = $Arguments -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass  -replace '#ALGORITHMDUAL#',$AlgonameDual 
+                                                    $Arguments = $Arguments -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass  -replace '#ALGORITHMDUAL#',$AlgonameDual -replace '#WORKERNAME#',$WorkerName2 
                                                     if ($Miner.PatternConfigFile -ne $null) {
-                                                                         $ConfigFileArguments = $ConfigFileArguments -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass -replace '#ALGORITHMDUAL#'
+                                                                         $ConfigFileArguments = $ConfigFileArguments -replace '#PORTDUAL#',$PoolDual.Port -replace '#SERVERDUAL#',$PoolDual.Host  -replace '#PROTOCOLDUAL#',$PoolDual.Protocol -replace '#LOGINDUAL#',$PoolDual.user -replace '#PASSWORDDUAL#',$PoolDual.Pass -replace '#ALGORITHMDUAL#' -replace '#WORKERNAME#',$WorkerName2 
                                                                         }
 
                                                     $PoolAbbName += '|' + $PoolDual.Abbname
@@ -465,6 +472,7 @@ while ($true) {
                             $_.PoolWorkers = $Miner.PoolWorkers
                             $_.PoolFee= $Miner.PoolFee
                             $_.IsValid = $true #not remove, necessary if pool fail and is operative again
+                            $_.BestBySwitch  = ""
                             }
                     else {
                             $_.IsValid = $false #simulates a delete
@@ -546,6 +554,7 @@ while ($true) {
                             AlgoLabel            = $_.AlgoLabel
                             Symbol               = $_.Symbol
                             SymbolDual           = $_.SymbolDual
+                            BestBySwitch         = ""
                             
                             
 
@@ -562,13 +571,23 @@ while ($true) {
             {$_.NeedBenchmark=$true} 
         }
 
-    #For each type, select most profitable miner, not benchmarked has priority
+    #For each type, select most profitable miner, not benchmarked has priority, only new miner is lauched if new profit is greater than old by percenttoswitch
     foreach ($TypeId in $Types.Id) {
 
-        $BestId=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and  $_.GroupId -eq $TypeId} | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object id)
-        if ($BestId -ne $null) {$ActiveMiners[$BestId.PSObject.Properties.value].best=$true}
-        }
+        $BestIdNow=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and  $_.GroupId -eq $TypeId} | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object -ExpandProperty  id)
+        $ProfitNow=$ActiveMiners[$BestIdNow].profits
+        
+        $BestIdLast=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -eq "Running" -and  $_.GroupId -eq $TypeId} | Select-Object -ExpandProperty  id)
+        if ($BestIdLast -ne $null) {$ProfitLast=$ActiveMiners[$BestIdLast].profits} else {$ProfitLast=0}
+        
+        if ($ProfitNow -gt $ProfitLast *(1+($PercentToSwitch/100))) {$ActiveMiners[$BestIdNow].best=$true} else {$ActiveMiners[$BestIdLast].best=$true ; $_.BestBySwitch  = "*"}
+        
+     
 
+        
+        
+
+        }
 
 
 
@@ -589,9 +608,7 @@ while ($true) {
         
     }
    
-    #$ActiveMiners | Where-Object Best -EQ $true  | Out-Host
-
-    #Start-Sleep 1 #Wait to prevent BSOD
+   
 
     #Start all Miners marked as Best (if they are running does nothing)
     $ActiveMiners | Where-Object Best -eq $true | ForEach-Object {
@@ -689,7 +706,7 @@ while ($true) {
             Set-ConsolePosition 0 0
 
         #display header        
-        "------------------------------------------------   MegaMiner 5.0  -----------------------------------------------------"| Out-host
+        "------------------------------------------------   MegaMiner 5.1  -----------------------------------------------------"| Out-host
         "-----------------------------------------------------------------------------------------------------------------------"| Out-host
         "  (E)nd Interval   (P)rofits    (C)urrent    (H)istory    (W)allets                       |" | Out-host
       
@@ -706,7 +723,7 @@ while ($true) {
               @{Label = "Speed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive))+'/s'} else {(ConvertTo-Hash  ($_.SpeedLive))+'/s|'+(ConvertTo-Hash ($_.SpeedLiveDual))+'/s'} }; Align = 'right'},     
               @{Label = "BTC/Day"; Expression = {$_.ProfitLive.tostring("n5")}; Align = 'right'}, 
               @{Label = $LabelProfit; Expression = {(([double]$_.ProfitLive + [double]$_.ProfitLiveDual) *  [double]$localBTCvalue ).tostring("n2")}; Align = 'right'}, 
-              @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm+$_.AlgoLabel       } else  {$_.Algorithm+$_.AlgoLabel+ '|' + $_.AlgorithmDual}}},   
+              @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm+$_.AlgoLabel+$_.BestBySwitch} else  {$_.Algorithm+$_.AlgoLabel+ '|' + $_.AlgorithmDual+$_.BestBySwitch}}},   
               @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else  {($_.symbol)+ '|' + ($_.symbolDual)}}},   
               @{Label = "Miner"; Expression = {$_.Name}}, 
               @{Label = "Pool"; Expression = {$_.PoolAbbName}},
@@ -754,8 +771,8 @@ while ($true) {
                     if ($ShowBestMinersOnly) {
                         $ProfitMiners=@()
                         $ActiveMiners | Where-Object IsValid |ForEach-Object {
-                            $ExistsBest=$ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object Coin -eq $_.Coin | Where-Object CoinDual -eq $_.CoinDual | Where-Object IsValid -eq $true | Where-Object Profits -gt $_.Profits
-                                           if ($ExistsBest -eq $null -and $_.Profits -eq 0) {$ExistsBest=$ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object Coin -eq $_.Coin | Where-Object CoinDual -eq $_.CoinDual | Where-Object IsValid -eq $true | Where-Object hashrate -gt $_.hashrate}
+                            $ExistsBest=$ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object IsValid -eq $true | Where-Object Profits -gt $_.Profits
+                                           if ($ExistsBest -eq $null -and $_.Profits -eq 0) {$ExistsBest=$ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object IsValid -eq $true | Where-Object hashrate -gt $_.hashrate}
                                            if ($ExistsBest -eq $null -or $_.NeedBenchmark -eq $true) {$ProfitMiners += $_}
                                            }
                            }

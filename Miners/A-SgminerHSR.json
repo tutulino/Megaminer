@@ -9,7 +9,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"hsr":"-k hsr -I 20"}
+                {"hsr":"-k hsr"}
               ]
 
 }

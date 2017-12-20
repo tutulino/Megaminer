@@ -409,3 +409,14 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Fixed: automatic log folder deletion not working
 *Fixed: ccminer polytmos not allowing more than one instance
 
+
+------------------------------------------------
+5.1
+
+
+Added new config.txt parameter @@PERCENTTOSWITCH for indicates MM new miner/algo only will be launched if new profit is greater than actual profit in specified percent, also defined PERCENTTOSWITCH parameter to override config.txt value (for example for not PPLS pools like Nicehash)
+Added confirmation prompt to ResetBechmark batch
+
+Fixed: incorrect workername for dualmining
+Fixed: divisor for yiimp keccakc 
+Fixed: profit screen showing repeated algos for coin level pools like MPH
