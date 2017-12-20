@@ -580,7 +580,7 @@ while ($true) {
         $BestIdLast=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -eq "Running" -and  $_.GroupId -eq $TypeId} | Select-Object -ExpandProperty  id)
         if ($BestIdLast -ne $null) {$ProfitLast=$ActiveMiners[$BestIdLast].profits} else {$ProfitLast=0}
         
-        if ($ProfitNow -gt $ProfitLast *(1+($PercentToSwitch/100))) {$ActiveMiners[$BestIdNow].best=$true} else {$ActiveMiners[$BestIdLast].best=$true ; $_.BestBySwitch  = "*"}
+        if ($ProfitNow -gt $ProfitLast *(1+($PercentToSwitch/100)) -or $ActiveMiners[$BestIdNow].NeedBenchmark) {$ActiveMiners[$BestIdNow].best=$true} else {$ActiveMiners[$BestIdLast].best=$true ; $ActiveMiners[$BestIdLast].BestBySwitch  = "*"}
         
      
 
