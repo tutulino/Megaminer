@@ -1,0 +1,14 @@
+{
+    "Path" : ".\\Bin\\AMD-CgminerBlake\\cgminer-3.7.2-blake\\cgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-CgminerBlake\\",
+    "Uri" : "http://cryptomining-blog.com/wp-content/download/cgminer-3.7.2-blakecoin.rar",
+    "Types" : ["AMD"],
+    "Arguments" : "--api-listen --api-port #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API" : "Xgminer",
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"blakecoin":"--blake256 --vectors 1 --no-restart --scan-time 30 -Q 3 -g 4 -w 128 -I 13"}
+    ]
+}
