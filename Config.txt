@@ -26,12 +26,13 @@
 -- you can add wallets with pattern @@WALLET_XXX (XXX=currency symbol)
 -- For custom NiceHash wallet use @@WALLET_BTC_NICE, otherwise @@WALLET_BTC will be used
 
-@@WALLET_BTC_NICE=3PFC7i8VT3jQG3ppoFEQyYy2wrg9YNoLmj
+@@WALLET_BTC_NICE=3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL
 @@WALLET_BTC=3FzmW9JMhgmRwipKkNnphxG73VPQMsYsN6
 @@WALLET_BTG=AdLbKEFQyKugXTduVAT1Z3KMMD7rhN8c6x
 @@WALLET_ETH=0x38973025136D1a5B773aE71c02cA24b365850A9A
 @@WALLET_LTC=MM8RmXUgxDwHJxrC54muF7KHciSCFS3gx3
 
+@@WALLET_PASL=3GhhbotqzjTq9mpXabpzqw4WLCZVp2SFG2CVs6Jfox4t3jCBgvAq92wiTVUEE5mCniN2zNDwhEZteq8QTk3cU7hHK6H6Jr3Aecpm1c
 
 -- API Keys, Non Anonymous pools (Suprnova, MPH) requires api key to get wallets info (format @@APIKEY_NAMEOFPOOL=XXXXXXXXXX)
 @@APIKEY_MINING_POOL_HUB=903106f05fddd0222af24e20312d14dff08ccbb6914855d5fe552c8c88cb3425
@@ -51,11 +52,11 @@
 @@STARTSCREEN=PROFITS
 
 -- Coin IDs from http://whattomine.com/calculators, separated by ",". 192 - Aeon, 210 - Zero, 213 - ETN
--- @@CUSTOM_WTM_COINS=210
+-- @@CUSTOM_WTM_COINS=210,177
 
 -- Dual Mining Ratio reduces calculated profitability due to higher power usage.
--- Set 0 to ignore, real ratio for AMD is normally between 20 to 30 (%)
-@@DUAL_MINING_RATIO=25
+-- Set 0 to ignore (free electricity?), real ratio for AMD is normally between 20 to 30 (%)
+@@DUAL_MINING_RATIO=0
 
 -- Number of minutes each day (NOT PERCENT) of donation
 @@DONATE=10
