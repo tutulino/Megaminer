@@ -126,6 +126,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                                         PoolName = $Name
                                         WalletMode      = $WalletMode
+                                        WalletSymbol = "BTC"
                                         OriginalAlgorithm =  $SNH_AlgorithmOriginal
                                         OriginalCoin = $NH_coin
                                         Fee = 0.04
@@ -144,7 +145,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 #****************************************************************************************************************************************************************************************
 
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 Remove-variable Result
 
 

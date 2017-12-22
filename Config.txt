@@ -64,9 +64,15 @@
 
 @@STARTSCREEN=PROFITS
 
--- Percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit in specified percent
 
-@@PERCENTTOSWITCH=0
+-- Percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit in specified percent (example: 10 means that new miner/algo must be 10% more profitable than actual to be launched)
+
+@@PERCENTTOSWITCH=10
+
+-- seconds to delay closing of old miners when new miner is selected as more profitable, this minimizes inactive time while switch.
+
+@@DELAYCLOSEMINERS=20
+
 
 -- [OPTIONAL] API Keys
 -- Some non-anonymous pools, such as Suprnova and MPH, require API keys to obtain wallet details.

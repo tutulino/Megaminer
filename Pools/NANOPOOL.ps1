@@ -120,5 +120,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         Remove-Variable Locations
         }
                   
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 Remove-Variable Result

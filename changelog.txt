@@ -414,9 +414,25 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 5.1
 
 
-Added new config.txt parameter @@PERCENTTOSWITCH for indicates MM new miner/algo only will be launched if new profit is greater than actual profit in specified percent, also defined PERCENTTOSWITCH parameter to override config.txt value (for example for not PPLS pools like Nicehash)
-Added confirmation prompt to ResetBechmark batch
+*Added new config.txt parameter @@PERCENTTOSWITCH for indicates MM new miner/algo only will be launched if new profit is greater than actual profit in specified percent, also defined PERCENTTOSWITCH parameter to override config.txt value (for example for not PPLS pools like Nicehash)
+*Added confirmation prompt to ResetBechmark batch
+*Excavator moved to additional miners folder due to instability
+*Reactivated Nicehash pool
+*Included Bminer for Nvidia equihash
+*Now miners are closed N seconds after new miners are opened, this minimize time machine is inactive for switching. Time is configured on config.txt @@TIMETOSWITCH variable 
 
-Fixed: incorrect workername for dualmining
-Fixed: divisor for yiimp keccakc 
-Fixed: profit screen showing repeated algos for coin level pools like MPH
+
+
+*Fixed: incorrect workername for dualmining
+*Fixed: divisor for yiimp keccakc 
+*Fixed: new Italyiimp api profit units for keccak
+*Fixed: profit screen showing repeated algos for coin level pools like MPH
+*Fixed: error "Cannot add a member with the name "Name" because a member with that name already exists"
+
+
+
+
+-- NOTE: YOU MUST ADD THIS VARIABLES TO CONFIG.TXT OR CONFIGURE FROM NEW RELEASE WHERE THEY ARE INCLUDED--------------------
+@@PERCENTTOSWITCH=10
+@@DELAYCLOSEMINERS=20
+

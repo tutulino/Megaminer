@@ -690,7 +690,20 @@ function Get-Live-HashRate {
     
                         }
 
-             }
+
+            "Bminer" { 
+                
+                        $Request = Invoke-WebRequest "http://$($Server):$Port/api/status" -UseBasicParsing                       
+
+                        $Data = $Request.content | ConvertFrom-Json 
+                        $HashRate =   0
+                        $Data.miners | Get-Member -MemberType NoteProperty | ForEach-Object {
+                                        $HashRate +=  $Data.miners.($_.name).solver.solution_rate
+
+                                       }
+                        #for."0".solver.solution_rate
+                    }
+         } #end switch
         
         $HashRates=@()
         $HashRates += [double]$HashRate
@@ -861,24 +874,28 @@ function Get-Pools {
 
             if (($info |  Get-Member -MemberType NoteProperty | where-object name -eq location) -eq $null) {$info | Add-Member Location $Location}
 
+            $info | Add-Member SharedFile [string]$null
+
             $PoolsFolderContent | ForEach-Object {
-                                    $Name = $_.BaseName
-                                    $SharedFile="$PSScriptRoot\$Name.tmp"
+                                    
+                                    $SharedFile=$PSScriptRoot+"\"+$_.BaseName+[string](Get-Random -minimum 0 -maximum 9999999)+".tmp"
+                                    $info.SharedFile=$SharedFile
+                                    
                                     if (Test-Path $SharedFile) {Remove-Item $SharedFile}
                                     &$_.FullName -Querymode $Querymode -Info $Info
                                     if (Test-Path $SharedFile) {
                                             $Content=Get-Content $SharedFile | ConvertFrom-Json 
                                             Remove-Item $SharedFile
                                         }
-                                    $Content | ForEach-Object {$ChildItems +=[PSCustomObject]@{Name = $Name; Content = $_}}
-                                    }
+                                    else 
+                                        {$Content=$null}
+                                    $Content | ForEach-Object {$ChildItems +=[PSCustomObject]@{Name = $Name; Content = $_}}                                              
+                                  }
                                 
-         
-
             $AllPools = $ChildItems | ForEach-Object {if ($_.content -ne $null) {$_.Content | Add-Member @{Name = $_.Name} -PassThru}}
-               
 
-            $AllPools | Add-Member LocationPriority 9999
+
+            $AllPools | Add-Member LocationPriority 9999         
 
             #Apply filters
             $AllPools2=@()
@@ -924,7 +941,7 @@ function Get-Pools {
 
 
     
-    Remove-variable ChildItems
+
     Remove-variable AllPools
     Remove-variable AllPools2
     

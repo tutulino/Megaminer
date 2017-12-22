@@ -15,7 +15,7 @@ param(
     [array]$Groupnames = $null,
 
     [Parameter(Mandatory = $false)]
-    [int]$PercentToSwitch = $null
+    [string]$PercentToSwitch = $null
 
 
 )
@@ -30,7 +30,7 @@ param(
 #$MiningMode='Automatic24h'
 #$MiningMode='Manual'
 
-#$PoolsName=('zpool','mining_pool_hub')
+#$PoolsName=('ahashpool','mining_pool_hub','hash_refinery')
 #$PoolsName='whattomine_virtual'
 #$PoolsName='yiimp'
 #$PoolsName='nanopool'
@@ -47,7 +47,7 @@ param(
 #$Coinsname ='bitcoingold'
 #$Algorithm =('x11')
 
-#$Groupnames=('cpu')
+#$Groupnames=('rx580')
 
 
 if ($Groupnames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($Groupnames -join "/")}
@@ -157,7 +157,7 @@ while ($true) {
     $Location=get-config-variable "LOCATION"
 
 
-    if ($PercentToSwitch -eq $null) {$PercentToSwitch = get-config-variable "PERCENTTOSWITCH"}
+    if ($PercentToSwitch -eq "") {$PercentToSwitch2 = [int](get-config-variable "PERCENTTOSWITCH")} else {$PercentToSwitch2=[int]$PercentToSwitch}
     
     
     $Types=Get-Mining-Types -filter $Groupnames
@@ -199,6 +199,7 @@ while ($true) {
                 $WorkerName = "Megaminer"
                 $CoinsWallets=@{} 
                 $CoinsWallets.add("BTC","1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM")
+              
                 
 
                 $NextInterval=$DonateTime *60
@@ -571,42 +572,36 @@ while ($true) {
             {$_.NeedBenchmark=$true} 
         }
 
+
+
+
+
     #For each type, select most profitable miner, not benchmarked has priority, only new miner is lauched if new profit is greater than old by percenttoswitch
     foreach ($TypeId in $Types.Id) {
 
         $BestIdNow=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and  $_.GroupId -eq $TypeId} | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object -ExpandProperty  id)
-        $ProfitNow=$ActiveMiners[$BestIdNow].profits
-        
-        $BestIdLast=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -eq "Running" -and  $_.GroupId -eq $TypeId} | Select-Object -ExpandProperty  id)
-        if ($BestIdLast -ne $null) {$ProfitLast=$ActiveMiners[$BestIdLast].profits} else {$ProfitLast=0}
-        
-        if ($ProfitNow -gt $ProfitLast *(1+($PercentToSwitch/100)) -or $ActiveMiners[$BestIdNow].NeedBenchmark) {$ActiveMiners[$BestIdNow].best=$true} else {$ActiveMiners[$BestIdLast].best=$true ; $ActiveMiners[$BestIdLast].BestBySwitch  = "*"}
-        
-     
+        if ($BestIdNow -ne $null) {
+                    $ProfitNow=$ActiveMiners[$BestIdNow].profits 
 
+                    $BestIdLast=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -eq "Running" -and  $_.GroupId -eq $TypeId} | Select-Object -ExpandProperty  id)
+                    
+                    if ($BestIdLast -ne $null) {$ProfitLast=$ActiveMiners[$BestIdLast].profits} else {$ProfitLast=0}
+ 
+                    if ($ProfitNow -gt ($ProfitLast *(1+($PercentToSwitch2/100))) -or $ActiveMiners[$BestIdNow].NeedBenchmark) {
+                            $ActiveMiners[$BestIdNow].best=$true
+                            } 
+                        else {
+                            $ActiveMiners[$BestIdLast].best=$true 
+                            if ($Profitlast -lt $ProfitNow) {
+                                    $ActiveMiners[$BestIdLast].BestBySwitch  = "*"
+                                }
+                            }
         
-        
-
+                    }
         }
 
 
-
-    #Stop miners running if they arent best now or failed
-    $ActiveMiners | Where-Object {$_.Best -eq $false -or $_.Status -eq "failed" -or $_.status -eq "cancelled"} | ForEach-Object {
-        if ($_.Process -eq $null) {
-            $_.Status = "Failed"
-            $_.failedtimes++
-        }
-        elseif ($_.Process.HasExited -eq $false) {
-            try {
-                Kill_ProcessId $_.Process.Id
-                } catch{}
-            $_.Status = "Idle"
-        }
-        
-        Kill_ProcessId $_.Process.Id #security closing
-        
-    }
+   
    
    
 
@@ -680,7 +675,8 @@ while ($true) {
 
 
     $FirstLoopExecution=$True   
-    $IntervalStartTime=Get-Date
+    $LoopStarttime=Get-Date
+    $MustCloseMiners=$true
 
     #---------------------------------------------------------------------------
     #---------------------------------------------------------------------------
@@ -694,10 +690,35 @@ while ($true) {
 
         $ExitLoop = $false
         
-       
+
+        $LoopTime=(get-date) - $LoopStarttime
+        $LoopSeconds=$LoopTime.seconds + $LoopTime.minutes * 60 +  $LoopTime.hours *3600
+
+
+        #Stop miners running if they arent best now or failed after 30 seconds into loop
+
+                    
+        if ($LoopSeconds -gt (get-config-variable "DELAYCLOSEMINERS") -and $MustCloseMiners) {
+                $AnyProcClosed=$false
+                $ActiveMiners | Where-Object {$_.Best -eq $false -and $_.Process -ne $null} | ForEach-Object {
+                        
+                            try {Kill_ProcessId $_.Process.Id} catch{}
+                            try {Kill_ProcessId $_.Process.Id} catch{}
+                            $_.process=$null
+                            $_.Status = "Idle"
+                            $AnyProcClosed=$true
+                        }
+                        
+                   if ($AnyProcClosed) {
+                        $MustCloseMiners=$false
+                        Clear-host
+                        $repaintScreen=$true
+                        }
+            }
+            
 
         #display interval
-            $TimetoNextInterval= NEW-TIMESPAN (Get-Date) ($IntervalStartTime.AddSeconds($NextInterval))
+            $TimetoNextInterval= NEW-TIMESPAN (Get-Date) ($LoopStarttime.AddSeconds($NextInterval))
             $TimetoNextIntervalSeconds=($TimetoNextInterval.Hours*3600)+($TimetoNextInterval.Minutes*60)+$TimetoNextInterval.Seconds
             if ($TimetoNextIntervalSeconds -lt 0) {$TimetoNextIntervalSeconds = 0}
 
@@ -810,7 +831,7 @@ while ($true) {
                     Remove-Variable ProfitMiners
                     Remove-Variable ProfitMiners2
                     
-                    $repaintScreen=$false
+                   
                 }
   
 
@@ -1072,7 +1093,7 @@ while ($true) {
 
                 if ($KeyPressed) {Clear-host;$repaintScreen=$true}
            
-                if (((Get-Date) -ge ($IntervalStartTime.AddSeconds($NextInterval)))  ) { #If time of interval has over, exit of main loop
+                if (((Get-Date) -ge ($LoopStarttime.AddSeconds($NextInterval)))  ) { #If time of interval has over, exit of main loop
                                 $ActiveMiners | Where-Object Best -eq $true | ForEach-Object { #if a miner ends inteval without speed reading mark as failed
                                        if ($_.AnyNonZeroSpeed -eq $false) {$_.FailedTimes++;$_.status="Failed"}
                                     }

@@ -145,5 +145,5 @@ Remove-variable MiningPoolHub_Request
 #****************************************************************************************************************************************************************************************
 
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 remove-variable Result
