@@ -415,12 +415,12 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 
 
 *Added new config.txt parameter @@PERCENTTOSWITCH for indicates MM new miner/algo only will be launched if new profit is greater than actual profit in specified percent, also defined PERCENTTOSWITCH parameter to override config.txt value (for example for not PPLS pools like Nicehash)
+*Now miners are closed N seconds after new miners are opened, this minimize time machine is inactive for switching. Time is configured on config.txt @@TIMETOSWITCH variable 
+*Included Bminer for Nvidia equihash
 *Added confirmation prompt to ResetBechmark batch
 *Excavator moved to additional miners folder due to instability
 *Reactivated Nicehash pool
-*Included Bminer for Nvidia equihash
-*Now miners are closed N seconds after new miners are opened, this minimize time machine is inactive for switching. Time is configured on config.txt @@TIMETOSWITCH variable 
-
+*Upgraded compatibility for more than one instance of MM running
 
 
 *Fixed: incorrect workername for dualmining

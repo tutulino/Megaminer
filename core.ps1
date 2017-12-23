@@ -158,7 +158,7 @@ while ($true) {
 
 
     if ($PercentToSwitch -eq "") {$PercentToSwitch2 = [int](get-config-variable "PERCENTTOSWITCH")} else {$PercentToSwitch2=[int]$PercentToSwitch}
-    
+    $DelayCloseMiners=get-config-variable "DELAYCLOSEMINERS"
     
     $Types=Get-Mining-Types -filter $Groupnames
     
@@ -199,13 +199,11 @@ while ($true) {
                 $WorkerName = "Megaminer"
                 $CoinsWallets=@{} 
                 $CoinsWallets.add("BTC","1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM")
-              
-                
 
                 $NextInterval=$DonateTime *60
 
                 $Algorithm=$null
-                $PoolsName="mining_pool_hub"
+                $PoolsName="nicehash"
                 $CoinsName=$null
                 $MiningMode="Automatic"
 
@@ -608,7 +606,7 @@ while ($true) {
     #Start all Miners marked as Best (if they are running does nothing)
     $ActiveMiners | Where-Object Best -eq $true | ForEach-Object {
         
-                if ($_.NeedBenchmark) {$NextInterval=$BechmarkintervalTime} #if one need benchmark next interval will be short
+                if ($_.NeedBenchmark) {$NextInterval=$BechmarkintervalTime;$DelayCloseMiners=0} #if one need benchmark next interval will be short and fast change
 
                 #Launch
                 if ($_.Process -eq $null -or $_.Process.HasExited -ne $false) {
@@ -697,8 +695,10 @@ while ($true) {
 
         #Stop miners running if they arent best now or failed after 30 seconds into loop
 
-                    
-        if ($LoopSeconds -gt (get-config-variable "DELAYCLOSEMINERS") -and $MustCloseMiners) {
+
+        
+        
+        if ($LoopSeconds -ge $DelayCloseMiners -and $MustCloseMiners) {
                 $AnyProcClosed=$false
                 $ActiveMiners | Where-Object {$_.Best -eq $false -and $_.Process -ne $null} | ForEach-Object {
                         

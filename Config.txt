@@ -69,7 +69,7 @@
 
 @@PERCENTTOSWITCH=10
 
--- seconds to delay closing of old miners when new miner is selected as more profitable, this minimizes inactive time while switch.
+-- seconds to delay closing of old miners when new miner is selected as more profitable, this minimizes inactive time while switch. For benchmarking interval this value is automatically zero.
 
 @@DELAYCLOSEMINERS=20
 

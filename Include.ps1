@@ -878,7 +878,8 @@ function Get-Pools {
 
             $PoolsFolderContent | ForEach-Object {
                                     
-                                    $SharedFile=$PSScriptRoot+"\"+$_.BaseName+[string](Get-Random -minimum 0 -maximum 9999999)+".tmp"
+                                    $Basename=$_.BaseName
+                                    $SharedFile=$PSScriptRoot+"\"+$Basename+[string](Get-Random -minimum 0 -maximum 9999999)+".tmp"
                                     $info.SharedFile=$SharedFile
                                     
                                     if (Test-Path $SharedFile) {Remove-Item $SharedFile}
@@ -889,7 +890,7 @@ function Get-Pools {
                                         }
                                     else 
                                         {$Content=$null}
-                                    $Content | ForEach-Object {$ChildItems +=[PSCustomObject]@{Name = $Name; Content = $_}}                                              
+                                    $Content | ForEach-Object {$ChildItems +=[PSCustomObject]@{Name = $Basename; Content = $_}}                                              
                                   }
                                 
             $AllPools = $ChildItems | ForEach-Object {if ($_.content -ne $null) {$_.Content | Add-Member @{Name = $_.Name} -PassThru}}
