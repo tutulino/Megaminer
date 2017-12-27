@@ -73,7 +73,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     # $Pools += [pscustomobject]@{"coin" = "BitcoinCash"; "algo" = "SHA256d"; "symbol" = "BCH"; "server" = "bcc.suprnova.cc"; "port" = "3333"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "BitcoinGold"; "algo" = "Equihash"; "symbol" = "BTG"; "server" = "btg.suprnova.cc"; "port" = "8816"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "BitcoinZ"; "algo" = "Equihash"; "symbol" = "BTCZ"; "server" = "btcz.suprnova.cc"; "port" = "5586"; "location" = "US"};
-    $Pools += [pscustomobject]@{"coin" = "ChainCoin"; "algo" = "C11"; "symbol" = "CHC"; "server" = "chc.suprnova.cc"; "port" = "5888"; "location" = "US"};
+    # $Pools += [pscustomobject]@{"coin" = "ChainCoin"; "algo" = "C11"; "symbol" = "CHC"; "server" = "chc.suprnova.cc"; "port" = "5888"; "location" = "US"};
     # $Pools += [pscustomobject]@{"coin" = "DashCoin"; "algo" = "X11"; "symbol" = "Dash"; "server" = "dash.suprnova.cc"; "port" = "9995"; "location" = "US"};
     # $Pools += [pscustomobject]@{"coin" = "Decred"; "algo" = "Blake14r"; "symbol" = "DCR"; "server" = "dcr.suprnova.cc"; "port" = "3252"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Digibyte"; "algo" = "Myriad-Groestl"; "symbol" = "DGB"; "server" = "dgbg.suprnova.cc"; "port" = "7978"; "location" = "US"};
@@ -84,7 +84,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     # $Pools += [pscustomobject]@{"coin" = "eMark"; "algo" = "SHA256"; "symbol" = "DEM"; "server" = "dem.suprnova.cc"; "port" = "5555"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Ethereum"; "algo" = "Ethash"; "symbol" = "ETH"; "server" = "eth.suprnova.cc"; "port" = "5000"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "EuropeCoin v3"; "algo" = "HODL"; "symbol" = "ERC"; "server" = "erc.suprnova.cc"; "port" = "7674"; "location" = "US"};
-    $Pools += [pscustomobject]@{"coin" = "Expanse"; "algo" = "Ethash"; "symbol" = "EXP"; "server" = "exp.suprnova.cc"; "port" = "3333"; "location" = "US"};
+    # $Pools += [pscustomobject]@{"coin" = "Expanse"; "algo" = "Ethash"; "symbol" = "EXP"; "server" = "exp.suprnova.cc"; "port" = "3333"; "location" = "US"};
     # $Pools += [pscustomobject]@{"coin" = "FlorinCoin"; "algo" = "Scrypt"; "symbol" = "FLO"; "server" = "flo.suprnova.cc"; "port" = "3210"; "location" = "US"};
     # $Pools += [pscustomobject]@{"coin" = "GameCredits"; "algo" = "Scrypt"; "symbol" = "GAME"; "server" = "gmc.suprnova.cc"; "port" = "7351"; "location" = "US"};
     # $Pools += [pscustomobject]@{"coin" = "GeoCoin"; "algo" = "Qubit"; "symbol" = "GEO"; "server" = "geo.suprnova.cc"; "port" = "6009"; "location" = "US"};
@@ -100,6 +100,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "MonaCoin"; "algo" = "Lyra2V2"; "symbol" = "MONA"; "server" = "mona.suprnova.cc"; "port" = "2995"; "location" = "US"};
     # $Pools += [pscustomobject]@{"coin" = "Monero"; "algo" = "Cryptonight"; "symbol" = "XMR"; "server" = "xmr-eu.suprnova.cc"; "port" = "5221"; "location" = "Europe"};
     $Pools += [pscustomobject]@{"coin" = "Monero"; "algo" = "Cryptonight"; "symbol" = "XMR"; "server" = "xmr.suprnova.cc"; "port" = "5222"; "location" = "US"};
+    $Pools += [pscustomobject]@{"coin" = "MUNCoin"; "algo" = "skunk"; "symbol" = "MUN"; "server" = "mun.suprnova.cc"; "port" = "8963"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Myriad"; "algo" = "Myriad-Groestl"; "symbol" = "XMY"; "server" = "myrgrs.suprnova.cc"; "port" = "2529"; "location" = "US"};
     # $Pools += [pscustomobject]@{"coin" = "Pure"; "algo" = "X11"; "symbol" = "PURE"; "server" = "pure.suprnova.cc"; "port" = "5518"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Polytimos"; "algo" = "Polytimos"; "symbol" = "PLYS"; "server" = "poly.suprnova.cc"; "port" = "7935"; "location" = "US"};
@@ -117,6 +118,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "ZClassic"; "algo" = "Equihash"; "symbol" = "ZCL"; "server" = "zcl.suprnova.cc"; "port" = "4042"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "ZClassic"; "algo" = "Equihash"; "symbol" = "ZCL"; "server" = "zcl-apac.suprnova.cc"; "port" = "4042"; "location" = "Asia"};
     $Pools += [pscustomobject]@{"coin" = "ZENCash"; "algo" = "Equihash"; "symbol" = "ZEN"; "server" = "zen.suprnova.cc"; "port" = "3618"; "location" = "US"};
+    $Pools += [pscustomobject]@{"coin" = "Zero"; "algo" = "EquihashZero"; "symbol" = "ZER"; "server" = "zero.suprnova.cc"; "port" = "6568"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Zcoin"; "algo" = "Lyra2Z"; "symbol" = "XZC"; "server" = "xzc-apac.suprnova.cc"; "port" = "1569"; "location" = "Asia"};
     $Pools += [pscustomobject]@{"coin" = "Zcoin"; "algo" = "Lyra2Z"; "symbol" = "XZC"; "server" = "xzc.suprnova.cc"; "port" = "1569"; "location" = "Europe"};
     $Pools += [pscustomobject]@{"coin" = "Zcoin"; "algo" = "Lyra2Z"; "symbol" = "XZC"; "server" = "xzc.suprnova.cc"; "port" = "1569"; "location" = "US"};
