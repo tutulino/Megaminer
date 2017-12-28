@@ -2,5 +2,5 @@
 
 
 
-get-gpu-information
+print_gpu_information
 
