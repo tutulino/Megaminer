@@ -86,12 +86,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         if ($HR_Request -ne $null) {
                         $HR_Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | ForEach-Object {
 
-                                        $Divisor = (Get-Algo-Divisor $_) / 1000
+                                        $Divisor = (Get_Algo_Divisor $_) / 1000
                                     
 
                                 
                                 $Result += [PSCustomObject]@{
-                                                Algorithm =  get-algo-unified-name $_
+                                                Algorithm = get_algo_unified_name $_
                                                 Info = $null
                                                 Price = [Double]$HR_Request.$_.estimate_current/$Divisor
                                                 Price24h =[Double]$HR_Request.$_.estimate_last24h/$Divisor

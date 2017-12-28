@@ -8,10 +8,10 @@
 #. .\..\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
-$ActiveOnManualMode    = $true
-$ActiveOnAutomaticMode = $true
-$AbbName = 'NH'
-$WalletMode = "WALLET"
+$ActiveOnManualMode    = $False
+$ActiveOnAutomaticMode = $False
+$AbbName = 'DON'
+$WalletMode = "NONE"
 $Result=@()
 
 
@@ -31,32 +31,6 @@ if ($Querymode -eq "info"){
                          }
     }
 
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
-
-if ($Querymode -eq "wallet")    {
-        
-                            $Info.user=($Info.user -split '\.')[0]
-
-                            try {
-                                $http="https://api.nicehash.com/api?method=stats.provider&addr="+$Info.user
-                                $NH_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats 
-                            }
-                            catch {}
-        
-                            if ($NH_Request -ne $null -and $NH_Request -ne ""){
-                                $Result =   [PSCustomObject]@{
-                                                        Pool =$name
-                                                        currency = "BTC"
-                                                        balance = ($NH_Request | Measure-Object -Sum balance).sum
-                                                    }
-                                    }
-
-                        Remove-variable NH_Request
-                        }
 
                         
 #****************************************************************************************************************************************************************************************

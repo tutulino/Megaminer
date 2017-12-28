@@ -52,7 +52,7 @@ if ($Querymode -eq "info"){
                                 
                                 if ($PoolRealName -ne $null){
                                         $Info.poolname = $PoolRealName     
-                                        $result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $Info.poolname -Info $Info   | select-object Pool,currency,balance
+                                        $result = Get_Pools -Querymode $info.WalletMode -PoolsFilterList $Info.poolname -Info $Info   | select-object Pool,currency,balance
                                         }
                              
                         
@@ -86,10 +86,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                 $WTMResponse.psobject.properties.name | ForEach-Object { 
                         
-                        $WTMResponse.($_).Algorithm = get-algo-unified-name ($WTMResponse.($_).Algorithm)
+                        $WTMResponse.($_).Algorithm = get_algo_unified_name ($WTMResponse.($_).Algorithm)
 
                          #not necessary delete bad names/algo, only necessary add correct name/algo
-                        $NewCoinName = get-coin-unified-name $_
+                        $NewCoinName =  get_coin_unified_name $_
                         if ($NewCoinName -ne $_) {
                                 $TempCoin=$WTMResponse.($_)
                                 $WTMResponse |add-member $NewCoinName $TempCoin
@@ -111,7 +111,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                                         }
 
-                        $HPools=Get-Pools -Querymode "core" -PoolsFilterList $PoolToSearch -location $Info.Location
+                        $HPools=Get_Pools -Querymode "core" -PoolsFilterList $PoolToSearch -location $Info.Location
 
                         $HPools | ForEach-Object {
 
@@ -148,7 +148,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         $Pools |ForEach-Object {
                             
-                $WTMFactor = get-WhattomineFactor ($_.Algo)
+                $WTMFactor = get_WhattomineFactor ($_.Algo)
                 
 
                 if ($WTMFactor -ne $null) {

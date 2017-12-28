@@ -52,7 +52,9 @@ if ($Querymode -eq "info"){
                                 $http="http://www.ahashpool.com/api/wallet?address="+$Info.user
                                 $Aha_Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
                             }
-                            catch {}
+                            catch {
+                             
+                            }
         
         
                             if ($Aha_Request -ne $null -and $Aha_Request -ne ""){
@@ -87,20 +89,20 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     } while ($Aha_Request -eq $null -and $retries -le 3)
                 
                 if ($retries -gt 3) {
-                                    WRITE-HOST 'AHASHPOOL API NOT RESPONDING...ABORTING'
+                                    WriteLog 'AHASHPOOL API NOT RESPONDING...ABORTING' $logFile $true
                                     EXIT
                                     }
 
 
         $Aha_Request | Get-Member -MemberType properties| ForEach-Object {
 
-                $coin=$Aha_Request | Select-Object -ExpandProperty $_.name
+                    $coin=$Aha_Request | Select-Object -ExpandProperty $_.name
                 
 
-                    $Aha_Algorithm = get-algo-unified-name $_.name
+                    $Aha_Algorithm = get_algo_unified_name $_.name
             
 
-                    $Divisor = (Get-Algo-Divisor $Aha_Algorithm) / 1000
+                    $Divisor = (Get_Algo_Divisor $Aha_Algorithm) / 1000
                 
 
                     $Result+=[PSCustomObject]@{

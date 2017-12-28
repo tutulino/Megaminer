@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\AMD-sgminerBitcore\\SgminerBitcore\\sgminer.exe",
 "ExtractionPath" : ".\\Bin\\AMD-sgminerBitcore\\",
-"Uri" : "https://github.com/Fedeparma74/Miners/releases/download/1.0/SgminerBitcore.rar",
+"Uri" : "https://github.com/tutulino/Software/releases/download/0/SgminerBitcore.rar",
 "Types" : ["AMD"],
 "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
 "API" : "Xgminer",

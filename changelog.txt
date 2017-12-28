@@ -436,3 +436,11 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 @@PERCENTTOSWITCH=10
 @@DELAYCLOSEMINERS=20
 
+------------------------------------------------
+5.2
+
+
+Added Mkxminer to Additional Miners folder (you must add manually to miner folder if you want to try)
+Added screen info while interval is starting
+Redesigned log files
+

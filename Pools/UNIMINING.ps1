@@ -100,12 +100,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 $coin=$Uni_Request | Select-Object -ExpandProperty $_.name
                 
 
-                    $Uni_Algorithm = get-algo-unified-name $coin.algo
-                    $Uni_coin =  get-coin-unified-name $coin.name
+                    $Uni_Algorithm = get_algo_unified_name $coin.algo
+                    $Uni_coin =  get_coin_unified_name $coin.name
                     $Uni_Simbol=$_.name
             
 
-                    $Divisor = Get-Algo-Divisor $Uni_Algorithm
+                    $Divisor = Get_Algo_Divisor $Uni_Algorithm
                     
                 
 

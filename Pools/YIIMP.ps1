@@ -99,12 +99,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 $coin=$Yiimp_Request | Select-Object -ExpandProperty $_.name
                 
 
-                    $Yiimp_Algorithm = get-algo-unified-name $coin.algo
-                    $Yiimp_coin =  get-coin-unified-name $coin.name
+                    $Yiimp_Algorithm = get_algo_unified_name $coin.algo
+                    $Yiimp_coin =   get_coin_unified_name $coin.name
                     $Yiimp_Symbol=$_.name
             
 
-                    $Divisor = Get-Algo-Divisor $Yiimp_Algorithm
+                    $Divisor = Get_Algo_Divisor $Yiimp_Algorithm
                     
                 
                     $Result+=[PSCustomObject]@{

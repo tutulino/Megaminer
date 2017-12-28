@@ -56,8 +56,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         $Pools |  ForEach-Object {
 
-                    $Flypool_Algorithm = get-algo-unified-name $_.algo
-                    $Flypool_coin =  get-coin-unified-name $_.coin
+                    $Flypool_Algorithm = get_algo_unified_name $_.algo
+                    $Flypool_coin =  get_coin_unified_name $_.coin
                     $Flypool_symbol = $_.Symbol
                 
 

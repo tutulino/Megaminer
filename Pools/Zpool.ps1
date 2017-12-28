@@ -77,10 +77,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 
                                 $coin=$Zpool_Request | Select-Object -ExpandProperty $_.name
 
-                                $Zpool_Algo =  get-algo-unified-name ($_.name)
+                                $Zpool_Algo =  get_algo_unified_name ($_.name)
 
                             
-                                $Divisor = (Get-Algo-Divisor $Zpool_Algo) / 1000
+                                $Divisor = (Get_Algo_Divisor $Zpool_Algo) / 1000
 
                                 switch ($Zpool_Algo){
                                     "X11"{$Divisor *= 1000}

@@ -41,8 +41,21 @@ if ($Querymode -eq "info"){
     if ($Querymode -eq "APIKEY")    {
 
                             Switch($Info.coin) {
-                                "DigiByte" {$Info.Coin=$Info.coin+'-'+$Info.Algorithm}
-                                "Myriad" {$Info.Coin=$Info.coin+'-'+$Info.Algorithm}
+                                "DigiByte" {
+                                    switch($Info.Algorithm){
+                                                        "qubit"{$Info.Coin="digibyte-qubit"}
+                                                        "myriad-groestl"{$Info.Coin="digibyte-groestl"}
+                                                        "skein"{$Info.Coin="digibyte-skein"}
+                                                        }               
+
+                                            }       
+                                "Myriad" {
+                                    switch($Info.Algorithm){
+                                                            "Skein"{$Info.Coin="myriadcoin-skein"}
+                                                            "myriad-groestl"{$Info.Coin="myriadcoin-groestl"}
+                                                            "yescrypt"{$Info.Coin="myriadcoin-yescrypt"}
+                                                            }                
+                                        }
                                 "Verge" {$Info.Coin=$Info.coin+'-'+$Info.Algorithm}
                                 }
 
@@ -91,8 +104,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
             $MiningPoolHub_Request.return | ForEach-Object {
 
-                $MiningPoolHub_Algorithm= get-algo-unified-name $_.algo
-                $MiningPoolHub_Coin =  get-coin-unified-name $_.coin_name
+                $MiningPoolHub_Algorithm= get_algo_unified_name $_.algo
+                $MiningPoolHub_Coin =   get_coin_unified_name $_.coin_name
 
                 $MiningPoolHub_OriginalAlgorithm=  $_.algo
                 $MiningPoolHub_OriginalCoin=  $_.coin_name
@@ -125,7 +138,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             ActiveOnManualMode    = $ActiveOnManualMode
                                             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                                             WalletMode     = $WalletMode
-                                            WalletSymbol= $MiningPoolHub_Coin #not symbol available
+                                            WalletSymbol= $_.coin_name
                                             PoolName = $Name
                                             OriginalAlgorithm = $MiningPoolHub_OriginalAlgorithm
                                             OriginalCoin = $MiningPoolHub_OriginalCoin

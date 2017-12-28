@@ -1,0 +1,18 @@
+﻿{
+"Path" : ".\\Bin\\AMD-Mkxminer\\mkxminer.exe",
+"ExtractionPath" : ".\\Bin\\AMD-Mkxminer\\",
+"Uri" : "https://github.com/tutulino/Software/releases/download/0/mkxminer300.zip",
+"Types" : ["AMD"],
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# --exitsick  --asm --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+"API" : "Xgminer",
+"Wrap" : false,
+"Dualmining":false,
+"PrelaunchCommand":"",
+"Algorithms": [
+        {"Lyra2v2":"-i23"}
+        ]
+
+}
+
+ 
+  

@@ -22,7 +22,7 @@ if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY 
 
 #--------------Load config.txt file
 
-$Location= get-config-variable "LOCATION"
+$Location= get_config_variable "LOCATION"
 
 $CoinsWallets=@{} #needed for anonymous pools load
 ((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','').TrimEnd() | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
@@ -60,9 +60,9 @@ If ($MiningMode -eq "")
 #-----------------Ask user for pool/s to use, if a pool is indicated in parameters no prompt
 
     switch ($MiningMode) {
-            "Automatic" {$Pools=Get-Pools -Querymode "Info" | Where-Object ActiveOnAutomaticMode -eq $true | sort name }
-            "Automatic24h" {$Pools=Get-Pools -Querymode "Info" | Where-Object ActiveOnAutomatic24hMode -eq $true | sort name }
-            "Manual" {$Pools=Get-Pools -Querymode "Info" | Where-Object ActiveOnManualMode -eq $true | sort name }
+            "Automatic" {$Pools=Get_Pools -Querymode "Info" | Where-Object ActiveOnAutomaticMode -eq $true | sort name }
+            "Automatic24h" {$Pools=Get_Pools -Querymode "Info" | Where-Object ActiveOnAutomatic24hMode -eq $true | sort name }
+            "Manual" {$Pools=Get_Pools -Querymode "Info" | Where-Object ActiveOnManualMode -eq $true | sort name }
             }
 
 $Pools | Add-Member Option "0"
@@ -140,7 +140,7 @@ if ($MiningMode -eq "manual"){
 
 
 
-                    $CoinsPool=Get-Pools -Querymode "Menu" -PoolsFilterList $PoolsName -location $Location |Select-Object info,symbol,algorithm,Workers,PoolHashRate,Blocks_24h -unique | Sort-Object info
+                    $CoinsPool=Get_Pools -Querymode "Menu" -PoolsFilterList $PoolsName -location $Location |Select-Object info,symbol,algorithm,Workers,PoolHashRate,Blocks_24h -unique | Sort-Object info
 
                     $CoinsPool | Add-Member Option "0"
 

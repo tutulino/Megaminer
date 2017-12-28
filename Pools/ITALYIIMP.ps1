@@ -98,7 +98,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                 $Ita_Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | ForEach-Object {
                     
-                                            $Divisor = (Get-Algo-Divisor $_) / 1000
+                                            $Divisor = (Get_Algo_Divisor $_) / 1000
 
                                             switch ($_){
                                                 "X11"{$Divisor *= 1000}
@@ -110,7 +110,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     
                                     
                                     $Result += [PSCustomObject]@{
-                                                    Algorithm =  get-algo-unified-name $_
+                                                    Algorithm =  get_algo_unified_name $_
                                                     Info = $null
                                                     Price = [Double]$Ita_Request.$_.estimate_current/$Divisor
                                                     Price24h =[Double]$Ita_Request.$_.estimate_last24h/$Divisor

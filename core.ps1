@@ -1,3 +1,5 @@
+#using module .\Include.psm1
+
 param(
     [Parameter(Mandatory = $false)]
     [Array]$Algorithm = $null,
@@ -20,9 +22,9 @@ param(
 
 )
 
+
+
 . .\Include.ps1
-
-
 
 ##Parameters for testing, must be commented on real use
 
@@ -50,6 +52,8 @@ param(
 #$Groupnames=('rx580')
 
 
+
+$ErrorActionPreference = "Continue"
 if ($Groupnames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($Groupnames -join "/")}
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
 
@@ -61,9 +65,16 @@ try {if ((Get-MpPreference).ExclusionPath -notcontains (Convert-Path .)) {Start-
 
 
 
-Clear-log
-$LogFile=".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
-Start-Transcript $LogFile
+#Start log file
+    Clear_log
+    $LogFile=".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
+    Start-Transcript $LogFile #for start log msg
+    Stop-Transcript
+    writelog ( get_gpu_information |ConvertTo-Json) $logfile $false
+    
+
+ 
+    
 
 
 $ActiveMiners = @()
@@ -76,7 +87,7 @@ $StartTime=get-date
 
 
 
-$Screen = get-config-variable "STARTSCREEN"
+$Screen = get_config_variable "STARTSCREEN"
   
 
 
@@ -89,7 +100,7 @@ if ($MiningMode -ne 'Automatic' -and $MiningMode -ne 'Manual' -and $MiningMode -
 
 
    
-$PoolsChecking=Get-Pools -Querymode "info" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm   
+$PoolsChecking=Get_Pools -Querymode "info" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm   
 
 $PoolsErrors=@()
 switch ($MiningMode){
@@ -125,16 +136,32 @@ if ($MiningMode -eq 'Manual' -and ($Algorithm | measure-object).count -gt 1){
 
 #parameters backup
 
-
     $ParamAlgorithmBCK=$Algorithm
     $ParamPoolsNameBCK=$PoolsName
     $ParamCoinsNameBCK=$CoinsName
     $ParamMiningModeBCK=$MiningMode
 
 
-set-WindowSize 120 60 
+set_WindowSize 120 60 
     
 $IntervalStartAt = (Get-Date) #first inicialization, must be outside loop
+
+
+ErrorsToLog $LogFile
+
+
+$Msg="Starting Parameters: "   
+$Msg+=" //Algorithm: "+[String]($Algorithm -join ",") 
+$Msg+=" //PoolsName: "+[String]($PoolsName -join ",") 
+$Msg+=" //CoinsName: "+[String]($CoinsName -join ",") 
+$Msg+=" //MiningMode: "+$MiningMode
+$Msg+=" //Groupnames: "+[String]($Groupnames -join ",") 
+$Msg+=" //PercentToSwitch: "+$PercentToSwitch
+
+WriteLog $msg $LogFile $False
+
+ 
+
 
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
@@ -149,27 +176,27 @@ $IntervalStartAt = (Get-Date) #first inicialization, must be outside loop
 
 while ($true) {
 
-   
     Clear-Host;$repaintScreen=$true
+
+    WriteLog "New interval starting............." $LogFile $True
+    Writelog ( Get_ComputerStats |ConvertTo-Json) $logfile $false
+
+    $Location=get_config_variable "LOCATION"
+
+
+    if ($PercentToSwitch -eq "") {$PercentToSwitch2 = [int](get_config_variable "PERCENTTOSWITCH")} else {$PercentToSwitch2=[int]$PercentToSwitch}
+    $DelayCloseMiners=get_config_variable "DELAYCLOSEMINERS"
     
-  
-
-    $Location=get-config-variable "LOCATION"
-
-
-    if ($PercentToSwitch -eq "") {$PercentToSwitch2 = [int](get-config-variable "PERCENTTOSWITCH")} else {$PercentToSwitch2=[int]$PercentToSwitch}
-    $DelayCloseMiners=get-config-variable "DELAYCLOSEMINERS"
-    
-    $Types=Get-Mining-Types -filter $Groupnames
+    $Types=Get_Mining_Types -filter $Groupnames
     
     $NumberTypesGroups=($Types | Measure-Object).count
     if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit=[Math]::Floor( 25 /$NumberTypesGroups)} #screen adjust to number of groups
     if ($FirstTotalExecution) {$ProfitsScreenLimit=$InitialProfitsScreenLimit}
                          
 
-    $Currency= get-config-variable "CURRENCY"
-    $BechmarkintervalTime=[int](get-config-variable "BENCHMARKTIME" )
-    $LocalCurrency= get-config-variable "LOCALCURRENCY"
+    $Currency= get_config_variable "CURRENCY"
+    $BechmarkintervalTime=[int](get_config_variable "BENCHMARKTIME" )
+    $LocalCurrency= get_config_variable "LOCALCURRENCY"
     if ($LocalCurrency.length -eq 0) { #for old config.txt compatibility
         switch ($location) {
             'Europe' {$LocalCurrency="EURO"}
@@ -189,7 +216,7 @@ while ($true) {
     $ElapsedDonationTime = [int]($DonationPastTime) + $LastIntervalTime.minutes + ($LastIntervalTime.hours *60)
 
     
-    $Dt= [int](get-config-variable "DONATE")
+    $Dt= [int](get_config_variable "DONATE")
     $DonateTime=if ($Dt -gt 0) {[int]$Dt} else {0}
     #Activate or deactivate donation
     if ($ElapsedDonationTime -gt 1440 -and $DonateTime -gt 0) { # donation interval
@@ -203,23 +230,25 @@ while ($true) {
                 $NextInterval=$DonateTime *60
 
                 $Algorithm=$null
-                $PoolsName="nicehash"
+                $PoolsName="DonationPool"
                 $CoinsName=$null
                 $MiningMode="Automatic"
 
                 0 | Set-Content  -Path Donation.ctr
 
+                WriteLog "Next "+[string]($DonateTime)+" minutes will be donation" $LogFile $True
+
             }
             else { #NOT donation interval
                     $DonationInterval = $false
-                    $NextInterval=get-config-variable "INTERVAL"
+                    $NextInterval=get_config_variable "INTERVAL"
 
                     $Algorithm=$ParamAlgorithmBCK
                     $PoolsName=$ParamPoolsNameBCK
                     $CoinsName=$ParamCoinsNameBCK
                     $MiningMode=$ParamMiningModeBCK
-                    $UserName= get-config-variable "USERNAME"
-                    $WorkerName= get-config-variable "WORKERNAME"
+                    $UserName= get_config_variable "USERNAME"
+                    $WorkerName= get_config_variable "WORKERNAME"
                     $CoinsWallets=@{} 
                     ((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','').TrimEnd() | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
                 
@@ -231,34 +260,35 @@ while ($true) {
     $Rates = [pscustomObject]@{}
     try { $Currency | ForEach-Object {$Rates | Add-Member $_ (Invoke-WebRequest "https://api.cryptonator.com/api/ticker/btc-$_" -UseBasicParsing | ConvertFrom-Json).ticker.price}} catch {}
 
- 
+    ErrorsToLog $LogFile
+
+
+    WriteLog "Loading Pools Information............." $LogFile $True
 
     #Load information about the Pools, only must read parameter passed files (not all as mph do), level is Pool-Algo-Coin
      do
         {
-        $Pools=Get-Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $Location -AlgoFilterList $Algorithm
+        $Pools=Get_Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $Location -AlgoFilterList $Algorithm
         if  ($Pools.Count -eq 0) {
-                "NO POOLS!....retry in 10 sec" | Out-Host
-                "REMEMBER, IF YOUR ARE MINING ON ANONYMOUS WITHOUT AUTOEXCHANGE POOLS LIKE YIIMP, NANOPOOL, ETC. YOU MUST SET WALLET FOR AT LEAST ONE POOL COIN IN CONFIG.TXT" | Out-Host
+                $Msg="NO POOLS!....retry in 10 sec"+'/n'
+                $Msg+="REMEMBER, IF YOUR ARE MINING ON ANONYMOUS WITHOUT AUTOEXCHANGE POOLS LIKE YIIMP, NANOPOOL, ETC. YOU MUST SET WALLET FOR AT LEAST ONE POOL COIN IN CONFIG.TXT"
+                WriteLog $msg $logFile $true
+                
                 Start-Sleep 10}
         }
     while ($Pools.Count -eq 0) 
     
-    
-
+    $Pools | Select-Object name -unique | foreach-object {Writelog ("Pool "+$_.name+" was responsive....") $logfile $true}
 
     #Load information about the Miner asociated to each Coin-Algo-Miner
 
     $Miners= @()
 
-  
-    
-
     foreach ($MinerFile in (Get-ChildItem "Miners" | Where-Object extension -eq '.json'))  
         {
             try { $Miner =$MinerFile | Get-Content | ConvertFrom-Json } 
             catch 
-                {   "-------BAD FORMED JSON: $MinerFile" | Out-host 
+                {  Writelog "-------BAD FORMED JSON: $MinerFile" $LogFile $true
                 Exit}
  
    
@@ -287,7 +317,7 @@ while ($true) {
                                            $DualMiningMainCoin=$Miner.DualMiningMainCoin -replace $null,""
                                            if (((Compare-object $_.info $DualMiningMainCoin -IncludeEqual -ExcludeDifferent | Measure-Object).count -gt 0) -or $Miner.Dualmining -eq $false) {  #not allow dualmining if main coin not coincide
 
-                                            $Hrs = Get-Hashrates -minername $Minerfile.basename -algorithm $Algorithms -GroupName $TypeGroup.GroupName -AlgoLabel  $AlgoLabel
+                                            $Hrs = Get_Hashrates -minername $Minerfile.basename -algorithm $Algorithms -GroupName $TypeGroup.GroupName -AlgoLabel  $AlgoLabel
                                             
                                             $HashrateValue=[long]($Hrs -split ("_"))[0]
                                             $HashrateValueDual=[long]($Hrs -split ("_"))[1]                                            
@@ -368,7 +398,7 @@ while ($true) {
                                                                     Path = $Miner.Path
                                                                     HashRate = $HashRateValue
                                                                     HashRateDual = $HashrateValueDual
-                                                                    Hashrates   = if ($Miner.Dualmining) {(ConvertTo-Hash ($HashRateValue)) + "/s|"+(ConvertTo-Hash $HashrateValueDual) + "/s"} else {(ConvertTo-Hash $HashRateValue) +"/s"}
+                                                                    Hashrates   = if ($Miner.Dualmining) {(ConvertTo_Hash ($HashRateValue)) + "/s|"+(ConvertTo_Hash $HashrateValueDual) + "/s"} else {(ConvertTo_Hash $HashRateValue) +"/s"}
                                                                     API = $Miner.API
                                                                     Port = $miner.ApiPort
                                                                     Wrap =$Miner.Wrap
@@ -412,18 +442,18 @@ while ($true) {
         }
              
 
-        
+    Writelog ("Miners detected: "+ [string]($Miners.count)+".........") $LogFile $true    
      
     #Launch download of miners    
-    $Miners |
-        where-object {$_.URI -ne $null -and $_.ExtractionPath -ne $null -and $_.Path -ne $null -and $_.URI -ne "" -and $_.ExtractionPath -ne "" -and $_.Path -ne ""} |
-        Select-Object URI, ExtractionPath,Path -Unique | ForEach-Object {Start-Downloader -URI $_.URI  -ExtractionPath $_.ExtractionPath -Path $_.Path}
+    $Miners | where-object {$_.URI -ne $null -and $_.ExtractionPath -ne $null -and $_.Path -ne $null -and $_.URI -ne "" -and $_.ExtractionPath -ne "" -and $_.Path -ne ""} | Select-Object URI, ExtractionPath,Path -Unique | ForEach-Object {
+                Start_Downloader -URI $_.URI  -ExtractionPath $_.ExtractionPath -Path $_.Path
+            }
     
-
+    ErrorsToLog $LogFile
     
     #Paint no miners message
     $Miners = $Miners | Where-Object {Test-Path $_.Path}
-    if ($Miners.Count -eq 0) {"NO MINERS!" | Out-Host ; EXIT}
+    if ($Miners.Count -eq 0) {Writelog "NO MINERS!" $LogFile $true ; EXIT}
 
 
     #Update the active miners list which is alive for  all execution time
@@ -562,6 +592,13 @@ while ($true) {
                 }
             }
 
+
+
+    Writelog ("Active Miners-pools: "+ [string]($ActiveMiners.count)+".........") $LogFile $true                
+
+    ErrorsToLog $LogFile
+
+
     #update miners that need benchmarks
                                                 
     $ActiveMiners | ForEach-Object {
@@ -572,16 +609,18 @@ while ($true) {
 
 
 
-
+    Writelog ("Active Miners-pools selected for benchmark: "+ [string](($ActiveMiners | where-object NeedBenchmark -eq $true).count)+".........") $LogFile $true                
 
     #For each type, select most profitable miner, not benchmarked has priority, only new miner is lauched if new profit is greater than old by percenttoswitch
-    foreach ($TypeId in $Types.Id) {
+    foreach ($Type in $Types) {
 
-        $BestIdNow=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and  $_.GroupId -eq $TypeId} | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object -ExpandProperty  id)
+        $BestIdNow=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and  $_.GroupId -eq $Type.Id} | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object -ExpandProperty  id)
         if ($BestIdNow -ne $null) {
                     $ProfitNow=$ActiveMiners[$BestIdNow].profits 
 
-                    $BestIdLast=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -eq "Running" -and  $_.GroupId -eq $TypeId} | Select-Object -ExpandProperty  id)
+                    Writelog ($ActiveMiners[$BestIdNow].name+"/"+$ActiveMiners[$BestIdNow].Algorithms+"(id "+[string]$BestIdNow+") is the best combination for gpu group "+$Type.groupname) $LogFile $true                
+
+                    $BestIdLast=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -eq "Running" -and  $_.GroupId -eq $Type.Id} | Select-Object -ExpandProperty  id)
                     
                     if ($BestIdLast -ne $null) {$ProfitLast=$ActiveMiners[$BestIdLast].profits} else {$ProfitLast=0}
  
@@ -592,6 +631,7 @@ while ($true) {
                             $ActiveMiners[$BestIdLast].best=$true 
                             if ($Profitlast -lt $ProfitNow) {
                                     $ActiveMiners[$BestIdLast].BestBySwitch  = "*"
+                                    Writelog ($ActiveMiners[$BestIdLast].name+"/"+$ActiveMiners[$BestIdLast].Algorithms+"(id "+[string]$BestIdLast+") continue mining due to @@percenttoswitch value "+$Type.name) $LogFile $true                
                                 }
                             }
         
@@ -599,7 +639,7 @@ while ($true) {
         }
 
 
-   
+    ErrorsToLog $LogFile
    
    
 
@@ -629,17 +669,19 @@ while ($true) {
                     if ($_.PrelaunchCommand -ne $null -and $_.PrelaunchCommand -ne "") {Start-Process -FilePath $_.PrelaunchCommand}
 
                     if ($_.Wrap) {$_.Process = Start-Process -FilePath "PowerShell" -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$($_.Arguments)' -WorkingDirectory '$(Split-Path $_.Path)'" -PassThru}
-                    else {$_.Process = Start-SubProcess -FilePath $_.Path -ArgumentList $_.Arguments -WorkingDirectory (Split-Path $_.Path)}
+                    else {$_.Process = Start_SubProcess -FilePath $_.Path -ArgumentList $_.Arguments -WorkingDirectory (Split-Path $_.Path)}
                 
-                
+                    
 
                     if ($_.Process -eq $null) {
                             $_.Status = "Failed"
                             $_.FailedTimes++
+                            Writelog ("Failed start of "+$_.Name+"/"+$_.Algorithms+"("+$_.Id+") --> "+$_.Path+" "+$_.Arguments) $LogFile $false
                         } 
                     else {
                         $_.Status = "Running"
                         $_.LastActiveCheck=get-date
+                        Writelog ("Started Process "+[string]$_.Process.Id+" for "+$_.Name+"/"+$_.Algorithms+"("+$_.Id+") --> "+$_.Path+" "+$_.Arguments) $LogFile $false
                         }
 
                     }
@@ -657,7 +699,7 @@ while ($true) {
                 
             catch {
                 Clear-Host;$repaintScreen=$true
-                "COINDESK API NOT RESPONDING, NOT POSSIBLE LOCAL COIN CONVERSION" | Out-host 
+                writelog "COINDESK API NOT RESPONDING, NOT POSSIBLE LOCAL COIN CONVERSION" $logfile $true
                 }
                 
                 switch ($LocalCurrency) {
@@ -676,6 +718,18 @@ while ($true) {
     $LoopStarttime=Get-Date
     $MustCloseMiners=$true
 
+    ErrorsToLog $LogFile
+
+
+
+    #---------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #---------------------------------------------------------------------------
     #---------------------------------------------------------------------------
 
@@ -694,8 +748,6 @@ while ($true) {
 
 
         #Stop miners running if they arent best now or failed after 30 seconds into loop
-
-
         
         
         if ($LoopSeconds -ge $DelayCloseMiners -and $MustCloseMiners) {
@@ -707,6 +759,7 @@ while ($true) {
                             $_.process=$null
                             $_.Status = "Idle"
                             $AnyProcClosed=$true
+                            WriteLog ("Killing "+$_.name+"/"+$_.Algorithms+"(id "+[string]$_.Id+")") $LogFile
                         }
                         
                    if ($AnyProcClosed) {
@@ -722,9 +775,9 @@ while ($true) {
             $TimetoNextIntervalSeconds=($TimetoNextInterval.Hours*3600)+($TimetoNextInterval.Minutes*60)+$TimetoNextInterval.Seconds
             if ($TimetoNextIntervalSeconds -lt 0) {$TimetoNextIntervalSeconds = 0}
 
-            Set-ConsolePosition 92 2
+            set_ConsolePosition 92 2
             "Next Interval:  $TimetoNextIntervalSeconds secs..." | Out-host
-            Set-ConsolePosition 0 0
+            set_ConsolePosition 0 0
 
         #display header        
         "------------------------------------------------   MegaMiner 5.1  -----------------------------------------------------"| Out-host
@@ -741,7 +794,7 @@ while ($true) {
   
           $ActiveMiners | Where-Object Status -eq 'Running'| Sort-Object GroupId | Format-Table -Wrap  (
               @{Label = "GroupName"; Expression = {$_.GroupName}}, 
-              @{Label = "Speed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive))+'/s'} else {(ConvertTo-Hash  ($_.SpeedLive))+'/s|'+(ConvertTo-Hash ($_.SpeedLiveDual))+'/s'} }; Align = 'right'},     
+              @{Label = "Speed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.SpeedLive))+'/s'} else {(ConvertTo_Hash  ($_.SpeedLive))+'/s|'+(ConvertTo_Hash ($_.SpeedLiveDual))+'/s'} }; Align = 'right'},     
               @{Label = "BTC/Day"; Expression = {$_.ProfitLive.tostring("n5")}; Align = 'right'}, 
               @{Label = $LabelProfit; Expression = {(([double]$_.ProfitLive + [double]$_.ProfitLiveDual) *  [double]$localBTCvalue ).tostring("n2")}; Align = 'right'}, 
               @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm+$_.AlgoLabel+$_.BestBySwitch} else  {$_.Algorithm+$_.AlgoLabel+ '|' + $_.AlgorithmDual+$_.BestBySwitch}}},   
@@ -759,15 +812,15 @@ while ($true) {
  #>             
 
 
-              
-
-
           ) | Out-Host
-          
+
+
+        writelog ($ActiveMiners | Where-Object Status -eq 'Running'| select-object id,groupname,name,poolabbname,Algorithm,AlgorithmDual,SpeedLive,ProfitLive,location,port,arguments |ConvertTo-Json) $logfile $false
+
 
         $XToWrite=[ref]0
         $YToWrite=[ref]0      
-        Get-ConsolePosition ([ref]$XToWrite) ([ref]$YToWrite)  
+        Get_ConsolePosition ([ref]$XToWrite) ([ref]$YToWrite)  
         $YToWriteMessages=$YToWrite+1
         $YToWriteData=$YToWrite+2
         Remove-Variable XToWrite
@@ -781,12 +834,12 @@ while ($true) {
                     "----------------------------------------------------PROFITS------------------------------------------------------------"| Out-host            
 
                  
-                    Set-ConsolePosition 80 $YToWriteMessages
+                    set_ConsolePosition 80 $YToWriteMessages
                     
                     "(B)est Miners/All       (T)op "+[string]$InitialProfitsScreenLimit+"/All" | Out-Host
 
                     
-                    Set-ConsolePosition 0 $YToWriteData
+                    set_ConsolePosition 0 $YToWriteData
 
 
                     if ($ShowBestMinersOnly) {
@@ -842,7 +895,7 @@ while ($true) {
                     "----------------------------------------------------CURRENT------------------------------------------------------------"| Out-host            
                     
                     
-                    Set-ConsolePosition 0 $YToWriteData
+                    set_ConsolePosition 0 $YToWriteData
 
                     #Display lauched commands information
                     $ActiveMiners | Where-Object Status -eq 'Running' | Format-Table -Wrap  (
@@ -854,7 +907,7 @@ while ($true) {
                     ) | Out-Host
                     
                     # Display devices info
-                    get-gpu-information
+                    print_gpu_information
 
                   
 
@@ -889,7 +942,7 @@ while ($true) {
                                     
 
                                     $ApiKeyPattern="APIKEY_"+$_.PoolName
-                                    $ApiKey = get-config-variable $ApiKeyPattern
+                                    $ApiKey = get_config_variable $ApiKeyPattern
                                 
                                     if ($Apikey -ne "") {
                                             $WalletsToCheck += [pscustomObject]@{
@@ -910,15 +963,16 @@ while ($true) {
                             $WalletStatus=@()
                             $WalletsToCheck |ForEach-Object {
 
-                                            Set-ConsolePosition 0 $YToWriteMessages
+                                            set_ConsolePosition 0 $YToWriteMessages
                                             "                                                                         "| Out-host 
-                                            Set-ConsolePosition 0 $YToWriteMessages
+                                            set_ConsolePosition 0 $YToWriteMessages
 
-                                            if ($_.WalletMode -eq "WALLET") {"Checking "+$_.Abbname+" - "+$_.symbol | Out-host}
-                                               else {"Checking "+$_.Abbname+" - "+$_.coin+' ('+$_.Algorithm+')' | Out-host}
+                                            if ($_.WalletMode -eq "WALLET") {writelog ("Checking "+$_.Abbname+" - "+$_.symbol) $logfile $true}
+                                               else {writelog ("Checking "+$_.Abbname+" - "+$_.coin+' ('+$_.Algorithm+')') $logfile $true}
                                          
+
                                           
-                                            $Ws = Get-Pools -Querymode $_.WalletMode -PoolsFilterList $_.Poolname -Info ($_)
+                                            $Ws = Get_Pools -Querymode $_.WalletMode -PoolsFilterList $_.Poolname -Info ($_)
                                             
                                             if ($_.WalletMode -eq "WALLET") {$Ws | Add-Member Wallet $_.User}
                                             else  {$Ws | Add-Member Wallet $_.Coin}
@@ -929,7 +983,7 @@ while ($true) {
                                             
                                             $WalletStatus += $Ws
 
-                                            Set-ConsolePosition 0 $YToWriteMessages
+                                            set_ConsolePosition 0 $YToWriteMessages
                                             "                                                                         "| Out-host 
 
                                             start-sleep 1 #no saturation of pool api
@@ -954,7 +1008,7 @@ while ($true) {
                          if ($Screen -eq "Wallets" -and $repaintScreen) {
                             "----------------------------------------------------WALLETS (slow)-----------------------------------------------------"| Out-host   
                             
-                            Set-ConsolePosition 0 $YToWriteMessages
+                            set_ConsolePosition 0 $YToWriteMessages
                             "Start Time: $StartTime                                                       (U)pdate  - $WalletsUpdate  " | Out-Host
                             "" | Out-Host 
                                                     
@@ -981,14 +1035,14 @@ while ($true) {
 
                     "--------------------------------------------------HISTORY------------------------------------------------------------"| Out-host            
                     
-                    Set-ConsolePosition 0 $YToWriteMessages
+                    set_ConsolePosition 0 $YToWriteMessages
                     "Running Mode: $MiningMode" |out-host
 
-                    Set-ConsolePosition 0 $YToWriteData
+                    set_ConsolePosition 0 $YToWriteData
 
                     #Display activated miners list
                     $ActiveMiners | Where-Object ActivatedTimes -GT 0 | Sort-Object -Descending Status, {if ($_.Process -eq $null) {[DateTime]0}else {$_.Process.StartTime}} | Select-Object -First (1 + 6 + 6) | Format-Table -Wrap -GroupBy Status (
-                        @{Label = "Speed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo-Hash  ($_.SpeedLive))+'s'} else {(ConvertTo-Hash  ($_.SpeedLive))+'/s|'+(ConvertTo-Hash ($_.SpeedLiveDual))+'/s'} }; Align = 'right'}, 
+                        @{Label = "Speed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.SpeedLive))+'s'} else {(ConvertTo_Hash  ($_.SpeedLive))+'/s|'+(ConvertTo_Hash ($_.SpeedLiveDual))+'/s'} }; Align = 'right'}, 
                         @{Label = "Active"; Expression = {"{0:dd} Days {0:hh} Hours {0:mm} Minutes" -f $_.ActiveTime}}, 
                         @{Label = "Launched"; Expression = {Switch ($_.ActivatedTimes) {0 {"Never"} 1 {"Once"} Default {"$_ Times"}}}}, 
                         @{Label = "Command"; Expression = {"$($_.Path.TrimStart((Convert-Path ".\"))) $($_.Arguments)"}}
@@ -1015,6 +1069,7 @@ while ($true) {
                                     if ($_.Status -eq "Running") {
                                                 $_.Status = "Failed"
                                                 $_.FailedTimes++
+                                                writelog ("Detected exit for "+$_.name+"/"+$_.Algorithm+" (if"+$_.Id+") --> "+$_.Arguments) $logfile $false
                                                 $ExitLoop = $true
                                                 }
                                     else
@@ -1025,7 +1080,7 @@ while ($true) {
                                     $_.ActiveTime += (get-date) - $_.LastActiveCheck 
                                     $_.LastActiveCheck=get-date
 
-                                    $Miner_HashRates = Get-Live-HashRate $_.API $_.Port 
+                                    $Miner_HashRates = Get_Live_HashRate $_.API $_.Port 
 
                                     if ($Miner_HashRates -ne $null){
                                         $_.SpeedLive = [double]($Miner_HashRates[0])
@@ -1048,7 +1103,7 @@ while ($true) {
                                             
                                             $_.Hashrate= $Value
                                             $_.HashrateDual= $ValueDual
-                                            Set-Hashrates -algorithm $_.Algorithms -minername $_.Name -GroupName $_.GroupName -AlgoLabel $_.AlgoLabel -value  $Value -valueDual $ValueDual
+                                            Set_Hashrates -algorithm $_.Algorithms -minername $_.Name -GroupName $_.GroupName -AlgoLabel $_.AlgoLabel -value  $Value -valueDual $ValueDual
                                             }
                                         }          
                                 }
@@ -1056,6 +1111,7 @@ while ($true) {
                                 
 
                             if ($_.ConsecutiveZeroSpeed -gt 25 -and $_.NeedBenchmark -ne $true ) { #avoid  miner hangs and wait interval ends
+                                writelog ($_.name+"/"+$_.Algorithm+" (if"+$_.Id+") had 25 zero hashrates reads, exiting loop") $logfile $false
                                 $_.FailedTimes++
                                 $_.status="Failed"
                                 #$_.Best= $false
@@ -1073,7 +1129,7 @@ while ($true) {
 
                 #Loop for reading key and wait
              
-                $KeyPressed=Timed-ReadKb 3 ('P','C','H','E','W','U','T','B','S')
+                $KeyPressed=Timed_ReadKb 3 ('P','C','H','E','W','U','T','B','S')
 
                 
 
@@ -1088,7 +1144,7 @@ while ($true) {
                     'U' {if ($Screen -eq "Wallets") {$WalletsUpdate=$null}}
                     'T' {if ($Screen -eq "Profits") {if ($ProfitsScreenLimit -eq $InitialProfitsScreenLimit) {$ProfitsScreenLimit=1000} else {$ProfitsScreenLimit=$InitialProfitsScreenLimit}}}
                     'B' {if ($Screen -eq "Profits") {if ($ShowBestMinersOnly -eq $true) {$ShowBestMinersOnly=$false} else {$ShowBestMinersOnly=$true}}}
-                    'S' {set-WindowSize 120 60}
+                    'S' {set_WindowSize 120 60}
                     }
 
                 if ($KeyPressed) {Clear-host;$repaintScreen=$true}
@@ -1101,15 +1157,20 @@ while ($true) {
                             } 
 
                 if ($ExitLoop) {break} #forced exit
+
+               ErrorsToLog $logfile
            
     
         }
+    
     
     Remove-variable miners
     Remove-variable pools
     Get-Job -State Completed | Remove-Job
     [GC]::Collect() #force garbage recollector for free memory
     $FirstTotalExecution =$False
+
+    
 }
 
 #-----------------------------------------------------------------------------------------------------------------------------------------
@@ -1119,6 +1180,9 @@ while ($true) {
 #-----------------------------------------------------------------------------------------------------------------------------------------
 
 
+
+Writelog "Program end" $logfile
+
 $ActiveMiners | ForEach-Object { Kill_ProcessId $_.Process.Id}
     
-Stop-Transcript
+#Stop-Transcript
