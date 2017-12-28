@@ -1,0 +1,39 @@
+{
+    "Path" : ".\\Bin\\Claymore-Dual\\EthDcrMiner64.exe",
+    "ExtractionPath" : ".\\Bin\\Claymore-Dual\\",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore-Dual-10.2.zip",
+    "Types" : ["AMD"],
+    "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL# -wd 1 -di #DEVICESCLAYMODE# -mport #APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
+    "API" : "Claymore",
+    "Wrap" : false,
+    "DualMining": true,
+    "DualMiningMainCoin": ["Ethereum","EthereumClassic"],
+    "DualMiningMainAlgo": "Ethash",
+    "PrelaunchCommand":"",
+    "Fee" : "0.02",
+    "Algorithms": [
+          {"Ethash_Blake2b_10":" -dcoin sc -dcri 10"},
+          {"Ethash_Blake2b_15":" -dcoin sc -dcri 15"},
+          {"Ethash_Blake2b_20":" -dcoin sc -dcri 20"},
+          {"Ethash_Blake2b_25":" -dcoin sc -dcri 25"},
+          {"Ethash_Blake2b_30":" -dcoin sc -dcri 30"},
+
+          {"Ethash_Blake14r_25":" -dcoin dcr -dcri 25"},
+          {"Ethash_Blake14r_30":" -dcoin dcr -dcri 30"},
+          {"Ethash_Blake14r_35":" -dcoin dcr -dcri 35"},
+          {"Ethash_Blake14r_40":" -dcoin dcr -dcri 40"},
+          {"Ethash_Blake14r_45":" -dcoin dcr -dcri 45"},
+
+          {"Ethash_Lbry_25":" -dcoin lbc -dcri 25"},
+          {"Ethash_Lbry_30":" -dcoin lbc -dcri 30"},
+          {"Ethash_Lbry_35":" -dcoin lbc -dcri 35"},
+          {"Ethash_Lbry_40":" -dcoin lbc -dcri 40"},
+          {"Ethash_Lbry_45":" -dcoin lbc -dcri 45"},
+
+          {"Ethash_Pascal_5":" -dcoin pasc -dcri 5"},
+          {"Ethash_Pascal_10":" -dcoin pasc -dcri 10"},
+          {"Ethash_Pascal_15":" -dcoin pasc -dcri 15"},
+          {"Ethash_Pascal_20":" -dcoin pasc -dcri 20"},
+          {"Ethash_Pascal_25":" -dcoin pasc -dcri 25"}
+    ]
+}

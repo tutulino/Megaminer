@@ -61,5 +61,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 remove-variable result

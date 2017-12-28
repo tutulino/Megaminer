@@ -3,12 +3,12 @@
     "ExtractionPath" : ".\\Bin\\cpu-xmrig\\",
     "Uri" : "https://github.com/xmrig/xmrig/releases/download/v2.4.3/xmrig-2.4.3-msvc-win64.zip",
     "Types" : ["CPU"],
-    "Arguments" : "--api-port #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --donate-level=1 #ALGORITHMPARAMETERS#",
-    "API" : "xmrminer",
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --donate-level 1 #ALGORITHMPARAMETERS#",
+    "API" : "XMRig",
     "Wrap" : false,
     "Dualmining": false,
-    "Fee": "0.01",
     "PrelaunchCommand":"",
+    "Fee" : 0.01,
     "Algorithms": [
         {"cryptonight": "-a cryptonight"},
         {"cryptonight-lite": "-a cryptonight-lite"}

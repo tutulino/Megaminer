@@ -3,12 +3,12 @@
     "ExtractionPath" : ".\\Bin\\AMD-mkxminer\\",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/mkxminer300.7z",
     "Types" : ["AMD"],
-    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-    "API" : "wrapper",
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# --exitsick --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API" : "warpper",
     "Wrap" : true,
     "Dualmining":false,
     "PrelaunchCommand":"",
     "Algorithms": [
-        {"lyra2v2":"--exitsick -I 23"}
+        {"lyra2v2":"-I 23"}
     ]
 }

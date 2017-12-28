@@ -1,0 +1,15 @@
+{
+    "Path" : ".\\Bin\\Claymore-Dual\\EthDcrMiner64.exe",
+    "ExtractionPath" : ".\\Bin\\Claymore-Dual\\",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore-Dual-10.2.zip",
+    "Types" : ["AMD"],
+    "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -wd 1 -mode 1  -di #DEVICESCLAYMODE# -mport #APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
+    "API" : "Claymore",
+    "Fee" : "0.01",
+    "Wrap" : false,
+    "DualMining": false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"Ethash":""}
+    ]
+}

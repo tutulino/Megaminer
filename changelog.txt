@@ -294,6 +294,153 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 4.8
 
 *Upgrade Dtsm-equihash to 0.5.6
+*Upgrade ccminer-tpruvot to 2.2.3
 *Excluded Blake2b for MPH due to different stratum protocol
 *Removed X13,X15,qubit algos: ASICS territory now.
 *Added option for set a exclusive nicehash wallet on config.txt
+*Added option for set local currency on config.txt (if not specified location is used)
+
+
+------------------------------------------------
+5.0 beta 1
+
+*GPUs grouping on config.txt, now you can group your GPUs, each group will be bechmarked and will run independent. This is ideal for mixed model/brand rigs.
+	- If you want to use your old config.txt you must remove GPUPLATFORM and TYPES parameters and add GPUGROUPS from new config file
+	
+*Added parameter Groupnames to command line to allow mining on some gpu only
+	
+*Merged Claymore dual miner files (one for each platform)
+
+
+*Removed prospector miner ¿someone is using?
+*Removed excavator miner ¿someone is using?
+*Removed pool API asistance on manual selection due to long waits.
+
+
+*THIS VERSION REQUIRES NEW CONFIG.TXT FILE, YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
+
+
+------------------------------------------------
+5.0 beta 2
+
+*Added CPU mining option	
+	- JayDdee miner 
+	- XMrig miner 
+*Added Pool Nanopool
+*Added CastXMR for Vega --> not tested, help needed
+*Added Claymore Cryptonote 9.7 (some people has problems with 10.2)
+*Removed Pool Nicehash until it works again
+*Yiimp Automatic mode come back (API seems responsive now)
+*Added more gpu info on current screen (Clocks, Pstate)
+*Enhaced ethash algo pools compatibility
+*Automatic Profit screen layout based on number of gpu groups
+*Removed dual mining with Pascal (Pasc), reason: dead coin
+*Added Start time in wallets screen
+*Added Mining mode in profits screen
+*Added best algo/miner combinations for NVIDIA Maxwell
+
+
+*Fixed: dualmining not working
+*Fixed: error while benchmark not getting automatic cancelation
+*Fixed: other small reported bugs
+*Fixed: incorrect platform id shown on GPUlist.bat
+
+
+
+*THIS VERSION REQUIRES 5.0 FORMAT CONFIG.TXT FILE, IF YOU UPGRADE FROM PREVIOUS RELEASE YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
+
+
+------------------------------------------------
+5.0 beta 3
+
+* Added automatic detection of gpu platform  --> For upgrade from 5.X you must delete this atribute from @@GPUGROUPS groups 
+* Added more algos for cpumining
+* Upgraded Claymore ETH to 10.2
+
+*Fixed: MPH and Suprnova not showing coin name/symbol on wallet screen
+*Fixed: MPH and Suprnova also checks wallets without APIKEY specified in config.txt
+*Fixed: -esm parameter missing on ClaymoreETH
+
+
+------------------------------------------------
+5.0 beta 4
+
+*Gpugroups now are optional
+*Eliminated screen Flickering
+*Reduced CPU usage 
+*Upgrades dtsm nvdia equihash miner to 0.5.7
+*Added SgminerHmq1725, SgminerHSR, SgminerBitcore,SgminerPhi (thx MikeBuzz)
+*Added CastXMR 0.8 for AMD
+*Reorganized and corrected config.txt, I expect more noob friendly (thx MikeBuzz & jbonifacio)
+*Added ClaymoreETH 10.2 for AMD
+*Renamed miners files for best type identification
+*New "additional miners" folder, this folder will contain miners deactivated but useful for some people, you must move file/s to miners folder to activate
+*Added "hidden" option to force miner apiport instead of dinamic port asignation (this option can be used only if one group of that type is defined on your rig). To use you must set "APIPORT"=PORT in miner file.
+*Added "hidden" key (S) for restore screen size
+*Reactivated MPH sia pool, this pool is not compatible with ccminer, Blake2b must not be added to any ccminer
+
+*Fixed: nsgminer not receiving rigth devices parameter 
+*Fixed: ewbf/dtsm not receiving rigth devices parameter 
+*Fixed: claymore miners not receiving rigth devices parameters
+*Fixed: dualmining not working on Whattomine virtual Pool
+*Fixed: wallets not showing on Whattomine virtual Pool
+*Fixed: duplicated wallets on wallet screen
+*Fixed: low difficulty share error for kecckak algo
+*Fixed: Unimining pool 24h mode not showing profit
+
+
+
+------------------------------------------------
+5.0
+
+
+*Better miners "closer" mechanism (safer and more agrresive)
+*Enhanced dynamic api port assignation, now is possible to run more than one instance of MM without ports conflicts.
+*Added Excavator for NVIDIA
+*Added Ccminer Nanashi
+*Added XMrig msvc for CPU
+*Updated ccminer klaust to 8.16
+*Updated claymore crypto to 11.0
+*Added AMD gpu info on current screen (experimental)
+
+*Fixed: pool not recovering from fail when multiple pools running
+*Fixed: xmrcast not selecting devices
+*Fixed: new zpool api profit units for keccak
+*Fixed: automatic log folder deletion not working
+*Fixed: ccminer polytmos not allowing more than one instance
+
+
+------------------------------------------------
+5.1
+
+
+*Added new config.txt parameter @@PERCENTTOSWITCH for indicates MM new miner/algo only will be launched if new profit is greater than actual profit in specified percent, also defined PERCENTTOSWITCH parameter to override config.txt value (for example for not PPLS pools like Nicehash)
+*Now miners are closed N seconds after new miners are opened, this minimize time machine is inactive for switching. Time is configured on config.txt @@TIMETOSWITCH variable 
+*Included Bminer for Nvidia equihash
+*Added confirmation prompt to ResetBechmark batch
+*Excavator moved to additional miners folder due to instability
+*Reactivated Nicehash pool
+*Upgraded compatibility for more than one instance of MM running
+
+
+*Fixed: incorrect workername for dualmining
+*Fixed: divisor for yiimp keccakc 
+*Fixed: new Italyiimp api profit units for keccak
+*Fixed: profit screen showing repeated algos for coin level pools like MPH
+*Fixed: error "Cannot add a member with the name "Name" because a member with that name already exists"
+
+
+
+
+-- NOTE: YOU MUST ADD THIS VARIABLES TO CONFIG.TXT OR CONFIGURE FROM NEW RELEASE WHERE THEY ARE INCLUDED--------------------
+@@PERCENTTOSWITCH=10
+@@DELAYCLOSEMINERS=20
+
+------------------------------------------------
+5.2
+
+
+Added Mkxminer to Additional Miners folder (you must add manually to miner folder if you want to try)
+Added screen info while interval is starting
+Redesigned log files
+

@@ -11,7 +11,7 @@ $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
-$AbbName = 'HRF'
+$AbbName = 'H.RFRY'
 $WalletMode = 'WALLET'
 $ApiUrl = 'http://pool.hashrefinery.com/api'
 $MineUrl = 'us.hashrefinery.com'
@@ -22,7 +22,7 @@ $Result = @()
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "Autoexchange to config.txt wallet, no registration required"
+        Disclaimer               = "Autoexchange to @@currency coin specified in config.txt, no registration required"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
@@ -69,7 +69,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Request | Get-Member -MemberType Properties | ForEach-Object {
 
         $coin = $Request | Select-Object -ExpandProperty $_.name
-        $Pool_Algo = get-algo-unified-name $coin.name
+        $Pool_Algo = get_algo_unified_name $coin.name
 
         $Divisor = 1000000
 
@@ -90,7 +90,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Host                  = $coin.name + "." + $MineUrl
                 Port                  = $coin.port
                 User                  = $CoinsWallets.get_item($Currency)
-                Pass                  = "c=$Currency,$WorkerName"
+                Pass                  = "c=$Currency,#WorkerName#"
                 Location              = $Location
                 SSL                   = $false
                 Symbol                = $null
@@ -99,7 +99,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                 PoolWorkers           = $coin.Workers
                 PoolHashRate          = $coin.hashrate
+                Blocks_24h            = $coin."24h_blocks"
                 WalletMode            = $WalletMode
+                WalletSymbol          = $currency
                 PoolName              = $Name
                 Fee                   = $coin.Fees / 100
             }
@@ -109,5 +111,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 remove-variable Result

@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\AMD-sgminerKeccakc\\",
     "Uri" : "https://www.creativechain.org/wp-content/uploads/2017/10/SG-Miner-CREA-Win.zip",
     "Types" : ["AMD"],
-    "Arguments" : "--api-listen --api-port #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",
     "Wrap" : false,
     "Dualmining":false,

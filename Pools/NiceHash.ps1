@@ -12,7 +12,6 @@ $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
 $AbbName = 'NH'
 $WalletMode = "WALLET"
-$ApiUrl = 'https://api.nicehash.com/api'
 $Result = @()
 
 
@@ -31,7 +30,7 @@ if ($Querymode -eq "info") {
 if ($Querymode -eq "wallet") {
     $Info.user = ($Info.user -split '\.')[0]
     try {
-        $http = $ApiUrl + "?method=stats.provider&addr=" + $Info.user
+        $http = "https://api.nicehash.com/api?method=stats.provider&addr=" + $Info.user
         $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats
     } catch {}
 
@@ -51,7 +50,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $retries = 1
     do {
         try {
-            $http = $ApiUrl + "?method=simplemultialgo.info"
+            $http = "https://api.nicehash.com/api?method=simplemultialgo.info"
             $Request = Invoke-WebRequest $http -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json |Select-Object -expand result |Select-Object -expand simplemultialgo
         } catch {start-sleep 2}
         $retries++
@@ -69,10 +68,19 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Request | Where-Object {$_.paying -gt 0 } | ForEach-Object {
 
-        $Algo = get-algo-unified-name ($_.name)
+        $Algo = get_algo_unified_name ($_.name)
         $AlgoOriginal = $_.name
 
         $Divisor = 1000000000
+
+        switch ($Algorithm) {
+            "Ethash" {$coin = "Ethereum"} #must force to allow dualmining Ethereum+?
+            "Lbry" {$coin = "Lbry"}
+            "Pascal" {$coin = "Pascal"}
+            "Blake2b" {$coin = "Siacoin"}
+            "Blake14r" {$coin = "Decred"}
+            default {$coin = $Algorithm}
+        }
 
         foreach ($location in $Locations) {
 
@@ -84,7 +92,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Protocol              = "stratum+tcp"
                 Host                  = $AlgoOriginal + "." + $location.NhLocation + ".nicehash.com"
                 Port                  = $_.port
-                User                  = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')}) + '.' + $Workername
+                User                  = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')}) + '.' + "#Workername#"
                 Pass                  = "x"
                 Location              = $location.MMLocation
                 SSL                   = $false
@@ -94,9 +102,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                 PoolName              = $Name
                 WalletMode            = $WalletMode
+                WalletSymbol          = "BTC"
                 OriginalAlgorithm     = $AlgoOriginal
                 OriginalCoin          = $coin
                 Fee                   = 0.04
+                EthStMode             = 3
 
             }
         }
@@ -105,5 +115,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 Remove-variable Result

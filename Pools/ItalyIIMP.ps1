@@ -26,6 +26,7 @@ if ($Querymode -eq "info") {
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
+        ApiData                  = $True
         AbbName                  = $AbbName
         WalletMode               = $WalletMode
     }
@@ -69,7 +70,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Request | Get-Member -MemberType Properties | ForEach-Object {
 
         $coin = $Request | Select-Object -ExpandProperty $_.name
-        $Pool_Algo = get-algo-unified-name $coin.name
+        $Pool_Algo = get_algo_unified_name $coin.name
 
         $Divisor = 1000000
 
@@ -96,7 +97,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Host                  = $MineUrl
                 Port                  = $coin.port
                 User                  = $CoinsWallets.get_item($Currency)
-                Pass                  = "c=$Currency,$WorkerName"
+                Pass                  = "c=$Currency,#WorkerName#"
                 Location              = $Location
                 SSL                   = $false
                 Symbol                = $null
@@ -106,6 +107,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 PoolWorkers           = $coin.Workers
                 PoolHashRate          = $coin.hashrate
                 WalletMode            = $WalletMode
+                WalletSymbol          = $Currency
                 PoolName              = $Name
                 Fee                   = $coin.Fees / 100
             }
@@ -115,5 +117,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 remove-variable Result

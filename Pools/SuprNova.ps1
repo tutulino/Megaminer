@@ -145,13 +145,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             PoolHashRate          = $null
             PoolName              = $Name
             WalletMode            = $WalletMode
+            WalletSymbol          = $_.symbol
             OriginalAlgorithm     = $_.Algo
             OriginalCoin          = $_.Coin
             Fee                   = 0.01
+            EthStMode             = 3
         }
     }
     Remove-Variable Pools
 }
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 Remove-Variable Result

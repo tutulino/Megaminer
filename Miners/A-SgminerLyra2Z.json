@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\AMD-sgminerLyra2z\\",
     "Uri" : "https://github.com/djm34/sgminer-msvc2015/releases/download/v0.2-pre/kernel_and_binary.rar",
     "Types" : ["AMD"],
-    "Arguments" : "--api-listen --api-port #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",
     "Wrap" : false,
     "Dualmining":false,

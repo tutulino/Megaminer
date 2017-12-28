@@ -1,0 +1,22 @@
+{
+"Path" : ".\\Bin\\Excavator\\Excavator.exe",
+"ExtractionPath" : ".\\Bin\\Excavator\\",
+"Uri" : "https://github.com/nicehash/excavator/releases/download/v1.3.7a/excavator_v1.3.7a_NVIDIA_Win64.zip",
+"Types" : ["NVIDIA"],
+"GenerateConfigFile" : ".\\Bin\\Excavator\\#GROUPNAME#.json",
+"PatternConfigFile": ".\\Patterns\\excavatorPattern.txt",
+"Arguments" : "-p #APIPORT# -c #GROUPNAME#.json -na ",
+"API" : "excavator",
+"Wrap" : false,
+"DualMining": false,
+"PrelaunchCommand":"",
+"Fee":"0",
+"Algorithms": [
+            {"Lyra2v2":"lyra2rev2"}
+            ]
+
+}
+
+
+  
+ 

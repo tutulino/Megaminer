@@ -1,0 +1,14 @@
+{
+    "Path" : ".\\Bin\\AMD-sgminerX17\\sgminer-x17-windows\\sgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-sgminerX17\\",
+    "Uri" : "http://cryptomining-blog.com/wp-content/download/sgminer-x17-windows.zip",
+    "Types" : ["AMD"],
+    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API" : "Xgminer",
+    "Wrap" : false,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"x17":"-k x17 -I 18"}
+    ]
+}

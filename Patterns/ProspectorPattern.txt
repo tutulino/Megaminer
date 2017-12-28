@@ -4,21 +4,9 @@ gpu-coin = "#ALGORITHMPARAMETERS#"
 url = "#PROTOCOL#://#SERVER#:#PORT#"
 username = "#LOGIN#"
 password = "#PASSWORD#"
-[gpus.#GpuPlatform#-0]
+#FOR_EACH_GPU#
+[gpus.#GpuPlatform#-#GPUID#]
 enabled = true
-[gpus.#GpuPlatform#-1]
-enabled = true
-[gpus.#GpuPlatform#-2]
-enabled = true
-[gpus.#GpuPlatform#-3]
-enabled = true
-[gpus.#GpuPlatform#-4]
-enabled = true
-[gpus.#GpuPlatform#-5]
-enabled = true
-[gpus.#GpuPlatform#-6]
-enabled = true
-[gpus.#GpuPlatform#-7]
-enabled = true
+#END_FOR_EACH_GPU#
 [cpu]
 enabled = false

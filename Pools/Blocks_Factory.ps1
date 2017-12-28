@@ -48,7 +48,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Protocol              = "stratum+tcp"
             Host                  = $_.Server
             Port                  = $_.Port
-            User                  = "$Username.$WorkerName"
+            User                  = "$Username.#WorkerName#"
             Pass                  = "x"
             Location              = $_.Location
             SSL                   = $false
@@ -64,5 +64,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 remove-variable result

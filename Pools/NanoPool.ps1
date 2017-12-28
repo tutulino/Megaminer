@@ -20,7 +20,7 @@ if ($Querymode -eq "info") {
         Disclaimer               = "No registration, No autoexchange, need wallet for each coin on config.txt"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
-        ActiveOnAutomatic24hMode = $ActiveOnAutomaticMode
+        ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
         ApiData                  = $true
         AbbName                  = $AbbName
         WalletMode               = $WalletMode
@@ -112,5 +112,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     Remove-Variable Locations
 }
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 Remove-Variable Result

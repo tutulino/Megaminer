@@ -3,13 +3,14 @@
     "ExtractionPath" : ".\\Bin\\GatelessGate\\",
     "Uri" : "https://github.com/zawawawa/gatelessgate/releases/download/v0.1.3-pre6b/gatelessgate-0.1.3-pre6b-win64.zip",
     "Types" : ["AMD"],
-    "Arguments" : "--api-listen --api-port #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",
     "Wrap" : false,
     "Dualmining":false,
     "PrelaunchCommand":"",
     "Algorithms": [
             {"neoscrypt":"-k neoscrypt -g 1 -w 256 -I 16"},
-            {"cryptonight":"-k cryptonight -g 2 -w 8 --rawintensity 1024"}
+            {"cryptonight":"-k cryptonight -g 2 -w 8 --rawintensity 1024"},
+            {"Nist5":"-k Nist5 --gpu-threads 2 --worksize 256 -I 20"}
     ]
 }

@@ -16,6 +16,8 @@ YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
 
 NICEHASH-- Anonymous, autoexchange to BTC
 
+NANOPOOL -- Anonymous, no autoexchange, must set a wallet for each coin
+
 FLYPOOL -- Anonymous, manual mode only
 
 UNIMINING -- No registration, No autoexchange, need wallet for each coin on config.txt
@@ -25,45 +27,33 @@ ITALYIIMP -- Anonymous, autoexchange to selected coin in config.txt
 WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to us
 
 
----- ALGOS/COINS SUPORTED (NVIDIA) -------------------------------
-
-**Mining Pool Hub, Yiimp, ZPOOL, AhashPool, Unimining, Italyiimp Nicehash and Hash Refinery (must be suported by pool)
-   skunk, jha, Blakecoin, c11, Groestl, yescrypt, veltor, blake, equihash, skein, scrypt, sib, neoscrypt, lbry, Myriad-Groestl, Lyra2v2, 
-   Keccak, blake2s,x11evo,sia, vanilla, timetravel, tribus, Qubit , X13, x17, lyra2z, hmq1725, pascal, bitcore, ethash, 
-   cryptonight, Nist5, quark, blake14r,x11gost, ethash|blake2s, ethash|lbry, ethash|pascal, ethash|blake14r, PHI, HSR
-
-**SUPRNOVA
-   DECRED(DCR), DIGIBYTE-SKEIN(DGB), HUSH(HUSH), LIBRARY(LBRY), MONACOIN (MONA), SIGNATUM(SIGT), ZCASH(ZEC),
-   ZENCASH (ZEN), ZCLASSIC(ZCL), KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB), SIBCOIN (SIB) ,UBIQ (UBQ), EXPANSE (EXP),
-   BITSEND (BSD),ELECTRONEUM (ETN),SMARTCASH (SMART),BITCOINZ (BTCZ),BITCOIN GOLD (BCG)
-
-
-**BLOCKSFACTORY
-   DIGIBYTE-SKEIN(DGB), FEATHERCOIN(FTC), PHOENIXCOIN(PXC), ORBITCOIN(ORB), GUNCOIN(GUN)
-
-**FLYPOOL
-   ZCASH
-
-
-**WHATTOMINE (virtual)
-   DECRED(DCR),  HUSH(HUSH), LBRY(LBRY), MONACOIN (MONA), ZCASH(ZEC), ZENCASH (ZEN), ZCOIN(XZC), ZCLASSIC(ZCL), VERTCOIN (VTC)
-   KOMODO(KMD), MONERO(XMR), DIGIBYTE-GROESTL(DGB),SIBCOIN (SIB),UBIQ (UBQ), EXPANSE (EXP), ETHEREUM CLASSIC (ETC), MYRIAD-GROESTL (XMY), MUSICOIN (MUSIC),
-   ETHEREUM+DECRED(ETH+DCR),ETHEREUM+LBRY(ETH+LBRY),BITCOINZ (BTCZ)
-
-
-**CROSSED BETWEEN POOLS
-    ETHEREUM+DECRED, ETHEREUM+LBRY, ETHEREUM+PASCAL, ETHEREUM+SIACOIN
-
 
 ---- INSTRUCTIONS ----------------------------------------------
 
-0. Download latest Release from github
+0. Download source code from latest Release from github (you dont need executable file)
 
 1. Edit CONFIG.TXT file before mining
 
-2. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt
+2. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt, you can use this parameters on your batch
+    - PoolsName = separated comma string of pools to run 
+	- MiningMode = Mode to check profit, note not all pools suport all modes (Automatic/Automatic24h/Manual). If manual mode is selected one coin must be passed on Coinsname parameter
+	- Algorithm = separated comma string of algorithms to run (optional)
+    - CoinsName = separated comma string of Coins to run (optional)
+    - Groupnames = Groups of gpu/cpu to run (based on your defined groups in config.txt @@Gpugroups section) (optional)
 
-3. Firt time, software will be donwloaded from miners github repositories and your system will be benchmarked
+3. Firt time, software will be donwloaded from miners github repositories and 
+	- As usual, some miners are detected as virus by Windows Defender, to avoid this you must set your instalation directory as excluded on Windows Defender 
+
+4. Your system will be benchmarked (long process)
+	- After benchmark check profits are razonables, sometimes miner return hashrates peaks. If you need repeat benchmark delete file from stats folder
+
+5. Make profit
+	- Except Nicehash (where you sell your power to indicated price), pools always overstimated profit, you must understand profit column as a way to get best algoritmh. Your real profit will be lower.
+
+6. Tuning (optional)
+	- you can edit miners folders content to delete miners or to assign/unassign algos to miners. 
+	- you can edit pools folders content to delete pools
+	- for advanced users, you can create miners or pools if are based on existing one.
 
 
 
@@ -73,13 +63,11 @@ Default donation is 5 minutes each day on automatic pools, you can change it at 
 ---- UPGRADE PROCEDURE ------------------------------------
 
 Safest way is download new software and copy from old version "stats" folders and "config.txt" file.
-If new verson haven´t miners update you can copy "bin" folder
-If there is a new version on some miner is recomended delete hasrate.txt files of that miner on miners folder to force benchmark again.
+If new verson has no miners update you can copy "bin" folder
+If there is a new miner version is recomended delete miner_algo_hashrate.txt files on miners folder to force benchmark again.
 
 
--------NEW FEATURES OVER NEMO AND AARONSACE SOFTWARE -----------
-
-In this software you can get same features than Nemosminer (Zpool) and Multipoolminer (MiningPoolHub), and also:
+-------NEW FEATURES OVER BASE SOFTWARE -----------
 
 -Menus sytem to choose coin/algo/pool and start mining
 
@@ -87,9 +75,9 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. 
 
--Can mine on any of this pools (or all at same time): Ahashpool, Nicehash, Zpool, Unimining, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
+-Can mine on any of this pools (or all at same time): Ahashpool, Nanopool, YIIMP, Nicehash, Zpool, Unimining, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
 
--Can mine on Suprnova,Nicehash, MPH, YIIMP, Flypool or BlocksFactory pool without autochange or profit calculation, manual coin selection
+-Can mine on Suprnova,Nicehash, MPH, Flypool or BlocksFactory pool without autochange or profit calculation, manual coin selection
 
 -Fastest miner for each algo/coin preselected for Nvidia Pascal (08/01/2017) on all pools.
 
@@ -117,21 +105,23 @@ In this software you can get same features than Nemosminer (Zpool) and Multipool
 
 -Miners and Pools fees are included in profit calculation
 
+-For mixed rigs (or for testing purpose on same cards rigs) you can group your cards allowing each group work at its best algo and difficulty
+
 
 
 ----- DISCLAIMER ---- ------------------------------------------
 
 Only tested on nvidia pascal (10X0) , sorry I haven't AMD card for testing purposes.
 
-Only for Windows (at this moment)
+Only for Windows
 
 Miners for AMD are included but not tested , ¡¡¡ AMD TESTERS NEEDED !!!
 
 Core for auto change pools is forked from AaronSace MultipoolMiner, you can read info at https://github.com/aaronsace/MultiPoolMiner
 
-Profit calculations are estimates based on info provided by Pools/Whattomine for your bechmarked hashrate extrapolated to 24h. No real profit warranty.
+Profit calculations are estimates based on info provided by Pools/Whattomine for your bechmarked hashrate extrapolated to 24h. No real profit warranty except nicehash, where you are selling your power at indicated price.
 
-Pools/Whattomine statistics are based on past (luck, difficulty, exchange-rate, pool hashrte, network hashrate, etc), it can be not very accurate.
+Pools or Whattomine statistics are based on past (luck, difficulty, exchange-rate, pool hashrte, network hashrate, etc), it can be not very accurate, usually expected profit is near 50% pool indicates.
 
 Local Currency exchange rate to BTC is taken from Coindesk, Local currency profit can vary from whattomine revenue (instant), BTC revenue must be exact.
 
@@ -139,7 +129,7 @@ Local Currency exchange rate to BTC is taken from Coindesk, Local currency profi
 Based 70% on aaronsace, 30% is mine (aprox.) Donations to
 
 *Aaronsace - 1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH
-*Me - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+*Tutulino (Me)  - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 
 
 

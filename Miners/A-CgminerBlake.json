@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\AMD-CgminerBlake\\",
     "Uri" : "http://cryptomining-blog.com/wp-content/download/cgminer-3.7.2-blakecoin.rar",
     "Types" : ["AMD"],
-    "Arguments" : "--api-listen --api-port #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",
     "Wrap" : false,
     "Dualmining":false,

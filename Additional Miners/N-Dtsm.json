@@ -1,0 +1,17 @@
+{
+  
+  "Path": ".\\Bin\\zm_0.5.7_win\\zm.exe",
+  "ExtractionPath": ".\\Bin\\",
+  "Uri": "https://github.com/tutulino/Software/releases/download/0/zm_0.5.7_win.zip",
+  "Types": ["NVIDIA"],
+  "Arguments":  "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --dev #DEVICESETHMODE# --telemetry=127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
+  "API":  "DTSM",
+  "Wrap":  false,
+  "Dualmining":false,
+  "Fee":"0.02",
+  "PrelaunchCommand":"",
+  "Algorithms": [
+                     {"Equihash":""}
+                   ]
+
+}

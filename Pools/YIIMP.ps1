@@ -81,9 +81,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Request | Get-Member -MemberType Properties | ForEach-Object {
 
         $coin = $Request | Select-Object -ExpandProperty $_.name
-        $Pool_Algo = get-algo-unified-name $coin.algo
+        $Pool_Algo = get_algo_unified_name $coin.algo
 
-        $Pool_coin = get-coin-unified-name $coin.name
+        $Pool_coin = get_coin_unified_name $coin.name
         $Pool_symbol = $_.name
 
         $Divisor = 1000000
@@ -105,7 +105,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Host                  = $MineUrl
             Port                  = $coin.port
             User                  = $CoinsWallets.get_item($Pool_symbol)
-            Pass                  = "c=$Pool_symbol,ID=$WorkerName"
+            Pass                  = "c=$Pool_symbol,ID=#WorkerName#"
             Location              = $Location
             SSL                   = $false
             Symbol                = $Pool_Symbol
@@ -116,6 +116,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             PoolHashRate          = $coin.hashrate
             Blocks_24h            = $coin.'24h_blocks'
             WalletMode            = $WalletMode
+            Walletsymbol          = $Pool_Symbol
             PoolName              = $Name
             Fee                   = $Request2.($coin.algo).Fees / 100
         }
@@ -125,5 +126,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 remove-variable Result

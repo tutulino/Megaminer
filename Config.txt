@@ -1,30 +1,37 @@
--- Only AMD and CPU tested, NVIDIA should work, but untested (for mixed rig set AMD,NVIDIA)
-@@TYPE=AMD,CPU
 
--- Gpu Platform, some miners (sgminer and prospector) needs specify gpu platform, usually this value is 0,1 (you must try, no automatic detection)
-@@GPUPLATFORM=0
+-- **********************************************************************************************************
+-- ********************                                                                  ********************
+-- ********************                           BASIC OPTIONS                          ********************
+-- ********************                                                                  ********************
+-- **********************************************************************************************************
 
--- ID for your rig
+-- Your rig ID
 -- if not defined, will use your computername
 -- @@WORKERNAME=fractal
 
--- Prefered Currency you will be pay, only for anonymous pools with autoexchange (Zpool, HR...),
--- must set wallet for this currency on "Wallets Section"
+-- Preferred currency you want to receive. Only used for anonymous pools with auto exchange such as Zpool, HR, ...
+-- You must set your wallet for this currency within the Wallets Section found in the Advanced Options section.
+
 @@CURRENCY=LTC
 
--- Pool username for not anonymous pools like SprNova, BlocksFactory or MiningPoolHub
-@@USERNAME=ffwd
+-- Local currency shown within the profits screen (USD,EUR,GBP). Any supported coin symbol from CoinDesk
 
--- Location of your rig: EUROPE/US/ASIA  (some pool may have no desired location, US will be selected then)
-@@LOCATION=EUROPE
-
--- Local Currency showed on profits screen (USD,EUR,GBP). Any supported coin symbol from CoinDesk
 @@LOCALCURRENCY=USD
 
--- WALLETS, for autoexchange pools you only need to set a wallet for prefered currency (@@currency),
--- other pools without autoexchange like Yiimp need as login a wallet of same coin you are mining,
--- you can add wallets with pattern @@WALLET_XXX (XXX=currency symbol)
--- For custom NiceHash wallet use @@WALLET_BTC_NICE, otherwise @@WALLET_BTC will be used
+-- Location of your rig: EUROPE/US/ASIA (by default "US" will be used for pools that don't require or support this setting)
+
+@@LOCATION=EUROPE
+
+-- Pool user name for non-anonymous pools such as SprNova, BlocksFactory, or MiningPoolHub
+-- You can ignore this setting if you're not using these types of pools
+
+@@USERNAME=ffwd
+
+-- WALLETS for auto exchange pools. You only need set a wallet for your preferred currency (@@currency).
+-- Other pools without an auto exchange, like Yiimp, will need a wallet defined for the same coin you are mining.
+-- You can add wallets using pattern  @@WALLET_XXX=YYYYY (where XXX=currency symbol; YYYYY=your wallet).
+-- For Nicehash if a @@WALLET_BTC_NICE=XXXXXXX is found it will be used, if not @@WALLET_BTC will be used.
+-- For some coins, such as Electroneum, you will need a Payment ID. Add it after your address separated by a dot.
 
 @@WALLET_BTC_NICE=3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL
 @@WALLET_BTC=3FzmW9JMhgmRwipKkNnphxG73VPQMsYsN6
@@ -34,29 +41,58 @@
 
 @@WALLET_PASL=3GhhbotqzjTq9mpXabpzqw4WLCZVp2SFG2CVs6Jfox4t3jCBgvAq92wiTVUEE5mCniN2zNDwhEZteq8QTk3cU7hHK6H6Jr3Aecpm1c
 
--- API Keys, Non Anonymous pools (Suprnova, MPH) requires api key to get wallets info (format @@APIKEY_NAMEOFPOOL=XXXXXXXXXX)
+-- Number of minutes to mine as a donation each day (NOT PERCENT)
+
+@@DONATE=10
+
+-- Use your cpu to mine: ENABLED = yes, DISABLED = no (you can start cpu alone mining also using -groupnames parameter in batch file)
+
+@@CPUMINING=ENABLED
+
+-- **********************************************************************************************************
+-- ********************                                                                  ********************
+-- ********************   ADVANCED OPTIONS (don't change unless you know what they do)   ********************
+-- ********************                                                                  ********************
+-- **********************************************************************************************************
+
+
+-- Profit recheck interval time (in seconds - less than 600 not recommended)
+-- This interval recalculates and selects the most profitable algorithm
+
+@@INTERVAL=600
+
+-- Benchmarks interval time (less than 200 not recommended for GPU, 300 for CPU)
+
+@@BENCHMARKTIME=200
+
+-- Screen to be shown at script start-up (WALLETS/CURRENT/HISTORY/PROFITS)
+
+@@STARTSCREEN=PROFITS
+
+
+-- Percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit in specified percent (example: 10 means that new miner/algo must be 10% more profitable than actual to be launched)
+
+@@PERCENTTOSWITCH=5
+
+-- seconds to delay closing of old miners when new miner is selected as more profitable, this minimizes inactive time while switch. For benchmarking interval this value is automatically zero.
+
+@@DELAYCLOSEMINERS=10
+
+
+-- [OPTIONAL] API Keys
+-- Some non-anonymous pools, such as Suprnova and MPH, require API keys to obtain wallet details.
+-- For example @@APIKEY_MINING_POOL_HUB=a04e6sx30b38f73878ae40775f70efseff6582e8ec37600215755487ccbd36b4510b4
+-- FORMAT: @@APIKEY_NAMEOFPOOL=XXXXXXXXXX) [optional]
 @@APIKEY_MINING_POOL_HUB=903106f05fddd0222af24e20312d14dff08ccbb6914855d5fe552c8c88cb3425
 @@APIKEY_SUPRNOVA=1ac1daa25868186cb8fc1ac9ce1e259949cb681332ac0faba20c40fddc05e98a
 
--- Time in seconds for recheck profit and select more profitable algorithm (less than 600 not recommended)
-@@INTERVAL=600
-
--- Benchmarks interval time (less than 200 not recommended)
-@@BENCHMARKTIME=200
-
--- Enabled or disabled call to apis (pools and exchanges) to help on manual coin selection,
--- some pools has slow response and will delay user prompt
-@@MANUALMININGAPIUSE=TRUE
-
--- Screen to be shown at start of program (WALLETS/CURRENT/HISTORY/PROFITS)
-@@STARTSCREEN=PROFITS
+-- [OPTIONAL] GPU Groups
+-- You can group your cards as you want. It's recommended to create a group for each card model in your rig, each group will be benchmarked and run separately (you can identify your GPU id's by launching GpuList.bat)
+-- If you change any of your group names you must delete the stats folder contents and re-run benchmarks.
+-- Type must be NVIDIA or AMD, if you don't set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
+-- Example for rig with 3 NVIDIA gpu, each gpu alone @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0"}]
+-- Example for rig with 5 NVIDIA and 2 AMD @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1"} ]
+@@GPUGROUPS=[{"GroupName" : "RX480","Type":"AMD","Gpus":"0"} ]
 
 -- Coin IDs from http://whattomine.com/calculators, separated by ",". 192 - Aeon, 210 - Zero, 213 - ETN
--- @@CUSTOM_WTM_COINS=210,177
-
--- Dual Mining Ratio reduces calculated profitability due to higher power usage.
--- Set 0 to ignore (free electricity?), real ratio for AMD is normally between 20 to 30 (%)
-@@DUAL_MINING_RATIO=0
-
--- Number of minutes each day (NOT PERCENT) of donation
-@@DONATE=10
+@@CUSTOM_WTM_COINS=210,192

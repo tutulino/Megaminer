@@ -1,0 +1,19 @@
+{
+  "Path" : ".\\Bin\\NVIDIA-ccminerlyra2z\\ccminer_cuda9.exe",
+  "ExtractionPath" : ".\\Bin\\NVIDIA-ccminerlyra2z\\",
+  "Uri" : "https://github.com/djm34/ccminer-msvc2015/releases/download/v0.2.1/ccminer_cuda9.exe",
+  "Types" : ["NVIDIA"],
+  "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+  "API" : "Ccminer",
+  "Wrap" : false,
+  "Dualmining":false,
+  "PrelaunchCommand":"",
+  "Algorithms": [
+                {"lyra2z":"-a lyra2z"}
+                
+                 
+                  
+                ]
+  
+  }
+  

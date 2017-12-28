@@ -41,7 +41,7 @@ if ($Querymode -eq "info") {
 if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
     if ($PoolRealName -ne $null) {
         $Info.poolname = $PoolRealName
-        $result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $Info.PoolName -Info $Info   | select-object Pool, currency, balance
+        $result = Get_Pools -Querymode $info.WalletMode -PoolsFilterList $Info.PoolName -Info $Info   | select-object Pool, currency, balance
     }
 }
 
@@ -75,10 +75,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $WTMResponse.psobject.properties.name | ForEach-Object {
 
-        $WTMResponse.($_).Algorithm = get-algo-unified-name ($WTMResponse.($_).Algorithm)
+        $WTMResponse.($_).Algorithm = get_algo_unified_name ($WTMResponse.($_).Algorithm)
 
         #not necessary delete bad names/algo, only necessary add correct name/algo
-        $NewCoinName = get-coin-unified-name $_
+        $NewCoinName = get_coin_unified_name $_
         if ($NewCoinName -ne $_) {
             $TempCoin = $WTMResponse.($_)
             $WTMResponse |add-member $NewCoinName $TempCoin
@@ -105,9 +105,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             try { $WTMCoinResponse = (Get-Content -Path ".\Cache\wtm-$c.json") | ConvertFrom-Json } catch { Write-Host "No Cache. Skipping" }
         }
 
-        $WTMCoinResponse.algorithm = get-algo-unified-name ($WTMCoinResponse.algorithm)
+        $WTMCoinResponse.algorithm = get_algo_unified_name ($WTMCoinResponse.algorithm)
         #not necessary delete bad names/algo, only necessary add correct name/algo
-        $NewCoinName = get-coin-unified-name $WTMCoinResponse.name
+        $NewCoinName = get_coin_unified_name $WTMCoinResponse.name
         if ($NewCoinName -ne $WTMCoinResponse.name) {
             $TempCoin = $WTMCoinResponse
             $WTMCoinResponse | add-member $NewCoinName $TempCoin
@@ -128,7 +128,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     )
     foreach ($Pool in $PoolsList) {
 
-        $HPools = Get-Pools -Querymode "core" -PoolsFilterList $Pool -location $Info.Location
+        $HPools = get_pools -Querymode "core" -PoolsFilterList $Pool -location $Info.Location
 
         $HPools | ForEach-Object {
 
@@ -148,6 +148,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                     protocol          = $_.Protocol
                     Abbname           = $_.Abbname
                     WalletMode        = $_.WalletMode
+                    EthStMode         = $_.EthStMode
                     WalletSymbol      = $_.WalletSymbol
                     PoolName          = $_.PoolName
                     OriginalAlgorithm = $_.OriginalAlgorithm
@@ -160,7 +161,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     #add estimation data to selected pools
 
     $Pools |ForEach-Object {
-        $WTMFactor = get-WhattomineFactor ($_.Algo)
+        $WTMFactor = get_WhattomineFactor ($_.Algo)
         if ($WTMFactor -ne $null) {
             $Estimate = [Double]($WTMResponse.($_.coin).btc_revenue / $WTMFactor)
             $Estimate24h = [Double]($WTMResponse.($_.coin).btc_revenue24 / $WTMFactor)
@@ -169,8 +170,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Result += [PSCustomObject]@{
             Algorithm             = $_.Algo
             Info                  = $_.Coin
-            Price                 = $Estimate * 0.95
-            Price24h              = $Estimate24h * 0.95
+            Price                 = $Estimate
+            Price24h              = $Estimate24h
             Protocol              = $_.Protocol
             Host                  = $_.Server
             Port                  = $_.Port
@@ -184,9 +185,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
             PoolName              = $_.PoolName
             WalletMode            = $_.WalletMode
+            WalletSymbol          = $_.WalletSymbol
             OriginalAlgorithm     = $_.OriginalAlgorithm
             OriginalCoin          = $_.OriginalCoin
             Fee                   = $_.Fee
+            EthStMode             = $_.EthStMode
         }
     }
     remove-variable WTMResponse
@@ -197,5 +200,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     remove-variable HPools
 }
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 remove-variable Result

@@ -84,8 +84,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0 -and $_.time_since_last_block -lt 86400} | ForEach-Object {
 
-        $MiningPoolHub_Algorithm = get-algo-unified-name $_.algo
-        $MiningPoolHub_Coin = get-coin-unified-name $_.coin_name
+        $MiningPoolHub_Algorithm = get_algo_unified_name $_.algo
+        $MiningPoolHub_Coin = get_coin_unified_name $_.coin_name
 
         $MiningPoolHub_OriginalAlgorithm = $_.algo
         $MiningPoolHub_OriginalCoin = $_.coin_name
@@ -108,19 +108,21 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Protocol              = "stratum+tcp"
                 Host                  = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
                 Port                  = $MiningPoolHub_Port
-                User                  = "$UserName.$WorkerName"
+                User                  = "$UserName.#WorkerName#"
                 Pass                  = "x"
                 Location              = $Location
                 SSL                   = $false
-                Symbol                = get-coin-symbol -Coin $MiningPoolHub_Coin
+                Symbol                = get_coin_symbol -Coin $MiningPoolHub_Coin
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                 WalletMode            = $WalletMode
+                WalletSymbol          = $_.coin_name
                 PoolName              = $Name
                 OriginalAlgorithm     = $MiningPoolHub_OriginalAlgorithm
                 OriginalCoin          = $MiningPoolHub_OriginalCoin
                 Fee                   = 0.009
+                EthStMode             = 3
             }
         }
     }
@@ -132,5 +134,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 #****************************************************************************************************************************************************************************************
 
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 remove-variable Result

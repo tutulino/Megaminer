@@ -1,0 +1,15 @@
+{
+    "Path" : ".\\Bin\\AMD-Claymore-Crypto97\\NsGpuCNMiner.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-Claymore-Crypto",
+    "Uri" : "https://github.com/tutulino/Claymore-Dual/releases/download/10.0/Claymore.CryptoNote.GPU.Miner.v9.7.Beta.-.POOL.rar",
+    "Types" : ["AMD"],
+    "Arguments" : "-o stratum+tcp://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -allpools 1  -di #DEVICESCLAYMODE# -mport #APIPORT# #ALGORITHMPARAMETERS#",
+    "API" : "ClaymoreV2",
+    "Fee" : "0.015",
+    "Wrap" : false,
+    "DualMining": false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+        {"Cryptonight":""}
+    ]
+}

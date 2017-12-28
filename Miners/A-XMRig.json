@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\AMD-xmrig\\",
     "Uri" : "https://github.com/xmrig/xmrig-amd/releases/download/v2.4.3-beta2/xmrig-amd-2.4.3-beta2-win64.zip",
     "Types" : ["AMD"],
-    "Arguments" : "--api-port #APIPORT# --opencl-platform=#GPUPLATFORM# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --donate-level=1 #ALGORITHMPARAMETERS#",
+    "Arguments" : "--api-port #APIPORT# --opencl-platform=#GPUPLATFORM# --opencl-devices=#DEVICES# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --donate-level=1 #ALGORITHMPARAMETERS#",
     "API" : "xmrminer",
     "Wrap" : false,
     "Dualmining":false,
