@@ -269,7 +269,7 @@ while ($true) {
         {
         $Pools=Get_Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $Location -AlgoFilterList $Algorithm
         if  ($Pools.Count -eq 0) {
-                $Msg="NO POOLS!....retry in 10 sec"+'/n'
+                $Msg="NO POOLS!....retry in 10 sec"+'\n'
                 $Msg+="REMEMBER, IF YOUR ARE MINING ON ANONYMOUS WITHOUT AUTOEXCHANGE POOLS LIKE YIIMP, NANOPOOL, ETC. YOU MUST SET WALLET FOR AT LEAST ONE POOL COIN IN CONFIG.TXT"
                 WriteLog $msg $logFile $true
 
@@ -1023,7 +1023,7 @@ while ($true) {
 
 
                             $Pools  | where-object WalletMode -eq 'NONE' | Select-Object PoolName -unique | ForEach-Object {
-                                "NO EXISTS API FOR POOL "+$_.PoolName+" - NO WALLETS CHECK" | Out-host
+                                "NO API FOR POOL "+$_.PoolName+" - NO WALLETS CHECK" | Out-host
                                 }
 
                             }
