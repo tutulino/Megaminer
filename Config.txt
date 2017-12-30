@@ -92,7 +92,7 @@
 -- Type must be NVIDIA or AMD, if you don't set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
 -- Example for rig with 3 NVIDIA gpu, each gpu alone @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0"}]
 -- Example for rig with 5 NVIDIA and 2 AMD @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1"} ]
-@@GPUGROUPS=[{"GroupName" : "RX480","Type":"AMD","Gpus":"0"} ]
+-- @@GPUGROUPS=[{"GroupName" : "RX480","Type":"AMD","Gpus":"0"} ]
 
 -- Coin IDs from http://whattomine.com/calculators, separated by ",". 192 - Aeon, 210 - Zero, 213 - ETN
 @@CUSTOM_WTM_COINS=210,192
