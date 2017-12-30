@@ -73,15 +73,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         $Divisor = 1000000000
 
-        switch ($Algorithm) {
-            "Ethash" {$coin = "Ethereum"} #must force to allow dualmining Ethereum+?
-            "Lbry" {$coin = "Lbry"}
-            "Pascal" {$coin = "Pascal"}
-            "Blake2b" {$coin = "Siacoin"}
-            "Blake14r" {$coin = "Decred"}
-            default {$coin = $Algorithm}
-        }
-
         foreach ($location in $Locations) {
 
             $Result += [PSCustomObject]@{
