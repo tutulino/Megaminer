@@ -1,4 +1,4 @@
-﻿
+
 Add-Type -Path .\OpenCL\*.cs
 
 
@@ -826,7 +826,7 @@ function ConvertTo_Hash {
 
 
     $Return=switch ([math]::truncate([math]::log($Hash, [Math]::Pow(1000, 1)))) {
-
+          "-Infinity" {"0 h"}
           0 {"{0:n1} h" -f ($Hash / [Math]::Pow(1000, 0))}
           1 {"{0:n1} kh" -f ($Hash / [Math]::Pow(1000, 1))}
           2 {"{0:n1} mh" -f ($Hash / [Math]::Pow(1000, 2))}
