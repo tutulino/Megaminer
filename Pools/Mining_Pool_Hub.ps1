@@ -117,7 +117,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                 WalletMode            = $WalletMode
-                WalletSymbol          = $_.coin_name
+                WalletSymbol          = get_coin_symbol -Coin $MiningPoolHub_Coin
                 PoolName              = $Name
                 OriginalAlgorithm     = $MiningPoolHub_OriginalAlgorithm
                 OriginalCoin          = $MiningPoolHub_OriginalCoin
