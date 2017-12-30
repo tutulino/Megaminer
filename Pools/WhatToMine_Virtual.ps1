@@ -78,14 +78,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $WTMResponse.($_).Algorithm = get_algo_unified_name ($WTMResponse.($_).Algorithm)
 
         #not necessary delete bad names/algo, only necessary add correct name/algo
-        $NewCoinName = get_coin_unified_name $_
+        $NewCoinName = (get_coin_unified_name $_)+'-'+$WTMResponse.($_).Algorithm
         if ($NewCoinName -ne $_) {
             $TempCoin = $WTMResponse.($_)
             $WTMResponse |add-member $NewCoinName $TempCoin
         }
     }
 
-    try {$CustomCoins = (Get-Content config.txt | Where-Object {$_ -like '@@CUSTOM_WTM_COINS=*'}) -replace '@@CUSTOM_WTM_COINS=', '' -split ','} catch {$CustomCoins = @()}
+    try {$CustomCoins = (get_config_variable "CUSTOM_WTM_COINS").Split(',')} catch {$CustomCoins = @()}
+    WriteLog "Custom WTM Coins: $CustomCoins" $LogFile $True
     foreach ($c in $CustomCoins) {
         $retries = 1
         do {
@@ -107,7 +108,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         $WTMCoinResponse.algorithm = get_algo_unified_name ($WTMCoinResponse.algorithm)
         #not necessary delete bad names/algo, only necessary add correct name/algo
-        $NewCoinName = get_coin_unified_name $WTMCoinResponse.name
+        $NewCoinName = (get_coin_unified_name $WTMCoinResponse.name)+'-'+$WTMCoinResponse.algorithm
         if ($NewCoinName -ne $WTMCoinResponse.name) {
             $TempCoin = $WTMCoinResponse
             $WTMCoinResponse | add-member $NewCoinName $TempCoin
@@ -132,13 +133,13 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         $HPools | ForEach-Object {
 
-            $WTMcoin = $WTMResponse.($_.Info)
+            $WTMcoin = $WTMResponse.($_.Info+'-'+$_.Algorithm)
 
             if (($WTMcoin.Algorithm -eq $_.Algorithm -and $WTMcoin.lagging -eq $false) -and (($Pools | where-object coin -eq $_.info |where-object Algo -eq $_.Algorithm) -eq $null)) {
                 $Pools += [pscustomobject]@{
                     coin              = $_.Info
                     algo              = $_.Algorithm
-                    symbol            = $WTMResponse.($_.Info).tag
+                    symbol            = $WTMCoin.tag
                     server            = $_.host
                     port              = $_.port
                     location          = $_.location
@@ -163,8 +164,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools |ForEach-Object {
         $WTMFactor = get_WhattomineFactor ($_.Algo)
         if ($WTMFactor -ne $null) {
-            $Estimate = [Double]($WTMResponse.($_.coin).btc_revenue / $WTMFactor)
-            $Estimate24h = [Double]($WTMResponse.($_.coin).btc_revenue24 / $WTMFactor)
+            $Estimate = [Double]($WTMResponse.($_.coin+'-'+$_.algo).btc_revenue / $WTMFactor)
+            $Estimate24h = [Double]($WTMResponse.($_.coin+'-'+$_.algo).btc_revenue24 / $WTMFactor)
         }
 
         $Result += [PSCustomObject]@{
