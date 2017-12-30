@@ -28,9 +28,6 @@ if ($Querymode -eq "info") {
 
 if ($Querymode -eq "APIKEY") {
     try {
-        $ApiKeyPattern = "@@APIKEY_$Name=*"
-        $ApiKey = ($Config | Where-Object {$_ -like $ApiKeyPattern} ) -replace $ApiKeyPattern, ''
-
         switch ($Info.Symbol) {
             'BCH' { $apiUrl = "http://bcc.suprnova.cc" }
             'GAME' { $apiUrl = "http://gmc.suprnova.cc" }
@@ -50,10 +47,10 @@ if ($Querymode -eq "APIKEY") {
             Default { $apiUrl = "http://" + $Info.Symbol + ".suprnova.cc" }
         }
 
-        $http = $apiUrl + "/index.php?page=api&action=getuserbalance&api_key=" + $ApiKey + "&id="
+        $http = $apiUrl + "/index.php?page=api&action=getuserbalance&api_key=" + $Info.ApiKey + "&id="
 
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $Suprnova_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10
+        $Suprnova_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5
         $Suprnova_Request = $Suprnova_Request | ConvertFrom-Json | Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
     } catch {
     }
