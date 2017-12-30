@@ -1342,6 +1342,7 @@ function get_WhattomineFactor ([string]$Algo) {
                                 "keccak" {$WTMFactor = 900000000}
                                 "Keccak-C" {$WTMFactor = 240000000}
                                 "CryptoNight-Lite" {$WTMFactor = 6600}
+                                "Lyra2z" {$WTMFactor = 420000}
                         }
 
 
