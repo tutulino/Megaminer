@@ -112,7 +112,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
             PoolWorkers           = $coin.Workers
             PoolHashRate          = $coin.hashrate
-            Blocks_24h            = $coin."24h_blocks"
+            Blocks_24h            = $coin.'24h_blocks'
             WalletMode            = $WalletMode
             WalletSymbol          = $Pool_Symbol
             PoolName              = $Name
@@ -124,5 +124,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result |ConvertTo-Json | Set-Content ("$name.tmp")
+$Result |ConvertTo-Json | Set-Content $info.SharedFile
 remove-variable Result

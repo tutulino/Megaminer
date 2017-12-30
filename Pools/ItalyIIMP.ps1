@@ -22,7 +22,7 @@ $Result = @()
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "Autoexchange to config.txt wallet, no registration required"
+        Disclaimer               = "Autoexchange to @@currency coin specified in config.txt, no registration required"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
@@ -87,7 +87,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "yescrypt" {$Divisor /= 1000}
         }
 
-        if ( $coin.Workers -gt 0 -and [double]$coin.actual_last24h -gt 0) {
+        if ( $coin.Workers -gt 0 -and [double]$coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $Pool_Algo
                 Info                  = $null

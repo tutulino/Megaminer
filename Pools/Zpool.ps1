@@ -22,10 +22,11 @@ $Result = @()
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "Autoexchange to config.txt wallet, no registration required"
+        Disclaimer               = "Autoexchange to @@currency coin specified in config.txt, no registration required"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
+        ApiData                  = $True
         AbbName                  = $AbbName
         WalletMode               = $WalletMode
     }

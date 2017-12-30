@@ -26,6 +26,7 @@ if ($Querymode -eq "info") {
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
+        ApiData                  = $True
         AbbName                  = $AbbName
         WalletMode               = $WalletMode
     }
@@ -99,7 +100,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                 PoolWorkers           = $coin.Workers
                 PoolHashRate          = $coin.hashrate
-                Blocks_24h            = $coin."24h_blocks"
                 WalletMode            = $WalletMode
                 WalletSymbol          = $currency
                 PoolName              = $Name

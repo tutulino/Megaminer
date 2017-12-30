@@ -104,7 +104,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                 PoolWorkers           = $coin.Workers
                 PoolHashRate          = $coin.hashrate
-                Blocks_24h            = $coin."24h_blocks"
                 WalletMode            = $WalletMode
                 WalletSymbol          = $currency
                 PoolName              = $Name
