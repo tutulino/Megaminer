@@ -170,7 +170,9 @@ function get_gpu_information {
     $GpuId=0
 
     #NVIDIA
-    invoke-expression "./bin/nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory  --format=csv,noheader"  | ForEach-Object {
+    $NVIDIAPlatform=[OpenCl.Platform]::GetPlatformIDs() | Where-Object vendor -like "*NVIDIA*"
+    if ($NVIDIAPlatform -ne $null) {
+        invoke-expression "./bin/nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory  --format=csv,noheader"  | ForEach-Object {
 
                 $SMIresultSplit = $_ -split (",")
 
@@ -189,8 +191,8 @@ function get_gpu_information {
                             ClockMem           = $SMIresultSplit[9]
                         }
                 $GpuId+=1
-
         }
+    }
 
 
     #AMD
