@@ -1,7 +1,7 @@
 {
-"Path" : ".\\Bin\\Claymore's Dual Ethereum+Decred_Siacoin_Lbry_Pascal AMD+NVIDIA GPU Miner v10.2\\EthDcrMiner64.exe",
-"ExtractionPath" : ".\\Bin\\",
-"Uri" : "https://github.com/tutulino/Claymore-Dual/releases/download/10.0/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.2.-.Catalyst.15.12-17.x.-.CUDA.8.0_7.5_6.5.zip","Types" : ["NVIDIA"],
+  "Path" : ".\\Bin\\Claymore-Dual\\Claymore's Dual Ethereum+Decred_Siacoin_Lbry_Pascal AMD+NVIDIA GPU Miner v10.3\\EthDcrMiner64.exe",
+  "ExtractionPath" : ".\\Bin\\Claymore-Dual\\",
+  "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.3.-.Catalyst.15.12-17.x.-.CUDA.8.0_7.5_6.5.zip",
 "Types" : ["NVIDIA"],
 "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL# -wd 1 -di #DEVICESCLAYMODE# -mport #APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
 "API" : "Claymore",
@@ -37,7 +37,7 @@
                 {"Ethash_Lbry_120":" -dcoin lbc -dcri 120"},
                 {"Ethash_Lbry_140":" -dcoin lbc -dcri 140"},
                 {"Ethash_Lbry_160":" -dcoin lbc -dcri 160"}
-                
+
               ]
 
 }
