@@ -1097,8 +1097,8 @@ while ($true) {
                                             }
 
 
-                                        $Value=[long]($Miner_HashRates[0] * 0.95)
-                                        $ValueDual=[long]($Miner_HashRates[1] * 0.95)
+                                        $Value=[double]($Miner_HashRates[0] * 0.95)
+                                        $ValueDual=[double]($Miner_HashRates[1] * 0.95)
 
                                         if ($Value -gt $_.Hashrate -and $_.NeedBenchmark -and ($valueDual -gt 0 -or $_.Dualmining -eq $false)) {
 

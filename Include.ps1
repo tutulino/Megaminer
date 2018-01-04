@@ -1242,9 +1242,9 @@ function Set_Hashrates {
         [Parameter(Mandatory = $false)]
         [String]$AlgoLabel,
         [Parameter(Mandatory = $true)]
-        [long]$Value,
+        [double]$Value,
         [Parameter(Mandatory = $true)]
-        [long]$ValueDual
+        [double]$ValueDual
 
     )
 
