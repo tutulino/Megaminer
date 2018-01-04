@@ -5,4 +5,5 @@ Cache/*
 
 .vscode/
 Donation.ctr
+Wrapper_*.txt
 !empty.txt
