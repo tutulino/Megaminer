@@ -96,7 +96,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 WalletSymbol          = "BTC"
                 OriginalAlgorithm     = $AlgoOriginal
                 OriginalCoin          = $coin
-                Fee                   = 0.04
                 EthStMode             = 3
 
             }
