@@ -1374,12 +1374,10 @@ function get_WhattomineFactor ([string]$Algo) {
                                 "Keccak-C" {$WTMFactor = 240000000}
                                 "CryptoNight-Lite" {$WTMFactor = 6600}
                                 "Lyra2z" {$WTMFactor = 420000}
+                                "X17" {$WTMFactor = 100000}
+                                "blake2s" {$WTMFactor = 100000}
                         }
-
-
-
          $WTMFactor
-
     }
 
 function get_coin_symbol ([string]$Coin) {
@@ -1416,6 +1414,7 @@ function get_coin_symbol ([string]$Coin) {
         "verge" {$Result = "XVG"}
         "digibyte" {$Result = "DGB"}
         "auroracoin" {$Result = "AUR"}
+        "electroneum" {$Result = "ETN"}
     }
     $Result
 }
