@@ -76,7 +76,7 @@
 
 -- seconds to delay closing of old miners when new miner is selected as more profitable, this minimizes inactive time while switch. For benchmarking interval this value is automatically zero.
 
-@@DELAYCLOSEMINERS=10
+@@DELAYCLOSEMINERS=5
 
 
 -- [OPTIONAL] API Keys
@@ -95,4 +95,4 @@
 -- @@GPUGROUPS=[{"GroupName" : "RX480","Type":"AMD","Gpus":"0"} ]
 
 -- Coin IDs from http://whattomine.com/calculators, separated by ",". 192 - Aeon, 210 - Zero, 213 - ETN
-@@CUSTOM_WTM_COINS=210,192
+@@CUSTOM_WTM_COINS=210
