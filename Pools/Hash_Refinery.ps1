@@ -81,7 +81,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "blakecoin" {$Divisor *= 1000}
         }
 
-        if ( $coin.Workers -gt 0 -and [double]$coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0) {
+        if ([double]$coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $Pool_Algo
                 Info                  = $null
