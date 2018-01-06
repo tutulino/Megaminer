@@ -1,7 +1,7 @@
 ﻿{
-    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.7-windows-v2\\cpuminer-4way.exe",
+    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.8-windows-v2\\cpuminer-aes-avx2.exe",
     "ExtractionPath" : ".\\Bin\\cpuminer-opt\\",
-    "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1569739/cpuminer-opt-3.7.7-windows-v2.zip",
+    "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1595441/cpuminer-opt-3.7.8-windows-v2.zip",
     "Types" : ["CPU"],
     "Arguments" : "-b #APIPORT# -o #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS# -q",
     "BenchmarkArg": "--benchmark",
@@ -37,7 +37,6 @@
         {"lyra2h": "-a lyra2h"},
         {"lyra2re": "-a lyra2re"},
         {"lyra2v2": "-a lyra2rev2"},
-        {"lyra2z": "-a lyra2z"},
         {"lyra2z330": "-a lyra2z330"},
         {"m7m": "-a m7m"},
         {"myriad-groestl": "-a myr-gr"},
