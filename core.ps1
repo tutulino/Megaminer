@@ -669,13 +669,13 @@ while ($true) {
 
         $BestIdNow = ($ActiveMiners |
                 Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and $_.GroupId -eq $Type.Id -and $_.NeedBenchmark} |
-                Sort-Object -Descending PoolPrice, Algorithm |
+                Sort-Object -Descending PoolPrice, PoolPriceDual |
                 Select-Object -First 1 |
                 Select-Object -ExpandProperty  id)
         if ($BestIdNow -eq $null) {
             $BestIdNow = ($ActiveMiners |
                     Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and $_.GroupId -eq $Type.Id} |
-                    Sort-Object -Descending {$_.Profits}, Algorithm |
+                    Sort-Object -Descending {$_.Profits} |
                     Select-Object -First 1 |
                     Select-Object -ExpandProperty  id)
         }
