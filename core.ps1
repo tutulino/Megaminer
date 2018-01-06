@@ -617,7 +617,18 @@ while ($true) {
     #For each type, select most profitable miner, not benchmarked has priority, only new miner is launched if new profit is greater than old by percenttoswitch
     foreach ($Type in $Types) {
 
-        $BestIdNow=($ActiveMiners |Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and  $_.GroupId -eq $Type.Id} | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, {$_.Profits},Algorithm | Select-Object -First 1 | Select-Object -ExpandProperty  id)
+        $BestIdNow = ($ActiveMiners |
+                Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and $_.GroupId -eq $Type.Id -and $_.NeedBenchmark} |
+                Sort-Object -Descending PoolPrice, Algorithm |
+                Select-Object -First 1 |
+                Select-Object -ExpandProperty  id)
+        if ($BestIdNow -eq $null) {
+            $BestIdNow = ($ActiveMiners |
+                    Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and $_.GroupId -eq $Type.Id} |
+                    Sort-Object -Descending {$_.Profits}, Algorithm |
+                    Select-Object -First 1 |
+                    Select-Object -ExpandProperty  id)
+        }
         if ($BestIdNow -ne $null) {
                     $ProfitNow=$ActiveMiners[$BestIdNow].profits
 
