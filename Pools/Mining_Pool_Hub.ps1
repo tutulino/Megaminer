@@ -43,7 +43,7 @@ if ($Querymode -eq "APIKEY") {
         $ApiKeyPattern = "@@APIKEY_$Name=*"
         $ApiKey = (Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} ) -replace $ApiKeyPattern, ''
 
-        $http = "http://" + $Info.OriginalCoin + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $ApiKey + "&id="
+        $http = "https://" + $Info.OriginalCoin + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $ApiKey + "&id="
         $MiningPoolHub_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
     } catch {}
 
@@ -69,7 +69,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $retries = 1
     do {
         try {
-            $MiningPoolHub_Request = Invoke-WebRequest "http://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+            $MiningPoolHub_Request = Invoke-WebRequest "https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
         } catch {start-sleep 2}
         $retries++
         if ($MiningPoolHub_Request -eq $null -or $MiningPoolHub_Request -eq "") {start-sleep 3}
