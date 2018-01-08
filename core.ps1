@@ -688,7 +688,7 @@ while ($true) {
 
             if ($BestIdLast -ne $null) {$ProfitLast = $ActiveMiners[$BestIdLast].profits} else {$ProfitLast = 0}
 
-            if ($ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))) -or $ActiveMiners[$BestIdNow].NeedBenchmark) {
+            if ($ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))) -or $ActiveMiners[$BestIdNow].NeedBenchmark -or $BestIdLast -eq $null) {
                 $ActiveMiners[$BestIdNow].best = $true
             } else {
                 $ActiveMiners[$BestIdLast].best = $true
