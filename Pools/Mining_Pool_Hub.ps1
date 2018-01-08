@@ -52,7 +52,11 @@ if ($Querymode -eq "APIKEY") {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Info.Symbol
-            balance  = $MiningPoolHub_Request.balance.confirmed + $MiningPoolHub_Request.balance.unconfirmed + $MiningPoolHub_Request.balance_for_auto_exchange.confirmed + $MiningPoolHub_Request.balance_for_auto_exchange.unconfirmed
+            balance  = $MiningPoolHub_Request.balance.confirmed +
+                $MiningPoolHub_Request.balance.unconfirmed +
+                $MiningPoolHub_Request.balance_for_auto_exchange.confirmed +
+                $MiningPoolHub_Request.balance_for_auto_exchange.unconfirmed +
+                $MiningPoolHub_Request.balance_on_exchange
         }
         Remove-variable MiningPoolHub_Request
     }
