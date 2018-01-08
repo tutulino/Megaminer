@@ -9,6 +9,6 @@
     "Dualmining":false,
     "PrelaunchCommand":"",
     "Algorithms": [
-        {"neoscrypt":"--neoscrypt -g 1 -w 128 -I 18"}
+        {"neoscrypt":"--neoscrypt -g 1 -w 64 -I 18"}
     ]
 }
