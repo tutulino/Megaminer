@@ -1,5 +1,5 @@
 ﻿{
-    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.8-windows-v2\\cpuminer-aes-avx2.exe",
+    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.8-windows-v2\\cpuminer-4way.exe",
     "ExtractionPath" : ".\\Bin\\cpuminer-opt\\",
     "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1595441/cpuminer-opt-3.7.8-windows-v2.zip",
     "Types" : ["CPU"],

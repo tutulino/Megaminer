@@ -1,7 +1,7 @@
 ﻿{
-    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.7-windows-v2\\cpuminer-aes-sse42.exe",
+    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.8-windows-v2\\cpuminer-aes-sse42.exe",
     "ExtractionPath" : ".\\Bin\\cpuminer-opt\\",
-    "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1569739/cpuminer-opt-3.7.7-windows-v2.zip",
+    "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1595441/cpuminer-opt-3.7.8-windows-v2.zip",
     "Types" : ["CPU"],
     "Arguments" : "-b #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS# -q",
     "BenchmarkArg": "--benchmark",
