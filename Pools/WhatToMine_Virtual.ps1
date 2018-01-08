@@ -116,6 +116,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             }
             try { $WTMResponse | Add-Member $NewCoinName $WTMCoinResponse } catch {}
             remove-variable WTMCoinResponse
+            Start-Sleep -Seconds 1 # Prevent API Saturation
         }
     }
 

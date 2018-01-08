@@ -1060,10 +1060,6 @@ while ($true) {
                     set_ConsolePosition 0 $YToWriteMessages
                     "                                                                         "| Out-host
 
-                    start-sleep 1 #no saturation of pool api
-
-
-
                 }
 
 

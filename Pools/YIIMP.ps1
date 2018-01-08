@@ -47,6 +47,7 @@ if ($Querymode -eq "wallet") {
         }
     }
     remove-variable Request
+    Start-Sleep -Seconds 1 # Prevent API Saturation
 }
 
 

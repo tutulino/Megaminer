@@ -42,6 +42,8 @@ if ($Querymode -eq "WALLET") {
         currency = $Info.OriginalCoin
         balance  = $NP_Request.data
     }
+    Remove-Variable NP_Request
+    Start-Sleep -Seconds 1 # Prevent API Saturation
 }
 
 
