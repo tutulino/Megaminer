@@ -1,7 +1,7 @@
 ﻿{
-    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.8-windows-v2\\cpuminer-aes-sse42.exe",
+    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.7.9-windows\\cpuminer-aes-sse42.exe",
     "ExtractionPath" : ".\\Bin\\cpuminer-opt\\",
-    "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1595441/cpuminer-opt-3.7.8-windows-v2.zip",
+    "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1613739/cpuminer-opt-3.7.9-windows.zip",
     "Types" : ["CPU"],
     "Arguments" : "-b #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS# -q",
     "BenchmarkArg": "--benchmark",
@@ -11,7 +11,6 @@
     "PrelaunchCommand":"",
     "Algorithms": [
         {"lbry": "-a lbry"},
-        {"polytimos": "-a polytimos"},
         {"yescrypt": "-a yescrypt"},
         {"yescryptr16": "-a yescryptr16"}
     ]
