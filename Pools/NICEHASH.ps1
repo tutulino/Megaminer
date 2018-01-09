@@ -83,9 +83,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Locations += [PSCustomObject]@{NhLocation ='EU';MMlocation='EUROPE'}
 
         $NH_Request | ForEach-Object {
-
-
-                    $NH_Algorithm = get_algo_unified_name ($_.name)
+                    $NH_Algorithm = get-algo-unified-name ($_.name)
                     $NH_AlgorithmOriginal =$_.name
                     
                     $Divisor = 1000000000
@@ -98,28 +96,21 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                             "Blake14r" {$NH_coin="Decred"}
                             default {$NH_coin=$NH_Algorithm}
                             }
-                 
-                
 
-
-
-
-                    foreach ($location in $Locations) {
-
-            
-
+                        foreach ($location in $Locations) {
+                        $enableSSL = ( $NH_Algorithm -eq "Cryptonight" -or  $NH_Algorithm -eq "Equihash" )
                         $Result+= [PSCustomObject]@{
                                         Algorithm     = $NH_Algorithm
                                         Info          = $NH_coin
                                         Price         = [double]($_.paying / $Divisor)
                                         Price24h      = $null
-                                        Protocol      = "stratum+tcp"
+                                        Protocol      = If ($enableSSL) {"stratum+ssl"} else {"stratum+tcp"}
                                         Host          = ($_.name)+"."+$location.NhLocation+".nicehash.com"
-                                        Port          = $_.port
+                                        Port          = If ($enableSSL) {$_.port + 30000} else {$_.port}
                                         User          = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')})+'.'+"#WorkerName#"
                                         Pass          = "x"
                                         Location      = $location.MMLocation
-                                        SSL           = $false
+                                        SSL           = $enableSSL
                                         Symbol        = $null
                                         AbbName       = $AbbName
                                         ActiveOnManualMode    = $ActiveOnManualMode
@@ -131,7 +122,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         OriginalCoin = $NH_coin
                                         Fee = 0.04
                                         EthStMode = 3
-                                            
                                         }
                         }
                 }
