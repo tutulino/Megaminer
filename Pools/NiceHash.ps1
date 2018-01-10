@@ -75,18 +75,22 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         foreach ($location in $Locations) {
 
+            $enableSSL = ($Algo -in @('Cryptonight', 'Equihash'))
+
             $Result += [PSCustomObject]@{
                 Algorithm             = $Algo
                 Info                  = $coin
                 Price                 = [double]($_.paying / $Divisor)
                 Price24h              = $null
                 Protocol              = "stratum+tcp"
+                ProtocolSSL           = if ($enableSSL) {"stratum+tls"} else {$null}
                 Host                  = $AlgoOriginal + "." + $location.NhLocation + ".nicehash.com"
                 Port                  = $_.port
+                PortSSL               = if ($enableSSL) {$_.port + 30000} else {$null}
                 User                  = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')}) + '.' + "#Workername#"
                 Pass                  = "x"
                 Location              = $location.MMLocation
-                SSL                   = $false
+                SSL                   = $enableSSL
                 Symbol                = $null
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
@@ -97,7 +101,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 OriginalAlgorithm     = $AlgoOriginal
                 OriginalCoin          = $coin
                 EthStMode             = 3
-
             }
         }
     }

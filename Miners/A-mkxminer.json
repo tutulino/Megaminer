@@ -6,6 +6,7 @@
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# --exitsick --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "wrapper",
     "Wrap" : true,
+    "SSL": true,
     "Dualmining":false,
     "PrelaunchCommand":"",
     "Algorithms": [

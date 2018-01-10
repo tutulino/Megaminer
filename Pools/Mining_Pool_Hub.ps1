@@ -104,25 +104,21 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Locations | ForEach-Object {
             $Location = $_
 
-            $MPH_SSL = $false
-            $MPH_Proto = "stratum+tcp"
-            if ($MiningPoolHub_Algorithm -in @('Cryptonight', 'Equihash')) {
-                $MPH_SSL = $true
-                $MPH_Proto = "stratum+tls"
-            }
+            $enableSSL = ($MiningPoolHub_Algorithm -in @('Cryptonight', 'Equihash'))
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $MiningPoolHub_Algorithm
                 Info                  = $MiningPoolHub_Coin
                 Price                 = $MiningPoolHub_Price
                 Price24h              = $null #MPH not send this on api
-                Protocol              = $MPH_Proto
+                Protocol              = "stratum+tcp"
+                ProtocolSSL           = if ($enableSSL) {"stratum+tls"} else {$null}
                 Host                  = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
                 Port                  = $MiningPoolHub_Port
                 User                  = "$UserName.#WorkerName#"
                 Pass                  = "x"
                 Location              = $Location
-                SSL                   = $MPH_SSL
+                SSL                   = $enableSSL
                 Symbol                = get_coin_symbol -Coin $MiningPoolHub_Coin
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode

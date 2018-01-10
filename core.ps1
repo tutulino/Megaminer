@@ -330,11 +330,12 @@ while ($true) {
 
                                 if (($Types | Measure-Object).Count -gt 1) {$WorkerName2 = $WorkerName + '_' + $TypeGroup.GroupName} else {$WorkerName2 = $WorkerName}
 
+                                $enableSSL = ($Miner.SSL -and $_.SSL)
 
                                 $Arguments = $Miner.Arguments `
-                                    -replace '#PORT#', $_.Port `
-                                    -replace '#SERVER#', $_.Host `
-                                    -replace '#PROTOCOL#', $_.Protocol `
+                                    -replace '#PORT#', $(if ($enableSSL -and $_.PortSSL -ne $null) {$_.PortSSL} else {$_.Port}) `
+                                    -replace '#SERVER#', $(if ($enableSSL -and $_.HostSSL -ne $null) {$_.HostSSL} else {$_.Host}) `
+                                    -replace '#PROTOCOL#', $(if ($enableSSL -and $_.ProtocolSSL -ne $null) {$_.ProtocolSSL} else {$_.Protocol}) `
                                     -replace '#LOGIN#', $_.user `
                                     -replace '#PASSWORD#', $_.Pass `
                                     -replace "#GpuPlatform#", $TypeGroup.GpuPlatform `
@@ -350,9 +351,9 @@ while ($true) {
                                 if ($Miner.PatternConfigFile -ne $null) {
                                     $ConfigFileArguments = replace_foreach_gpu (get-content $Miner.PatternConfigFile -raw)  $TypeGroup.Gpus
                                     $ConfigFileArguments = $ConfigFileArguments `
-                                        -replace '#PORT#', $_.Port `
-                                        -replace '#SERVER#', $_.Host `
-                                        -replace '#PROTOCOL#', $_.Protocol `
+                                        -replace '#PORT#', $(if ($enableSSL -and $_.PortSSL -ne $null) {$_.PortSSL} else {$_.Port}) `
+                                        -replace '#SERVER#', $(if ($enableSSL -and $_.HostSSL -ne $null) {$_.HostSSL} else {$_.Host}) `
+                                        -replace '#PROTOCOL#', $(if ($enableSSL -and $_.ProtocolSSL -ne $null) {$_.ProtocolSSL} else {$_.Protocol}) `
                                         -replace '#LOGIN#', $_.user `
                                         -replace '#PASSWORD#', $_.Pass `
                                         -replace "#GpuPlatform#", $TypeGroup.GpuPlatform `
@@ -376,8 +377,9 @@ while ($true) {
                                 }
 
                                 #apply fee to profit
-                                if ([double]$Miner.Fee -gt 0) {$MinerProfit = $MinerProfit - ($minerProfit * [double]$Miner.fee)}
-                                if ([double]$_.Fee -gt 0) {$MinerProfit = $MinerProfit - ($minerProfit * [double]$_.fee)}
+                                if ($enableSSL -and [double]$Miner.FeeSSL -gt 0) {$MinerProfit *= (100 - [double]$Miner.feeSSL) / 100}
+                                elseif ([double]$Miner.Fee -gt 0) {$MinerProfit *= (100 - [double]$Miner.fee) / 100}
+                                if ([double]$_.Fee -gt 0) {$MinerProfit *= (100 - [double]$_.fee) / 100}
 
                                 $PoolAbbName = $_.Abbname
                                 $PoolName = $_.name
@@ -397,23 +399,26 @@ while ($true) {
                                         $MinerProfitDual = [Double]([double]$HashrateValueDual * [double]$PoolDual.Price)
                                     }
 
+                                    $enableDualSSL = ($Miner.SSL -and $PoolDual.SSL)
+
                                     #apply fee to profit
-                                    if ($Miner.Fee -gt 0) {$MinerProfitDual = $MinerProfitDual - ($MinerProfitDual * [double]$Miner.fee)}
-                                    if ($PoolDual.Fee -gt 0) {$MinerProfitDual = $MinerProfitDual - ($MinerProfitDual * [double]$PoolDual.fee)}
+                                    if ($enableDualSSL -and [double]$Miner.FeeSSL -gt 0) {$MinerProfitDual *= (100 - [double]$Miner.feeSSL) / 100}
+                                    elseif ([double]$Miner.Fee -gt 0) {$MinerProfitDual *= (100 - [double]$Miner.fee) / 100}
+                                    if ([double]$PoolDual.Fee -gt 0) {$MinerProfitDual = $MinerProfitDual - ($MinerProfitDual * [double]$PoolDual.fee)}
 
                                     $Arguments = $Arguments `
-                                        -replace '#PORTDUAL#', $PoolDual.Port `
-                                        -replace '#SERVERDUAL#', $PoolDual.Host `
-                                        -replace '#PROTOCOLDUAL#', $PoolDual.Protocol `
+                                        -replace '#PORTDUAL#', $(if ($enableDualSSL -and $PoolDual.PortSSL -ne $null) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
+                                        -replace '#SERVERDUAL#', $(if ($enableDualSSL -and $PoolDual.HostSSL -ne $null) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
+                                        -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL -and $PoolDual.ProtocolSSL -ne $null) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
                                         -replace '#LOGINDUAL#', $PoolDual.user `
                                         -replace '#PASSWORDDUAL#', $PoolDual.Pass `
                                         -replace '#ALGORITHMDUAL#', $AlgonameDual `
                                         -replace '#WORKERNAME#', $WorkerName2
                                     if ($Miner.PatternConfigFile -ne $null) {
                                         $ConfigFileArguments = $ConfigFileArguments `
-                                            -replace '#PORTDUAL#', $PoolDual.Port `
-                                            -replace '#SERVERDUAL#', $PoolDual.Host `
-                                            -replace '#PROTOCOLDUAL#', $PoolDual.Protocol `
+                                            -replace '#PORTDUAL#', $(if ($enableDualSSL -and $PoolDual.PortSSL -ne $null) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
+                                            -replace '#SERVERDUAL#', $(if ($enableDualSSL -and $PoolDual.HostSSL -ne $null) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
+                                            -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL -and $PoolDual.ProtocolSSL -ne $null) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
                                             -replace '#LOGINDUAL#', $PoolDual.user `
                                             -replace '#PASSWORDDUAL#', $PoolDual.Pass `
                                             -replace '#ALGORITHMDUAL#' `
@@ -815,7 +820,6 @@ while ($true) {
             $AnyProcClosed = $false
             $ActiveMiners | Where-Object {$_.Best -eq $false -and $_.Process -ne $null} | ForEach-Object {
 
-                try {Kill_ProcessId $_.Process.Id} catch {}
                 try {Kill_ProcessId $_.Process.Id} catch {}
                 $_.process = $null
                 $_.Status = "Idle"
