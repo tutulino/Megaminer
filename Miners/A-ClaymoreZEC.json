@@ -6,7 +6,7 @@
   "Arguments" : "-zpool #PROTOCOL#://#SERVER#:#PORT# -zwal #LOGIN# -zpsw #PASSWORD# -allpools 1 -di #DEVICESCLAYMODE# -mport #APIPORT# #ALGORITHMPARAMETERS#",
   "API" : "ClaymoreV2",
   "Wrap" : false,
-  "Fee" : "0.025",
+  "Fee" : "0.02",
   "DualMining": false,
   "PrelaunchCommand":"",
   "Algorithms": [
