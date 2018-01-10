@@ -9,7 +9,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"xevan":"-k xevan -i 18"}
+                 {"xevan":"-k xevan-mod --intensity 15"}
                
               ]
 

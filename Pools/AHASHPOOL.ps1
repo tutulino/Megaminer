@@ -18,6 +18,44 @@ $Result = @()
 
 
 
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+
+
+if ($Querymode -eq "speed")    {
+        
+                            
+    try {
+        $http="http://www.ahashpool.com/api/walletEx?address="+$Info.user
+        $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+    }
+    catch {}
+    
+    $Result=@()
+
+    if ($Request -ne $null -and $Request -ne ""){
+            $Request.Miners |ForEach-Object {
+                            $Result += [PSCustomObject]@{
+                                PoolName =$name
+                                Version = $_.version
+                                Algorithm = get_algo_unified_name $_.Algo
+                                Workername =($_.password -split ",")[1]
+                                Diff     = $_.difficulty
+                                Rejected = $_.rejected
+                                Hashrate = $_.accepted
+                          }     
+                    }
+            remove-variable Request                                                                                                        
+            }
+
+
+}
+
+
+
+
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
@@ -50,20 +88,18 @@ if ($Querymode -eq "info"){
                             
                             try {
                                 $http="http://www.ahashpool.com/api/wallet?address="+$Info.user
-                                $Aha_Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+                                $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
                             }
-                            catch {
-                             
-                            }
+                            catch {}
         
         
-                            if ($Aha_Request -ne $null -and $Aha_Request -ne ""){
+                            if ($Request -ne $null -and $Request -ne ""){
                                 $Result = [PSCustomObject]@{
                                                         Pool =$name
-                                                        currency = $Aha_Request.currency
-                                                        balance = $Aha_Request.balance
+                                                        currency = $Request.currency
+                                                        balance = $Request.balance
                                                     }
-                                    remove-variable Aha_Request                                                                                                        
+                                    remove-variable Request                                                                                                        
                                     }
 
                         
@@ -81,22 +117,22 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $retries=1
                 do {
                         try {
-                            $Aha_Request = Invoke-WebRequest "http://www.ahashpool.com/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 10  | ConvertFrom-Json 
+                            $Request = Invoke-WebRequest "http://www.ahashpool.com/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 10  | ConvertFrom-Json 
                         }
                         catch {}
                         $retries++
-                    if ($Aha_Request -eq $null -or $Aha_Request -eq "") {start-sleep 5}
-                    } while ($Aha_Request -eq $null -and $retries -le 3)
+                    if ($Request -eq $null -or $Request -eq "") {start-sleep 5}
+                    } while ($Request -eq $null -and $retries -le 3)
                 
                 if ($retries -gt 3) {
-                                    WriteLog 'AHASHPOOL API NOT RESPONDING...ABORTING' $logFile $true
+                                    WRITE-HOST 'AHASHPOOL API NOT RESPONDING...ABORTING'
                                     EXIT
                                     }
 
 
-        $Aha_Request | Get-Member -MemberType properties| ForEach-Object {
+        $Request | Get-Member -MemberType properties| ForEach-Object {
 
-                    $coin=$Aha_Request | Select-Object -ExpandProperty $_.name
+                $coin=$Request | Select-Object -ExpandProperty $_.name
                 
 
                     $Aha_Algorithm = get_algo_unified_name $_.name
@@ -104,7 +140,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                     $Divisor = (Get_Algo_Divisor $Aha_Algorithm) / 1000
                 
-
                     $Result+=[PSCustomObject]@{
                                 Algorithm     = $Aha_Algorithm
                                 Info          = $null
@@ -133,7 +168,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 
                 }
 
-  remove-variable Aha_Request                
+  remove-variable Request                
     }
 
 

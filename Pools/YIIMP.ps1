@@ -50,24 +50,57 @@ if ($Querymode -eq "info"){
                             
                             try {
                                 $http="http://api.yiimp.eu/api/wallet?address="+$Info.user
-                                $Yiimp_Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+                                $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
                             }
                             catch {}
         
         
-                            if ($Yiimp_Request -ne $null -and $Yiimp_Request -ne ""){
+                            if ($Request -ne $null -and $Request -ne ""){
                                 $Result = [PSCustomObject]@{
                                                         Pool =$name
-                                                        currency = $Yiimp_Request.currency
-                                                        balance = $Yiimp_Request.balance
+                                                        currency = $Request.currency
+                                                        balance = $Request.balance
                                                     }
-                                    remove-variable Yiimp_Request                                                                                                        
+                                    remove-variable Request                                                                                                        
                                     }
 
                         
                         }
                         
-                        
+     
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+
+
+if ($Querymode -eq "speed")    {
+        
+                            
+    try {
+        $http="http://api.yiimp.eu/api/walletEx?address="+$Info.user
+        $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+    }
+    catch {}
+    
+    $Result=@()
+
+    if ($Request -ne $null -and $Request -ne ""){
+            $Request.Miners |ForEach-Object {
+                            $Result += [PSCustomObject]@{
+                                PoolName =$name
+                                Version = $_.version
+                                Algorithm = get_algo_unified_name $_.Algo
+                                Workername =($_.password -split ",")[1]
+                                Diff     = $_.difficulty
+                                Rejected = $_.rejected
+                                Hashrate = $_.accepted
+                          }     
+                    }
+            remove-variable Request                                                                                                        
+            }
+
+
+}                   
 
 
 #****************************************************************************************************************************************************************************************
@@ -79,14 +112,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $retries=1
                 do {
                         try {
-                            $Yiimp_Request = Invoke-WebRequest "http://api.yiimp.eu/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5  | ConvertFrom-Json 
-                            $Yiimp_Request2 = Invoke-WebRequest "http://api.yiimp.eu/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 | ConvertFrom-Json  
+                            $Request = Invoke-WebRequest "http://api.yiimp.eu/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5  | ConvertFrom-Json 
+                            $Request2 = Invoke-WebRequest "http://api.yiimp.eu/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 | ConvertFrom-Json  
 
                         }
                         catch {}
                         $retries++
-                    if ($Yiimp_Request -eq $null -or $Yiimp_Request -eq "") {start-sleep 5}
-                    } while ($Yiimp_Request -eq $null -and $retries -le 3)
+                    if ($Request -eq $null -or $Request -eq "") {start-sleep 5}
+                    } while ($Request -eq $null -and $retries -le 3)
                 
                 if ($retries -gt 3) {
                                     WRITE-HOST 'YIIMP API NOT RESPONDING...ABORTING'
@@ -94,9 +127,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     }
 
 
-        $Yiimp_Request | Get-Member -MemberType properties| ForEach-Object {
+        $Request | Get-Member -MemberType properties| ForEach-Object {
 
-                $coin=$Yiimp_Request | Select-Object -ExpandProperty $_.name
+                $coin=$Request | Select-Object -ExpandProperty $_.name
                 
 
                     $Yiimp_Algorithm = get_algo_unified_name $coin.algo
@@ -129,14 +162,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 WalletMode    = $WalletMode
                                 Walletsymbol = $Yiimp_Symbol
                                 PoolName = $Name
-                                Fee = ($Yiimp_Request2.($coin.algo).Fees)/100
+                                Fee = ($Request2.($coin.algo).Fees)/100
                                 }
                         
                 
                 }
 
-        remove-variable Yiimp_Request                
-        remove-variable Yiimp_Request2                
+        remove-variable Request                
+        remove-variable Request2                
     }
 
 

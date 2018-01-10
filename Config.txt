@@ -36,9 +36,9 @@
 @@WALLET_BTC=YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
 @@WALLET_XXX=ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
 
--- Number of minutes to mine as a donation each day (NOT PERCENT)
+-- Number of minutes to mine as a donation each day (minimum 5 minutes or 0.34%)
 
-@@DONATE=5
+@@DONATE=10
 
 -- Use your cpu to mine: ENABLED = yes, DISABLED = no (you can start cpu alone mining also using -groupnames parameter in batch file)
 
@@ -46,7 +46,7 @@
 
 -- **********************************************************************************************************
 -- ********************                                                                  ********************
--- ********************   ADVANCED OPTIONS (don't change unless you know what they do)   ********************
+-- ********************   ADVANCED OPTIONS (don't change unless you know what you do)   ********************
 -- ********************                                                                  ********************
 -- **********************************************************************************************************
 
@@ -60,7 +60,7 @@
 
 @@BENCHMARKTIME=200
 
--- Screen to be shown at script start-up (WALLETS/CURRENT/HISTORY/PROFITS)
+-- Screen to be shown at script start-up (WALLETS/CURRENT/HISTORY/PROFITS/STATS)
 
 @@STARTSCREEN=PROFITS
 
@@ -71,7 +71,7 @@
 
 -- seconds to delay closing of old miners when new miner is selected as more profitable, this minimizes inactive time while switch. For benchmarking interval this value is automatically zero.
 
-@@DELAYCLOSEMINERS=20
+@@DELAYCLOSEMINERS=0
 
 
 -- [OPTIONAL] API Keys

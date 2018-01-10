@@ -1,7 +1,7 @@
 {
-"Path" : ".\\Bin\\nsgminer-win64-0.9.3\\nsgminer.exe",
+"Path" : ".\\Bin\\nsgminer-win64-0.9.4\\nsgminer.exe",
 "ExtractionPath" : ".\\Bin\\",
-"Uri" : "https://github.com/ghostlander/nsgminer/releases/download/nsgminer-v0.9.3/nsgminer-win64-0.9.3.zip",
+"Uri" : "https://github.com/ghostlander/nsgminer/releases/download/nsgminer-v0.9.4/nsgminer-win64-0.9.4.zip",
 "Types" : ["AMD"],
 "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #DEVICESNSGMODE# --api-port #APIPORT# --gpu-platform #GPUPLATFORM#  --no-adl --remove-disabled  #ALGORITHMPARAMETERS#",
 "API" : "Xgminer",
@@ -10,7 +10,8 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"Neoscrypt":"-w 128 -g 1 -I 18"}
+          {"Neoscrypt":"--gpu-threads 1 --worksize 64 --intensity 15"}
               ]
 
 }
+  

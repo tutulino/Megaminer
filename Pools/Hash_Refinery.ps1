@@ -47,24 +47,58 @@ if ($Querymode -eq "info"){
                             
                             try {
                                 $http="http://pool.hashrefinery.com/api/wallet?address="+$Info.user
-                                $HR_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+                                $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
                             }
                             catch {}
         
         
-                            if ($HR_Request -ne $null -and $HR_Request -ne ""){
+                            if ($Request -ne $null -and $Request -ne ""){
                                 $Result=  [PSCustomObject]@{
                                                         Pool =$name
-                                                        currency = $HR_Request.currency
-                                                        balance = $HR_Request.balance
+                                                        currency = $Request.currency
+                                                        balance = $Request.balance
                                                     }
                                     }
 
-                        remove-variable HR_Request                                    
+                        remove-variable Request                                    
                         }
 
+                   
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
 
 
+                if ($Querymode -eq "speed")    {
+        
+                            
+                            try {
+                                $http="http://pool.hashrefinery.com/api/walletEx?address="+$Info.user
+                                $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+                            }
+                            catch {}
+                            
+                            $Result=@()
+                        
+                            if ($Request -ne $null -and $Request -ne ""){
+                                    $Request.Miners |ForEach-Object {
+                                                    $Result += [PSCustomObject]@{
+                                                        PoolName =$name
+                                                        Version = $_.version
+                                                        Algorithm = get_algo_unified_name $_.Algo
+                                                        Workername =($_.password -split ",")[1]
+                                                        Diff     = $_.difficulty
+                                                        Rejected = $_.rejected
+                                                        Hashrate = $_.accepted
+                                                  }     
+                                            }
+                                    remove-variable Request                                                                                                        
+                                    }
+                        
+                        
+                        }
+                        
 
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
@@ -75,7 +109,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         try
         {
-            $HR_Request = Invoke-WebRequest "http://pool.hashrefinery.com/api/status" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+            $Request = Invoke-WebRequest "http://pool.hashrefinery.com/api/status" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
         }
         catch
         {
@@ -83,8 +117,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         }
 
 
-        if ($HR_Request -ne $null) {
-                        $HR_Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | ForEach-Object {
+        if ($Request -ne $null) {
+                        $Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | ForEach-Object {
 
                                         $Divisor = (Get_Algo_Divisor $_) / 1000
                                     
@@ -93,11 +127,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 $Result += [PSCustomObject]@{
                                                 Algorithm = get_algo_unified_name $_
                                                 Info = $null
-                                                Price = [Double]$HR_Request.$_.estimate_current/$Divisor
-                                                Price24h =[Double]$HR_Request.$_.estimate_last24h/$Divisor
+                                                Price = [Double]$Request.$_.estimate_current/$Divisor
+                                                Price24h =[Double]$Request.$_.estimate_last24h/$Divisor
                                                 Protocol = "stratum+tcp"
                                                 Host = $_+".us.hashrefinery.com"
-                                                Port = $HR_Request.$_.port
+                                                Port = $Request.$_.port
                                                 User = $CoinsWallets.get_item($currency)
                                                 Pass = "c=$Currency,#WorkerName#"
                                                 Location = "US"
@@ -105,11 +139,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                                 AbbName = $AbbName
                                                 ActiveOnManualMode    = $ActiveOnManualMode
                                                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                                PoolWorkers = $HR_Request.$_.workers
+                                                PoolWorkers = $Request.$_.workers
                                                 WalletMode=$WalletMode
                                                 WalletSymbol    = $currency
                                                 PoolName = $Name
-                                                Fee = $HR_Request.$_.Fees/100
+                                                Fee = $Request.$_.Fees/100
                                     
                                 }
                             

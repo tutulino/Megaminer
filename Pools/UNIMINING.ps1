@@ -50,25 +50,85 @@ if ($Querymode -eq "info"){
                             
                             try {
                                 $http="http://pool.unimining.net/api/wallet?address="+$Info.user
-                                $Uni_Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+                                $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
                             }
                             catch {}
         
         
-                            if ($Uni_Request -ne $null -and $Uni_Request -ne ""){
+                            if ($Request -ne $null -and $Request -ne ""){
                                 $Result = [PSCustomObject]@{
                                                         Pool =$name
-                                                        currency = $Uni_Request.currency
-                                                        balance = $Uni_Request.balance
+                                                        currency = $Request.currency
+                                                        balance = $Request.balance
                                                     }
-                                    remove-variable Uni_Request                                                                                                        
+                                    remove-variable Request                                                                                                        
                                     }
 
                         
                         }
                         
-                        
+ 
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
 
+
+if ($Querymode -eq "speed")    {
+        
+                            
+    try {
+        $http="http://www.ahashpool.com/api/walletEx?address="+$Info.user
+        $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+    }
+    catch {}
+    
+    $Result=@()
+
+    if ($Request -ne $null -and $Request -ne ""){
+            $Request.Miners |ForEach-Object {
+                            $Result += [PSCustomObject]@{
+                                PoolName =$name
+                                Version = $_.version
+                                Algorithm = get_algo_unified_name $_.Algo
+                                Workername =($_.password -split ",")[1]
+                                Diff     = $_.difficulty
+                                Rejected = $_.rejected
+                                Hashrate = $_.accepted
+                          }     
+                    }
+            remove-variable Request                                                                                                        
+            }
+
+
+}                       
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+
+
+
+    if ($Querymode -eq "wallet")    {
+        
+                            
+                            try {
+                                $http="http://api.yiimp.eu/api/wallet?address="+$Info.user
+                                $Yiimp_Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+                            }
+                            catch {}
+        
+        
+                            if ($Yiimp_Request -ne $null -and $Yiimp_Request -ne ""){
+                                $Result = [PSCustomObject]@{
+                                                        Pool =$name
+                                                        currency = $Yiimp_Request.currency
+                                                        balance = $Yiimp_Request.balance
+                                                    }
+                                    remove-variable Yiimp_Request                                                                                                        
+                                    }
+
+                        
+                        }
 
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
@@ -79,15 +139,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $retries=1
                 do {
                         try {
-                            $Uni_Request = Invoke-WebRequest "http://pool.unimining.net/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 
-                            $Uni_Request = $Uni_Request | ConvertFrom-Json 
+                            $Request = Invoke-WebRequest "http://pool.unimining.net/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 
+                            $Request = $Request | ConvertFrom-Json 
                              #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
 
                         }
                         catch {}
                         $retries++
-                    if ($Uni_Request -eq $null -or $Uni_Request -eq "") {start-sleep 5}
-                    } while ($Uni_Request -eq $null -and $retries -le 3)
+                    if ($Request -eq $null -or $Request -eq "") {start-sleep 5}
+                    } while ($Request -eq $null -and $retries -le 3)
                 
                 if ($retries -gt 3) {
                                     WRITE-HOST 'UNIMINING API NOT RESPONDING...ABORTING'
@@ -95,9 +155,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     }
 
 
-        $Uni_Request | Get-Member -MemberType properties| ForEach-Object {
+        $Request | Get-Member -MemberType properties| ForEach-Object {
 
-                $coin=$Uni_Request | Select-Object -ExpandProperty $_.name
+                $coin=$Request | Select-Object -ExpandProperty $_.name
                 
 
                     $Uni_Algorithm = get_algo_unified_name $coin.algo
@@ -137,7 +197,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 
                 }
 
-  remove-variable Uni_Request                
+  remove-variable Request                
     }
 
 

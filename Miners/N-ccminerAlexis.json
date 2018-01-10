@@ -11,12 +11,12 @@
 "PrelaunchCommand":"",
 "Algorithms": [
                 
-                {"c11" : "-a c11" },  
+                {"c11" : "-a c11 -i 20" },  
                 {"lbry" : "-a lbry" },
                 {"skein" : "-a skein"},
                 {"x14" : "-a x14" },
                 {"x11evo" : "-a x11evo"},
-                {"x17" : "-a x17" },
+                {"x17" : "-a x17 -i 20" },
                 {"nist5" : "-a nist5" },
                 {"blakecoin" : "-a blakecoin" }
 

@@ -36,18 +36,13 @@ if ($Querymode -eq "info"){
 
     if ($Querymode -eq "APIKEY")    {
         
-         
-
-                             
-                 
-
                         
                             try {
                                 $http="http://"+$Info.Symbol+".suprnova.cc/index.php?page=api&action=getuserbalance&api_key="+$Info.ApiKey+"&id="
                                 #$http |write-host  
                                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12                              
-                                $Suprnova_Request =  Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5
-                                $Suprnova_Request = $Suprnova_Request | ConvertFrom-Json | Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
+                                $Request =  Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5
+                                $Request = $Request | ConvertFrom-Json | Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
                                 }
                             catch {
                                   }
@@ -57,14 +52,41 @@ if ($Querymode -eq "info"){
                                 $Result=[PSCustomObject]@{
                                                         Pool =$name
                                                         currency = $Info.OriginalCoin
-                                                        balance = $Suprnova_Request.confirmed+$Suprnova_Request.unconfirmed
+                                                        balance = $Request.confirmed+$Request.unconfirmed
                                                     }
                          
                          
                                                 
                         }
 
+            
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+
+    if ($Querymode -eq "SPEED")    {
+        
                         
+        try {
+            $http="http://"+$Info.Symbol+".suprnova.cc/index.php?page=api&action=getuserbalance&api_key="+$Info.ApiKey+"&id="
+            #$http |write-host  
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12                              
+            $Request =  Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5
+            $Request = $Request | ConvertFrom-Json | Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
+            }
+        catch {
+              }
+
+
+    
+            $Result=[PSCustomObject]@{
+                                    Pool =$name
+                                    currency = $Info.OriginalCoin
+                                    balance = $Request.confirmed+$Request.unconfirmed
+                                }
+                            
+    }
+
 
 
 #****************************************************************************************************************************************************************************************

@@ -152,7 +152,8 @@ function Kill_ProcessId {
         )
 
     try {
-        #$_.Process.CloseMainWindow() | Out-Null
+        $_.Process.CloseMainWindow() | Out-Null
+        Start-Sleep 2
         Stop-Process $ProcessId -force -wa SilentlyContinue -ea SilentlyContinue 
     } catch {}
 }
@@ -162,7 +163,7 @@ function Kill_ProcessId {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
-function get_gpu_information {
+function get_gpu_information ($Types) {
     [cmdletbinding()]
 
 
@@ -170,27 +171,38 @@ function get_gpu_information {
     $GpuId=0
 
     #NVIDIA
-    invoke-expression "./nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory  --format=csv,noheader"  | ForEach-Object {
+                invoke-expression "./nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader"  | ForEach-Object {
+
 
                 $SMIresultSplit = $_ -split (",")   
-                
-                $Cards +=[pscustomObject]@{
+
+                $GpuGroup=($Types  | where-object type -eq 'NVIDIA' |where-object GpusArray -contains $GpuId).groupname
+
+                $Card =[pscustomObject]@{
                             Type               ='NVIDIA'
                             GpuId              = $GpuId
+                            GpuGroup          = $GpuGroup
                             gpu_name           = $SMIresultSplit[0] 
-                            utilization_gpu    = $SMIresultSplit[1]
-                            utilization_memory = $SMIresultSplit[2]
-                            temperature_gpu    = $SMIresultSplit[3]
-                            power_draw         = $SMIresultSplit[4]
-                            power_limit        = $SMIresultSplit[5]
-                            FanSpeed           = $SMIresultSplit[6]
+                            utilization_gpu    = [int]($SMIresultSplit[1] -replace '%','')
+                            utilization_memory = [int]($SMIresultSplit[2] -replace '%','')
+                            temperature_gpu    = [int]($SMIresultSplit[3] -replace '%','')
+                            power_draw         = [int]($SMIresultSplit[4] -replace 'W','')
+                            power_limit        = [int]($SMIresultSplit[5] -replace 'W','')
+                            FanSpeed           = [int]($SMIresultSplit[6] -replace '%','')
                             pstate             = $SMIresultSplit[7]
-                            ClockGpu           = $SMIresultSplit[8]
-                            ClockMem           = $SMIresultSplit[9]
+                            ClockGpu           = [int]($SMIresultSplit[8] -replace 'Mhz','')
+                            ClockMem           = [int]($SMIresultSplit[9] -replace 'Mhz','')
+                            Power_MaxLimit     =  [int]($SMIresultSplit[10] -replace 'W','')
+                            Power_DefaultLimit  =  [int]($SMIresultSplit[11] -replace 'W','')
                         }
+               
+                $card |add-member Power_limit_percent ([math]::Floor(($Card.power_limit*100) / $Card.Power_DefaultLimit))
+
+                $cards+=$card        
                 $GpuId+=1
 
-        }    
+
+         }    
         
         
     #AMD
@@ -199,24 +211,37 @@ function get_gpu_information {
 
 
                   #ADL
+                    $GpuId=0
+
                     invoke-expression "./OverdriveN"  | ForEach-Object {
               
-                      $AdlResultSplit = $_ -split (",")   
-                      
-                      $AdlDevices +=[pscustomObject]@{
-                                  GpuId              = $AdlResultSplit[0] 
-                                  FanSpeed           = [string][int]([int]$AdlResultSplit[1] /[int]$AdlResultSplit[2]*100) + " %"
-                                  ClockGpu           = [string]([int]($AdlResultSplit[3] / 100)) + " MHZ"
-                                  ClockMem           = [string]([int]($AdlResultSplit[4] / 100)) + " MHZ"
-                                  utilization_gpu    = $AdlResultSplit[5]+ " %"
-                                  temperature_gpu    = [int]$AdlResultSplit[6] /1000
-                                  TdpLimit           = $AdlResultSplit[7]+ " %"
-                              }
-                      
-              
-                      }               
-              
+                        $AdlResultSplit = $_ -split (",")   
 
+                            $GpuId=[int]$AdlResultSplit[0]
+                    
+                            $GpuGroup=($Types  | where-object type -eq 'AMD' |where-object GpusArray -contains $GpuId ).groupname
+
+                            
+                            $cards +=[pscustomObject]@{
+                                    Type               = 'AMD'
+                                    GpuId              = $GpuId 
+                                    GpuGroup           = $GpuGroup
+                                    FanSpeed           = [int][int]([int]$AdlResultSplit[1] /[int]$AdlResultSplit[2]*100)
+                                    ClockGpu           = [int]([int]($AdlResultSplit[3] / 100))
+                                    ClockMem           = [int]([int]($AdlResultSplit[4] / 100))
+                                    utilization_gpu    = [int]$AdlResultSplit[5]
+                                    temperature_gpu    = [int]$AdlResultSplit[6] /1000
+                                    power_limit_percent= 100+[int]$AdlResultSplit[7]
+                                    Power_draw         = $null <#switch ($AdlResultSplit[8]){
+                                                                    "Radeon RX 580 Series"{1000 * ((100+[int]$AdlResultSplit[7])/100) * ([int]$AdlResultSplit[5]/100) } 
+                                                                    }#>
+                                    Name               = $AdlResultSplit[8]
+                                    UDID               = $AdlResultSplit[9]
+                                    }
+                          }               
+    
+                          
+                        <#
                       #Open CL
                           $OCLDevices = [OpenCl.Device]::GetDeviceIDs($AMDPlatform[0],"ALL") | Where-Object vendor -like "*Advanced Micro Devices*"  #exclude integrated INTEL gpu
       
@@ -228,24 +253,26 @@ function get_gpu_information {
 
                                       
                                       $AdlDevice=$AdlDevices |Where-Object GpuId -eq $Counter| Select-Object -first 1
+
+                                      $GpuGroup=($Types  | where-object type -eq 'AMD' |where-object GpusArray -contains $counter).groupname
                                       
                                       $cards+=[pscustomobject]@{
-                                              Type = $Type
-                                              GpuId=$counter
-                                              Name=$_.Name
-                                              FanSpeed=$AdlDevice.FanSpeed
-                                              ClockGpu=$AdlDevice.ClockGpu
-                                              ClockMem=$AdlDevice.ClockMem
-                                              utilization_gpu=$AdlDevice.utilization_gpu
-                                              temperature_gpu=$AdlDevice.temperature_gpu
-                                              TdpLimit=$AdlDevice.TdpLimit
-
+                                              Type               = $Type
+                                              GpuId              =$counter
+                                              GpuGroup           = $GpuGroup
+                                              Name               =$AdlDevice.Name
+                                              FanSpeed           =$AdlDevice.FanSpeed
+                                              ClockGpu           =$AdlDevice.ClockGpu
+                                              ClockMem           =$AdlDevice.ClockMem
+                                              utilization_gpu    =$AdlDevice.utilization_gpu
+                                              temperature_gpu    =$AdlDevice.temperature_gpu
+                                              TdpLimit           =$AdlDevice.TdpLimit
+                                              Power_draw         = $null
+                              
                                           }
-                                          $counter++
-                                  }
-
-
-             }
+                                    #>                                          
+                            $counter++
+                      }
 
     $cards                                               
     }
@@ -254,40 +281,43 @@ function get_gpu_information {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
-function print_gpu_information {
+function print_gpu_information ($Cards){
     
     
      
-            $Cards=get_gpu_information
+            
     
             $Cards |where-object Type -eq 'NVIDIA' | Format-Table -Wrap  (
-                @{Label = "GpuId"; Expression = {$_.gpuId}},
-                @{Label = "Type"; Expression = {"NVIDIA"}},
+                @{Label = "GpuId"; Expression = {$_.gpuId}; Align = 'right'},
+                @{Label = "GpuGroup"; Expression = {$_.gpuGroup}; Align = 'right'},
                 @{Label = "Name"; Expression = {$_.gpu_name}},
-                @{Label = "Gpu%"; Expression = {$_.utilization_gpu}},   
-                @{Label = "Mem%"; Expression = {$_.utilization_memory}}, 
-                @{Label = "Temp"; Expression = {$_.temperature_gpu}}, 
-                @{Label = "FanSpeed"; Expression = {$_.FanSpeed}},
-                @{Label = "Power"; Expression = {$_.power_draw+" /"+$_.power_limit}},
-                @{Label = "pstate"; Expression = {$_.pstate}},
-                @{Label = "ClockGpu"; Expression = {$_.ClockGpu}},
-                @{Label = "ClockMem"; Expression = {$_.ClockMem}}
+                @{Label = "Gpu"; Expression = {[string]$_.utilization_gpu+"%"}; Align = 'right'},   
+                @{Label = "Mem"; Expression = {[string]$_.utilization_memory+"%"}; Align = 'right'}, 
+                @{Label = "Temp"; Expression = {$_.temperature_gpu}; Align = 'right'}, 
+                @{Label = "Fan"; Expression = {[string]$_.FanSpeed+"%"}; Align = 'right'},
+                @{Label = "Power"; Expression = {[string]$_.power_draw +"W/"+[string]$_.power_limit+"W"}; Align = 'right'},
+                @{Label = "PowLmt"; Expression = {[string]$_.Power_limit_percent+'%'}; Align = 'right'},
+                @{Label = "Pstate"; Expression = {$_.pstate}; Align = 'right'},
+                @{Label = "ClkGpu"; Expression = {[string]$_.ClockGpu+"Mhz"}; Align = 'right'},
+                @{Label = "ClkMem"; Expression = {[string]$_.ClockMem+"Mhz"}; Align = 'right'}
                 
-            ) | Out-Host
+            ) -groupby Type | Out-Host
     
-     
+ 
 
             $Cards |where-object Type -eq 'AMD' | Format-Table -Wrap  (
-                            @{Label = "GpuId"; Expression = {$_.gpuId}},
-                            @{Label = "Type"; Expression = {$_.Type}},
+                            @{Label = "GpuId"; Expression = {$_.gpuId}; Align = 'right'},
+                            @{Label = "GpuGroup"; Expression = {$_.gpuGroup}; Align = 'right'},
                             @{Label = "Name"; Expression = {$_.name}},
-                            @{Label = "Gpu%"; Expression = {$_.utilization_gpu}},   
-                            @{Label = "Temp"; Expression = {$_.temperature_gpu}}, 
-                            @{Label = "FanSpeed"; Expression = {$_.FanSpeed}},
-                            @{Label = "ClockGpu"; Expression = {$_.ClockGpu}},
-                            @{Label = "ClockMem"; Expression = {$_.ClockMem}}
+                            @{Label = "Gpu"; Expression = {[string]$_.utilization_gpu+"%"}; Align = 'right'},   
+                            @{Label = "Temp"; Expression = {$_.temperature_gpu}; Align = 'right'}, 
+                            @{Label = "FanSpeed"; Expression = {[string]$_.FanSpeed+"%"}; Align = 'right'},
+                            @{Label = "Power*"; Expression = {[string]$_.power_draw +"W"}; Align = 'right'},
+                            @{Label = "PowLmt"; Expression = {[string]$_.Power_limit_percent+'%'}; Align = 'right'},
+                            @{Label = "ClkGpu"; Expression = {[string]$_.ClockGpu+"Mhz"}; Align = 'right'},
+                            @{Label = "ClkMem"; Expression = {[string]$_.ClockMem+"Mhz"}; Align = 'right'}
                             
-                        ) | Out-Host
+                        )  -groupby Type  | Out-Host
         }
     
                       
@@ -415,22 +445,11 @@ Function Get_Mining_Types () {
                                         $_ | Add-Member Id $c
                                         $c=$c+1
                                         
-    $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
-                                                 <#
-                                        if ($_.type -eq "NVIDIA" -or $OCLPlatforms[0].Name -like "*NVIDIA*") {  #claymore needs global openclid, when Nvidia platform is first, this not coincide with AMD devices only order, some miners like sgminer needs AMD devices only order, others like claymore needs global position
-                                            $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
-                                                }
-                                            else {
-                                                    $gpust=$_.gpus -split ',' 
-                                                    for ($i=0; $i -lt $gpust.length; $i++) {$gpust[$i]=[int]$gpust[$i]+$NumberNvidiaGPU} 
-                                                    $A=($gpust -join ',')
-                                                    $_ | Add-Member GpusClayMode (($gpust -join ',') -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
-
-                                                }
-                                                    #>                                                
+                                        $_ | Add-Member GpusClayMode ($_.gpus -replace '10','A' -replace '11','B' -replace '12','C' -replace '13','D' -replace '14','E' -replace '15','F' -replace '16','G'  -replace ',','')
                                         $_ | Add-Member GpusETHMode ($_.gpus -replace ',',' ')
                                         $_ | Add-Member GpusNsgMode ("-d "+$_.gpus -replace ',',' -d ')
                                         $_ | Add-Member GpuPlatform (Get_Gpu_Platform $_.Type)
+                                        $_ | Add-Member GpusArray ($_.gpus -split ",")
 
                                         $Types+=$_
                                         }
@@ -658,20 +677,20 @@ function Get_Live_HashRate {
                     if ($Request -ne "" -and $request -ne $null) {
                             $Data = $Request.Substring($Request.IndexOf("{"), $Request.LastIndexOf("}") - $Request.IndexOf("{") + 1) -replace " ", "_" | ConvertFrom-Json
 
-                            $HashRate = if ($Data.SUMMARY.HS_5s -ne $null) {[Double]$Data.SUMMARY.HS_5s * [Math]::Pow($Multiplier, 0)}
-                            elseif ($Data.SUMMARY.KHS_5s -ne $null) {[Double]$Data.SUMMARY.KHS_5s * [Math]::Pow($Multiplier, 1)}
-                            elseif ($Data.SUMMARY.MHS_5s -ne $null) {[Double]$Data.SUMMARY.MHS_5s * [Math]::Pow($Multiplier, 2)}
-                            elseif ($Data.SUMMARY.GHS_5s -ne $null) {[Double]$Data.SUMMARY.GHS_5s * [Math]::Pow($Multiplier, 3)}
-                            elseif ($Data.SUMMARY.THS_5s -ne $null) {[Double]$Data.SUMMARY.THS_5s * [Math]::Pow($Multiplier, 4)}
-                            elseif ($Data.SUMMARY.PHS_5s -ne $null) {[Double]$Data.SUMMARY.PHS_5s * [Math]::Pow($Multiplier, 5)}
+                            $HashRate = if ($Data.SUMMARY.HS_5s -ne $null) {[Double]$Data.SUMMARY.HS_5s * [math]::Pow($Multiplier, 0)}
+                            elseif ($Data.SUMMARY.KHS_5s -ne $null) {[Double]$Data.SUMMARY.KHS_5s * [math]::Pow($Multiplier, 1)}
+                            elseif ($Data.SUMMARY.MHS_5s -ne $null) {[Double]$Data.SUMMARY.MHS_5s * [math]::Pow($Multiplier, 2)}
+                            elseif ($Data.SUMMARY.GHS_5s -ne $null) {[Double]$Data.SUMMARY.GHS_5s * [math]::Pow($Multiplier, 3)}
+                            elseif ($Data.SUMMARY.THS_5s -ne $null) {[Double]$Data.SUMMARY.THS_5s * [math]::Pow($Multiplier, 4)}
+                            elseif ($Data.SUMMARY.PHS_5s -ne $null) {[Double]$Data.SUMMARY.PHS_5s * [math]::Pow($Multiplier, 5)}
 
                             if ($HashRate -eq $null) {
-                                    $HashRate = if ($Data.SUMMARY.HS_av -ne $null) {[Double]$Data.SUMMARY.HS_av * [Math]::Pow($Multiplier, 0)}
-                                    elseif ($Data.SUMMARY.KHS_av -ne $null) {[Double]$Data.SUMMARY.KHS_av * [Math]::Pow($Multiplier, 1)}
-                                    elseif ($Data.SUMMARY.MHS_av -ne $null) {[Double]$Data.SUMMARY.MHS_av * [Math]::Pow($Multiplier, 2)}
-                                    elseif ($Data.SUMMARY.GHS_av -ne $null) {[Double]$Data.SUMMARY.GHS_av * [Math]::Pow($Multiplier, 3)}
-                                    elseif ($Data.SUMMARY.THS_av -ne $null) {[Double]$Data.SUMMARY.THS_av * [Math]::Pow($Multiplier, 4)}
-                                    elseif ($Data.SUMMARY.PHS_av -ne $null) {[Double]$Data.SUMMARY.PHS_av * [Math]::Pow($Multiplier, 5)}
+                                    $HashRate = if ($Data.SUMMARY.HS_av -ne $null) {[Double]$Data.SUMMARY.HS_av * [math]::Pow($Multiplier, 0)}
+                                    elseif ($Data.SUMMARY.KHS_av -ne $null) {[Double]$Data.SUMMARY.KHS_av * [math]::Pow($Multiplier, 1)}
+                                    elseif ($Data.SUMMARY.MHS_av -ne $null) {[Double]$Data.SUMMARY.MHS_av * [math]::Pow($Multiplier, 2)}
+                                    elseif ($Data.SUMMARY.GHS_av -ne $null) {[Double]$Data.SUMMARY.GHS_av * [math]::Pow($Multiplier, 3)}
+                                    elseif ($Data.SUMMARY.THS_av -ne $null) {[Double]$Data.SUMMARY.THS_av * [math]::Pow($Multiplier, 4)}
+                                    elseif ($Data.SUMMARY.PHS_av -ne $null) {[Double]$Data.SUMMARY.PHS_av * [math]::Pow($Multiplier, 5)}
                                     }
                                 }
 
@@ -811,14 +830,14 @@ function ConvertTo_Hash {
          )
 
     
-    $Return=switch ([math]::truncate([math]::log($Hash, [Math]::Pow(1000, 1)))) {
+    $Return=switch ([math]::truncate([math]::log($Hash, [math]::Pow(1000, 1)))) {
  
-          0 {"{0:n1} h" -f ($Hash / [Math]::Pow(1000, 0))}
-          1 {"{0:n1} kh" -f ($Hash / [Math]::Pow(1000, 1))}
-          2 {"{0:n1} mh" -f ($Hash / [Math]::Pow(1000, 2))}
-          3 {"{0:n1} gh" -f ($Hash / [Math]::Pow(1000, 3))}
-          4 {"{0:n1} th" -f ($Hash / [Math]::Pow(1000, 4))}
-          Default {"{0:n1} ph" -f ($Hash / [Math]::Pow(1000, 5))}
+          0 {"{0:n1} h" -f ($Hash / [math]::Pow(1000, 0))}
+          1 {"{0:n1} kh" -f ($Hash / [math]::Pow(1000, 1))}
+          2 {"{0:n1} mh" -f ($Hash / [math]::Pow(1000, 2))}
+          3 {"{0:n1} gh" -f ($Hash / [math]::Pow(1000, 3))}
+          4 {"{0:n1} th" -f ($Hash / [math]::Pow(1000, 4))}
+          Default {"{0:n1} ph" -f ($Hash / [math]::Pow(1000, 5))}
           
 
         }
@@ -1083,6 +1102,25 @@ function Get_ConsolePosition ([ref]$x,[ref]$y) {
 }
         
 
+
+   
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+function Print_Horizontal_line ([string]$Tittle) { 
+
+       $Width = $Host.UI.RawUI.WindowSize.Width
+       $A=$tittle.Length
+
+       if ($Tittle -eq "") {$str = "-" * $Width}
+             else {
+                $str = ("-" * ($Width/2 - ($tittle.Length/2) - 4)) +"  "+$Tittle+"  " 
+                $str += "-" * ($Width-$str.Length)
+             }
+       $str | Out-host
+   
+}
+
    
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
@@ -1090,12 +1128,26 @@ function Get_ConsolePosition ([ref]$x,[ref]$y) {
 
 function set_WindowSize ([int]$Width,[int]$Height) { 
     #zero not change this axis
+    
+
     $pshost = Get-Host
-    $psWindow = $pshost.UI.RawUI
-    $newSize = $psWindow.WindowSize
-    if ($Width -ne 0) {$newSize.Width =$Width}
-    if ($Height -ne 0) {$newSize.Height =$Height}
-    $psWindow.WindowSize= $newSize
+    $RawUI = $pshost.UI.RawUI
+
+    #Buffer must be always greater than windows size
+  
+    $BSize = $Host.UI.RawUI.BufferSize
+    if ($Width -ne 0 -and $Width -gt $BSize.Width) {$BSize.Width=$Width} 
+    if ($Height -ne 0 -and $Height -gt $BSize.Height) {$BSize.Width=$Height} 
+    
+    $Host.UI.RawUI.BufferSize= $BSize
+
+
+    $WSize = $Host.UI.RawUI.WindowSize
+    if ($Width -ne 0) {$WSize.Width =$Width}
+    if ($Height -ne 0) {$WSize.Height =$Height}
+
+    $Host.UI.RawUI.WindowSize= $WSize
+    
 }
 
 #************************************************************************************************************************************************************************************
@@ -1244,24 +1296,28 @@ function Start_Downloader {
                 }
                 else {
                     Clear-Host
-                    Write-Host -BackgroundColor green -ForegroundColor Black "Downloading....$($URI)"
+                    $Message="Downloading....$($URI)"
+                    Write-Host -BackgroundColor green -ForegroundColor Black  $Message
+                    Writelog $Message $logfile
                     Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop
                 }
             }
             catch {
                 
-                if ($URI) {Write-Host -BackgroundColor Yellow -ForegroundColor Black "Cannot download $($Path) distributed at $($URI). "}
-                else {Write-Host -BackgroundColor Yellow -ForegroundColor Black "Cannot download $($Path). "}
-                
+                $Message="Cannot download $($Path) distributed at $($URI). "
+                Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
+                Writelog $Message $logfile
+
                 
                 if ($Path_Old) {
                     if (Test-Path (Split-Path $Path_New)) {(Split-Path $Path_New) | Remove-Item -Recurse -Force}
                     (Split-Path $Path_Old) | Copy-Item -Destination (Split-Path $Path_New) -Recurse -Force
                 }
                 else {
-                    if ($URI) {Write-Host -BackgroundColor Yellow -ForegroundColor Black "Cannot find $($Path) distributed at $($URI). "}
-                    else {Write-Host -BackgroundColor Yellow -ForegroundColor Black "Cannot find $($Path). "}
-                }
+                    $Message="Cannot find $($Path) distributed at $($URI). "
+                    Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
+                    Writelog $Message $logfile
+                    }
             }
         }
     

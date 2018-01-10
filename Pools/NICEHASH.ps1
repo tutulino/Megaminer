@@ -10,6 +10,7 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $true
+$ActiveOnAutomatic24hMode = $true
 $AbbName = 'NH'
 $WalletMode = "WALLET"
 $Result=@()
@@ -25,11 +26,55 @@ if ($Querymode -eq "info"){
                     Disclaimer = "No registration, Autoexchange to BTC always"
                     ActiveOnManualMode=$ActiveOnManualMode  
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
+                    ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
                     ApiData = $True
                     AbbName=$AbbName
                     WalletMode=$WalletMode
                          }
     }
+
+
+
+
+
+
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+
+    if ($Querymode -eq "speed")    {
+       
+        $Info.user=($Info.user -split '\.')[0]
+                            
+        try {
+            $http="https://api.nicehash.com/api?method=stats.provider.workers&addr="+$Info.user
+            $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+        }
+        catch {}
+        
+        $Result=@()
+    
+        if ($Request.Result.Workers -ne $null -and $Request.Result.Workers -ne ""){
+$A= $Request.Result.Workers
+                $Request.Result.Workers |ForEach-Object {
+                                $Result += [PSCustomObject]@{
+                                        PoolName =$name
+                                        WorkerName =$_[0]
+                                        Rejected = $_[4]
+                                        Hashrate = [double]$_[1].a * 1000000
+                              }     
+                        }
+                remove-variable Request                                                                                                        
+                }
+    
+    
+    }
+    
+
+
+
+
 
 
 #****************************************************************************************************************************************************************************************
@@ -43,19 +88,20 @@ if ($Querymode -eq "wallet")    {
 
                             try {
                                 $http="https://api.nicehash.com/api?method=stats.provider&addr="+$Info.user
-                                $NH_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats 
+                                $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+                                $Request = $Request |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats 
                             }
                             catch {}
         
-                            if ($NH_Request -ne $null -and $NH_Request -ne ""){
+                            if ($Request -ne $null -and $Request -ne ""){
                                 $Result =   [PSCustomObject]@{
                                                         Pool =$name
                                                         currency = "BTC"
-                                                        balance = ($NH_Request | Measure-Object -Sum balance).sum
+                                                        balance = ($Request | Measure-Object -Sum balance).sum
                                                     }
                                     }
 
-                        Remove-variable NH_Request
+                        Remove-variable Request
                         }
 
                         
@@ -68,7 +114,8 @@ if ($Querymode -eq "wallet")    {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         try {
-            $NH_Request = Invoke-WebRequest "https://api.nicehash.com/api?method=simplemultialgo.info" -UseBasicParsing | ConvertFrom-Json |Select-Object -expand result |Select-Object -expand simplemultialgo
+            $Request = Invoke-WebRequest "https://api.nicehash.com/api?method=simplemultialgo.info" -UseBasicParsing -timeoutsec 3 | ConvertFrom-Json 
+            $Request = $Request |Select-Object -expand result |Select-Object -expand simplemultialgo
             
         }
         catch {
@@ -82,7 +129,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Locations += [PSCustomObject]@{NhLocation ='USA';MMlocation='US'}
         $Locations += [PSCustomObject]@{NhLocation ='EU';MMlocation='EUROPE'}
 
-        $NH_Request | ForEach-Object {
+        $Request | ForEach-Object {
 
 
                     $NH_Algorithm = get_algo_unified_name ($_.name)
@@ -98,21 +145,17 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                             "Blake14r" {$NH_coin="Decred"}
                             default {$NH_coin=$NH_Algorithm}
                             }
-                 
-                
-
 
 
 
                     foreach ($location in $Locations) {
-
             
 
                         $Result+= [PSCustomObject]@{
                                         Algorithm     = $NH_Algorithm
                                         Info          = $NH_coin
                                         Price         = [double]($_.paying / $Divisor)
-                                        Price24h      = $null
+                                        Price24h      = [double]($_.paying / $Divisor)
                                         Protocol      = "stratum+tcp"
                                         Host          = ($_.name)+"."+$location.NhLocation+".nicehash.com"
                                         Port          = $_.port
@@ -129,14 +172,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         WalletSymbol = "BTC"
                                         OriginalAlgorithm =  $SNH_AlgorithmOriginal
                                         OriginalCoin = $NH_coin
-                                        Fee = 0.04
+                                        Fee = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {0.02} else {0.04})
                                         EthStMode = 3
                                             
                                         }
                         }
                 }
 
-    Remove-variable NH_Request
+    Remove-variable Request
     }
 
 

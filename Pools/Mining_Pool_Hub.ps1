@@ -63,18 +63,18 @@ if ($Querymode -eq "info"){
                             try {
                                     $http="http://"+$Info.Coin+".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key="+$Info.ApiKey+"&id="
                                     #$http |write-host                                
-                                    $MiningPoolHub_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
+                                    $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
                             }
                             catch {}
         
         
-                            if ($MiningPoolHub_Request -ne $null -and $MiningPoolHub_Request -ne ""){
+                            if ($Request -ne $null -and $Request -ne ""){
                                 $Result = [PSCustomObject]@{
                                                         Pool =$name
                                                         currency = $Info.OriginalCoin
-                                                        balance = $MiningPoolHub_Request.balance.confirmed+$MiningPoolHub_Request.balance.unconfirmed+$MiningPoolHub_Request.balance_for_auto_exchange.confirmed+$MiningPoolHub_Request.balance_for_auto_exchange.unconfirmed
+                                                        balance = $Request.balance.confirmed+$Request.balance.unconfirmed+$Request.balance_for_auto_exchange.confirmed+$Request.balance_for_auto_exchange.unconfirmed
                                                     }
-                                Remove-variable MiningPoolHub_Request                                    
+                                Remove-variable Request                                    
                                 }
 
                         
@@ -90,19 +90,19 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
 
             try {
-                $MiningPoolHub_Request = Invoke-WebRequest "http://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+                $Request = Invoke-WebRequest "http://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
             }
             catch {
                     WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'
                     EXIT
             }
             
-            if (-not $MiningPoolHub_Request.success) { WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'; EXIT}
+            if (-not $Request.success) { WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'; EXIT}
 
 
             $Locations = "Europe", "US", "Asia"
 
-            $MiningPoolHub_Request.return | ForEach-Object {
+            $Request.return | ForEach-Object {
 
                 $MiningPoolHub_Algorithm= get_algo_unified_name $_.algo
                 $MiningPoolHub_Coin =   get_coin_unified_name $_.coin_name
@@ -150,7 +150,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
             }
 
 
-Remove-variable MiningPoolHub_Request
+Remove-variable Request
 }
 
 #****************************************************************************************************************************************************************************************
