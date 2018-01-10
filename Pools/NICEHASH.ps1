@@ -83,7 +83,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $Locations += [PSCustomObject]@{NhLocation ='EU';MMlocation='EUROPE'}
 
         $NH_Request | ForEach-Object {
-                    $NH_Algorithm = get-algo-unified-name ($_.name)
+
+
+                    $NH_Algorithm = get_algo_unified_name ($_.name)
                     $NH_AlgorithmOriginal =$_.name
                     
                     $Divisor = 1000000000
@@ -98,7 +100,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                             }
 
                         foreach ($location in $Locations) {
+
                         $enableSSL = ( $NH_Algorithm -eq "Cryptonight" -or  $NH_Algorithm -eq "Equihash" )
+
                         $Result+= [PSCustomObject]@{
                                         Algorithm     = $NH_Algorithm
                                         Info          = $NH_coin
