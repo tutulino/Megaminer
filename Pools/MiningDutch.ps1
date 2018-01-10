@@ -37,7 +37,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Pools = @()
     $Pools += [pscustomobject]@{"coin" = "Anarchistprime"; "algo" = "myriad-groestl"; "symbol" = "ACP"; "port" = "3415"};
-    $Pools += [pscustomobject]@{"coin" = "Auroracoin"; "algo" = "myriad-groestl"; "symbol" = "AUR "; "port" = "3761"};
+    $Pools += [pscustomobject]@{"coin" = "Auroracoin"; "algo" = "myriad-groestl"; "symbol" = "AUR"; "port" = "3761"};
     $Pools += [pscustomobject]@{"coin" = "Digibyte"; "algo" = "myriad-groestl"; "symbol" = "DGB"; "port" = "3472"};
     $Pools += [pscustomobject]@{"coin" = "Myriadcoin"; "algo" = "myriad-groestl"; "symbol" = "XMY"; "port" = "3708"};
     $Pools += [pscustomobject]@{"coin" = "Shield"; "algo" = "myriad-groestl"; "symbol" = "XSH"; "port" = "3762"};
