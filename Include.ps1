@@ -153,7 +153,10 @@ function Kill_ProcessId {
 
     try {
         #$_.Process.CloseMainWindow() | Out-Null
-        Stop-Process $ProcessId -force -wa SilentlyContinue -ea SilentlyContinue
+        $Proc = Get-Process -Id $ProcessId
+        $Proc.CloseMainWindow()
+        $Proc.Close()
+        # Stop-Process -Id $ProcessId -force -wa SilentlyContinue -ea SilentlyContinue
     } catch {}
 }
 
@@ -1080,6 +1083,41 @@ function Get_Pools {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
+function Get-Best-Hashrate-Algo {
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]$Algorithm
+    )
+
+
+    $Pattern = "*_" + $Algorithm + "_*_HashRate.txt"
+
+    $Besthashrate = 0
+
+    Get-ChildItem ($PSScriptRoot + "\Stats")  | Where-Object pschildname -like $Pattern | ForEach-Object {
+        $Content = ($_ | Get-Content | ConvertFrom-Json)
+        $Hrs = 0
+        if ($content -ne $null) {$Hrs = [double]($Content[0])}
+
+        if ($Hrs -gt $Besthashrate) {
+            $Besthashrate = $Hrs
+            $Miner = ($_.pschildname -split '_')[0]
+        }
+        $Return = [pscustomobject]@{
+            Hashrate = $Besthashrate
+            Miner    = $Miner
+        }
+
+    }
+
+    $Return
+}
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
 
 function Get_Algo_Divisor {
     param(
@@ -1353,7 +1391,7 @@ function get_WhattomineFactor ([string]$Algo) {
     #WTM json is for 3xAMD 480 hashrate must adjust,
     # to check result with WTM set WTM on "Difficulty for revenue" to "current diff" and "and sort by "current profit" set your algo hashrate from profits screen, WTM "Rev. BTC" and MM BTC/Day must be the same
 
-    switch ($_.Algo) {
+    switch ($Algo) {
         "Ethash" {$WTMFactor = 79500000}
         "Groestl" {$WTMFactor = 54000000}
         "Myriad-Groestl" {$WTMFactor = 79380000}
