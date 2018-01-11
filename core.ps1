@@ -30,12 +30,12 @@ param(
 
 
 #$MiningMode='Automatic'
-$MiningMode='Manual'
+#$MiningMode='Manual'
 
 #$PoolsName=('ahashpool','mining_pool_hub','hash_refinery')
 #$PoolsName='whattomine_virtual'
 #$PoolsName='yiimp'
-$PoolsName='nanopool'
+#$PoolsName='nanopool'
 #$PoolsName=('hash_refinery','zpool')
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
@@ -45,7 +45,7 @@ $PoolsName='nanopool'
 #$PoolsName="Nicehash"
 
 #$Coinsname =('bitcore','Signatum','Zcash')
-$Coinsname ='zcash'
+#$Coinsname ='zcash'
 #$Algorithm =('x11')
 
 #$Groupnames=('rx580')
