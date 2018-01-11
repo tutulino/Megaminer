@@ -31,6 +31,9 @@ if ($Querymode -eq "info"){
     }
 
 
+
+          
+
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
@@ -38,7 +41,7 @@ if ($Querymode -eq "info"){
     
 
 
-    if ($Querymode -eq "APIKEY")    {
+    if ($Querymode -eq "APIKEY" -or $Querymode -eq "SPEED")    {
 
                             Switch($Info.coin) {
                                 "DigiByte" {
@@ -59,24 +62,53 @@ if ($Querymode -eq "info"){
                                 "Verge" {$Info.Coin=$Info.coin+'-'+$Info.Algorithm}
                                 }
 
-                            
-                            try {
-                                    $http="http://"+$Info.Coin+".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key="+$Info.ApiKey+"&id="
-                                    #$http |write-host                                
-                                    $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
-                            }
-                            catch {}
-        
-        
-                            if ($Request -ne $null -and $Request -ne ""){
-                                $Result = [PSCustomObject]@{
-                                                        Pool =$name
-                                                        currency = $Info.OriginalCoin
-                                                        balance = $Request.balance.confirmed+$Request.balance.unconfirmed+$Request.balance_for_auto_exchange.confirmed+$Request.balance_for_auto_exchange.unconfirmed
-                                                    }
-                                Remove-variable Request                                    
-                                }
 
+                            #***************************
+                            if ($Querymode -eq "APIKEY" ) {
+
+                                        try {
+                                                $http="http://"+$Info.Coin+".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key="+$Info.ApiKey+"&id="
+                                                $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
+                                        }
+                                        catch {}
+                    
+                    
+                                        if ($Request -ne $null -and $Request -ne ""){
+                                            $Result = [PSCustomObject]@{
+                                                                    Pool =$name
+                                                                    currency = $Info.OriginalCoin
+                                                                    balance = $Request.balance.confirmed+$Request.balance.unconfirmed+$Request.balance_for_auto_exchange.confirmed+$Request.balance_for_auto_exchange.unconfirmed
+                                                                }
+                                            Remove-variable Request                                    
+                                            }
+                                        }
+                            #***************************
+
+
+                            if ($Querymode -eq "SPEED")    {
+        
+                        
+                                try {
+                                    $http="http://"+$Info.Coin+".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key="+$Info.ApiKey
+                                    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12                              
+                                    $Request =  Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5  | ConvertFrom-Json
+                                    }
+                                catch {
+                                      }
+                            
+                                if ($Request -ne $null -and $Request -ne ""){
+                                $Request.getuserworkers.data | ForEach-Object {
+                                                $Result += [PSCustomObject]@{
+                                                        PoolName =$name
+                                                        Diff     = $_.difficulty
+                                                        Workername =($_.username -split "\.")[1]
+                                                        Hashrate = $_.hashrate
+                                                        }
+                                                }
+                                                    
+                                          }
+                            
+                                }
                         
                         }
 

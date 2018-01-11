@@ -29,13 +29,13 @@ param(
 ##Parameters for testing, must be commented on real use
 
 
-#$MiningMode='Automatic24h'
-#$MiningMode='Manual'
+#$MiningMode='Automatic'
+$MiningMode='Manual'
 
 #$PoolsName=('ahashpool','mining_pool_hub','hash_refinery')
 #$PoolsName='whattomine_virtual'
 #$PoolsName='yiimp'
-#$PoolsName='nanopool'
+$PoolsName='nanopool'
 #$PoolsName=('hash_refinery','zpool')
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
@@ -45,7 +45,7 @@ param(
 #$PoolsName="Nicehash"
 
 #$Coinsname =('bitcore','Signatum','Zcash')
-#$Coinsname ='bitcoingold'
+$Coinsname ='zcash'
 #$Algorithm =('x11')
 
 #$Groupnames=('rx580')
@@ -920,20 +920,31 @@ while ($true) {
                                 #To get pool speed
                                         $PoolsSpeed=@()
                                         
-                                        $ActiveMiners | Where-Object Status -eq 'Running' |select-object PoolName,UserNameReal -unique | ForEach-Object { 
+                                        
+                                        $A=$ActiveMiners | Where-Object Status -eq 'Running'
+                                        
+                                        $ActiveMiners | Where-Object Status -eq 'Running' |select-object PoolName,UserNameReal,WalletSymbol,coin,Workername -unique | ForEach-Object { 
                                                             $Info=[PSCustomObject]@{
                                                                                 User= $_.UsernameReal
                                                                                 PoolName=$_.Poolname
+                                                                                ApiKey = get_config_variable ("APIKEY_"+$_.PoolName)
+                                                                                Symbol = $_.WalletSymbol
+                                                                                Coin= $_.coin
+                                                                                Workername= $_.Workername
                                                                                 }
                                                             $PoolsSpeed+=Get_Pools -Querymode "speed" -PoolsFilterList $_.Poolname -Info $Info
                                                             }
 
                                         #Dual miners
 
-                                        $ActiveMiners | Where-Object Status -eq 'Running' |Where-object PoolNameDual -ne $null |select-object PoolnameDual,UserNameRealDual -unique | ForEach-Object { 
+                                        $ActiveMiners | Where-Object Status -eq 'Running' |Where-object PoolNameDual -ne $null |select-object PoolnameDual,UserNameRealDual,WalletSymbol,coinDual,Workername -unique | ForEach-Object { 
                                                             $Info=[PSCustomObject]@{
                                                                                 User= $_.UsernameRealDual
                                                                                 PoolName=$_.PoolnameDual
+                                                                                ApiKey = get_config_variable ("APIKEY_"+$_.PoolnameDual)
+                                                                                Symbol = $_.WalletSymbol
+                                                                                Coin= $_.coinDual
+                                                                                Workername= $_.WorkernameDual
                                                                                 }
                                                             $PoolsSpeed+=Get_Pools -Querymode "speed" -PoolsFilterList $_.PoolnameDual -Info $Info
                                             }      
@@ -1103,8 +1114,8 @@ while ($true) {
                             $Pools  | where-object WalletMode -eq 'APIKEY' | Select-Object PoolName,AbbName,info,Algorithm,OriginalAlgorithm,OriginalCoin,Symbol,WalletMode,WalletSymbol  -unique  | ForEach-Object {
                                     
 
-                                    $ApiKeyPattern="APIKEY_"+$_.PoolName
-                                    $ApiKey = get_config_variable $ApiKeyPattern
+                                    
+                                    $ApiKey = get_config_variable ("APIKEY_"+$_.PoolName)
                                 
                                     if ($Apikey -ne "") {
                                             $WalletsToCheck += [pscustomObject]@{

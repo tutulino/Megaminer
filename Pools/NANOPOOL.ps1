@@ -28,12 +28,46 @@ if ($Querymode -eq "info"){
     }
 
 
+
+    
+    
+     
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+    
+
+if ($Querymode -eq "SPEED")    {
+      
+    
+    try {
+        $http="https://api.nanopool.org/v1/"+$Info.symbol.tolower()+"/history/"+$Info.user
+        $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+    }
+    catch {}
+
+
+    $Result=[PSCustomObject]@{
+                            PoolName =$name
+                            Workername = $Info.WorkerName
+                            Hashrate = ($Request.data)[0].hashrate
+                        }
+}
+
+
+
+
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+    
+
     if ($Querymode -eq "WALLET")    {
       
     
                                 try {
                                     $http="https://api.nanopool.org/v1/"+$Info.symbol.tolower()+"/balance/"+$Info.user
-                                    $NP_Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+                                    $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
                                 }
                                 catch {}
 
@@ -41,12 +75,15 @@ if ($Querymode -eq "info"){
                                 $Result=[PSCustomObject]@{
                                                         Pool =$name
                                                         currency = $Info.OriginalCoin
-                                                        balance = $NP_Request.data
+                                                        balance = $Request.data
                                                     }
                         }
 
                         
 
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
+#****************************************************************************************************************************************************************************************
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
@@ -67,12 +104,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $PrePools | ForEach-Object  {
 
                 try {
-                    $NP_RequestW=$null
+                    $RequestW=$null
                     $http="https://api.nanopool.org/v1/"+$_.symbol.ToLower()+"/pool/activeworkers"
-                    $NP_RequestW = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 3 | ConvertFrom-Json 
-                    $NP_RequestP=$null
+                    $RequestW = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 3 | ConvertFrom-Json 
+                    $RequestP=$null
                     $http="https://api.nanopool.org/v1/"+$_.symbol.ToLower()+"/approximated_earnings/1"
-                    $NP_RequestP = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 3 | ConvertFrom-Json |select-object -ExpandProperty data |select-object -ExpandProperty day
+                    $RequestP = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 3 | ConvertFrom-Json |select-object -ExpandProperty data |select-object -ExpandProperty day
                 }
                 catch {}
 
@@ -86,7 +123,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                   $Result+=[PSCustomObject]@{
                                         Algorithm = $_.algo
                                         Info = $_.Coin
-                                        Price = ($NP_RequestP.bitcoins / $_.Divisor)
+                                        Price = ($RequestP.bitcoins / $_.Divisor)
                                         Price24h = $null
                                         Protocol      = "stratum+tcp" #$_.Protocol
                                         Host          = $loc.server
@@ -99,7 +136,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         AbbName       = $AbbName
                                         ActiveOnManualMode    = $ActiveOnManualMode
                                         ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                        PoolWorkers = $NP_RequestW.Data
+                                        PoolWorkers = $RequestW.Data
                                         PoolName        = $Name
                                         WalletMode      = $WalletMode
                                         WalletSymbol    = $_.symbol

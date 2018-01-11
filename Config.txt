@@ -69,13 +69,13 @@
 
 @@PERCENTTOSWITCH=10
 
--- seconds to delay closing of old miners when new miner is selected as more profitable, this minimizes inactive time while switch. For benchmarking interval this value is automatically zero.
+-- seconds to delay closing of old miners when new miner is selected as more profitable, this minimizes inactive time while switch. For benchmarking interval this value is automatically zero. Some systems can turn unstable if non zero.
 
 @@DELAYCLOSEMINERS=0
 
 
 -- [OPTIONAL] API Keys
--- Some non-anonymous pools, such as Suprnova and MPH, require API keys to obtain wallet details.
+-- Some non-anonymous pools, such as Suprnova and MPH, require API keys to obtain wallet details or pool speed.
 -- For example @@APIKEY_MINING_POOL_HUB=a04e6sx30b38f73878ae40775f70efseff6582e8ec37600215755487ccbd36b4510b4
 -- FORMAT: @@APIKEY_NAMEOFPOOL=XXXXXXXXXX) [optional] 
 

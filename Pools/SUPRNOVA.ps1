@@ -58,7 +58,6 @@ if ($Querymode -eq "info"){
                          
                                                 
                         }
-
             
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
@@ -68,26 +67,27 @@ if ($Querymode -eq "info"){
         
                         
         try {
-            $http="http://"+$Info.Symbol+".suprnova.cc/index.php?page=api&action=getuserbalance&api_key="+$Info.ApiKey+"&id="
+            $http="http://"+$Info.Symbol+".suprnova.cc/index.php?page=api&action=getuserworkers&api_key="+$Info.ApiKey
             #$http |write-host  
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12                              
-            $Request =  Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5
-            $Request = $Request | ConvertFrom-Json | Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
+            $Request =  Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5  | ConvertFrom-Json
             }
         catch {
               }
 
-
-    
-            $Result=[PSCustomObject]@{
-                                    Pool =$name
-                                    currency = $Info.OriginalCoin
-                                    balance = $Request.confirmed+$Request.unconfirmed
+        if ($Request -ne $null -and $Request -ne ""){
+        $Request.getuserworkers.data | ForEach-Object {
+                        $Result += [PSCustomObject]@{
+                                PoolName =$name
+                                Diff     = $_.difficulty
+                                Workername =($_.username -split "\.")[1]
+                                Hashrate = $_.hashrate
                                 }
+                        }
                             
-    }
+                  }
 
-
+        }
 
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************

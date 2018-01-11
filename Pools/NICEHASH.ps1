@@ -10,7 +10,7 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $true
-$ActiveOnAutomatic24hMode = $true
+$ActiveOnAutomatic24hMode = $false
 $AbbName = 'NH'
 $WalletMode = "WALLET"
 $Result=@()
