@@ -1,7 +1,7 @@
 {
-  "Path": ".\\Bin\\bminer-v3.0.0-e95eeda\\bminer.exe",
+  "Path": ".\\Bin\\bminer-v5.0.0-3a6fcd1\\bminer.exe",
   "ExtractionPath": ".\\Bin\\",
-    "Uri": "https://github.com/tutulino/Software/releases/download/0/bminer-v3.0.0-e95eeda-amd64.1.zip",
+    "Uri": "https://github.com/tutulino/Software/releases/download/0/bminer-v5.0.0-3a6fcd1-amd64.1.zip",
     "Types": ["NVIDIA"],
     "Arguments":  "-uri stratum://#LOGIN#.#WORKERNAME#@#SERVER#:#PORT# -devices #DEVICES# -watchdog -api 127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
     "API":  "BMINER",

@@ -33,6 +33,31 @@ if ($Querymode -eq "info") {
 }
 
 
+if ($Querymode -eq "speed") {
+    try {
+        $http = $ApiUrl + "/walletEx?address=" + $Info.user
+        $Request = Invoke-WebRequest -UserAgent $UserAgent $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+    } catch {}
+
+    $Result = @()
+
+    if ($Request -ne $null -and $Request -ne "") {
+        $Request.Miners |ForEach-Object {
+            $Result += [PSCustomObject]@{
+                PoolName   = $name
+                Version    = $_.version
+                Algorithm  = get_algo_unified_name $_.Algo
+                Workername = ($_.password -split ",")[1]
+                Diff       = $_.difficulty
+                Rejected   = $_.rejected
+                Hashrate   = $_.accepted
+            }
+        }
+        remove-variable Request
+    }
+}
+
+
 if ($Querymode -eq "wallet") {
     try {
         $http = $ApiUrl + "/wallet?address=" + $Info.user

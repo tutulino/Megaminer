@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\cpuminer-opt\\",
     "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1613739/cpuminer-opt-3.7.9-windows.zip",
     "Types" : ["CPU"],
-    "Arguments" : "-b #APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS# -q",
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# #ALGORITHMPARAMETERS# -q",
     "BenchmarkArg": "--benchmark",
     "API" : "Ccminer",
     "Wrap" : false,

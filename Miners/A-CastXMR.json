@@ -1,6 +1,6 @@
 {
-    "Path" : ".\\Bin\\AMD-castXMR\\cast_xmr-vega.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-castXMR\\",
+    "Path" : ".\\Bin\\AMD-CastXMR\\cast_xmr-vega.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-CastXMR\\",
     "Uri" : "http://www.gandalph3000.com/download/cast_xmr-vega-win64_081.zip",
     "Types" : ["AMD"],
     "Arguments" : "--remoteaccess -S #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -G #DEVICES# --remoteport #APIPORT# --opencl #GPUPLATFORM# --forcecompute --fastjobswitch #ALGORITHMPARAMETERS#",

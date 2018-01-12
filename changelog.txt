@@ -440,7 +440,21 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 5.2
 
 
-Added Mkxminer to Additional Miners folder (you must add manually to miner folder if you want to try)
-Added screen info while interval is starting
-Redesigned log files
 
+
+*Added pool detected hashrate to active miners section, note: this speed is usually based on las 5 minutes shares and is pools refresh speed dependant.
+*Redesigned and more informatives log files
+*Added power limit percent and Gpu Group in current screen
+*Added Power and efficiency for NVIDIA in Active Miners section
+*Added screen info while interval is starting
+*Minimum donation is now 5 minutes per day (0.34%)
+*New stats screen (old screens are reorganize)
+*Changed default miner intensities and config options to ensure default options stability
+*Moved Mkxminer to Additional Miners folder (you must add manually to miner folder if you want to try)
+*Updated ccminer tpruvot to 2.2.4
+*Updated bcminer to 5.0.0
+*Updated Claymore Dual to 10.3
+*Updated Nsgminer to 0.9.4
+
+*Fixed: some wallets from sprnova and mining pool hub not shown on wallets screen
+*Fixed: Nicehash wrong fee whe using nicehash specific wallet

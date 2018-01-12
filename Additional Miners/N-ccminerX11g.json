@@ -10,7 +10,7 @@
 "PrelaunchCommand":"",
 "Algorithms": [
                
-                {"x11gost" : "-a sib"}
+                {"x11gost" : "-a sib -i 20"}
 
               ]
 

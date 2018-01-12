@@ -4,7 +4,7 @@
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/amdxmrminer_v0.65b.zip",
     "Types" : ["AMD"],
     "Arguments" : "-wp #APIPORT# -p #SERVER#:#PORT# -w #LOGIN# -psw #PASSWORD# -pidx #GPUPLATFORM# -do 0 #ALGORITHMPARAMETERS#",
-    "API" : "xmrminer",
+    "API" : "XMrig",
     "Wrap" : false,
     "Dualmining":false,
     "PrelaunchCommand":"",

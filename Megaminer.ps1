@@ -22,6 +22,7 @@ if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY 
 
 #--------------Load config.txt file
 
+$Currency= get_config_variable "CURRENCY"
 $Location = get_config_variable "LOCATION"
 $LocalCurrency = get_config_variable "LOCALCURRENCY"
 if ($LocalCurrency.length -eq 0) {
@@ -253,16 +254,16 @@ if ($MiningMode -eq "manual") {
             @{Label = "Name"; Expression = {$_.info.toupper()}; Align = 'left'} ,
             @{Label = "Symbol"; Expression = {$_.symbol}; Align = 'left'},
             @{Label = "Algorithm"; Expression = {$_.algorithm.tolower()}; Align = 'left'},
-            @{Label = "Workers"; Expression = {$_.Workers}; Align = 'right'},
-            #@{Label = "PoolHash"; Expression = {"$($_.PoolHashRate | ConvertTo-Hash)/s"}; Align = 'right'},
+            # @{Label = "Workers"; Expression = {$_.Workers}; Align = 'right'},
+            # @{Label = "PoolHash"; Expression = {"$($_.PoolHashRate | ConvertTo-Hash)/s"}; Align = 'right'},
             @{Label = "HashRate"; Expression = {(ConvertTo_Hash ($_.YourHashRate)) + "/s"}; Align = 'right'},
-            #@{Label = "Blocks_24h"; Expression = {$_.Blocks_24h}; Align = 'right'},
-            @{Label = "BTCPrice"; Expression = {[math]::Round($_.BTCPrice, 6)}; Align = 'right'},
+            # @{Label = "Blocks_24h"; Expression = {$_.Blocks_24h}; Align = 'right'},
+            @{Label = "BTCPrice"; Expression = {if ($_.BTCPrice -gt 0) {[math]::Round($_.BTCPrice, 6).ToString("n6")}}; Align = 'right'},
             @{Label = $LabelPrice; Expression = { [math]::Round($_.LocalPrice, 2)}; Align = 'right'},
-            #@{Label = "DiffChange24h"; Expression = {([math]::Round($_.DiffChange24h,1)).ToString()+'%'}; Align = 'right'},
-            @{Label = "Reward"; Expression = {([math]::Round($_.Reward, 3))}; Align = 'right'},
-            @{Label = "BtcProfit"; Expression = {([math]::Round($_.BtcProfit, 6))}; Align = 'right'},
-            @{Label = $LabelProfit; Expression = {[math]::Round($_.LocalProfit, 2)}; Align = 'right'}
+            # @{Label = "DiffChange24h"; Expression = {([math]::Round($_.DiffChange24h,1)).ToString()+'%'}; Align = 'right'},
+            @{Label = "Reward"; Expression = {if ($_.Reward -gt 0 ) {[math]::Round($_.Reward, 3)}}; Align = 'right'},
+            @{Label = "mBTCProfit"; Expression = {if ($_.BtcProfit -gt 0 ) {($_.BtcProfit * 1000).ToString("n5")}}; Align = 'right'},
+            @{Label = $LabelProfit; Expression = {if ($_.LocalProfit -gt 0 ) {[math]::Round($_.LocalProfit, 2)}}; Align = 'right'}
         )  | out-host
 
 

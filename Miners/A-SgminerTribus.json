@@ -1,6 +1,6 @@
 {
-    "Path" : ".\\Bin\\AMD-sgminerTribus\\sgminer.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-sgminerTribus\\",
+    "Path" : ".\\Bin\\AMD-SgminerTribus\\sgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-SgminerTribus\\",
     "Uri" : "http://ccminer.org/preview/sgminer-x64-5.3.8.zip",
     "Types" : ["AMD"],
     "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",

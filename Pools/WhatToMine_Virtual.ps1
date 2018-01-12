@@ -38,6 +38,14 @@ if ($Querymode -eq "info") {
 }
 
 
+if (($Querymode -eq "speed") ) {
+    if ($PoolRealName -ne $null) {
+        $Info.poolname = $PoolRealName
+        $result = Get_Pools -Querymode "speed" -PoolsFilterList $Info.poolname -Info $Info
+    }
+}
+
+
 if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
     if ($PoolRealName -ne $null) {
         $Info.poolname = $PoolRealName
@@ -60,7 +68,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $http = "https://whattomine.com/coins.json"
             $Response = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5
             If ($Response.StatusCode -eq 200) {
-                $Response.Content | Set-Content .\Cache\wtm-coins.json
                 $WTMResponse = $Response.Content | ConvertFrom-Json | Select-Object -ExpandProperty coins
             }
         } catch {start-sleep 2}
@@ -69,8 +76,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     } while ($WTMResponse -eq $null -and $retries -le 3)
 
     if ($retries -gt 3) {
-        Write-Host $Name 'API NOT RESPONDING...USING CACHE'
-        try { $WTMResponse = (Get-Content -Path ".\Cache\wtm-coins.json") | ConvertFrom-Json | Select-Object -ExpandProperty coins } catch { Write-Host "No Cache. Exiting"; Exit}
+        Write-Host $Name 'API NOT RESPONDING...'
     }
 
     $WTMResponse.psobject.properties.name | ForEach-Object {
@@ -95,7 +101,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                     $http = "http://whattomine.com/coins/$c.json"
                     $Response = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5
                     If ($Response.StatusCode -eq 200) {
-                        $Response.Content | Set-Content ".\Cache\wtm-$c.json"
                         $WTMCoinResponse = $Response.Content | ConvertFrom-Json
                     }
                 } catch {start-sleep 2}
@@ -103,8 +108,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 if ($WTMCoinResponse -eq $null -or $WTMCoinResponse -eq "") {start-sleep 3}
             } while ($WTMCoinResponse -eq $null -and $retries -le 3)
             if ($retries -gt 3) {
-                Write-Host $Name 'COIN API NOT RESPONDING...USING CACHE'
-                try { $WTMCoinResponse = (Get-Content -Path ".\Cache\wtm-$c.json") | ConvertFrom-Json } catch { Write-Host "No Cache. Skipping" }
+                Write-Host $Name 'COIN API NOT RESPONDING...'
             }
 
             $WTMCoinResponse.algorithm = get_algo_unified_name ($WTMCoinResponse.algorithm)

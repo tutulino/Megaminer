@@ -29,9 +29,6 @@ if ($Querymode -eq "info") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
     $Pools += [pscustomobject]@{"coin" = "DIGIBYTE"; "algo" = "Groestl"; "symbol" = "DGB"; "server" = "s1.theblocksfactory.com"; "port" = "9003"; "location" = "US"};
-    $Pools += [pscustomobject]@{"coin" = "DIGIBYTE"; "algo" = "Qubit"; "symbol" = "DGB"; "server" = "s1.theblocksfactory.com"; "port" = "9000"; "location" = "US"};
-    $Pools += [pscustomobject]@{"coin" = "DIGIBYTE"; "algo" = "Scrypt"; "symbol" = "DGB"; "server" = "s1.theblocksfactory.com"; "port" = "9004"; "location" = "US"};
-    $Pools += [pscustomobject]@{"coin" = "DIGIBYTE"; "algo" = "sha256d"; "symbol" = "DGB"; "server" = "s1.theblocksfactory.com"; "port" = "9001"; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "DIGIBYTE"; "algo" = "SKEIN"; "symbol" = "DGB"; "server" = "s1.theblocksfactory.com"; "port" = "9002"; "location" = "US"};
 
     $Pools += [pscustomobject]@{"coin" = "FEATHERCOIN"; "algo" = "NEOSCRYPT"; "symbol" = "FTC"; "server" = "s1.theblocksfactory.com"; "port" = "3333"; "location" = "US"}

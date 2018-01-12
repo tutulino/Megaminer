@@ -10,6 +10,7 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
+$ActiveOnAutomatic24hMode = $false
 $AbbName = 'NH'
 $WalletMode = "WALLET"
 $Result = @()
@@ -23,6 +24,31 @@ if ($Querymode -eq "info") {
         ApiData               = $True
         AbbName               = $AbbName
         WalletMode            = $WalletMode
+    }
+}
+
+
+if ($Querymode -eq "speed") {
+    $Info.user = ($Info.user -split '\.')[0]
+
+    try {
+        $http = "https://api.nicehash.com/api?method=stats.provider.workers&addr=" + $Info.user
+        $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+    } catch {}
+
+    $Result = @()
+
+    if ($Request.Result.Workers -ne $null -and $Request.Result.Workers -ne "") {
+        $A = $Request.Result.Workers
+        $Request.Result.Workers |ForEach-Object {
+            $Result += [PSCustomObject]@{
+                PoolName   = $name
+                WorkerName = $_[0]
+                Rejected   = $_[4]
+                Hashrate   = [double]$_[1].a * 1000000
+            }
+        }
+        remove-variable Request
     }
 }
 

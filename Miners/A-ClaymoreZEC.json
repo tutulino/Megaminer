@@ -1,7 +1,7 @@
 {
-    "Path" : ".\\Bin\\AMD-ClaymoreZEC\\ZecMiner64.exe",
+    "Path" : ".\\Bin\\AMD-ClaymoreZEC\\Claymore's ZCash AMD GPU Miner v12.6\\ZecMiner64.exe",
     "ExtractionPath" : ".\\Bin\\AMD-ClaymoreZEC\\",
-    "Uri" : "https://github.com/nanopool/ClaymoreZECMiner/releases/download/v12.6/Claymore.s.ZCash.AMD.GPU.Miner.v12.6.zip",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.ZCash.AMD.GPU.Miner.v12.6.-.Catalyst.15.12-17.x.zip",
     "Types" : ["AMD"],
     "Arguments" : "-zpool #PROTOCOL#://#SERVER#:#PORT# -zwal #LOGIN# -zpsw #PASSWORD# -allpools 1 -di #DEVICESCLAYMODE# -mport #APIPORT# #ALGORITHMPARAMETERS#",
     "API" : "ClaymoreV2",

@@ -1,6 +1,6 @@
 {
-    "Path" : ".\\Bin\\AMD-sgminerPhi\\sgminer.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-sgminerPhi\\",
+    "Path" : ".\\Bin\\AMD-SgminerPhi\\sgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-SgminerPhi\\",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/sgminer-phi-5.6.1-1-windows-amd64.zip",
     "Types" : ["AMD"],
     "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",

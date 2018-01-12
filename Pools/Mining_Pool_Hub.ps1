@@ -40,25 +40,46 @@ if ($Querymode -eq "info") {
 if ($Querymode -eq "APIKEY") {
 
     try {
-        $ApiKeyPattern = "@@APIKEY_$Name=*"
-        $ApiKey = (Get-Content config.txt | Where-Object {$_ -like $ApiKeyPattern} ) -replace $ApiKeyPattern, ''
-
-        $http = "https://" + $Info.OriginalCoin + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $ApiKey + "&id="
-        $MiningPoolHub_Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
+        $http = "https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $Info.ApiKey + "&id="
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
     } catch {}
 
 
-    if ($MiningPoolHub_Request -ne $null -and $MiningPoolHub_Request -ne "") {
+    if ($Request -ne $null -and $Request -ne "") {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Info.Symbol
-            balance  = $MiningPoolHub_Request.balance.confirmed +
-                $MiningPoolHub_Request.balance.unconfirmed +
-                $MiningPoolHub_Request.balance_for_auto_exchange.confirmed +
-                $MiningPoolHub_Request.balance_for_auto_exchange.unconfirmed +
-                $MiningPoolHub_Request.balance_on_exchange
+            balance  = $Request.balance.confirmed +
+            $Request.balance.unconfirmed +
+            $Request.balance_for_auto_exchange.confirmed +
+            $Request.balance_for_auto_exchange.unconfirmed +
+            $Request.balance_on_exchange
         }
-        Remove-variable MiningPoolHub_Request
+        Remove-variable Request
+    }
+}
+
+
+if ($Querymode -eq "SPEED") {
+
+    try {
+        $http = "https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5  | ConvertFrom-Json
+    } catch {
+    }
+
+    if ($Request -ne $null -and $Request -ne "") {
+        $Request.getuserworkers.data | ForEach-Object {
+            $Result += [PSCustomObject]@{
+                PoolName   = $name
+                Diff       = $_.difficulty
+                Workername = ($_.username -split "\.")[1]
+                Hashrate   = $_.hashrate
+            }
+        }
+        Remove-variable Request
     }
 }
 
@@ -124,7 +145,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                 WalletMode            = $WalletMode
-                WalletSymbol          = get_coin_symbol -Coin $MiningPoolHub_Coin
+                WalletSymbol          = $MiningPoolHub_OriginalCoin
                 PoolName              = $Name
                 OriginalAlgorithm     = $MiningPoolHub_OriginalAlgorithm
                 OriginalCoin          = $MiningPoolHub_OriginalCoin

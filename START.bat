@@ -7,8 +7,4 @@ setx GPU_SINGLE_ALLOC_PERCENT 100
 
 cd /d %~dp0
 
-:LOOP
-
 powershell -version 5.0 -noexit -executionpolicy bypass -command "&.\Megaminer.ps1
-
-GOTO LOOP

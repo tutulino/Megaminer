@@ -1,6 +1,6 @@
 {
-    "Path" : ".\\Bin\\AMD-sgminerPolytimos\\sgminer-polytimos\\sgminer.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-sgminerPolytimos\\",
+    "Path" : ".\\Bin\\AMD-SgminerPolytimos\\sgminer-polytimos\\sgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-SgminerPolytimos\\",
     "Uri" : "https://github.com/polytimos/release/raw/master/sgminer-polytimos.zip",
     "Types" : ["AMD"],
     "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
