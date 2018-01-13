@@ -735,6 +735,15 @@ while ($true) {
 
     ErrorsToLog $LogFile
 
+    #Stop miners running if they arent best now
+    if ($DelayCloseMiners -eq 0) {
+        $ActiveMiners | Where-Object {$_.Best -eq $false -and $_.Process -ne $null} | ForEach-Object {
+            Kill_ProcessId $_.Process.Id
+            $_.process = $null
+            $_.Status = "Idle"
+            WriteLog ("Killing " + $_.name + "/" + $_.Algorithms + "(id " + [string]$_.Id + ")") $LogFile
+        }
+    }
 
 
     #Start all Miners marked as Best (if they are running does nothing)
@@ -852,24 +861,26 @@ while ($true) {
 
         #Stop miners running if they aren't best now or failed after 30 seconds into loop
 
-        if ($MustCloseMiners) {writelog ("time to close old miners..." + [string]($DelayCloseMiners - $LoopSeconds) + " secs") $logfile $false}
+        if ($DelayCloseMiners -gt 0) {
+            if ($MustCloseMiners) {writelog ("time to close old miners..." + [string]($DelayCloseMiners - $LoopSeconds) + " secs") $logfile $false}
 
-        if ($LoopSeconds -ge $DelayCloseMiners -and $MustCloseMiners) {
-            $AnyProcClosed = $false
-            $ActiveMiners | Where-Object {$_.Best -eq $false -and $_.Process -ne $null} | ForEach-Object {
+            if ($LoopSeconds -ge $DelayCloseMiners -and $MustCloseMiners) {
+                $AnyProcClosed = $false
+                $ActiveMiners | Where-Object {$_.Best -eq $false -and $_.Process -ne $null} | ForEach-Object {
 
-                Kill_ProcessId $_.Process.Id
-                $_.process = $null
-                $_.Status = "Idle"
-                $AnyProcClosed = $true
-                WriteLog ("Killing " + $_.name + "/" + $_.Algorithms + "(id " + [string]$_.Id + ")") $LogFile
-            }
+                    Kill_ProcessId $_.Process.Id
+                    $_.process = $null
+                    $_.Status = "Idle"
+                    $AnyProcClosed = $true
+                    WriteLog ("Killing " + $_.name + "/" + $_.Algorithms + "(id " + [string]$_.Id + ")") $LogFile
+                }
 
-            $MustCloseMiners = $false
+                $MustCloseMiners = $false
 
-            if ($AnyProcClosed) {
-                Clear-host
-                $repaintScreen = $true
+                if ($AnyProcClosed) {
+                    Clear-host
+                    $repaintScreen = $true
+                }
             }
         }
 
