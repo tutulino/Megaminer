@@ -264,9 +264,6 @@ while ($true) {
     }
 
 
-    $Rates = [pscustomObject]@{}
-    try { $Currency | ForEach-Object {$Rates | Add-Member $_ (Invoke-WebRequest "https://api.cryptonator.com/api/ticker/btc-$_" -UseBasicParsing | ConvertFrom-Json).ticker.price}} catch {}
-
     ErrorsToLog $LogFile
 
 
