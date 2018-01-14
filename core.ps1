@@ -327,7 +327,7 @@ while ($true) {
                                 $HashrateValue = [double]($Hrs -split ("_"))[0]
                                 $HashrateValueDual = [double]($Hrs -split ("_"))[1]
 
-
+                                $enableSSL = ($Miner.SSL -and $_.SSL)
 
                                 if (($Types | Measure-Object).Count -gt 1) {
                                     if ($_.name -eq 'Nicehash') {$WorkerName2 = $WorkerName + $TypeGroup.GroupName} else {$WorkerName2 = $WorkerName + '_' + $TypeGroup.GroupName}
@@ -488,7 +488,7 @@ while ($true) {
                                     ConfigFileArguments = $ConfigFileArguments
                                     Location            = $_.location
                                     PrelaunchCommand    = $Miner.PrelaunchCommand
-                                    MinerFee            = if ($Miner.Fee -eq $null) {$null} else {[double]$Miner.fee}
+                                    MinerFee            = if ($enableSSL -and [double]$Miner.FeeSSL -gt 0) {[double]$Miner.feeSSL} elseif ([double]$Miner.Fee -gt 0) {[double]$Miner.Fee} else {$null}
                                     PoolFee             = if ($_.Fee -eq $null) {$null} else {[double]$_.fee}
                                     PoolPass            = $PoolPass
                                     Workername          = $WorkerName2
