@@ -121,7 +121,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             HostSSL               = if ($enableSSL -and $_.serverSSL -ne $null) {$_.serverSSL} else {$_.Server}
             Port                  = $_.Port
             PortSSL               = if ($enableSSL) {$_.PortSSL} else {$null}
-            User                  = "$Username.$WorkerName"
+            User                  = "$Username.#Workername#"
             Pass                  = "x"
             Location              = $_.Location
             SSL                   = $enableSSL

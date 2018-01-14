@@ -474,8 +474,8 @@ while ($true) {
                                     PoolPrice           = if ($MiningMode -eq 'Automatic24h') {[double]$_.Price24h} else {[double]$_.Price}
                                     PoolPriceDual       = if ($MiningMode -eq 'Automatic24h') {[double]$PoolDual.Price24h} else {[double]$PoolDual.Price}
                                     Profits             = if ($Miner.Dualmining) {$MinerProfitDual + $MinerProfit} else {$MinerProfit}
-                                    PoolName            = $_.name
-                                    PoolNameDual        = $PoolDual.name
+                                    PoolName            = $_.PoolName
+                                    PoolNameDual        = $PoolDual.PoolName
                                     PoolAbbName         = $PoolAbbName
                                     PoolWorkers         = $PoolWorkers
                                     DualMining          = $Miner.Dualmining
