@@ -768,7 +768,7 @@ function Get_Live_HashRate {
             }
             "wrapper" {
                 $HashRate = ""
-                $HashRate = Get-Content ".\Wrapper_$Port.txt"
+                if (Test-Path -Path ".\Wrapper_$Port.txt") { $HashRate = Get-Content ".\Wrapper_$Port.txt" }
                 $HashRate = $HashRate -replace ',', '.'
             }
 
