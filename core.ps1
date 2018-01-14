@@ -81,7 +81,6 @@ writelog ( get_gpu_information $Types |ConvertTo-Json) $logfile $false
 
 $ActiveMiners = @()
 $ActiveMinersIdCounter = 0
-$Activeminers = @()
 $ShowBestMinersOnly = $true
 $FirstTotalExecution = $true
 $StartTime = get-date
@@ -264,7 +263,7 @@ while ($true) {
     }
 
 
-    ErrorsToLog $LogFile
+        ErrorsToLog $LogFile
 
 
     WriteLog "Loading Pools Information............." $LogFile $True
@@ -1023,18 +1022,11 @@ while ($true) {
             $ActiveMiners | Where-Object Status -eq 'Running' | ForEach-Object {
 
                 $Me = $PoolsSpeed | where-object PoolName -eq $_.Poolname | where-object Workername -eq $_.Workername |select-object HashRate, PoolName, Workername -first 1
-
                 $_.PoolHashrate = $Me.Hashrate
 
-
                 $MeDual = $PoolsSpeed | where-object PoolName -eq $_.PoolnameDual | where-object Workername -eq $_.WorkernameDual |select-object HashRate, PoolName, Workername -first 1
-
                 $_.PoolHashrateDual = $MeDual.Hashrate
-
-
             }
-
-
         }
 
 
