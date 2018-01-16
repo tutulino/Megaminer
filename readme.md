@@ -44,9 +44,7 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 	- you can edit pools folders content to delete pools
 	- for advanced users, you can create miners or pools if are based on existing one.
 
-
-
-Minimum donation is 5 minutes each day
+ 
 
 
 ---- UPGRADE PROCEDURE ------------------------------------
@@ -98,7 +96,7 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -Option to switch miner only if profit is a percent upper than actual (defined by you)
 
--Delayed miners closing, you define how close old miner when a new miner is open, this makes less profit loss while switching
+
 
 
 ----- DISCLAIMER ---- ------------------------------------------
