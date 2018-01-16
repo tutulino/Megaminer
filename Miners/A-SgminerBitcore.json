@@ -8,6 +8,7 @@
 "Wrap" : false,
 "Fee" : 0,
 "Dualmining":false,
+"APIPort" : 4028,
 "PrelaunchCommand":"",
 "Algorithms": [
                 {"bitcore":"--kernel timetravel10 -I 21"}

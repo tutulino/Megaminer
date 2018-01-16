@@ -1,7 +1,7 @@
 {
-"Path" : ".\\Bin\\cpuminer-opt-3.7.5-windows\\cpuminer-aes-avx2.exe",
+"Path" : ".\\Bin\\cpuminer-opt-3.7.9-windows\\cpuminer-sse2.exe",
 "ExtractionPath" : ".\\Bin\\",
-"Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1543780/cpuminer-opt-3.7.5-windows.zip",
+"Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1613739/cpuminer-opt-3.7.9-windows.zip",
 "Types" : ["CPU"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# #ALGORITHMPARAMETERS#",
 "API" : "ccminer",

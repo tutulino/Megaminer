@@ -1,6 +1,38 @@
 ﻿
+
 Add-Type -Path .\OpenCL\*.cs
 
+
+
+
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
+function set_Nvidia_Powerlimit ([int]$PowerLimitPercent,[string]$Devices){
+
+
+        $device=$Devices -split ','
+ 
+        $device |foreach-object {
+
+            $xpr="./nvidia-smi.exe -i "+$_+" --query-gpu=power.default_limit --format=csv,noheader"  
+            $PowerDefaultLimit=[int]((invoke-expression $xpr) -replace 'W','')
+
+         
+            #powerlimit change must run in admin mode
+            $newProcess = New-Object System.Diagnostics.ProcessStartInfo "nvidia-smi.exe"
+            $newProcess.Verb = "runas"
+            #$newProcess.UseShellExecute = $false
+            $newProcess.Arguments = "-i "+$_+" -pl "+[Math]::Floor([int]($PowerDefaultLimit -replace ' W','')*($PowerLimitPercent/100))
+            [System.Diagnostics.Process]::Start($newProcess) | out-null
+            }
+
+       
+       Remove-Variable newprocess
+    }            
 
 
 #************************************************************************************************************************************************************************************
@@ -171,8 +203,7 @@ function get_gpu_information ($Types) {
     $GpuId=0
 
     #NVIDIA
-                invoke-expression "./nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader"  | ForEach-Object {
-
+        invoke-expression "./nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader"  | ForEach-Object {
 
                 $SMIresultSplit = $_ -split (",")   
 
@@ -195,8 +226,7 @@ function get_gpu_information ($Types) {
                             Power_MaxLimit     =  [int]($SMIresultSplit[10] -replace 'W','')
                             Power_DefaultLimit  =  [int]($SMIresultSplit[11] -replace 'W','')
                         }
-               
-                $card |add-member Power_limit_percent ([math]::Floor(($Card.power_limit*100) / $Card.Power_DefaultLimit))
+                        if ($Card.Power_DefaultLimit -gt 0) { $card |add-member Power_limit_percent ([math]::Floor(($Card.power_limit*100) / $Card.Power_DefaultLimit))}
 
                 $cards+=$card        
                 $GpuId+=1
@@ -232,9 +262,14 @@ function get_gpu_information ($Types) {
                                     utilization_gpu    = [int]$AdlResultSplit[5]
                                     temperature_gpu    = [int]$AdlResultSplit[6] /1000
                                     power_limit_percent= 100+[int]$AdlResultSplit[7]
-                                    Power_draw         = $null <#switch ($AdlResultSplit[8]){
-                                                                    "Radeon RX 580 Series"{1000 * ((100+[int]$AdlResultSplit[7])/100) * ([int]$AdlResultSplit[5]/100) } 
-                                                                    }#>
+                                    Power_draw         = switch ($AdlResultSplit[8]){
+                                                                    "Radeon RX 580 Series"  {[int](135 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
+                                                                    "Radeon RX 480 Series"  {[int](135 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
+                                                                    "Radeon RX 570 Series"  {[int](120 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
+                                                                    "Radeon RX 470 Series"  {[int](120 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
+                                                                    "Radeon Vega 56 Series" {[int](210 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
+                                                                    "Radeon Vega 64 Series" {[int](230 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
+                                                                    }
                                     Name               = $AdlResultSplit[8]
                                     UDID               = $AdlResultSplit[9]
                                     }
@@ -1060,13 +1095,14 @@ function Get_Algo_Divisor {
                     
                     switch($Algo)
                     {
-                        "skein"{$Divisor *= 100}
+                        "skein"{$Divisor *= 1000}
                         "equihash"{$Divisor /= 1000}
                         "blake2s"{$Divisor *= 1000}
                         "blakecoin"{$Divisor *= 1000}
                         "decred"{$Divisor *= 1000}
                         "blake14r"{$Divisor *= 1000}
                         "keccakc"{$Divisor *= 1000}
+                        "yescrypt"{$Divisor /= 1000}
                     }
 
     $Divisor
@@ -1214,23 +1250,28 @@ function Get_Hashrates  {
         [Parameter(Mandatory = $true)]
         [String]$GroupName,
         [Parameter(Mandatory = $false)]
-        [String]$AlgoLabel
+        [String]$AlgoLabel,
+        [Parameter(Mandatory = $true)]
+        [String]$Powerlimit
         
 
     )
 
-    $Hrs=$null
+ 
 
-    $Pattern=$MinerName+"_"+$Algorithm+"_"+$GroupName
-    if ($AlgoLabel -ne "") {$Pattern+="_"+$AlgoLabel}
-    $Pattern+="_HashRate.txt"
+    if ($AlgoLabel -eq "") {$AlgoLabel='X'}
+    $Pattern=$MinerName+"_"+$Algorithm+"_"+$GroupName+"_"+$AlgoLabel+"_PL"+$PowerLimit+"_HashRate.txt"
 
-    try {$Content=(Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {$Content=$null}
     
-    if ($content -ne $null) {$Hrs = $Content[0].tostring() + "_" + $Content[1].tostring()}
 
-    $Hrs
+    try {$Content=(Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {}
+
     
+    if ($Content -eq $null) {$Content=@()}
+    $content
+    
+
+
 }
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
@@ -1248,21 +1289,19 @@ function Set_Hashrates {
         [Parameter(Mandatory = $false)]
         [String]$AlgoLabel,
         [Parameter(Mandatory = $true)]
-        [long]$Value,
+        [pscustomobject]$Value,
         [Parameter(Mandatory = $true)]
-        [long]$ValueDual
-        
+        [String]$Powerlimit
     )
 
 
-    $Path=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_"+$GroupName
-    if ($AlgoLabel -ne "") {$Path+="_"+$AlgoLabel}
-    $Path+="_HashRate.txt"
-
+    if ($AlgoLabel -eq "") {$AlgoLabel='X'}
+ 
+    $Path=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_"+$GroupName+"_"+$AlgoLabel+"_PL"+$PowerLimit+"_HashRate.txt"
    
-    $Array=$Value,$valueDual
-    $Array | Convertto-Json | Set-Content  -Path $Path
-    Remove-Variable Array
+   
+    $Value | Convertto-Json | Set-Content  -Path $Path
+    
 
     
 }

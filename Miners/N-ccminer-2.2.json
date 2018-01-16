@@ -8,6 +8,7 @@
 "Wrap" : false,
 "Fee" : 0,
 "Dualmining":false,
+"APIPort" : 4068,
 "PrelaunchCommand":"",
 "Algorithms": [
                         {"bitcore":"-a bitcore"},

@@ -7,6 +7,7 @@
 "API" : "Xgminer",
 "Wrap" : false,
 "Fee" : 0,
+"APIPort" : 4028,
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [

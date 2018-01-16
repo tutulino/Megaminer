@@ -440,21 +440,31 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 5.2
 
 
-
-
-*Added pool detected hashrate to active miners section, note: this speed is usually based on las 5 minutes shares and is pools refresh speed dependant.
+*More acurated benchmark system, now benchmark is also updated while mining
+*Power cost now affects profit (real for NVIDIA, estimated model based for AMD)
+*Added Power, revenues, efficiency and pool detected hashrate, to active miners section, note: this speed is usually based on las 5 minutes shares and is pools refresh speed dependant.
 *Redesigned and more informatives log files
-*Added power limit percent and Gpu Group in current screen
-*Added Power and efficiency for NVIDIA in Active Miners section
 *Added screen info while interval is starting
+
+*Added power limit percent and Gpu Group in current screen
 *Minimum donation is now 5 minutes per day (0.34%)
 *New stats screen (old screens are reorganize)
 *Changed default miner intensities and config options to ensure default options stability
-*Moved Mkxminer to Additional Miners folder (you must add manually to miner folder if you want to try)
+*Removed delay close miner option from code due to unstable executions
+*Moved Mkxminer and excavator to Additional Miners folder (you must add manually to miner folder if you want to try)
 *Updated ccminer tpruvot to 2.2.4
-*Updated bcminer to 5.0.0
-*Updated Claymore Dual to 10.3
+*Updated bminer to 5.1.0
+*Updated Claymore Dual to 10.4
 *Updated Nsgminer to 0.9.4
+*Updated ccminer klaust to 8.18
+*Updated cpu miner xmrig to 2.4.4
+*Updated cpu miner jaydee to 3.7.9
+*New sgminer phi fork
+*Added Altminer Pool
 
 *Fixed: some wallets from sprnova and mining pool hub not shown on wallets screen
-*Fixed: Nicehash wrong fee whe using nicehash specific wallet
+*Fixed: Nicehash wrong fee when using nicehash specific wallet
+*Fixed: donation time not used for donation if next interval is for benchmark
+
+NOTE: YOU MUST ADD THIS VARIABLE TO CONFIG.TXT OR CONFIGURE FROM NEW RELEASE WHERE IT IS INCLUDED : @@ELECTRICITYCOST
+NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YU MUST BENCHMARK AGAIN

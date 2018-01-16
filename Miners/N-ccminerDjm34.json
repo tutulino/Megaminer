@@ -8,6 +8,7 @@
   "Wrap" : false,
   "Dualmining":false,
   "PrelaunchCommand":"",
+  "APIPort" : 4068,
   "Algorithms": [
                 {"lyra2z":"-a lyra2z"}
                 

@@ -1,32 +1,19 @@
 ﻿---- POOLS SUPORTED ---------------------------------------
 
-ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
-
 AHASHPOOL -- Anonymous, autoexchange to selected coin in config.txt
-
-HASHREFINERY -- Anonymous, autoexchange to selected coin in config.txt
-
-MININGPOOLHUB -- registration required, autoexchange to selected coin on pool´s web.
-
-SUPRNOVA -- registration required, one registration for all pools except bitcoin cash, no autoexchange
-
+ALTMINER -- Anonymous, no autoexchange, must set a wallet for each coin
 BLOCKSFACTORY -- registration required, one registration for all pools, no autoexchange
-
-YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
-
-NICEHASH-- Anonymous, autoexchange to BTC
-
-NANOPOOL -- Anonymous, no autoexchange, must set a wallet for each coin
-
 FLYPOOL -- Anonymous, manual mode only
-
-UNIMINING -- No registration, No autoexchange, need wallet for each coin on config.txt
-
+HASHREFINERY -- Anonymous, autoexchange to selected coin in config.txt
 ITALYIIMP -- Anonymous, autoexchange to selected coin in config.txt
-
+MININGPOOLHUB -- registration required, autoexchange to selected coin on pool´s web.
+NANOPOOL -- Anonymous, no autoexchange, must set a wallet for each coin
+NICEHASH-- Anonymous, autoexchange to BTC
+SUPRNOVA -- registration required, one registration for all pools except bitcoin cash, no autoexchange
+UNIMINING -- No registration, No autoexchange, need wallet for each coin on config.txt
 WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to us
-
-
+YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
+ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 
 ---- INSTRUCTIONS ----------------------------------------------
 
@@ -40,6 +27,8 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
 	- Algorithm = separated comma string of algorithms to run (optional)
     - CoinsName = separated comma string of Coins to run (optional)
     - Groupnames = Groups of gpu/cpu to run (based on your defined groups in config.txt @@Gpugroups section) (optional)
+	- PercentToSwitch = Overrides config.txt config, percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit in specified percent (optional)
+ 
 
 3. Firt time, software will be donwloaded from miners github repositories and 
 	- As usual, some miners are detected as virus by Windows Defender, to avoid this you must set your instalation directory as excluded on Windows Defender 
@@ -57,7 +46,7 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
 
 
 
-Default donation is 5 minutes each day on automatic pools, you can change it at config.txt or donate manually ;-)
+Minimum donation is 5 minutes each day
 
 
 ---- UPGRADE PROCEDURE ------------------------------------
@@ -95,7 +84,7 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -Lastest version of miners available
 
--Nvidia SMI Info (Power, temperatures...)
+-GPU Info (AMD/Nvidia) (Power, fan, temperatures, eficency...)
 
 -Pools Wallets actual and evolution info
  
@@ -107,15 +96,16 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -For mixed rigs (or for testing purpose on same cards rigs) you can group your cards allowing each group work at its best algo and difficulty
 
+-Option to switch miner only if profit is a percent upper than actual (defined by you)
+
+-Delayed miners closing, you define how close old miner when a new miner is open, this makes less profit loss while switching
 
 
 ----- DISCLAIMER ---- ------------------------------------------
 
-Only tested on nvidia pascal (10X0) , sorry I haven't AMD card for testing purposes.
+Tested on nvidia pascal 10X0 and AMD RX580
 
 Only for Windows
-
-Miners for AMD are included but not tested , ¡¡¡ AMD TESTERS NEEDED !!!
 
 Core for auto change pools is forked from AaronSace MultipoolMiner, you can read info at https://github.com/aaronsace/MultiPoolMiner
 
@@ -126,10 +116,13 @@ Pools or Whattomine statistics are based on past (luck, difficulty, exchange-rat
 Local Currency exchange rate to BTC is taken from Coindesk, Local currency profit can vary from whattomine revenue (instant), BTC revenue must be exact.
 
 
-Based 70% on aaronsace, 30% is mine (aprox.) Donations to
+Based 50% on aaronsace, 50% is mine (aprox.) Donations to
 
-*Aaronsace - 1MsrCoAt8qM53HUMsUxvy9gMj3QVbHLazH
-*Tutulino (Me)  - 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+BTC: 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
+LTC: LVwuYbAvbMDVapheQBA7o2qQ2mKTEXVDbX
+BCH: 1N7wsg4JmWJLP6BuHUP5rwsAXnQjTWPBjr
+ETH: 0x9b7A01Bf5bD29c66d228d372B5bD1C43cDb78AcC
+
 
 
 

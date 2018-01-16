@@ -8,17 +8,17 @@
 "Wrap" : false,
 "Fee" : 0,
 "Dualmining":false,
+"APIPort" : 4068,
 "PrelaunchCommand":"",
 "Algorithms": [
                 {"skunk":"-a skunk"},
                 {"jha":"-a jha"},
-                            {"Tribus":"-a tribus"},
+                {"Tribus":"-a tribus"},
                 {"lyra2z" : "-a lyra2z" },
                 {"lyra2v2" : "-a lyra2z" },
                 {"whirpool":"-a whirl"},
                 {"phi":"-a phi"},
                 {"polytimos": "-a polytimos"},
-               
                 {"keccakc":"-a keccakc"},
                 {"keccak":"-a keccakc"}
                 

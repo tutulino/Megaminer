@@ -1,19 +1,18 @@
 {
-"Path" : ".\\Bin\\NVIDIA-skunkkrnlx\\ccminer-x64-80.exe",
-"ExtractionPath" : ".\\Bin\\NVIDIA-skunkkrnlx\\",
-"Uri" : "http://ccminer.org/preview/ccminer-skunk-krnlx-80.7z",
+"Path" : ".\\Bin\\ccminer-phi-1.0\\ccminer.exe",
+"ExtractionPath" : ".\\Bin\\",
+"Uri" : "https://github.com/216k155/ccminer-phi-anxmod/releases/download/ccminer%2Fphi-1.0/ccminer-phi-1.0.zip",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
 "API" : "Ccminer",
 "Wrap" : false,
+"Fee" : 0,
 "Dualmining":false,
 "APIPort" : 4068,
 "PrelaunchCommand":"",
 "Algorithms": [
-            {"timetravel":"-a timetravel"},
-            {"bitcore":"-a bitcore"}
-
-
+                {"phi":"-a phi"}
+                
               ]
 
 }

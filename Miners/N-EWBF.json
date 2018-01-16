@@ -7,6 +7,7 @@
     "API":  "EWBF",
     "Wrap":  false,
     "Dualmining":false,
+    "APIPort":  "42000",
     "Fee":"0",
     "PrelaunchCommand":"",
      "Algorithms": [

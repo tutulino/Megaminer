@@ -6,6 +6,7 @@
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API" : "Ccminer",
     "Wrap" : false,
+    "APIPort" : 4068,
     "Dualmining":false,
     "Algorithms": [
                     {"groestl":"-a groestl"}

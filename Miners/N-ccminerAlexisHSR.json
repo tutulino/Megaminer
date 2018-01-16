@@ -8,6 +8,7 @@
     "Fee" : 0,
     "Wrap" : false,
     "Dualmining":false,
+    "APIPort" : 4068,
     "PrelaunchCommand":"",
     "Algorithms": [
                     

@@ -44,9 +44,19 @@
 
 @@CPUMINING=DISABLED
 
+--Electricity cost, you can use this converter to get your BTC cost http://www.xe.com/es/currencyconverter/convert/?Amount=0%2C012&From=EUR&To=XBT
+--Example for all day cost [{"HourStart":0,"HourEnd":23,"CostKwhBTC":0.00000105609}]
+--Example for two periods cost [{"HourStart":12,"HourEnd":21,"CostKwhBTC":0.00000105609},{"HourStart":22,"HourEnd":11,"CostKwhBTC":0.00000703759}]
+
+@@ELECTRICITYCOST=[{"HourStart":0,"HourEnd":23,"CostKwhBTC":0.00000105609}]
+
+
+
+
+
 -- **********************************************************************************************************
 -- ********************                                                                  ********************
--- ********************   ADVANCED OPTIONS (don't change unless you know what you do)   ********************
+-- ********************   ADVANCED OPTIONS (don't change unless you know what you do)    ********************
 -- ********************                                                                  ********************
 -- **********************************************************************************************************
 
@@ -56,9 +66,9 @@
 
 @@INTERVAL=600
 
--- Benchmarks interval time (less than 200 not recommended for GPU, 300 for CPU)
+-- Benchmarks interval time (less than 300 not recommended for GPU due to miners ramp time)
 
-@@BENCHMARKTIME=200
+@@BENCHMARKTIME=300
 
 -- Screen to be shown at script start-up (WALLETS/CURRENT/HISTORY/PROFITS/STATS)
 
@@ -69,10 +79,6 @@
 
 @@PERCENTTOSWITCH=10
 
--- seconds to delay closing of old miners when new miner is selected as more profitable, this minimizes inactive time while switch. For benchmarking interval this value is automatically zero. Some systems can turn unstable if non zero.
-
-@@DELAYCLOSEMINERS=0
-
 
 -- [OPTIONAL] API Keys
 -- Some non-anonymous pools, such as Suprnova and MPH, require API keys to obtain wallet details or pool speed.
@@ -80,10 +86,18 @@
 -- FORMAT: @@APIKEY_NAMEOFPOOL=XXXXXXXXXX) [optional] 
 
 
+-- @@APIKEY_NAMEOFPOOL=XXXXXXXXXX
+-- @@APIKEY_NAMEOFPOOL2=YYYYYYYYYY
+
+
+
 -- [OPTIONAL] GPU Groups
 -- You can group your cards as you want. It's recommended to create a group for each card model in your rig, each group will be benchmarked and run separately (you can identify your GPU id's by launching GpuList.bat)
 -- If you change any of your group names you must delete the stats folder contents and re-run benchmarks.
 -- Type must be NVIDIA or AMD, if you dont set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
+-- If you activate this option miners ports will be calculated dynamic mode, some software like ethmonitoring will not work
 -- Example for rig with 3 NVIDIA gpu, each gpu alone @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0"}]
 -- Example for rig with 5 NVIDIA and 2 AMD @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1"} ]
 
+
+--@@GPUGROUPS= XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
