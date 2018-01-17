@@ -1,7 +1,7 @@
 ﻿{
     "Path" : ".\\Bin\\CPU-XMrig_MSVC\\xmrig.exe",
     "ExtractionPath" : ".\\Bin\\CPU-XMrig_MSVC\\",
-    "Uri" : "https://github.com/xmrig/xmrig/releases/download/v2.4.3/xmrig-2.4.3-msvc-win64.zip",
+    "Uri" : "https://github.com/xmrig/xmrig/releases/download/v2.4.4/xmrig-2.4.4-msvc-win64.zip",
     "Types" : ["CPU"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --cpu-priority 0 --donate-level 1 #ALGORITHMPARAMETERS#",
     "API" : "XMRig",
