@@ -24,7 +24,7 @@ $Result=@()
 if ($Querymode -eq "info"){
     $Result =  [PSCustomObject]@{
                     Disclaimer = "No registration, Autoexchange to BTC always"
-                    ActiveOnManualMode=$ActiveOnManualMode  
+                    ActiveOnManualMode=$ActiveOnManualMode
                     ActiveOnAutomaticMode=$ActiveOnAutomaticMode
                     ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
                     ApiData = $True
@@ -44,17 +44,17 @@ if ($Querymode -eq "info"){
 #****************************************************************************************************************************************************************************************
 
     if ($Querymode -eq "speed")    {
-       
+
         $Info.user=($Info.user -split '\.')[0]
-                            
+
         try {
             $http="https://api.nicehash.com/api?method=stats.provider.workers&addr="+$Info.user
-            $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+            $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
         }
         catch {}
-        
+
         $Result=@()
-    
+
         if ($Request.Result.Workers -ne $null -and $Request.Result.Workers -ne ""){
 $A= $Request.Result.Workers
                 $Request.Result.Workers |ForEach-Object {
@@ -63,14 +63,14 @@ $A= $Request.Result.Workers
                                         WorkerName =$_[0]
                                         Rejected = $_[4]
                                         Hashrate = [double]$_[1].a * 1000000
-                              }     
+                              }
                         }
-                remove-variable Request                                                                                                        
+                remove-variable Request
                 }
-    
-    
+
+
     }
-    
+
 
 
 
@@ -83,16 +83,16 @@ $A= $Request.Result.Workers
 
 
 if ($Querymode -eq "wallet")    {
-        
+
                             $Info.user=($Info.user -split '\.')[0]
 
                             try {
                                 $http="https://api.nicehash.com/api?method=stats.provider&addr="+$Info.user
-                                $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
-                                $Request = $Request |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats 
+                                $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+                                $Request = $Request |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats
                             }
                             catch {}
-        
+
                             if ($Request -ne $null -and $Request -ne ""){
                                 $Result =   [PSCustomObject]@{
                                                         Pool =$name
@@ -104,26 +104,26 @@ if ($Querymode -eq "wallet")    {
                         Remove-variable Request
                         }
 
-                        
+
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
 
 
-    
+
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         try {
-            $Request = Invoke-WebRequest "https://api.nicehash.com/api?method=simplemultialgo.info" -UseBasicParsing -timeoutsec 3 | ConvertFrom-Json 
+            $Request = Invoke-WebRequest "https://api.nicehash.com/api?method=simplemultialgo.info" -UseBasicParsing -timeoutsec 3 | ConvertFrom-Json
             $Request = $Request |Select-Object -expand result |Select-Object -expand simplemultialgo
-            
+
         }
         catch {
                     WRITE-HOST 'Nicehash API NOT RESPONDING...ABORTING'
                     EXIT
                 }
 
-        
+
 
         $Locations=@()
         $Locations += [PSCustomObject]@{NhLocation ='USA';MMlocation='US'}
@@ -133,8 +133,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
 
                     $NH_Algorithm = get_algo_unified_name ($_.name)
-                    $NH_AlgorithmOriginal =$_.name
-                    
+
                     $Divisor = 1000000000
 
                     switch ($NH_Algorithm) {
@@ -149,7 +148,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
 
                     foreach ($location in $Locations) {
-            
+
 
                         $Result+= [PSCustomObject]@{
                                         Algorithm     = $NH_Algorithm
@@ -170,11 +169,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         PoolName = $Name
                                         WalletMode      = $WalletMode
                                         WalletSymbol = "BTC"
-                                        OriginalAlgorithm =  $SNH_AlgorithmOriginal
-                                        OriginalCoin = $NH_coin
                                         Fee = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {0.02} else {0.04})
                                         EthStMode = 3
-                                            
+
                                         }
                         }
                 }

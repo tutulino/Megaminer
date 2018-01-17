@@ -198,7 +198,7 @@ function get_gpu_information ($Types) {
                 Power_DefaultLimit = [int]($SMIresultSplit[11] -replace 'W', '')
             }
 
-            $card |add-member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))
+            if ($Card.Power_DefaultLimit -gt 0) { $card |add-member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
 
             $cards += $card
             $GpuId += 1
@@ -235,9 +235,14 @@ function get_gpu_information ($Types) {
                 utilization_gpu     = [int]$AdlResultSplit[5]
                 temperature_gpu     = [int]$AdlResultSplit[6] / 1000
                 power_limit_percent = 100 + [int]$AdlResultSplit[7]
-                Power_draw          = $null <#switch ($AdlResultSplit[8]){
-                                                                    "Radeon RX 580 Series"{1000 * ((100+[int]$AdlResultSplit[7])/100) * ([int]$AdlResultSplit[5]/100) }
-                                                                    }#>
+                Power_draw          = switch ($AdlResultSplit[8]) {
+                    "Radeon RX 580 Series" {[int](135 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                    "Radeon RX 480 Series" {[int](135 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                    "Radeon RX 570 Series" {[int](120 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                    "Radeon RX 470 Series" {[int](120 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                    "Radeon Vega 56 Series" {[int](210 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                    "Radeon Vega 64 Series" {[int](230 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                }
                 Name                = $AdlResultSplit[8]
                 UDID                = $AdlResultSplit[9]
             }
@@ -1126,13 +1131,14 @@ function Get_Algo_Divisor {
     $Divisor = 1000000000
 
     switch ($Algo) {
-        "skein" {$Divisor *= 100}
+        "skein" {$Divisor *= 1000}
         "equihash" {$Divisor /= 1000}
         "blake2s" {$Divisor *= 1000}
         "blakecoin" {$Divisor *= 1000}
         "decred" {$Divisor *= 1000}
         "blake14r" {$Divisor *= 1000}
         "keccakc" {$Divisor *= 1000}
+        "yescrypt" {$Divisor /= 1000}
     }
 
     $Divisor

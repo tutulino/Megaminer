@@ -74,7 +74,7 @@ if ($Querymode -eq "SPEED")    {
 
                                 $Result=[PSCustomObject]@{
                                                         Pool =$name
-                                                        currency = $Info.OriginalCoin
+                                                        currency = $Info.Symbol
                                                         balance = $Request.data
                                                     }
                         }
@@ -140,8 +140,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         PoolName        = $Name
                                         WalletMode      = $WalletMode
                                         WalletSymbol    = $_.symbol
-                                        OriginalAlgorithm =  $_.Algo
-                                        OriginalCoin = $_.Coin
                                         Fee = $_.fee
                                         EthStMode = 0
 
@@ -159,7 +157,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
     $Result = [PSCustomObject]@{
         Pool     = $name
-        currency = $Info.OriginalCoin
+        currency = $Info.Symbol
         balance  = $NP_Request.data
     }
     Remove-Variable NP_Request
@@ -223,8 +221,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 PoolName              = $Name
                 WalletMode            = $WalletMode
                 WalletSymbol          = $_.symbol
-                OriginalAlgorithm     = $_.Algo
-                OriginalCoin          = $_.Coin
                 Fee                   = $_.fee
                 EthStMode             = 0
             }

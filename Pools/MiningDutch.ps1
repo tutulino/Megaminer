@@ -83,8 +83,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             PoolName              = $Name
             WalletMode            = $WalletMode
             WalletSymbol          = $_.Symbol
-            OriginalAlgorithm     = $_.Algo
-            OriginalCoin          = $_.Coin
             Fee                   = 0.02
             EthStMode             = 3
         }

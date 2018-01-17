@@ -95,7 +95,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Request | Where-Object {$_.paying -gt 0 } | ForEach-Object {
 
         $Algo = get_algo_unified_name ($_.name)
-        $AlgoOriginal = $_.name
 
         $Divisor = 1000000000
 
@@ -110,7 +109,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Price24h              = $null
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = if ($enableSSL) {"stratum+tls"} else {$null}
-                Host                  = $AlgoOriginal + "." + $location.NhLocation + ".nicehash.com"
+                Host                  = $_.name + "." + $location.NhLocation + ".nicehash.com"
                 Port                  = $_.port
                 PortSSL               = if ($enableSSL) {$_.port + 30000} else {$null}
                 User                  = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')}) + '.' + "#Workername#"
@@ -124,8 +123,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 PoolName              = $Name
                 WalletMode            = $WalletMode
                 WalletSymbol          = "BTC"
-                OriginalAlgorithm     = $AlgoOriginal
-                OriginalCoin          = $coin
+                Fee                   = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {0.02} else {0.05})
                 EthStMode             = 3
             }
         }

@@ -228,7 +228,7 @@ while ($true) {
 
         $DonationInterval = $true
         $UserName = "ffwd"
-        $WorkerName = "Donate"
+        $WorkerName = "Donate" + $env:COMPUTERNAME
         $CoinsWallets = @{}
         $CoinsWallets.add("BTC", "3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL")
 
@@ -263,7 +263,7 @@ while ($true) {
     }
 
 
-        ErrorsToLog $LogFile
+    ErrorsToLog $LogFile
 
 
     WriteLog "Loading Pools Information............." $LogFile $True
@@ -317,9 +317,7 @@ while ($true) {
                     $Pools | where-object Algorithm -eq $AlgoName | ForEach-Object {   #Search pools for that algo
 
                         if ((($Pools | Where-Object Algorithm -eq $AlgoNameDual) -ne $null) -or ($Miner.Dualmining -eq $false)) {
-                            $DualMiningMainCoin = $Miner.DualMiningMainCoin -replace $null, ""
                             if ($_.Algorithm -eq $Miner.DualMiningMainAlgo -or $Miner.Dualmining -eq $false) {
-                                # if (((Compare-object $_.info $DualMiningMainCoin -IncludeEqual -ExcludeDifferent | Measure-Object).count -gt 0) -or $Miner.Dualmining -eq $false) {  #not allow dualmining if main coin not coincide
 
                                 $Hrs = Get_Hashrates -minername $Minerfile.basename -algorithm $Algorithms -GroupName $TypeGroup.GroupName -AlgoLabel  $AlgoLabel
 
@@ -806,10 +804,7 @@ while ($true) {
         writelog "COINDESK API NOT RESPONDING, NOT POSSIBLE LOCAL COIN CONVERSION" $logfile $true
     }
 
-    $LabelProfit = "$LocalCurrency" + "/Day"
     $localBTCvalue = $CDKResponse.$LocalCurrency.rate_float
-
-
 
 
 
@@ -1037,27 +1032,16 @@ while ($true) {
             @{Label = "GroupName"; Expression = {$_.GroupName}},
             @{Label = "LocalSpeed"; Expression = {if ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.SpeedLive)) + '/s'} else {(ConvertTo_Hash  ($_.SpeedLive)) + '/s|' + (ConvertTo_Hash ($_.SpeedLiveDual)) + '/s'} }; Align = 'right'},
             @{Label = "mBTC/Day"; Expression = {($_.ProfitLive * 1000).tostring("n5")}; Align = 'right'},
-            @{Label = $LabelProfit; Expression = {(([double]$_.ProfitLive + [double]$_.ProfitLiveDual) * [double]$localBTCvalue ).tostring("n2")}; Align = 'right'},
+            @{Label = $LocalCurrency + "/day"; Expression = {(([double]$_.ProfitLive + [double]$_.ProfitLiveDual) * [double]$localBTCvalue ).tostring("n2")}; Align = 'right'},
             @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm + $_.AlgoLabel + $_.BestBySwitch} else {$_.Algorithm + $_.AlgoLabel + '|' + $_.AlgorithmDual + $_.BestBySwitch}}},
             @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Symbol} else {($_.Symbol) + '|' + ($_.SymbolDual)}}},
             @{Label = "Miner"; Expression = {$_.Name}},
-            @{Label = "Power"; Expression = {if ($_.GroupType -eq "NVIDIA") {[string]$_.PowerDraw + 'W'} else {}}; Align = 'right'},
-            @{Label = "Efficiency"; Expression = {if ($_.AlgorithmDual -eq $null -and $_.GroupType -eq 'NVIDIA') {(ConvertTo_Hash  ($_.SpeedLive / $_.PowerDraw)) + '/W'} else {$null} }; Align = 'right'},
-
-
+            # @{Label = "Power"; Expression = {if ($_.GroupType -eq "NVIDIA") {[string]$_.PowerDraw + 'W'} else {}}; Align = 'right'},
+            # @{Label = "Efficiency"; Expression = {if ($_.AlgorithmDual -eq $null -and $_.GroupType -eq 'NVIDIA') {(ConvertTo_Hash  ($_.SpeedLive / $_.PowerDraw)) + '/W'} else {$null} }; Align = 'right'},
             @{Label = "PoolSpeed"; Expression = {if ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.PoolHashrate)) + '/s'} else {(ConvertTo_Hash  ($_.PoolHashrate)) + '/s|' + (ConvertTo_Hash ($_.PoolHashrateDual)) + '/s'} }; Align = 'right'},
             @{Label = "Workers"; Expression = {$_.PoolWorkers}; Align = 'right'},
             @{Label = "Loc."; Expression = {$_.Location}},
             @{Label = "Pool"; Expression = {$_.PoolAbbName}}
-            <#
-              @{Label = "BmkT"; Expression = {$_.BenchmarkedTimes}},
-              @{Label = "FailT"; Expression = {$_.FailedTimes}},
-              @{Label = "Nbmk"; Expression = {$_.NeedBenchmark}},
-              @{Label = "CZero"; Expression = {$_.ConsecutiveZeroSpeed}}
-              @{Label = "Port"; Expression = {$_.Port}}
- #>
-
-
         ) | Out-Host
 
 
@@ -1118,7 +1102,7 @@ while ($true) {
                 @{Label = "Miner"; Expression = {$_.Name}},
                 @{Label = "LocalSpeed"; Expression = {$_.Hashrates}},
                 @{Label = "mBTC/Day"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {($_.Profits * 1000).tostring("n5")}}; Align = 'right'},
-                @{Label = $LabelProfit; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n2") } ; Align = 'right'},
+                @{Label = $LocalCurrency + "/day"; Expression = {([double]$_.Profits * [double]$localBTCvalue ).tostring("n2") } ; Align = 'right'},
                 @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:P2}" -f $_.PoolFee}}; Align = 'right'},
                 @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:P2}" -f $_.MinerFee}}; Align = 'right'},
                 @{Label = "Pool"; Expression = {$_.PoolAbbName}},
@@ -1161,19 +1145,17 @@ while ($true) {
 
                 $Pools  | where-object WalletMode -eq 'WALLET' | Select-Object PoolName, AbbName, User, WalletMode, WalletSymbol -unique  | ForEach-Object {
                     $WalletsToCheck += [pscustomObject]@{
-                        PoolName          = $_.PoolName
-                        AbbName           = $_.AbbName
-                        WalletMode        = $_.WalletMode
-                        User              = ($_.User -split '\.')[0] #to allow payment id after wallet
-                        Coin              = $null
-                        Algorithm         = $null
-                        OriginalAlgorithm = $null
-                        OriginalCoin      = $null
-                        Host              = $null
-                        Symbol            = $_.WalletSymbol
+                        PoolName   = $_.PoolName
+                        AbbName    = $_.AbbName
+                        WalletMode = $_.WalletMode
+                        User       = ($_.User -split '\.')[0] #to allow payment id after wallet
+                        Coin       = $null
+                        Algorithm  = $null
+                        Host       = $null
+                        Symbol     = $_.WalletSymbol
                     }
                 }
-                $Pools  | where-object WalletMode -eq 'APIKEY' | Select-Object PoolName, AbbName, info, Algorithm, OriginalAlgorithm, OriginalCoin, Symbol, WalletMode, WalletSymbol  -unique  | ForEach-Object {
+                $Pools  | where-object WalletMode -eq 'APIKEY' | Select-Object PoolName, AbbName, info, Algorithm, Symbol, WalletMode, WalletSymbol -unique  | ForEach-Object {
 
 
 
@@ -1181,16 +1163,14 @@ while ($true) {
 
                     if ($Apikey -ne "") {
                         $WalletsToCheck += [pscustomObject]@{
-                            PoolName          = $_.PoolName
-                            AbbName           = $_.AbbName
-                            WalletMode        = $_.WalletMode
-                            User              = $null
-                            Coin              = $_.Info
-                            Algorithm         = $_.Algorithm
-                            OriginalAlgorithm = $_.OriginalAlgorithm
-                            OriginalCoin      = $_.OriginalCoin
-                            Symbol            = $_.WalletSymbol
-                            ApiKey            = $ApiKey
+                            PoolName   = $_.PoolName
+                            AbbName    = $_.AbbName
+                            WalletMode = $_.WalletMode
+                            User       = $null
+                            Coin       = $_.Info
+                            Algorithm  = $_.Algorithm
+                            Symbol     = $_.WalletSymbol
+                            ApiKey     = $ApiKey
                         }
                     }
                 }

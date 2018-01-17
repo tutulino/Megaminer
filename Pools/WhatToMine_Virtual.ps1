@@ -127,7 +127,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     #search on pools where to mine coins, switch sentence determines order to look, if one pool has one coin, no more pools for that coin are searched after.
 
     $PoolsList = @(
-        'Mining_Pool_Hub'
+        'Mining_Pool_Hub_Coins'
         'Suprnova'
         'FairPool'
         'MyPools'
@@ -162,8 +162,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                     EthStMode         = $_.EthStMode
                     WalletSymbol      = $_.WalletSymbol
                     PoolName          = $_.PoolName
-                    OriginalAlgorithm = $_.OriginalAlgorithm
-                    OriginalCoin      = $_.OriginalCoin
                 }
             }
         }
@@ -200,8 +198,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             PoolName              = $_.PoolName
             WalletMode            = $_.WalletMode
             WalletSymbol          = $_.WalletSymbol
-            OriginalAlgorithm     = $_.OriginalAlgorithm
-            OriginalCoin          = $_.OriginalCoin
             Fee                   = $_.Fee
             EthStMode             = $_.EthStMode
         }
