@@ -6,6 +6,7 @@ setx GPU_MAX_ALLOC_PERCENT 100
 setx GPU_SINGLE_ALLOC_PERCENT 100
 
 cd /d %~dp0
+del /q Wrapper_*.txt
 
 :LOOP
 
