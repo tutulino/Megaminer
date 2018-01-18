@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\PhoenixMiner\\",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/PhoenixMiner_2.3.zip",
     "Types" : ["AMD"],
-    "Arguments" : "-pool #SERVER#:#PORT# -wal #LOGIN# -pass #PASSWORD# -esm #ETHSTMODE# -di #DEVICESCLAYMODE# -mport #APIPORT# -amd #ALGORITHMPARAMETERS#",
+    "Arguments" : "-pool #SERVER#:#PORT# -wal #LOGIN# -pass #PASSWORD# -esm #ETHSTMODE# -di #DEVICESCLAYMODE# -cdmport #APIPORT# -cdm 1 -amd #ALGORITHMPARAMETERS#",
     "API" : "Claymore",
     "Fee" : "0.0065",
     "Wrap" : false,

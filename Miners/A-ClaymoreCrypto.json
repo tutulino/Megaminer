@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\AMD-ClaymoreCryptonote\\",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore.CryptoNote.AMD.GPU.Miner.v11.2.-.POOL.-.Catalyst.15.12-17.x.zip",
     "Types" : ["AMD"],
-    "Arguments" : "-xpool #PROTOCOL#://#SERVER#:#PORT# -xwal #LOGIN# -xpsw #PASSWORD# -allpools 1  -di #DEVICESCLAYMODE# -mport #APIPORT# #ALGORITHMPARAMETERS#",
+    "Arguments" : "-xpool #PROTOCOL#://#SERVER#:#PORT# -xwal #LOGIN# -xpsw #PASSWORD# -allpools 1 -di #DEVICESCLAYMODE# -mport -#APIPORT# #ALGORITHMPARAMETERS#",
     "API" : "ClaymoreV2",
     "Fee" : "0.015",
     "FeeSSL" : "0.01",
