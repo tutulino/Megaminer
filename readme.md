@@ -1,4 +1,60 @@
-﻿---- POOLS SUPORTED ---------------------------------------
+This Megaminer fork is aimed at AMD + CPU usage.
+New features from tutulino are merged manually after a review to ensure stability.
+NVidia miners are copied as is from tutulino's branch unless there fixes needed.
+
+## Changes from tutulino's branch
+
+* Support SSL Mining on supported pools (MiningPoolHub, NiceHash, some Suprnova Pools)
+* Additional miners
+	- AMD OptiminerZcash
+	- AMD OptiminerZero
+	- AMD MkxMiner
+	- AMD XMRig
+	- AMD XMR-Stak
+	- AMD XmrMiner
+	- AMD Cgminer Blakecoin
+	- AMD Phoenix
+	- AMD SgminerC11
+	- AMD SgminerX17
+	- AMD SgminerKeccakC
+	- CPU NHeqminer
+	- CPU XMR-Stak
+	- NVidia XMR-Stak
+* Miner optimizations for CPU and AMD
+* Use C# assembly to prevent miners from steal focus (except miners that use wrapper, for now)
+* Poll mining api to display projected profits for Manual mining
+* Allow mining specific Algo instead of coin in Manual mode
+* Profit display in mBTC instead of BTC with too many zeroes
+* Support profitability info for Custom coins from What to Mine pool
+* Support any fiat currency which is supported by CoinDesk for profit display
+* Allow dual mining any Ethash coin instead of ETH/ETC
+* Filter out algos without solved blocks in 24h on MPH and YIIMP type pools
+* Split MiningPoolHub to separate algo and coin pools
+* Filter out non-paying algos on NiceHash
+* Allow decimal values in hashrate from algos with very low hashrate (i.e. EquihashZero)
+* Faster wallet display
+* Fix algo divisors on YIIMP type pools
+* Additional pools
+	- Mining Dutch
+	- FairPool
+	- Blockmunch
+	- Suprnova (up to date algos)
+* Some code optimizations and formatting changes
+
+### Donations are welcome
+- BTC - 3FzmW9JMhgmRwipKkNnphxG73VPQMsYsN6
+- ETH - 0x38973025136D1a5B773aE71c02cA24b365850A9A
+- LTC - MM8RmXUgxDwHJxrC54muF7KHciSCFS3gx3
+
+
+Original author's wallets listed at the end of original readme below
+
+
+
+### Original readme file below
+
+
+---- POOLS SUPORTED ---------------------------------------
 
 ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 
