@@ -5,10 +5,8 @@
     "Types" : ["AMD"],
     "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #DEVICESNSGMODE# --api-port #APIPORT# --gpu-platform #GPUPLATFORM#  --no-adl --remove-disabled  #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",
-    "Wrap" : false,
-    "Dualmining":false,
-    "PrelaunchCommand":"",
+    "APIPort" : 4028,
     "Algorithms": [
-        {"neoscrypt":"--neoscrypt -g 1 -w 64 -I 18"}
+        {"NeoScrypt":"--neoscrypt -g 1 -w 64 -I 18"}
     ]
 }

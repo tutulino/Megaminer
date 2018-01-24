@@ -1,0 +1,13 @@
+﻿{
+    "Path" : ".\\Bin\\nheqminer_zero\\zero_nheqminer\\zero_nheqminer.exe",
+    "ExtractionPath" : ".\\Bin\\nheqminer_zero\\",
+    "Uri" : "https://zero.suprnova.cc/zero_nheqminer.zip",
+    "Types" : ["CPU"],
+    "Arguments" : "-a #APIPORT# -l #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
+    "API" : "nicehashequihash",
+    "Algorithms": [
+        {"Zero__2": "-t 2"},
+        {"Zero__3": "-t 3"},
+        {"Zero__4": "-t 4"}
+    ]
+}

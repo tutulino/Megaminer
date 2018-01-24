@@ -5,11 +5,9 @@
     "Types" : ["AMD"],
     "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",
-    "Wrap" : false,
-    "Dualmining":false,
-    "PrelaunchCommand":"",
+    "APIPort" : 4028,
     "Algorithms": [
-        {"lyra2z":"-k lyra2z -w 32 -I 18"},
-        {"lyra2h":"-k lyra2h -w 16 -I 16"}
+        {"Lyra2z":"-k lyra2z -w 32 -I 18"},
+        {"Lyra2h":"-k lyra2h -w 16 -I 16"}
     ]
 }

@@ -11,6 +11,6 @@ del /q Wrapper_*.txt
 :LOOP
 
 powershell -version 5.0 -noexit -executionpolicy bypass -command ^
-    "&.\core.ps1 -MiningMode AUTOMATIC -PoolsName Mining_Pool_Hub,Zpool,WhatToMine_Virtual,NiceHash
+    "&.\Core.ps1 -MiningMode AUTOMATIC -PoolsName Mining_Pool_Hub,Zpool,WhatToMine_Virtual
 
 GOTO LOOP

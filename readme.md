@@ -4,7 +4,7 @@ NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 
 ## Changes from tutulino's branch
 
-* Support SSL Mining on supported pools (MiningPoolHub, NiceHash, some Suprnova Pools)
+* Support SSL Mining on supported pools (MiningPoolHub, NiceHash, some coins on Suprnova)
 * Additional miners
 	- AMD OptiminerZcash
 	- AMD OptiminerZero
@@ -12,10 +12,8 @@ NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 	- AMD XMRig
 	- AMD XMR-Stak
 	- AMD XmrMiner
-	- AMD Cgminer Blakecoin
 	- AMD Phoenix
 	- AMD SgminerC11
-	- AMD SgminerX17
 	- AMD SgminerKeccakC
 	- CPU NHeqminer
 	- CPU XMR-Stak
@@ -25,11 +23,10 @@ NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 * Poll mining api to display projected profits for Manual mining
 * Allow mining specific Algo instead of coin in Manual mode
 * Profit display in mBTC instead of BTC with too many zeroes
-* Support profitability info for Custom coins from What to Mine pool
+* Support profitability info for Custom coins from WhatToMine pool
 * Support any fiat currency which is supported by CoinDesk for profit display
-* Allow dual mining any Ethash coin instead of ETH/ETC
+* Allow dual mining any Ethash coin instead of ETH/ETC only
 * Filter out algos without solved blocks in 24h on MPH and YIIMP type pools
-* Split MiningPoolHub to separate algo and coin pools
 * Filter out non-paying algos on NiceHash
 * Allow decimal values in hashrate from algos with very low hashrate (i.e. EquihashZero)
 * Faster wallet display
@@ -37,9 +34,9 @@ NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 * Additional pools
 	- Mining Dutch
 	- FairPool
-	- Blockmunch
+	- BlockMunch
 	- Suprnova (up to date algos)
-* Some code optimizations and formatting changes
+* More small fixes, code optimizations and formatting changes
 
 ### Donations are welcome
 - BTC - 3FzmW9JMhgmRwipKkNnphxG73VPQMsYsN6
@@ -91,14 +88,14 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
 1. Edit CONFIG.TXT file before mining
 
 2. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt, you can use this parameters on your batch
-    - PoolsName = separated comma string of pools to run 
+    - PoolsName = separated comma string of pools to run
 	- MiningMode = Mode to check profit, note not all pools suport all modes (Automatic/Automatic24h/Manual). If manual mode is selected one coin must be passed on Coinsname parameter
 	- Algorithm = separated comma string of algorithms to run (optional)
     - CoinsName = separated comma string of Coins to run (optional)
     - Groupnames = Groups of gpu/cpu to run (based on your defined groups in config.txt @@Gpugroups section) (optional)
 
-3. Firt time, software will be donwloaded from miners github repositories and 
-	- As usual, some miners are detected as virus by Windows Defender, to avoid this you must set your instalation directory as excluded on Windows Defender 
+3. Firt time, software will be donwloaded from miners github repositories and
+	- As usual, some miners are detected as virus by Windows Defender, to avoid this you must set your instalation directory as excluded on Windows Defender
 
 4. Your system will be benchmarked (long process)
 	- After benchmark check profits are razonables, sometimes miner return hashrates peaks. If you need repeat benchmark delete file from stats folder
@@ -107,7 +104,7 @@ WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnov
 	- Except Nicehash (where you sell your power to indicated price), pools always overstimated profit, you must understand profit column as a way to get best algoritmh. Your real profit will be lower.
 
 6. Tuning (optional)
-	- you can edit miners folders content to delete miners or to assign/unassign algos to miners. 
+	- you can edit miners folders content to delete miners or to assign/unassign algos to miners.
 	- you can edit pools folders content to delete pools
 	- for advanced users, you can create miners or pools if are based on existing one.
 
@@ -129,7 +126,7 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -One file config to start mining
 
--Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. 
+-Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use.
 
 -Can mine on any of this pools (or all at same time): Ahashpool, Nanopool, YIIMP, Nicehash, Zpool, Unimining, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
 
@@ -154,7 +151,7 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 -Nvidia SMI Info (Power, temperatures...)
 
 -Pools Wallets actual and evolution info
- 
+
 -Option to autochange based on 24h statistics (on supported pools)
 
 -Option for asociate command to launch before run to each miner (nvidia inspector for example to set overclock)

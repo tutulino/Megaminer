@@ -7,11 +7,9 @@
     "PatternConfigFile": ".\\Patterns\\ProspectorPattern.txt",
     "Arguments" : "-c #GROUPNAME#.toml",
     "API" : "prospector",
-    "APIPort" : "42000",
-    "Wrap" : false,
-    "DualMining": false,
+    "APIPort" : 42000,
     "PrelaunchCommand":"",
-    "Fee" : "0.01",
+    "Fee" : 0.01,
     "Algorithms": [
         {"Skunk":"sigt"}
     ]

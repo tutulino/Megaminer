@@ -15,7 +15,6 @@ Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
 
 . .\Include.ps1
 
-#Remove-Item ".\Wrapper_$Id.txt" -ErrorAction Ignore
 0 | Set-Content ".\Wrapper_$Id.txt"
 
 
@@ -41,7 +40,7 @@ do {
                 -or $Line -like "*accepted:*" `
                 -or $Line -like "*Mining on #*" `
                 -or $line -like "*diff*yes!*" `
-                -or $line -like "*Temp*Fan*Rej*" `
+                -or $line -like ">*Rej*" `
                 -or $line -like "*overall*" `
         ) {
             $Line = $Line  `
@@ -62,16 +61,6 @@ do {
                     -replace "ph/s", "" `
                     -replace "h/s", "" )
 
-            <#
-write-host 3332
-$Line | write-host
-$Word | write-host
-$HashRate | write-host
-start-sleep 50
-#>
-
-
-
             switch  -wildcard ($Word) {
                 "*kh/s*" {$HashRate *= [Math]::Pow(1000, 1)}
                 "*mh/s*" {$HashRate *= [Math]::Pow(1000, 2)}
@@ -81,19 +70,10 @@ start-sleep 50
             }
 
             $HashRate | Set-Content ".\Wrapper_$Id.txt"
-            <#
-write-host 4444
-$HashRate | write-host
-start-sleep 2
-#>
-
         }
-
         $Line
     }
 
     if ((Get-Process | Where-Object Id -EQ $ControllerProcessID) -eq $null) {$PowerShell.Stop() | Out-Null}
 }
 until($Result.IsCompleted)
-
-#Remove-Item ".\Wrapper_$Id.txt" -ErrorAction Ignore

@@ -1,16 +1,12 @@
 {
-"Path" : ".\\Bin\\ClaymoreDual\\Claymore's Dual Ethereum+Decred_Siacoin_Lbry_Pascal AMD+NVIDIA GPU Miner v10.4\\EthDcrMiner64.exe",
-"ExtractionPath" : ".\\Bin\\",
-"Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.4.-.Catalyst.15.12-17.x.-.CUDA.8.0_7.5_6.5.zip",
-"Types" : ["NVIDIA"],
-"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -wd 1 -mode 1  -di #DEVICESCLAYMODE# -mport #APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
-"API" : "Claymore",
-"Fee" : "0.01",
-"Wrap" : false,
-"DualMining": false,
-"PrelaunchCommand":"",
-"Algorithms": [
-                {"Ethash":""}
-              ]
-
+    "Path" : ".\\Bin\\ClaymoreDual\\Claymore's Dual Ethereum+Decred_Siacoin_Lbry_Pascal AMD+NVIDIA GPU Miner v10.4\\EthDcrMiner64.exe",
+    "ExtractionPath" : ".\\Bin\\",
+    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.4.-.Catalyst.15.12-17.x.-.CUDA.8.0_7.5_6.5.zip",
+    "Types" : ["NVIDIA"],
+    "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -wd 1 -mode 1  -di #DEVICESCLAYMODE# -mport #APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
+    "API" : "Claymore",
+    "Fee" : 0.01,
+    "Algorithms": [
+        {"Ethash":""}
+    ]
 }

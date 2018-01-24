@@ -5,10 +5,8 @@
     "Types" : ["AMD"],
     "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",
-    "Wrap" : false,
-    "Dualmining":false,
-    "PrelaunchCommand":"",
+    "APIPort" : 4028,
     "Algorithms": [
-        {"skein":" -k skeincoin -g 2 -w 256 -I 23"}
+        {"Skein":" -k skeincoin -g 2 -w 256 -I 23"}
     ]
 }

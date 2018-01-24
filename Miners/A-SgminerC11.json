@@ -5,10 +5,8 @@
     "Types" : ["AMD"],
     "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",
-    "Wrap" : false,
-    "Dualmining":false,
-    "PrelaunchCommand":"",
+    "APIPort" : 4028,
     "Algorithms": [
-        {"c11":"-k chaincoin -I 18 -g 4 -w 128"}
+        {"C11":"-k chaincoin -I 18 -g 4 -w 128"}
     ]
 }

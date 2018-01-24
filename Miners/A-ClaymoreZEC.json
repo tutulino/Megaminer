@@ -3,15 +3,13 @@
     "ExtractionPath" : ".\\Bin\\AMD-ClaymoreZEC\\",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.ZCash.AMD.GPU.Miner.v12.6.-.Catalyst.15.12-17.x.zip",
     "Types" : ["AMD"],
-    "Arguments" : "-zpool #PROTOCOL#://#SERVER#:#PORT# -zwal #LOGIN# -zpsw #PASSWORD# -allpools 1 -di #DEVICESCLAYMODE# -mport -#APIPORT# #ALGORITHMPARAMETERS#",
+    "Arguments" : "-zpool #PROTOCOL#://#SERVER#:#PORT# -zwal #LOGIN# -zpsw #PASSWORD# -allpools 1 -wd 1 -r -1 -di #DEVICESCLAYMODE# -mport -#APIPORT# #ALGORITHMPARAMETERS#",
     "API" : "ClaymoreV2",
-    "Wrap" : false,
-    "Fee" : "0.025",
-    "FeeSSL" : "0.02",
+    "APIPort" : 3333,
+    "Fee" : 0.025,
+    "FeeSSL" : 0.02,
     "SSL": true,
-    "DualMining": false,
-    "PrelaunchCommand":"",
     "Algorithms": [
-        {"equihash":""}
+        {"Equihash":""}
     ]
 }

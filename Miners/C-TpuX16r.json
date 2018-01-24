@@ -1,0 +1,13 @@
+﻿{
+    "Path" : ".\\Bin\\cpuminer-multi\\x16r\\cpuminer-x64.exe",
+    "ExtractionPath" : ".\\Bin\\cpuminer-multi\\x16r\\",
+    "Uri" : "https://rvn.suprnova.cc/cpuminer-multi-rel1.3.3-x64.7z",
+    "Types" : ["CPU"],
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# #ALGORITHMPARAMETERS# -q",
+    "#BenchmarkArg": "--benchmark",
+    "API" : "Ccminer",
+    "APIPort" : 4048,
+    "Algorithms": [
+        {"X16r": "-a x16r"}
+    ]
+}

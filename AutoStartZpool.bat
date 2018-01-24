@@ -10,6 +10,6 @@ cd /d %~dp0
 :LOOP
 
 powershell -version 5.0 -noexit -executionpolicy bypass -command ^
-    "&.\core.ps1 -MiningMode Automatic -PoolsName Zpool
+    "&.\Core.ps1 -MiningMode Automatic -PoolsName Zpool
 
 GOTO LOOP

@@ -6,14 +6,13 @@
 -- **********************************************************************************************************
 
 -- Your rig ID
-
 -- if not defined, will use your computername
--- @@WORKERNAME=fractal
+-- @@WORKERNAME=worker
 
 -- Preferred currency you want to receive. Only used for anonymous pools with auto exchange such as Zpool, HR, ...
 -- You must set your wallet for this currency within the Wallets Section found in the Advanced Options section.
 
-@@CURRENCY=LTC
+@@CURRENCY=BTC
 
 -- Local currency shown within the profits screen (USD,EUR,GBP). Any supported coin symbol from CoinDesk
 
@@ -32,16 +31,11 @@
 -- Other pools without an auto exchange, like Yiimp, will need a wallet defined for the same coin you are mining.
 -- You can add wallets using pattern  @@WALLET_XXX=YYYYY (where XXX=currency symbol; YYYYY=your wallet).
 -- For Nicehash if a @@WALLET_BTC_NICE=XXXXXXX is found it will be used, if not @@WALLET_BTC will be used.
--- For some coins, such as Electroneum, you will need a Payment ID. Add it after your address separated by a dot.
+-- For some coins, such as Electroneum, you may need a Payment ID. Add it after your address separated by a dot.
 
-@@WALLET_BTC_NICE=3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL
-@@WALLET_BTC=3FzmW9JMhgmRwipKkNnphxG73VPQMsYsN6
-@@WALLET_BTG=AdLbKEFQyKugXTduVAT1Z3KMMD7rhN8c6x
-@@WALLET_ETH=0x38973025136D1a5B773aE71c02cA24b365850A9A
-@@WALLET_LTC=MM8RmXUgxDwHJxrC54muF7KHciSCFS3gx3
-
-@@WALLET_AEON=WmspZbxNAYubNL53fUfVuBSk3Eo3GzgKqbeEeC1Fq4QdEiQhQFE4so5CjkhDS8kRxGBesfRwGiSmDRPRKWvVVvqf2kNZdeguY
-@@WALLET_PASL=3GhhbotqzjTq9mpXabpzqw4WLCZVp2SFG2CVs6Jfox4t3jCBgvAq92wiTVUEE5mCniN2zNDwhEZteq8QTk3cU7hHK6H6Jr3Aecpm1c
+@@WALLET_BTC_NICE=xxx
+@@WALLET_BTC=xxx
+@@WALLET_LTC=xxx
 
 -- Number of minutes to mine as a donation each day (minimum 5 minutes or 0.34%)
 
@@ -49,11 +43,17 @@
 
 -- Use your cpu to mine: ENABLED = yes, DISABLED = no (you can start cpu alone mining also using -groupnames parameter in batch file)
 
-@@CPUMINING=ENABLED
+@@CPUMINING=DISABLED
+
+--Electricity cost, you can use this converter to get your BTC cost http://www.xe.com/es/currencyconverter/convert/?Amount=0%2C012&From=EUR&To=XBT
+--Example for all day cost [{"HourStart":0,"HourEnd":23,"CostKwhBTC":0.00000105609}]
+--Example for two periods cost [{"HourStart":12,"HourEnd":21,"CostKwhBTC":0.00000105609},{"HourStart":22,"HourEnd":11,"CostKwhBTC":0.00000703759}]
+
+@@ELECTRICITYCOST=[{"HourStart":0,"HourEnd":23,"CostKwhBTC":0.000007}]
 
 -- **********************************************************************************************************
 -- ********************                                                                  ********************
--- ********************   ADVANCED OPTIONS (don't change unless you know what you do)   ********************
+-- ********************   ADVANCED OPTIONS (don't change unless you know what you do)    ********************
 -- ********************                                                                  ********************
 -- **********************************************************************************************************
 
@@ -65,36 +65,32 @@
 
 -- Benchmarks interval time (less than 200 not recommended for GPU, 300 for CPU)
 
-@@BENCHMARKTIME=200
+@@BENCHMARKTIME=300
 
 -- Screen to be shown at script start-up (WALLETS/CURRENT/HISTORY/PROFITS/STATS)
 
 @@STARTSCREEN=PROFITS
 
+-- Percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit
+-- in specified percent (example: 10 means that new miner/algo must be 10% more profitable than actual to be launched)
 
--- Percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit in specified percent (example: 10 means that new miner/algo must be 10% more profitable than actual to be launched)
-
-@@PERCENTTOSWITCH=5
-
--- seconds to delay closing of old miners when new miner is selected as more profitable, this minimizes inactive time while switch. For benchmarking interval this value is automatically zero. Some systems can turn unstable if non zero.
-
-@@DELAYCLOSEMINERS=0
-
+@@PERCENTTOSWITCH=10
 
 -- [OPTIONAL] API Keys
 -- Some non-anonymous pools, such as Suprnova and MPH, require API keys to obtain wallet details or pool speed.
 -- For example @@APIKEY_MINING_POOL_HUB=a04e6sx30b38f73878ae40775f70efseff6582e8ec37600215755487ccbd36b4510b4
 -- FORMAT: @@APIKEY_NAMEOFPOOL=XXXXXXXXXX) [optional]
 
-@@APIKEY_MINING_POOL_HUB=903106f05fddd0222af24e20312d14dff08ccbb6914855d5fe552c8c88cb3425
-@@APIKEY_SUPRNOVA=1ac1daa25868186cb8fc1ac9ce1e259949cb681332ac0faba20c40fddc05e98a
+@@APIKEY_MINING_POOL_HUB=xxx
+@@APIKEY_SUPRNOVA=xxx
 
 -- [OPTIONAL] GPU Groups
--- You can group your cards as you want. It's recommended to create a group for each card model in your rig, each group will be benchmarked and run separately (you can identify your GPU id's by launching GpuList.bat)
+-- You can group your cards as you want. It's recommended to create a group for each card model in your rig,
+-- each group will be benchmarked and run separately (you can identify your GPU id's by launching GpuList.bat)
 -- If you change any of your group names you must delete the stats folder contents and re-run benchmarks.
 -- Type must be NVIDIA or AMD, if you dont set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
 -- Example for rig with 3 NVIDIA gpu, each gpu alone @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0"}]
 -- Example for rig with 5 NVIDIA and 2 AMD @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1"} ]
 
--- Coin IDs from http://whattomine.com/calculators, separated by ",". 192 - Aeon, 210 - Zero, 213 - ETN
-@@CUSTOM_WTM_COINS=210,192
+-- Coin IDs from http://whattomine.com/calculators, separated by ",". 192 - Aeon, 210 - Zero, 213 - ETN, 177 - PASL
+-- @@CUSTOM_WTM_COINS=177

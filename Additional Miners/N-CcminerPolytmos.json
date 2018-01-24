@@ -5,19 +5,16 @@
     "Types" : ["NVIDIA"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API" : "Ccminer",
-    "Wrap" : false,
-    "Dualmining":false,
-    "PrelaunchCommand":"",
     "Algorithms": [
-                    {"polytimos" : "-a poly"},
-                    {"blake2s":"-a blake2s"},
-                    {"blakecoin":"-a blakecoin"},
-                    {"Keccak":"-a keccak -m 2"},
-                    {"lbry":"-a lbry"},
-                    {"lyra2v2":"-a lyra2v2"},
-                    {"Myriad-Groestl" : "-a myr-gr"},
-                    {"skein" : "-a skein"},
-                    {"veltor":"-a veltor"},
-                    {"nist5" : "-a nist5" }
-                  ]
-    }
+        {"Polytimos" : "-a poly"},
+        {"Blake2s":"-a blake2s"},
+        {"Blakecoin":"-a blakecoin"},
+        {"Keccak":"-a keccak -m 2"},
+        {"Lbry":"-a lbry"},
+        {"Lyra2RE2":"-a lyra2v2"},
+        {"MyriadGroestl" : "-a myr-gr"},
+        {"Skein" : "-a skein"},
+        {"Veltor":"-a veltor"},
+        {"Nist5" : "-a nist5" }
+    ]
+}

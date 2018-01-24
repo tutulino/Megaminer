@@ -1,20 +1,15 @@
 {
-"Path" : ".\\Bin\\NVIDIA-CcminerKlaust\\ccminer.exe",
-"ExtractionPath" : ".\\Bin\\NVIDIA-CcminerKlaust\\",
-"Uri" : "https://github.com/KlausT/ccminer/releases/download/8.16/ccminer-816-cuda91-x64.zip",
-"Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
-"API" : "Ccminer",
-"Wrap" : false,
-"Dualmining":false,
-"PrelaunchCommand":"",
-"Algorithms": [
-                {"groestl":"-a groestl"},
-                {"sib" : "-a sib"},
-                {"Myriad-Groestl" : "-a myr-gr"},
-                {"Keccak" : "-a Keccak -m 2"},
-                {"Neoscrypt":"-a Neoscrypt"}
-                
-              ]
+    "Path" : ".\\Bin\\NVIDIA-CcminerKlaust\\ccminer.exe",
+    "ExtractionPath" : ".\\Bin\\NVIDIA-CcminerKlaust\\",
+    "Uri" : "https://github.com/KlausT/ccminer/releases/download/8.16/ccminer-816-cuda91-x64.zip",
+    "Types" : ["NVIDIA"],
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API" : "Ccminer",
+    "Algorithms": [
+        {"Groestl":"-a groestl"},
+        {"Sib" : "-a sib"},
+        {"MyriadGroestl" : "-a myr-gr"},
+        {"Keccak" : "-a Keccak -m 2"},
+        {"Neoscrypt":"-a Neoscrypt"}
+    ]
 }
-

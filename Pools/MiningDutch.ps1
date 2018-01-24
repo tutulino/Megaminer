@@ -36,29 +36,29 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
 
     $Pools = @()
-    $Pools += [pscustomobject]@{"coin" = "Anarchistprime"; "algo" = "myriad-groestl"; "symbol" = "ACP"; "port" = "3415"};
-    $Pools += [pscustomobject]@{"coin" = "Auroracoin"; "algo" = "myriad-groestl"; "symbol" = "AUR"; "port" = "3761"};
-    $Pools += [pscustomobject]@{"coin" = "Digibyte"; "algo" = "myriad-groestl"; "symbol" = "DGB"; "port" = "3472"};
-    $Pools += [pscustomobject]@{"coin" = "Myriadcoin"; "algo" = "myriad-groestl"; "symbol" = "XMY"; "port" = "3708"};
-    $Pools += [pscustomobject]@{"coin" = "Shield"; "algo" = "myriad-groestl"; "symbol" = "XSH"; "port" = "3762"};
-    $Pools += [pscustomobject]@{"coin" = "Verge"; "algo" = "myriad-groestl"; "symbol" = "XVG"; "port" = "3426"};
+    $Pools += [pscustomobject]@{"coin" = "Anarchistprime"; "algo" = "MyriadGroestl"; "symbol" = "ACP"; "port" = "3415"};
+    $Pools += [pscustomobject]@{"coin" = "Auroracoin"; "algo" = "MyriadGroestl"; "symbol" = "AUR"; "port" = "3761"};
+    $Pools += [pscustomobject]@{"coin" = "Digibyte"; "algo" = "MyriadGroestl"; "symbol" = "DGB"; "port" = "3472"};
+    $Pools += [pscustomobject]@{"coin" = "Myriadcoin"; "algo" = "MyriadGroestl"; "symbol" = "XMY"; "port" = "3708"};
+    $Pools += [pscustomobject]@{"coin" = "Shield"; "algo" = "MyriadGroestl"; "symbol" = "XSH"; "port" = "3762"};
+    $Pools += [pscustomobject]@{"coin" = "Verge"; "algo" = "MyriadGroestl"; "symbol" = "XVG"; "port" = "3426"};
 
-    $Pools += [pscustomobject]@{"coin" = "Bulwark"; "algo" = "nist5"; "symbol" = "BWK"; "port" = "3758"};
-    $Pools += [pscustomobject]@{"coin" = "Coimatic2"; "algo" = "nist5"; "symbol" = "CTIC2"; "port" = "3712"};
-    $Pools += [pscustomobject]@{"coin" = "Ectam"; "algo" = "nist5"; "symbol" = "ECT"; "port" = "3759"};
-    $Pools += [pscustomobject]@{"coin" = "Virtauniquecoin"; "algo" = "nist5"; "symbol" = "VUC"; "port" = "3408"};
-    $Pools += [pscustomobject]@{"coin" = "Wyvern"; "algo" = "nist5"; "symbol" = "WYV"; "port" = "3497"};
+    $Pools += [pscustomobject]@{"coin" = "Bulwark"; "algo" = "Nist5"; "symbol" = "BWK"; "port" = "3758"};
+    $Pools += [pscustomobject]@{"coin" = "Coimatic2"; "algo" = "Nist5"; "symbol" = "CTIC2"; "port" = "3712"};
+    $Pools += [pscustomobject]@{"coin" = "Ectam"; "algo" = "Nist5"; "symbol" = "ECT"; "port" = "3759"};
+    $Pools += [pscustomobject]@{"coin" = "Virtauniquecoin"; "algo" = "Nist5"; "symbol" = "VUC"; "port" = "3408"};
+    $Pools += [pscustomobject]@{"coin" = "Wyvern"; "algo" = "Nist5"; "symbol" = "WYV"; "port" = "3497"};
 
-    $Pools += [pscustomobject]@{"coin" = "desire"; "algo" = "neoscrypt"; "symbol" = "DSR"; "port" = "3635"};
-    $Pools += [pscustomobject]@{"coin" = "feathercoin"; "algo" = "neoscrypt"; "symbol" = "FTC"; "port" = "3347"};
-    $Pools += [pscustomobject]@{"coin" = "gobyte"; "algo" = "neoscrypt"; "symbol" = "GBX"; "port" = "3606"};
-    $Pools += [pscustomobject]@{"coin" = "guncoin"; "algo" = "neoscrypt"; "symbol" = "GUN"; "port" = "3615"};
-    $Pools += [pscustomobject]@{"coin" = "innova"; "algo" = "neoscrypt"; "symbol" = "INN"; "port" = "3389"};
-    $Pools += [pscustomobject]@{"coin" = "onexcash"; "algo" = "neoscrypt"; "symbol" = "ONEX"; "port" = "3655"};
-    $Pools += [pscustomobject]@{"coin" = "orbitcoin"; "algo" = "neoscrypt"; "symbol" = "ORB"; "port" = "3614"};
-    $Pools += [pscustomobject]@{"coin" = "trezarcoin"; "algo" = "neoscrypt"; "symbol" = "TZC"; "port" = "3616"};
-    $Pools += [pscustomobject]@{"coin" = "ufocoin"; "algo" = "neoscrypt"; "symbol" = "UFO"; "port" = "3351"};
-    $Pools += [pscustomobject]@{"coin" = "vivo"; "algo" = "neoscrypt"; "symbol" = "VIVO"; "port" = "3610"};
+    $Pools += [pscustomobject]@{"coin" = "Desire"; "algo" = "NeoScrypt"; "symbol" = "DSR"; "port" = "3635"};
+    $Pools += [pscustomobject]@{"coin" = "Feathercoin"; "algo" = "NeoScrypt"; "symbol" = "FTC"; "port" = "3347"};
+    $Pools += [pscustomobject]@{"coin" = "Gobyte"; "algo" = "NeoScrypt"; "symbol" = "GBX"; "port" = "3606"};
+    $Pools += [pscustomobject]@{"coin" = "Guncoin"; "algo" = "NeoScrypt"; "symbol" = "GUN"; "port" = "3615"};
+    $Pools += [pscustomobject]@{"coin" = "Innova"; "algo" = "NeoScrypt"; "symbol" = "INN"; "port" = "3389"};
+    $Pools += [pscustomobject]@{"coin" = "Onexcash"; "algo" = "NeoScrypt"; "symbol" = "ONEX"; "port" = "3655"};
+    $Pools += [pscustomobject]@{"coin" = "Orbitcoin"; "algo" = "NeoScrypt"; "symbol" = "ORB"; "port" = "3614"};
+    $Pools += [pscustomobject]@{"coin" = "Trezarcoin"; "algo" = "NeoScrypt"; "symbol" = "TZC"; "port" = "3616"};
+    $Pools += [pscustomobject]@{"coin" = "Ufocoin"; "algo" = "NeoScrypt"; "symbol" = "UFO"; "port" = "3351"};
+    $Pools += [pscustomobject]@{"coin" = "Vivo"; "algo" = "NeoScrypt"; "symbol" = "VIVO"; "port" = "3610"};
 
     $Pools |ForEach-Object {
 
@@ -72,7 +72,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Port                  = $_.Port
             User                  = "$Username.$WorkerName"
             Pass                  = "x"
-            Location              = "EU"
+            Location              = "Europe"
             SSL                   = $false
             Symbol                = $_.Symbol
             AbbName               = $AbbName

@@ -5,16 +5,10 @@
     "Types" : ["NVIDIA"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API" : "Ccminer",
-        "Wrap" : false,
-    "Dualmining":false,
     "Algorithms": [
-                    {"blakecoin":"-a blakecoin"},
-                    {"x11gost" : "-a sib"},
-                    {"x17" : "-a x17" },
-                    {"x11evo" : "-a x11evo"}
-
-                  ]
-    
-    
-    }
-    
+        {"Blakecoin":"-a blakecoin"},
+        {"Sib" : "-a sib"},
+        {"X17" : "-a x17" },
+        {"X11evo" : "-a x11evo"}
+    ]
+}

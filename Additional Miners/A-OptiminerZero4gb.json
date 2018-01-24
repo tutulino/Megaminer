@@ -1,7 +1,7 @@
 {
-    "Path" : ".\\Bin\\AMD-OptiminerZero\\optiminer-zero-win\\optiminer.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-OptiminerZero\\",
-    "Uri" : "https://github.com/Optiminer/OptiminerZero/raw/master/optiminer-zero-1.2.0.zip",
+    "Path" : ".\\Bin\\AMD-OptiminerZero4gb\\optiminer-zero-win\\optiminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-OptiminerZero4gb\\",
+    "Uri" : "https://github.com/Optiminer/OptiminerZero/raw/master/optiminer-zero-1.1.0.zip",
     "Types" : ["AMD"],
     "Arguments" : "-m #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #DEVICESNSGMODE# #ALGORITHMPARAMETERS#",
     "API" : "optiminer",

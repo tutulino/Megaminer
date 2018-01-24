@@ -5,11 +5,9 @@
     "Types" : ["AMD"],
     "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",
-    "Wrap" : false,
-    "Dualmining":false,
-    "PrelaunchCommand":"",
+    "APIPort" : 4028,
     "Algorithms": [
-        {"tribus":"-k tribus --shaders 2304 --lookup-gap 4 -I 21"},
-        {"veltor":"-k veltor -I 21"}
+        {"Tribus":"-k tribus --shaders 2304 --lookup-gap 4 -I 21"},
+        {"Veltor":"-k veltor -I 21"}
     ]
 }

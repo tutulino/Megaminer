@@ -110,7 +110,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "yescrypt" {$Divisor /= 1000}
         }
 
-        if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0 -and $coin.Workers -lt 19999) {
+        if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $Pool_Algo
                 Info                  = $null

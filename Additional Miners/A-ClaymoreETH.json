@@ -3,12 +3,10 @@
     "ExtractionPath" : ".\\Bin\\ClaymoreDual\\",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.5.-.Catalyst.15.12-17.x.-.CUDA.8.0_9.1_7.5_6.5.zip",
     "Types" : ["AMD"],
-    "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -wd 1 -mode 1 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
+    "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -wd 1 -r -1 -mode 1 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
     "API" : "Claymore",
-    "Fee" : "0.01",
-    "Wrap" : false,
-    "DualMining": false,
-    "PrelaunchCommand":"",
+    "APIPort" : 3333,
+    "Fee" : 0.01,
     "Algorithms": [
         {"Ethash":""}
     ]

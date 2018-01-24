@@ -5,12 +5,9 @@
     "Types" : ["AMD"],
     "Arguments" : "--api-port #APIPORT# --opencl-platform=#GPUPLATFORM# -o #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --donate-level=1 #ALGORITHMPARAMETERS#",
     "API" : "XMRig",
-    "Wrap" : false,
-    "Dualmining":false,
-    "Fee":"0.01",
-    "PrelaunchCommand":"",
+    "Fee": 0.01,
     "Algorithms": [
-        {"cryptonight": "-a cryptonight"},
-        {"cryptonight-lite": "-a cryptonight-lite"}
+        {"CryptoNight": "-a cryptonight"},
+        {"CryptoLight": "-a cryptonight-lite"}
     ]
 }

@@ -5,12 +5,9 @@
     "Types" : ["CPU"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --cpu-priority 0 --donate-level 1 #ALGORITHMPARAMETERS#",
     "API" : "XMRig",
-    "Wrap" : false,
-    "Dualmining": false,
-    "PrelaunchCommand":"",
     "Fee" : 0.01,
     "Algorithms": [
-        {"cryptonight": "-a cryptonight"},
-        {"cryptonight-lite": "-a cryptonight-lite"}
+        {"CryptoNight": "-a cryptonight"},
+        {"CryptoLight": "-a cryptonight-lite"}
 	]
 }

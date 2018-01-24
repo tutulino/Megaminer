@@ -5,13 +5,11 @@
     "Types" : ["CPU"],
     "Arguments" : "-mport -#APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -allpools 1 #ALGORITHMPARAMETERS#",
     "API" : "ClaymoreV2",
-    "Wrap" : false,
-    "Fee" : "0.025",
-    "FeeSSL": "0.02",
+    "APIPort" : 4444,
+    "Fee" : 0.025,
+    "FeeSSL": 0.02,
     "SSL": true,
-    "DualMining": false,
-    "PrelaunchCommand":"",
     "Algorithms": [
-        {"cryptonight":""}
+        {"CryptoNight":""}
     ]
 }

@@ -1,5 +1,5 @@
 
-Add-Type -Path .\OpenCL\*.cs
+Add-Type -Path .\Includes\OpenCL\*.cs
 
 
 
@@ -8,6 +8,28 @@ Add-Type -Path .\OpenCL\*.cs
 #************************************************************************************************************************************************************************************
 
 
+function set_Nvidia_Powerlimit ([int]$PowerLimitPercent, [string]$Devices) {
+    $device = $Devices -split ','
+
+    $device |foreach-object {
+
+        $xpr = "./bin/nvidia-smi.exe -i " + $_ + " --query-gpu=power.default_limit --format=csv,noheader"
+        $PowerDefaultLimit = [int]((invoke-expression $xpr) -replace 'W', '')
+
+
+        #powerlimit change must run in admin mode
+        $newProcess = New-Object System.Diagnostics.ProcessStartInfo "./bin/nvidia-smi.exe"
+        $newProcess.Verb = "runas"
+        #$newProcess.UseShellExecute = $false
+        $newProcess.Arguments = "-i " + $_ + " -pl " + [Math]::Floor([int]($PowerDefaultLimit -replace ' W', '') * ($PowerLimitPercent / 100))
+        [System.Diagnostics.Process]::Start($newProcess) | out-null
+    }
+    Remove-Variable newprocess
+}
+
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
 
 function Get_ComputerStats {
     [cmdletbinding()]
@@ -19,7 +41,6 @@ function Get_ComputerStats {
     $Conns = (Get-NetTCPConnection).count
 
     "AverageCpu = $avg % | MemoryUsage = $mem % | VirtualMemoryUsage = $memV % |  PercentCFree = $free % | Processes = $nprocs | Connections = $Conns"
-
 }
 
 
@@ -28,7 +49,6 @@ function Get_ComputerStats {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 function ErrorsTolog {
-
     param(
         [Parameter(Mandatory = $true)]
         [string]$LogFile
@@ -49,11 +69,10 @@ function ErrorsTolog {
 #************************************************************************************************************************************************************************************
 
 function replace_foreach_gpu {
-
     param(
         [Parameter(Mandatory = $true)]
         [string]$ConfigFileArguments,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [string]$Gpus
     )
 
@@ -96,7 +115,6 @@ function replace_foreach_gpu {
 
 
 function get_next_free_port {
-
     param(
         [Parameter(Mandatory = $true)]
         [int]$LastUsedPort
@@ -108,8 +126,6 @@ function get_next_free_port {
     while (Query_TCPPort -Server 127.0.0.1 -Port $FreePort -timeout 100) {$FreePort = $LastUsedPort + 1}
 
     $FreePort
-
-
 }
 
 
@@ -121,8 +137,6 @@ function Query_TCPPort {
     param([string]$Server, [int]$Port, [int]$Timeout)
 
     $Connection = New-Object System.Net.Sockets.TCPClient
-
-
 
     try {
         $Connection.SendTimeout = $Timeout
@@ -145,7 +159,6 @@ function Query_TCPPort {
 
 
 function Kill_ProcessId {
-
     param(
         [Parameter(Mandatory = $true)]
         [int]$ProcessId
@@ -173,37 +186,39 @@ function get_gpu_information ($Types) {
     #NVIDIA
     $NVIDIAPlatform = [OpenCl.Platform]::GetPlatformIDs() | Where-Object vendor -like "*NVIDIA*"
     if ($NVIDIAPlatform -ne $null) {
-        invoke-expression "./bin/nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader"  | ForEach-Object {
+        $SMIResult = invoke-expression "./bin/nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader"
 
+        if ($SMIResult -notlike "*couldn't find nvml.dll*") {
 
-            $SMIresultSplit = $_ -split (",")
+            $SMIResult | ForEach-Object {
 
-            $GpuGroup = ($Types  | where-object type -eq 'NVIDIA' |where-object GpusArray -contains $GpuId).groupname
+                $SMIresultSplit = $_ -split (",")
 
-            $Card = [pscustomObject]@{
-                Type               = 'NVIDIA'
-                GpuId              = $GpuId
-                GpuGroup           = $GpuGroup
-                gpu_name           = $SMIresultSplit[0]
-                utilization_gpu    = [int]($SMIresultSplit[1] -replace '%', '')
-                utilization_memory = [int]($SMIresultSplit[2] -replace '%', '')
-                temperature_gpu    = [int]($SMIresultSplit[3] -replace '%', '')
-                power_draw         = [int]($SMIresultSplit[4] -replace 'W', '')
-                power_limit        = [int]($SMIresultSplit[5] -replace 'W', '')
-                FanSpeed           = [int]($SMIresultSplit[6] -replace '%', '')
-                pstate             = $SMIresultSplit[7]
-                ClockGpu           = [int]($SMIresultSplit[8] -replace 'Mhz', '')
-                ClockMem           = [int]($SMIresultSplit[9] -replace 'Mhz', '')
-                Power_MaxLimit     = [int]($SMIresultSplit[10] -replace 'W', '')
-                Power_DefaultLimit = [int]($SMIresultSplit[11] -replace 'W', '')
+                $GpuGroup = ($Types  | where-object type -eq 'NVIDIA' |where-object GpusArray -contains $GpuId).groupname
+
+                $Card = [pscustomObject]@{
+                    Type               = 'NVIDIA'
+                    GpuId              = $GpuId
+                    GpuGroup           = $GpuGroup
+                    gpu_name           = $SMIresultSplit[0].Trim()
+                    utilization_gpu    = [int]($SMIresultSplit[1] -replace '%', '')
+                    utilization_memory = [int]($SMIresultSplit[2] -replace '%', '')
+                    temperature_gpu    = [int]($SMIresultSplit[3] -replace '%', '')
+                    power_draw         = [int]($SMIresultSplit[4] -replace 'W', '')
+                    power_limit        = [int]($SMIresultSplit[5] -replace 'W', '')
+                    FanSpeed           = [int]($SMIresultSplit[6] -replace '%', '')
+                    pstate             = $SMIresultSplit[7].Trim()
+                    ClockGpu           = [int]($SMIresultSplit[8] -replace 'Mhz', '')
+                    ClockMem           = [int]($SMIresultSplit[9] -replace 'Mhz', '')
+                    Power_MaxLimit     = [int]($SMIresultSplit[10] -replace 'W', '')
+                    Power_DefaultLimit = [int]($SMIresultSplit[11] -replace 'W', '')
+                }
+
+                if ($Card.Power_DefaultLimit -gt 0) { $card |add-member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
+
+                $cards += $card
+                $GpuId += 1
             }
-
-            if ($Card.Power_DefaultLimit -gt 0) { $card |add-member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
-
-            $cards += $card
-            $GpuId += 1
-
-
         }
     }
 
@@ -216,37 +231,70 @@ function get_gpu_information ($Types) {
         #ADL
         $GpuId = 0
 
-        invoke-expression "./bin/OverdriveN.exe"  | ForEach-Object {
+        $AdlResult = invoke-expression "./bin/OverdriveN.exe"
 
-            $AdlResultSplit = $_ -split (",")
+        if ($AdlResult -notlike "*failed*") {
+            $AdlResult | ForEach-Object {
 
-            $GpuId = [int]$AdlResultSplit[0]
+                $AdlResultSplit = $_ -split (",")
 
-            $GpuGroup = ($Types  | where-object type -eq 'AMD' |where-object GpusArray -contains $GpuId ).groupname
+                $GpuId = [int]$AdlResultSplit[0]
 
+                $GpuGroup = ($Types  | where-object type -eq 'AMD' |where-object GpusArray -contains $GpuId ).groupname
 
-            $cards += [pscustomObject]@{
-                Type                = 'AMD'
-                GpuId               = $GpuId
-                GpuGroup            = $GpuGroup
-                FanSpeed            = [int][int]([int]$AdlResultSplit[1] / [int]$AdlResultSplit[2] * 100)
-                ClockGpu            = [int]([int]($AdlResultSplit[3] / 100))
-                ClockMem            = [int]([int]($AdlResultSplit[4] / 100))
-                utilization_gpu     = [int]$AdlResultSplit[5]
-                temperature_gpu     = [int]$AdlResultSplit[6] / 1000
-                power_limit_percent = 100 + [int]$AdlResultSplit[7]
-                Power_draw          = switch ($AdlResultSplit[8]) {
-                    "Radeon RX 580 Series" {[int](135 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
-                    "Radeon RX 480 Series" {[int](135 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
-                    "Radeon RX 570 Series" {[int](120 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
-                    "Radeon RX 470 Series" {[int](120 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
-                    "Radeon Vega 56 Series" {[int](210 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
-                    "Radeon Vega 64 Series" {[int](230 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                $cards += [pscustomObject]@{
+                    Type                = 'AMD'
+                    GpuId               = $GpuId
+                    GpuGroup            = $GpuGroup
+                    FanSpeed            = [int][int]([int]$AdlResultSplit[1] / [int]$AdlResultSplit[2] * 100)
+                    ClockGpu            = [int]([int]($AdlResultSplit[3] / 100))
+                    ClockMem            = [int]([int]($AdlResultSplit[4] / 100))
+                    utilization_gpu     = [int]$AdlResultSplit[5]
+                    temperature_gpu     = [int]$AdlResultSplit[6] / 1000
+                    power_limit_percent = 100 + [int]$AdlResultSplit[7]
+                    Power_draw          = switch ($AdlResultSplit[8].Trim()) {
+                        "Radeon RX 580 Series" {[int](135 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                        "Radeon RX 480 Series" {[int](135 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                        "Radeon RX 570 Series" {[int](120 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                        "Radeon RX 470 Series" {[int](120 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                        "Radeon Vega 56 Series" {[int](210 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                        "Radeon Vega 64 Series" {[int](230 * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100))}
+                    }
+                    Name                = $AdlResultSplit[8].Trim()
+                    UDID                = $AdlResultSplit[9].Trim()
                 }
-                Name                = $AdlResultSplit[8]
-                UDID                = $AdlResultSplit[9]
+            }
+        } else {
+            $AdlResult = invoke-expression "./bin/adli.exe -n"
+            $AdlResult | ForEach-Object {
+
+                $AdlResultSplit = $_ -split (",")
+
+                $GpuId = [int]$AdlResultSplit[0]
+
+                $GpuGroup = ($Types  | where-object type -eq 'AMD' |where-object GpusArray -contains $GpuId ).groupname
+
+
+                $cards += [pscustomObject]@{
+                    Type                = 'AMD'
+                    GpuId               = $GpuId
+                    GpuGroup            = $GpuGroup
+                    FanSpeed            = [int]$AdlResultSplit[3]
+                    temperature_gpu     = [int]$AdlResultSplit[2]
+                    power_limit_percent = 100
+                    Power_draw          = switch ($AdlResultSplit[1].Trim()) {
+                        "Radeon RX 580 Series" {[int]135}
+                        "Radeon RX 480 Series" {[int]135}
+                        "Radeon RX 570 Series" {[int]120}
+                        "Radeon RX 470 Series" {[int]120}
+                        "Radeon Vega 56 Series" {[int]210}
+                        "Radeon Vega 64 Series" {[int]230}
+                    }
+                    Name                = $AdlResultSplit[1].Trim()
+                }
             }
         }
+
 
 
         <#
@@ -281,7 +329,6 @@ function get_gpu_information ($Types) {
                                     #>
         $counter++
     }
-
     $cards
 }
 
@@ -290,10 +337,6 @@ function get_gpu_information ($Types) {
 #************************************************************************************************************************************************************************************
 
 function print_gpu_information ($Cards) {
-
-
-
-
 
     $Cards |where-object Type -eq 'NVIDIA' | Format-Table -Wrap  (
         @{Label = "GpuId"; Expression = {$_.gpuId}; Align = 'right'},
@@ -308,9 +351,7 @@ function print_gpu_information ($Cards) {
         @{Label = "Pstate"; Expression = {$_.pstate}; Align = 'right'},
         @{Label = "ClkGpu"; Expression = {[string]$_.ClockGpu + "Mhz"}; Align = 'right'},
         @{Label = "ClkMem"; Expression = {[string]$_.ClockMem + "Mhz"}; Align = 'right'}
-
     ) -groupby Type | Out-Host
-
 
 
     $Cards |where-object Type -eq 'AMD' | Format-Table -Wrap  (
@@ -324,7 +365,6 @@ function print_gpu_information ($Cards) {
         @{Label = "PowLmt"; Expression = {[string]$_.Power_limit_percent + '%'}; Align = 'right'},
         @{Label = "ClkGpu"; Expression = {[string]$_.ClockGpu + "Mhz"}; Align = 'right'},
         @{Label = "ClkMem"; Expression = {[string]$_.ClockMem + "Mhz"}; Align = 'right'}
-
     )  -groupby Type  | Out-Host
 }
 
@@ -350,15 +390,10 @@ function get_comma_separated_string {
 
 
     for ($i = $start; $i - $start -lt $lenght; $i++) {
-
         if ($result -ne $null) {$result += ","}
-
         $result = $result + [string]$i
     }
-
     $result
-
-
 }
 
 #************************************************************************************************************************************************************************************
@@ -381,9 +416,7 @@ Function get_config_variable {
     $A = Get-Content config.txt | Where-Object {$_ -like $SearchPattern}
     $A | ForEach-Object {$content += ($_ -split '=')[1]}
     if (($content | Measure-Object).count -gt 1) {$var = $content} else {$var = [string]$content}
-    if ($Var -ne $null) {($Var.TrimEnd()).TrimStart()}
-
-
+    if ($Var -ne $null) {$Var.Trim()}
 }
 
 
@@ -437,15 +470,13 @@ Function Get_Mining_Types () {
                 Gpus      = (get_comma_separated_string 0 $NumberAmdGPU )
             }
         }
-
-
     }
 
     #if cpu mining is enabled add a new group
     if (
         ((get_config_variable "CPUMINING") -eq 'ENABLED' -and ($Filter |Measure-Object).count -eq 0) -or ((compare-object "CPU" $Filter -IncludeEqual -ExcludeDifferent |Measure-Object).count -gt 0)
     )
-    {$Types0 += [pscustomobject]@{GroupName = "CPU"; Type = "CPU"}
+    {$Types0 += [pscustomobject]@{GroupName = "CPU"; Type = "CPU"; Gpus = $null}
     }
 
 
@@ -464,7 +495,6 @@ Function Get_Mining_Types () {
             $Types += $_
         }
     }
-
     $Types #return
 }
 
@@ -475,7 +505,6 @@ Function Get_Mining_Types () {
 
 
 Function WriteLog {
-
     param(
         [Parameter(Mandatory = $false)]
         [string]$Message,
@@ -491,7 +520,6 @@ Function WriteLog {
     if ($SendToScreen) { $Message | out-host}
 
     #if ($object -ne $null) {$object | convertto-json | Set-Content  -Path $LogFile}
-
 }
 
 
@@ -519,12 +547,8 @@ Function Timed_ReadKb {
             while ($Host.UI.RawUI.KeyAvailable) {$host.ui.RawUi.Flushinputbuffer()} #keyb buffer flush
 
         }
-
         start-sleep -m 30
-
-
     }
-
     $KeyPressed
 }
 
@@ -545,7 +569,6 @@ function Get_Gpu_Platform {
     else {$return = 0}
 
     $return
-
 }
 
 
@@ -563,7 +586,6 @@ function Clear_Screen_Zone {
 
     $BlankLine = "                                                                                                                    "
 
-
     Set_ConsolePosition 0 $start
 
     for ($i = $startY; $i -le $endY; $i++) {
@@ -578,7 +600,6 @@ function Clear_Screen_Zone {
 #************************************************************************************************************************************************************************************
 
 function Invoke_TcpRequest {
-
     param(
         [Parameter(Mandatory = $true)]
         [String]$Server = "localhost",
@@ -608,9 +629,7 @@ function Invoke_TcpRequest {
         if ($Stream) {$Stream.Close()}
         if ($Client) {$Client.Close()}
     }
-
     $response
-
 }
 
 
@@ -622,7 +641,6 @@ function Invoke_TcpRequest {
 
 
 function Invoke_httpRequest {
-
     param(
         [Parameter(Mandatory = $true)]
         [String]$Server = "localhost",
@@ -639,9 +657,7 @@ function Invoke_httpRequest {
         $response = Invoke-WebRequest "http://$($Server):$Port$Request" -UseBasicParsing -TimeoutSec $timeout
     } catch {$Error.Remove($error[$Error.Count - 1])}
 
-
     $response
-
 }
 
 
@@ -752,20 +768,10 @@ function Get_Live_HashRate {
             }
 
             "prospector" {
-                $Request = Invoke_httpRequest $Server $Port "/api/v0/hashrates" 5
+                $Request = Invoke_httpRequest $Server 42000 "/api/v0/hashrates" 5
                 if ($Request -ne "" -and $request -ne $null) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [Double]($Data.rate | Measure-Object -Sum).sum
-                }
-            }
-
-            "fireice" {
-                $Request = Invoke_httpRequest $Server $Port "/h" 5
-                if ($Request -ne "" -and $request -ne $null) {
-                    $Data = $Request.Content -split "</tr>" -match "total*" -split "<td>" -replace "<[^>]*>", ""
-                    $HashRate = $Data[1]
-                    if ($HashRate -eq "") {$HashRate = $Data[2]}
-                    if ($HashRate -eq "") {$HashRate = $Data[3]}
                 }
             }
 
@@ -806,7 +812,8 @@ function Get_Live_HashRate {
                 $Request = Invoke_httpRequest $Server $Port "" 5
                 if ($Request -ne "" -and $request -ne $null) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [Double]($Data.solution_rate.Total."5s" | Measure-Object -Sum).sum
+                    $HashRate = [Double]($Data.solution_rate.Total."60s" | Measure-Object -Sum).sum
+                    if ($HashRate -eq 0) { $HashRate = [Double]($Data.solution_rate.Total."5s" | Measure-Object -Sum).sum }
                 }
             }
         } #end switch
@@ -818,17 +825,6 @@ function Get_Live_HashRate {
         $HashRates
     } catch {}
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 #************************************************************************************************************************************************************************************
@@ -851,8 +847,6 @@ function ConvertTo_Hash {
         3 {"{0:n1} gh" -f ($Hash / [math]::Pow(1000, 3))}
         4 {"{0:n1} th" -f ($Hash / [math]::Pow(1000, 4))}
         Default {"{0:n1} ph" -f ($Hash / [math]::Pow(1000, 5))}
-
-
     }
     $Return
 }
@@ -876,7 +870,7 @@ function Start_SubProcess {
 
     )
 
-    $Job = Start-Job -ArgumentList $PID, (Resolve-Path ".\CreateProcess.cs"), $FilePath, $ArgumentList, $WorkingDirectory {
+    $Job = Start-Job -ArgumentList $PID, (Resolve-Path ".\Includes\CreateProcess.cs"), $FilePath, $ArgumentList, $WorkingDirectory {
         param($ControllerProcessID, $CreateProcessPath, $FilePath, $ArgumentList, $WorkingDirectory)
 
         $ControllerProcess = Get-Process -Id $ControllerProcessID
@@ -888,7 +882,7 @@ function Start_SubProcess {
         $lpApplicationName = $FilePath;
 
         $lpCommandLine = ""
-        #$lpCommandLine = '"' + $FilePath + '"' #Windows paths cannot contain ", so there is no need to escape
+        $lpCommandLine = '"' + $FilePath + '"' #Windows paths cannot contain ", so there is no need to escape
         if ($ArgumentList -ne "") {$lpCommandLine += " " + $ArgumentList}
 
         $lpProcessAttributes = New-Object SECURITY_ATTRIBUTES
@@ -1053,10 +1047,8 @@ function Get_Pools {
                         if ($Pool.Info -eq $null) {$Pool.info = ''}
                         $AllPools2 += $Pool
                     }
-
                 }
             }
-
         }
         #Insert by priority of location
         if ($Location -ne "") {
@@ -1072,14 +1064,10 @@ function Get_Pools {
     { $Return = $AllPools }
 
 
-
-
     Remove-variable AllPools
     Remove-variable AllPools2
 
     $Return
-
-
 }
 
 
@@ -1087,7 +1075,7 @@ function Get_Pools {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
-function Get-Best-Hashrate-Algo {
+function Get_Best_Hashrate_Algo {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Algorithm
@@ -1098,10 +1086,10 @@ function Get-Best-Hashrate-Algo {
 
     $Besthashrate = 0
 
-    Get-ChildItem ($PSScriptRoot + "\Stats")  | Where-Object pschildname -like $Pattern | ForEach-Object {
-        $Content = ($_ | Get-Content | ConvertFrom-Json)
+    Get-ChildItem ($PSScriptRoot + "\Stats") | Where-Object pschildname -like $Pattern | ForEach-Object {
+        $Content = ($_ | Get-Content | ConvertFrom-Json )
         $Hrs = 0
-        if ($content -ne $null) {$Hrs = [double]($Content[0])}
+        if ($Content -ne $null) {$Hrs = $($Content | Where-Object TimeRunning -gt 100 | Measure-Object -property Speed -average).Average}
 
         if ($Hrs -gt $Besthashrate) {
             $Besthashrate = $Hrs
@@ -1111,9 +1099,7 @@ function Get-Best-Hashrate-Algo {
             Hashrate = $Besthashrate
             Miner    = $Miner
         }
-
     }
-
     $Return
 }
 
@@ -1140,7 +1126,6 @@ function Get_Algo_Divisor {
         "keccakc" {$Divisor *= 1000}
         "yescrypt" {$Divisor /= 1000}
     }
-
     $Divisor
 }
 
@@ -1219,7 +1204,6 @@ function set_WindowSize ([int]$Width, [int]$Height) {
     if ($Height -ne 0) {$WSize.Height = $Height}
 
     $Host.UI.RawUI.WindowSize = $WSize
-
 }
 
 #************************************************************************************************************************************************************************************
@@ -1228,27 +1212,9 @@ function set_WindowSize ([int]$Width, [int]$Height) {
 
 function get_algo_unified_name ([string]$Algo) {
 
-    $Result = $Algo
-    switch ($Algo) {
-        "sib" {$Result = "x11gost"}
-        "Blake (14r)" {$Result = "Blake14r"}
-        "Blake (2b)" {$Result = "Blake2b"}
-        "decred" {$Result = "Blake14r"}
-        "Lyra2RE2" {$Result = "lyra2v2"}
-        "Lyra2REv2" {$Result = "lyra2v2"}
-        "sia" {$Result = "Blake2b"}
-        "myr-gr" {$Result = "Myriad-Groestl"}
-        "myriadgroestl" {$Result = "Myriad-Groestl"}
-        "daggerhashimoto" {$Result = "Ethash"}
-        "dagger" {$Result = "Ethash"}
-        "hashimoto" {$Result = "Ethash"}
-        "skunkhash" {$Result = "skunk"}
-        "TimeTravel10" {$Result = "bitcore"}
-        "phi1612" {$Result = "phi"}
-        "keccak-c" {$Result = "keccakc"}
-    }
-    $Result
-
+    $Algos = Get-Content -Path ".\Includes\algorithms.json" | ConvertFrom-Json
+    if ($Algos.$Algo -ne $null) { $Algos.$Algo }
+    else { $Algo }
 }
 
 #************************************************************************************************************************************************************************************
@@ -1268,9 +1234,7 @@ function  get_coin_unified_name ([string]$Coin) {
         "Auroracoin-*" {$Result = "Auroracoin"}
         "EthereumClassic" {$Result = "Ethereum-Classic"}
     }
-
     $Result
-
 }
 
 
@@ -1290,24 +1254,21 @@ function Get_Hashrates {
         [Parameter(Mandatory = $true)]
         [String]$GroupName,
         [Parameter(Mandatory = $false)]
-        [String]$AlgoLabel
-
-
+        [String]$AlgoLabel,
+        [Parameter(Mandatory = $true)]
+        [String]$Powerlimit
     )
 
-    $Hrs = $null
 
-    $Pattern = $MinerName + "_" + $Algorithm + "_" + $GroupName
-    if ($AlgoLabel -ne "") {$Pattern += "_" + $AlgoLabel}
-    $Pattern += "_HashRate.txt"
+    if ($AlgoLabel -eq "") {$AlgoLabel = 'X'}
+    $Pattern = $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.txt"
 
-    try {$Content = (Get-ChildItem ($PSScriptRoot + "\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {$Content = $null}
+    try {$Content = (Get-ChildItem ($PSScriptRoot + "\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {}
 
-    if ($content -ne $null) {$Hrs = $Content[0].tostring() + "_" + $Content[1].tostring()}
-
-    $Hrs
-
+    if ($Content -eq $null) {$Content = @()}
+    $content
 }
+
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
@@ -1324,23 +1285,17 @@ function Set_Hashrates {
         [Parameter(Mandatory = $false)]
         [String]$AlgoLabel,
         [Parameter(Mandatory = $true)]
-        [double]$Value,
+        [pscustomobject]$Value,
         [Parameter(Mandatory = $true)]
-        [double]$ValueDual
-
+        [String]$Powerlimit
     )
 
 
-    $Path = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName
-    if ($AlgoLabel -ne "") {$Path += "_" + $AlgoLabel}
-    $Path += "_HashRate.txt"
+    if ($AlgoLabel -eq "") {$AlgoLabel = 'X'}
 
+    $Path = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.txt"
 
-    $Array = $Value, $valueDual
-    $Array | Convertto-Json | Set-Content  -Path $Path
-    Remove-Variable Array
-
-
+    $Value | Convertto-Json | Set-Content  -Path $Path
 }
 
 
@@ -1393,9 +1348,6 @@ function Start_Downloader {
             }
         }
     }
-
-
-
 }
 
 
@@ -1418,7 +1370,6 @@ function clear_log {
     $Files = Get-Childitem $TargetFolder -Include $Extension -Exclude "empty.txt" -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
 
     $Files |ForEach-Object {Remove-Item $_.fullname}
-
 }
 
 
@@ -1436,34 +1387,30 @@ function get_WhattomineFactor ([string]$Algo) {
     switch ($Algo) {
         "Ethash" {$WTMFactor = 79500000}
         "Groestl" {$WTMFactor = 54000000}
-        "Myriad-Groestl" {$WTMFactor = 79380000}
-        "X11Gost" {$WTMFactor = 20100000}
-        "Cryptonight" {$WTMFactor = 2190}
-        "equihash" {$WTMFactor = 870}
-        "lyra2v2" {$WTMFactor = 14700000}
-        "Neoscrypt" {$WTMFactor = 1950000}
+        "MyriadGroestl" {$WTMFactor = 79380000}
+        "Sib" {$WTMFactor = 20100000}
+        "CryptoNight" {$WTMFactor = 2190}
+        "Equihash" {$WTMFactor = 870}
+        "Lyra2RE2" {$WTMFactor = 14700000}
+        "NeoScrypt" {$WTMFactor = 1950000}
         "Lbry" {$WTMFactor = 285000000}
-        "Blake2b" {$WTMFactor = 2970000000}
-        "Blake14r" {$WTMFactor = 4200000000}
+        "Sia" {$WTMFactor = 2970000000}
+        "Decred" {$WTMFactor = 4200000000}
         "Pascal" {$WTMFactor = 2070000000}
-        "skunk" {$WTMFactor = 54000000}
-        "xevan" {$WTMFactor = 4800000}
-        "bitcore" {$WTMFactor = 30000000}
-        "EquihashZero" {$WTMFactor = 18}
-        "keccak" {$WTMFactor = 900000000}
-        "Keccak-C" {$WTMFactor = 240000000}
-        "CryptoNight-Lite" {$WTMFactor = 6600}
+        "Skunk" {$WTMFactor = 54000000}
+        "Xevan" {$WTMFactor = 4800000}
+        "Bitcore" {$WTMFactor = 30000000}
+        "Zero" {$WTMFactor = 18}
+        "Keccak" {$WTMFactor = 900000000}
+        "KeccakC" {$WTMFactor = 240000000}
+        "CryptoLight" {$WTMFactor = 6600}
         "Lyra2z" {$WTMFactor = 420000}
         "X17" {$WTMFactor = 100000}
-        "blake2s" {$WTMFactor = 100000}
-        "skein" {$WTMFactor = 780000000}
-        "yescrypt" {$WTMFactor = 13080}
+        "Blake2s" {$WTMFactor = 100000}
+        "Skein" {$WTMFactor = 780000000}
+        "Yescrypt" {$WTMFactor = 13080}
     }
-
-
-
     $WTMFactor
-
 }
 
 

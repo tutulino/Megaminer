@@ -47,9 +47,9 @@ if ($Querymode -eq "info") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Pools = @()
-    $Pools += [pscustomobject]@{"Symbol" = "ZEC"; "algo" = "equihash"; "port" = 3333; "coin" = "Zcash"; "location" = "US"; "server" = "us1-zcash.flypool.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "ZEC"; "algo" = "equihash"; "port" = 3333; "coin" = "Zcash"; "location" = "ASIA"; "server" = "asia1-zcash.flypool.org"}
-    $Pools += [pscustomobject]@{"Symbol" = "ZEC"; "algo" = "equihash"; "port" = 3333; "coin" = "Zcash"; "location" = "EUROPE"; "server" = "eu1-zcash.flypool.org"}
+    $Pools += [pscustomobject]@{"Symbol" = "ZEC"; "algo" = "Equihash"; "port" = 3333; "coin" = "Zcash"; "location" = "US"; "server" = "us1-zcash.flypool.org"}
+    $Pools += [pscustomobject]@{"Symbol" = "ZEC"; "algo" = "Equihash"; "port" = 3333; "coin" = "Zcash"; "location" = "ASIA"; "server" = "asia1-zcash.flypool.org"}
+    $Pools += [pscustomobject]@{"Symbol" = "ZEC"; "algo" = "Equihash"; "port" = 3333; "coin" = "Zcash"; "location" = "EUROPE"; "server" = "eu1-zcash.flypool.org"}
 
 
 

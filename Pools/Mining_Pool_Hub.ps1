@@ -94,7 +94,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $retries = 1
     do {
         try {
-            $MiningPoolHub_Request = Invoke-WebRequest "https://miningpoolhub.com/index.php?page=api&action=getautoswitchingandprofitsstatistics" -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+            $MiningPoolHub_Request = Invoke-WebRequest "https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
         } catch {start-sleep 2}
         $retries++
         if ($MiningPoolHub_Request -eq $null -or $MiningPoolHub_Request -eq "") {start-sleep 3}
@@ -107,15 +107,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Locations = "Europe", "US", "Asia"
 
-    $MiningPoolHub_Request.return | ForEach-Object {
+    $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0} | ForEach-Object {
 
         $MiningPoolHub_Algorithm = get_algo_unified_name $_.algo
-        # $MiningPoolHub_Coin = get_coin_unified_name $_.current_mining_coin
+        $MiningPoolHub_Coin = get_coin_unified_name $_.coin_name
 
-        $MiningPoolHub_OriginalCoin = $_.current_mining_coin
+        $MiningPoolHub_OriginalCoin = $_.coin_name
 
-        $MiningPoolHub_Hosts = $_.all_host_list.split(";")
-        $MiningPoolHub_Port = $_.algo_switch_port
+        $MiningPoolHub_Hosts = $_.direct_mining_host_list.split(";")
+        $MiningPoolHub_Port = $_.direct_mining_algo_port
 
         $Divisor = [double]1000000000
 
@@ -128,7 +128,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $MiningPoolHub_Algorithm
-                Info                  = $null #$MiningPoolHub_Coin
+                Info                  = $MiningPoolHub_Coin
                 Price                 = $MiningPoolHub_Price
                 Price24h              = $null #MPH not send this on api
                 Protocol              = "stratum+tcp"
@@ -139,7 +139,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Pass                  = "x"
                 Location              = $Location
                 SSL                   = $enableSSL
-                Symbol                = $null #get_coin_symbol -Coin $MiningPoolHub_Coin
+                Symbol                = get_coin_symbol -Coin $MiningPoolHub_Coin
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode

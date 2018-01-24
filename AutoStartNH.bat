@@ -10,6 +10,6 @@ cd /d %~dp0
 :LOOP
 
 powershell -version 5.0 -noexit -executionpolicy bypass -command ^
-    "&.\core.ps1 -MiningMode AUTOMATIC -PoolsName NiceHash
+    "&.\Core.ps1 -MiningMode AUTOMATIC -PoolsName NiceHash
 
 GOTO LOOP

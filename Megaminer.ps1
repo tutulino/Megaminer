@@ -37,7 +37,7 @@ if ($LocalCurrency.length -eq 0) {
 }
 
 $CoinsWallets = @{} #needed for anonymous pools load
-((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*', '').TrimEnd() | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0], ($_ -split "=")[1])}
+((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*', '').Trim() | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0], ($_ -split "=")[1])}
 
 
 $SelectedOption = ""
@@ -184,7 +184,7 @@ if ($MiningMode -eq "manual") {
         $CoinsPool | ForEach-Object {
             $_.Option = $Counter
             $counter++
-            $_.YourHashRate = (Get-Best-Hashrate-Algo $_.Algorithm).hashrate
+            $_.YourHashRate = (Get_Best_Hashrate_Algo $_.Algorithm).hashrate
 
             if ($ManualMiningApiUse -eq $true -and $_.symbol -ne "" -and $_.symbol -ne $null) {
 
@@ -251,16 +251,12 @@ if ($MiningMode -eq "manual") {
 
         $CoinsPool  | Format-Table -Wrap (
             @{Label = "Opt."; Expression = {$_.Option}; Align = 'right'} ,
-            @{Label = "Name"; Expression = {$_.info.toupper()}; Align = 'left'} ,
+            @{Label = "Name"; Expression = {$_.Info}; Align = 'left'} ,
             @{Label = "Symbol"; Expression = {$_.symbol}; Align = 'left'},
-            @{Label = "Algorithm"; Expression = {$_.algorithm.tolower()}; Align = 'left'},
-            # @{Label = "Workers"; Expression = {$_.Workers}; Align = 'right'},
-            # @{Label = "PoolHash"; Expression = {"$($_.PoolHashRate | ConvertTo-Hash)/s"}; Align = 'right'},
+            @{Label = "Algorithm"; Expression = {$_.algorithm}; Align = 'left'},
             @{Label = "HashRate"; Expression = {(ConvertTo_Hash ($_.YourHashRate)) + "/s"}; Align = 'right'},
-            # @{Label = "Blocks_24h"; Expression = {$_.Blocks_24h}; Align = 'right'},
             @{Label = "BTCPrice"; Expression = {if ($_.BTCPrice -gt 0) {[math]::Round($_.BTCPrice, 6).ToString("n6")}}; Align = 'right'},
             @{Label = $LabelPrice; Expression = { [math]::Round($_.LocalPrice, 2)}; Align = 'right'},
-            # @{Label = "DiffChange24h"; Expression = {([math]::Round($_.DiffChange24h,1)).ToString()+'%'}; Align = 'right'},
             @{Label = "Reward"; Expression = {if ($_.Reward -gt 0 ) {[math]::Round($_.Reward, 3)}}; Align = 'right'},
             @{Label = "mBTCProfit"; Expression = {if ($_.BtcProfit -gt 0 ) {($_.BtcProfit * 1000).ToString("n5")}}; Align = 'right'},
             @{Label = $LabelProfit; Expression = {if ($_.LocalProfit -gt 0 ) {[math]::Round($_.LocalProfit, 2)}}; Align = 'right'}

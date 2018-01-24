@@ -5,11 +5,11 @@
     "Types" : ["AMD"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# --exitsick --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "wrapper",
-    "Wrap" : true,
+    "APIPort" : 3333,
+    "Wrap": true,
     "SSL": true,
-    "Dualmining":false,
-    "PrelaunchCommand":"",
     "Algorithms": [
-        {"lyra2v2":"-I 23"}
+        {"Lyra2RE2":"-I 23"},
+        {"Lyra2RE2__asm":"-I 23 --asm"}
     ]
 }

@@ -3,15 +3,13 @@
 	"ExtractionPath" : ".\\Bin\\XMR-Stak\\",
 	"Uri" : "https://github.com/fireice-uk/xmr-stak/releases/download/v2.2.0/xmr-stak-win64.zip",
 	"Types" : ["CPU"],
-	"GenerateConfigFile" : ".\\Bin\\xmr-stak\\xmr-stak-win64\\config.txt",
+	"GenerateConfigFile" : ".\\Bin\\xmr-stak\\xmr-stak-win64\\config-#GROUPNAME#.txt",
 	"PatternConfigFile": ".\\Patterns\\xmr-stak-Pattern.txt",
-	"Arguments" : "-c config.txt --noNVIDIA --noAMD --noUAC",
+	"Arguments" : "-c config-#GROUPNAME#.txt --noNVIDIA --noAMD --noUAC",
 	"API" : "XMRig",
-	"Wrap" : false,
-	"DualMining": false,
-	"PrelaunchCommand":"",
-	"Fee" : "0.01",
+	"Fee" : 0.01,
 	"Algorithms": [
-		{"cryptonight":""}
+		{"CryptoNight": "monero"},
+		{"CryptoLight": "aeon"}
 	]
 }
