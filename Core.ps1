@@ -70,7 +70,7 @@ $LogFile = ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 Start-Transcript $LogFile #for start log msg
 Stop-Transcript
 $Types = Get_Mining_Types -filter $Groupnames
-writelog ( get_gpu_information $Types |ConvertTo-Json) $logfile $false
+writelog ( get_gpu_information $Types | ConvertTo-Json) $logfile $false
 
 
 $ActiveMiners = @()
@@ -99,7 +99,7 @@ switch ($MiningMode) {
     "Manual" {$PoolsErrors = $PoolsChecking | Where-Object ActiveOnManualMode -eq $false }
 }
 
-$PoolsErrors |ForEach-Object {
+$PoolsErrors | ForEach-Object {
     "Selected MiningMode is not valid for pool " + $_.name | Out-Host
     EXIT
 }
@@ -166,7 +166,7 @@ while ($true) {
     Clear-Host; $repaintScreen = $true
 
     WriteLog "New interval starting............." $LogFile $True
-    Writelog ( Get_ComputerStats |ConvertTo-Json) $logfile $false
+    Writelog ( Get_ComputerStats | ConvertTo-Json) $logfile $false
 
     $Location = get_config_variable "LOCATION"
 
@@ -510,7 +510,7 @@ while ($true) {
 
     #Paint no miners message
     $Miners = $Miners | Where-Object {Test-Path $_.Path}
-    if ($Miners.Count -eq 0) {Writelog "NO MINERS!" $LogFile $true ; EXIT}
+    if ($Miners.Count -eq 0) {Writelog "NO MINERS!" $LogFile $true; EXIT}
 
 
     #Update the active miners list which is alive for  all execution time
@@ -836,7 +836,7 @@ while ($true) {
         $LoopSeconds = $LoopTime.seconds + $LoopTime.minutes * 60 + $LoopTime.hours * 3600
 
 
-        $cards = get_gpu_information $Types
+        $Devices = get_gpu_information $Types
 
         #############################################################
 
@@ -869,7 +869,7 @@ while ($true) {
                     $_.SpeedLiveDual = [double]($Miner_HashRates[1])
                     $_.RevenueLive = $_.SpeedLive * $_.PoolPrice
                     $_.RevenueLiveDual = $_.SpeedLiveDual * $_.PoolPriceDual
-                    $_.PowerLive = ($Cards | Where-Object gpugroup -eq $_.GroupName | Measure-Object -property power_draw -sum).sum
+                    $_.PowerLive = ($Devices | Where-Object gpugroup -eq $_.GroupName | Measure-Object -property power_draw -sum).sum
                     $_.Profitslive = $_.RevenueLive + $_.RevenueLiveDual - ($ElectricityCostValue * ($_.PowerLive * 24) / 1000)
 
                     $_.TimeRunning += (get-date) - $_.LastTimeActive
@@ -920,7 +920,7 @@ while ($true) {
         if ($TimetoNextIntervalSeconds -lt 0) {$TimetoNextIntervalSeconds = 0}
 
         set_ConsolePosition ($Host.UI.RawUI.WindowSize.Width - 31) 2
-        "|  Next Interval:  $TimetoNextIntervalSeconds secs..." | Out-host
+        " | Next Interval:  $TimetoNextIntervalSeconds secs..." | Out-host
         set_ConsolePosition 0 0
 
         #display header
@@ -940,13 +940,13 @@ while ($true) {
 
         if ($SwitchLoop = 1) {
 
-            writelog ($ActiveMiners | Where-Object Status -eq 'Running' | select-object id, process.Id, groupname, name, poolabbname, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, location, port, arguments |ConvertTo-Json) $logfile $false
+            writelog ($ActiveMiners | Where-Object Status -eq 'Running' | select-object id, process.Id, groupname, name, poolabbname, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, location, port, arguments | ConvertTo-Json) $logfile $false
 
             #To get pool speed
             $PoolsSpeed = @()
 
 
-            $ActiveMiners | Where-Object Status -eq 'Running' |select-object PoolName, UserNameReal, WalletSymbol, Coin, Workername -unique | ForEach-Object {
+            $ActiveMiners | Where-Object Status -eq 'Running' | select-object PoolName, UserNameReal, WalletSymbol, Coin, Workername -unique | ForEach-Object {
                 $Info = [PSCustomObject]@{
                     User       = $_.UserNameReal
                     PoolName   = $_.PoolName
@@ -960,7 +960,7 @@ while ($true) {
 
             #Dual miners
 
-            $ActiveMiners | Where-Object Status -eq 'Running' | Where-Object PoolNameDual -ne $null |select-object PoolNameDual, UserNameRealDual, WalletSymbolDual, CoinDual, WorkernameDual -unique | ForEach-Object {
+            $ActiveMiners | Where-Object Status -eq 'Running' | Where-Object PoolNameDual -ne $null | select-object PoolNameDual, UserNameRealDual, WalletSymbolDual, CoinDual, WorkernameDual -unique | ForEach-Object {
                 $Info = [PSCustomObject]@{
                     User       = $_.UserNameRealDual
                     PoolName   = $_.PoolNameDual
@@ -975,10 +975,10 @@ while ($true) {
 
             $ActiveMiners | Where-Object Status -eq 'Running' | ForEach-Object {
 
-                $Me = $PoolsSpeed | Where-Object PoolName -eq $_.Poolname | Where-Object Workername -eq $_.Workername |select-object HashRate, PoolName, Workername -first 1
+                $Me = $PoolsSpeed | Where-Object PoolName -eq $_.Poolname | Where-Object Workername -eq $_.Workername | select-object HashRate, PoolName, Workername -first 1
                 $_.PoolHashrate = $Me.Hashrate
 
-                $MeDual = $PoolsSpeed | Where-Object PoolName -eq $_.PoolnameDual | Where-Object Workername -eq $_.WorkernameDual |select-object HashRate, PoolName, Workername -first 1
+                $MeDual = $PoolsSpeed | Where-Object PoolName -eq $_.PoolnameDual | Where-Object Workername -eq $_.WorkernameDual | select-object HashRate, PoolName, Workername -first 1
                 $_.PoolHashrateDual = $MeDual.Hashrate
             }
         }
@@ -1039,7 +1039,7 @@ while ($true) {
 
             if ($ShowBestMinersOnly) {
                 $ProfitMiners = @()
-                $ActiveMiners | Where-Object IsValid |ForEach-Object {
+                $ActiveMiners | Where-Object IsValid | ForEach-Object {
                     $ExistsBest = $ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object IsValid -eq $true | Where-Object Profits -gt $_.Profits
                     if ($ExistsBest -eq $null -and $_.Profits -eq 0) {$ExistsBest = $ActiveMiners | Where-Object GroupId -eq $_.GroupId | Where-Object Algorithm -eq $_.Algorithm | Where-Object AlgorithmDual -eq $_.AlgorithmDual | Where-Object IsValid -eq $true | Where-Object hashrate -gt $_.hashrate}
                     if ($ExistsBest -eq $null -or $_.NeedBenchmark -eq $true) {$ProfitMiners += $_}
@@ -1052,7 +1052,7 @@ while ($true) {
             ForEach ( $TypeId in $types.Id) {
                 $inserted = 1
                 $ProfitMiners | Where-Object IsValid | Where-Object GroupId -eq $TypeId | Sort-Object -Descending GroupName, NeedBenchmark, Profits | ForEach-Object {
-                    if ($inserted -le $ProfitsScreenLimit) {$ProfitMiners2 += $_ ; $inserted++} #this can be done with select-object -first but then memory leak happens, ¿why?
+                    if ($inserted -le $ProfitsScreenLimit) {$ProfitMiners2 += $_; $inserted++} #this can be done with select-object -first but then memory leak happens, ¿why?
                 }
             }
 
@@ -1067,8 +1067,8 @@ while ($true) {
                 # @{Label = "PowLmt"; Expression ={if ($_.PowerLimit -gt 0) {$_.PowerLimit}};align='right'},
                 @{Label = "PowerAvg"; Expression = {if (-not $_.NeedBenchmark) {$_.PowerAvg.tostring("n0")}}; Align = 'right'},
                 @{Label = "StatsSpeed"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Hashrates}}; Align = 'right'},
-                @{Label = "mBTC/Day"; Expression = {((($_.Revenue + $_.RevenueDual) * 1000).tostring("n5"))} ; Align = 'right'},
-                @{Label = $LocalCurrency + "/Day"; Expression = {((($_.Revenue + $_.RevenueDual) * [double]$localBTCvalue ).tostring("n2"))} ; Align = 'right'},
+                @{Label = "mBTC/Day"; Expression = {((($_.Revenue + $_.RevenueDual) * 1000).tostring("n5"))}; Align = 'right'},
+                @{Label = $LocalCurrency + "/Day"; Expression = {((($_.Revenue + $_.RevenueDual) * [double]$localBTCvalue ).tostring("n2"))}; Align = 'right'},
                 @{Label = "Profit/Day"; Expression = {if (-not $_.NeedBenchmark) {($_.Profits * [double]$localBTCvalue).tostring("n2") + " " + $LocalCurrency}}; Align = 'right'},
                 @{Label = "PoolFee"; Expression = {if ($_.PoolFee -gt 0) {"{0:P2}" -f $_.PoolFee}}; Align = 'right'},
                 @{Label = "MinerFee"; Expression = {if ($_.MinerFee -gt 0) {"{0:P2}" -f $_.MinerFee}}; Align = 'right'},
@@ -1076,7 +1076,7 @@ while ($true) {
                 @{Label = "Location"; Expression = {$_.Location}}
 
 
-            )  -GroupBy GroupName  |  Out-Host
+            )  -GroupBy GroupName | Out-Host
 
 
             Remove-Variable ProfitMiners
@@ -1090,7 +1090,7 @@ while ($true) {
             set_ConsolePosition 0 $YToWriteData
 
             # Display devices info
-            print_gpu_information $Cards
+            print_gpu_information $Devices
         }
 
 
@@ -1105,7 +1105,7 @@ while ($true) {
 
                 $WalletsToCheck = @()
 
-                $Pools  | Where-Object WalletMode -eq 'WALLET' | Select-Object PoolName, User, WalletMode, WalletSymbol -unique  | ForEach-Object {
+                $Pools | Where-Object WalletMode -eq 'WALLET' | Select-Object PoolName, User, WalletMode, WalletSymbol -unique | ForEach-Object {
                     $WalletsToCheck += [pscustomObject]@{
                         PoolName   = $_.PoolName
                         WalletMode = $_.WalletMode
@@ -1117,7 +1117,7 @@ while ($true) {
                     }
                 }
 
-                $Pools  | Where-Object WalletMode -eq 'APIKEY' | Select-Object PoolName, Algorithm, WalletMode, WalletSymbol -unique  | ForEach-Object {
+                $Pools | Where-Object WalletMode -eq 'APIKEY' | Select-Object PoolName, Algorithm, WalletMode, WalletSymbol -unique | ForEach-Object {
                     $ApiKey = get_config_variable ("APIKEY_" + $_.PoolName)
 
                     if ($Apikey -ne "") {
@@ -1133,10 +1133,10 @@ while ($true) {
                 }
 
                 $WalletStatus = @()
-                $WalletsToCheck |ForEach-Object {
+                $WalletsToCheck | ForEach-Object {
 
                     set_ConsolePosition 0 $YToWriteMessages
-                    "                                                                         "| Out-host
+                    "                                                                         " | Out-host
                     set_ConsolePosition 0 $YToWriteMessages
 
                     if ($_.WalletMode -eq "WALLET") {writelog ("Checking " + $_.PoolName + " - " + $_.symbol) $logfile $true}
@@ -1152,7 +1152,7 @@ while ($true) {
                     $WalletStatus += $Ws
 
                     set_ConsolePosition 0 $YToWriteMessages
-                    "                                                                         "| Out-host
+                    "                                                                         " | Out-host
                 }
 
 
@@ -1180,7 +1180,7 @@ while ($true) {
 
                 ) | Out-Host
 
-                $Pools  | Where-Object WalletMode -eq 'NONE' | Select-Object PoolName -unique | ForEach-Object {
+                $Pools | Where-Object WalletMode -eq 'NONE' | Select-Object PoolName -unique | ForEach-Object {
                     "NO EXISTS API FOR POOL " + $_.PoolName + " - NO WALLETS CHECK" | Out-host
                 }
                 $repaintScreen = $false
@@ -1197,12 +1197,12 @@ while ($true) {
             set_ConsolePosition 0 $YToWriteData
 
             #Display activated miners list
-            $ActiveMiners | Where-Object ActivatedTimes -GT 0 | Sort-Object -Descending LastTimeActive  | Format-Table -Wrap  (
+            $ActiveMiners | Where-Object ActivatedTimes -GT 0 | Sort-Object -Descending LastTimeActive | Format-Table -Wrap  (
                 @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
                 @{Label = "LastTime"; Expression = {$_.LastTimeActive}},
                 @{Label = "GroupName"; Expression = {$_.GroupName}},
                 @{Label = "Command"; Expression = {"$($_.Path.TrimStart((Convert-Path ".\"))) $($_.Arguments)"}}
-            )  | Out-Host
+            ) | Out-Host
             $repaintScreen = $false
         }
 
