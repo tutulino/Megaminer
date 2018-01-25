@@ -1,6 +1,6 @@
-Bin/**/
-Logs/*-*.txt
-Stats/*_HashRate.txt
+Bin/*
+Logs/*
+Stats/*
 Cache/*
 
 .vscode/

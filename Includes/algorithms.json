@@ -1,8 +1,10 @@
 {
+    "bitblock":  "X15",
     "bitcore":  "Bitcore",
     "blake2s":  "Blake2s",
     "blake256r8":  "Blakecoin",
     "blake256r8vnl":  "BlakeVanilla",
+    "blake256r14":  "Blake256r14",
     "blakecoin":  "Blakecoin",
     "blakevanilla":  "BlakeVanilla",
     "c11":  "C11",
@@ -24,6 +26,7 @@
     "hsr":  "HSR",
     "jha":  "JHA",
     "keccak":  "Keccak",
+    "keccakc":  "KeccakC",
     "lbry":  "Lbry",
     "lyra2h":  "Lyra2h",
     "lyra2re":  "Lyra2RE",

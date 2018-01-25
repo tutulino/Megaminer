@@ -115,11 +115,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Divisor = 1000000
 
         switch ($Pool_Algo) {
-            "sha256" {$Divisor *= 1000}
-            "scrypt" {$Divisor *= 1000}
             "blake2s" {$Divisor *= 1000}
             "blakecoin" {$Divisor *= 1000}
             "equihash" {$Divisor /= 1000}
+            "scrypt" {$Divisor *= 1000}
+            "sha256" {$Divisor *= 1000}
         }
 
         $Result += [PSCustomObject]@{

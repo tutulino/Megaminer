@@ -1117,13 +1117,12 @@ function Get_Algo_Divisor {
     $Divisor = 1000000000
 
     switch ($Algo) {
-        "skein" {$Divisor *= 1000}
-        "equihash" {$Divisor /= 1000}
         "blake2s" {$Divisor *= 1000}
         "blakecoin" {$Divisor *= 1000}
         "decred" {$Divisor *= 1000}
-        "blake14r" {$Divisor *= 1000}
+        "equihash" {$Divisor /= 1000}
         "keccakc" {$Divisor *= 1000}
+        "skein" {$Divisor *= 1000}
         "yescrypt" {$Divisor /= 1000}
     }
     $Divisor
@@ -1226,13 +1225,13 @@ function  get_coin_unified_name ([string]$Coin) {
 
     $Result = $Coin
     switch -wildcard  ($Coin) {
-        "Myriadcoin-*" {$Result = "Myriad"}
-        "Myriad-*" {$Result = "Myriad"}
+        "Auroracoin-*" {$Result = "Auroracoin"}
         "Dgb-*" {$Result = "Digibyte"}
         "Digibyte-*" {$Result = "Digibyte"}
-        "Verge-*" {$Result = "Verge"}
-        "Auroracoin-*" {$Result = "Auroracoin"}
         "EthereumClassic" {$Result = "Ethereum-Classic"}
+        "Myriad-*" {$Result = "Myriad"}
+        "Myriadcoin-*" {$Result = "Myriad"}
+        "Verge-*" {$Result = "Verge"}
     }
     $Result
 }
@@ -1385,30 +1384,30 @@ function get_WhattomineFactor ([string]$Algo) {
     # to check result with WTM set WTM on "Difficulty for revenue" to "current diff" and "and sort by "current profit" set your algo hashrate from profits screen, WTM "Rev. BTC" and MM BTC/Day must be the same
 
     switch ($Algo) {
+        "Bitcore" {$WTMFactor = 30000000}
+        "Blake2s" {$WTMFactor = 100000}
+        "CryptoLight" {$WTMFactor = 6600}
+        "CryptoNight" {$WTMFactor = 2190}
+        "Decred" {$WTMFactor = 4200000000}
+        "Equihash" {$WTMFactor = 870}
         "Ethash" {$WTMFactor = 79500000}
         "Groestl" {$WTMFactor = 54000000}
-        "MyriadGroestl" {$WTMFactor = 79380000}
-        "Sib" {$WTMFactor = 20100000}
-        "CryptoNight" {$WTMFactor = 2190}
-        "Equihash" {$WTMFactor = 870}
-        "Lyra2RE2" {$WTMFactor = 14700000}
-        "NeoScrypt" {$WTMFactor = 1950000}
-        "Lbry" {$WTMFactor = 285000000}
-        "Sia" {$WTMFactor = 2970000000}
-        "Decred" {$WTMFactor = 4200000000}
-        "Pascal" {$WTMFactor = 2070000000}
-        "Skunk" {$WTMFactor = 54000000}
-        "Xevan" {$WTMFactor = 4800000}
-        "Bitcore" {$WTMFactor = 30000000}
-        "Zero" {$WTMFactor = 18}
         "Keccak" {$WTMFactor = 900000000}
         "KeccakC" {$WTMFactor = 240000000}
-        "CryptoLight" {$WTMFactor = 6600}
+        "Lbry" {$WTMFactor = 285000000}
+        "Lyra2RE2" {$WTMFactor = 14700000}
         "Lyra2z" {$WTMFactor = 420000}
-        "X17" {$WTMFactor = 100000}
-        "Blake2s" {$WTMFactor = 100000}
+        "MyriadGroestl" {$WTMFactor = 79380000}
+        "NeoScrypt" {$WTMFactor = 1950000}
+        "Pascal" {$WTMFactor = 2070000000}
+        "Sia" {$WTMFactor = 2970000000}
+        "Sib" {$WTMFactor = 20100000}
         "Skein" {$WTMFactor = 780000000}
+        "Skunk" {$WTMFactor = 54000000}
+        "X17" {$WTMFactor = 100000}
+        "Xevan" {$WTMFactor = 4800000}
         "Yescrypt" {$WTMFactor = 13080}
+        "Zero" {$WTMFactor = 18}
     }
     $WTMFactor
 }
@@ -1418,37 +1417,37 @@ function get_WhattomineFactor ([string]$Algo) {
 function get_coin_symbol ([string]$Coin) {
     $Result = $Coin
     switch -wildcard  ($Coin) {
-        "bitcoin" {$Result = "BTC"}
+        "adzcoin" {$Result = "ADZ"}
+        "auroracoin" {$Result = "AUR"}
         "bitcoin-cash" {$Result = "BCH"}
         "bitcoin-gold" {$Result = "BTG"}
-        "monero" {$Result = "XMR"}
-        "feathercoin" {$Result = "FTC"}
+        "bitcoin" {$Result = "BTC"}
+        "dash" {$Result = "DASH"}
+        "digibyte" {$Result = "DGB"}
+        "electroneum" {$Result = "ETN"}
         "ethereum-classic" {$Result = "ETC"}
-        "expanse" {$Result = "EXP"}
-        "musicoin" {$Result = "MUSIC"}
         "ethereum" {$Result = "ETH"}
-        "siacoin" {$Result = "SC"}
-        "zcoin" {$Result = "XZC"}
-        "zcash" {$Result = "ZEC"}
-        "zclassic" {$Result = "ZCL"}
-        "zencash" {$Result = "ZEN"}
-        "globalboosty" {$Result = "BSTY"}
-        "groestlcoin" {$Result = "GRS"}
-        "vertcoin" {$Result = "VTC"}
-        "monacoin" {$Result = "MONA"}
-        "litecoin" {$Result = "LTC"}
+        "expanse" {$Result = "EXP"}
+        "feathercoin" {$Result = "FTC"}
         "gamecredits" {$Result = "GAME"}
         "geocoin" {$Result = "GEO"}
-        "dash" {$Result = "DASH"}
+        "globalboosty" {$Result = "BSTY"}
+        "groestlcoin" {$Result = "GRS"}
+        "litecoin" {$Result = "LTC"}
         "maxcoin" {$Result = "MAX"}
-        "startcoin" {$Result = "START"}
-        "adzcoin" {$Result = "ADZ"}
-        "sexcoin" {$Result = "SXC"}
+        "monacoin" {$Result = "MONA"}
+        "monero" {$Result = "XMR"}
+        "musicoin" {$Result = "MUSIC"}
         "myriad" {$Result = "XMY"}
+        "sexcoin" {$Result = "SXC"}
+        "siacoin" {$Result = "SC"}
+        "startcoin" {$Result = "START"}
         "verge" {$Result = "XVG"}
-        "digibyte" {$Result = "DGB"}
-        "auroracoin" {$Result = "AUR"}
-        "electroneum" {$Result = "ETN"}
+        "vertcoin" {$Result = "VTC"}
+        "zcash" {$Result = "ZEC"}
+        "zclassic" {$Result = "ZCL"}
+        "zcoin" {$Result = "XZC"}
+        "zencash" {$Result = "ZEN"}
     }
     $Result
 }

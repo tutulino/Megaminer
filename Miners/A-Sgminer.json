@@ -7,14 +7,14 @@
     "API" : "Xgminer",
     "APIPort" : 4028,
     "Algorithms": [
-        {"MyriadGroestl":"-k myriadcoin-groestl -g 2 -w 64 -I 16"},
-        {"Groestl":"-k groestlcoin -I 22"},
+		{"Blake":"-k blake -I d"},
         {"Blakecoin":"-k blakecoin -g 4 -I 20"},
-        {"Blake":"-k blake"},
         {"Decred":"-k decred -g 2 -w 64 -I 21"},
-        {"Pascal":"-k pascal -g 1 -w 64 -I 21"},
+        {"Groestl":"-k groestlcoin -I 22"},
         {"Keccak":"-k maxcoin -g 2 -I 10"},
-        {"Sib":"-k sibcoin-mod -g 2 -w 128 -I 20"},
-        {"Lyra2RE2":"-k lyra2rev2 -g 2 -w 64 -I 16"}
+        {"Lyra2RE2":"-k lyra2rev2 -g 2 -w 64 -I 16"},
+        {"MyriadGroestl":"-k myriadcoin-groestl -g 2 -w 64 -I 16"},
+        {"Pascal":"-k pascal -g 1 -w 64 -I 21"},
+        {"Sib":"-k sibcoin-mod -g 2 -w 128 -I 20"}
     ]
 }
