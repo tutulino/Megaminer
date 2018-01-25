@@ -33,6 +33,7 @@ NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 * Fix algo divisors on YIIMP type pools
 * Additional pools
 	- Mining Dutch
+	- DemoCats
 	- FairPool
 	- BlockMunch
 	- Suprnova (up to date algos)
