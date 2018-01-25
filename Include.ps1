@@ -281,26 +281,26 @@ function get_gpu_information ($Types) {
             }
         }
         Clear-Variable AmdCardsTDP
-
-        $CpuResult = Get-WmiObject Win32_Processor
-        $CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json
-        $CpuLoad = (Get-Counter '\Processor(_Total)\% Processor Time').countersamples.cookedvalue / 100
-        $CpuResult | ForEach-Object {
-            $Devices += [pscustomObject]@{
-                Type            = 'CPU'
-                GpuId           = $_.DeviceID
-                GpuGroup        = "CPU"
-                ClockCpu        = $_.MaxClockSpeed
-                utilization_cpu = $_.LoadPercentage
-                CacheL3         = $_.L3CacheSize
-                Cores           = $_.NumberOfCores
-                Threads         = $_.NumberOfLogicalProcessors
-                Power_draw      = [int]($CpuTDP.($_.Name) * $CpuLoad)
-                Name            = $_.Name
-            }
-        }
-        Clear-Variable CpuTDP
     }
+    $CpuResult = Get-WmiObject Win32_Processor
+    $CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json
+    $CpuLoad = (Get-Counter '\Processor(_Total)\% Processor Time').countersamples.cookedvalue / 100
+    $CpuResult | ForEach-Object {
+        $Devices += [pscustomObject]@{
+            Type            = 'CPU'
+            GpuId           = $_.DeviceID
+            GpuGroup        = "CPU"
+            ClockCpu        = $_.MaxClockSpeed
+            utilization_cpu = $_.LoadPercentage
+            CacheL3         = $_.L3CacheSize
+            Cores           = $_.NumberOfCores
+            Threads         = $_.NumberOfLogicalProcessors
+            Power_draw      = [int]($CpuTDP.($_.Name) * $CpuLoad)
+            Name            = $_.Name
+        }
+    }
+    Clear-Variable CpuTDP
+
     $Devices
 }
 
