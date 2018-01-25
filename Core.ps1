@@ -269,6 +269,22 @@ while ($true) {
 
     $Pools | Select-Object name -unique | foreach-object {Writelog ("Pool " + $_.name + " was responsive....") $logfile $true}
 
+    #Call api to local currency conversion
+    try {
+        $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 |
+            ConvertFrom-Json |
+            Select-Object -ExpandProperty BPI
+        Clear-Host
+        $repaintScreen = $true
+    } catch {
+        Clear-Host
+        $repaintScreen = $true
+        writelog "COINDESK API NOT RESPONDING, NOT LOCAL COIN CONVERSION" $logfile $true
+    }
+    $LocalBTCvalue = $CDKResponse.$LocalCurrency.rate_float
+
+    $ElectricityCostValue = if ($LocalBTCvalue -gt 0 ) {((get_config_variable "ElectricityCost" | ConvertFrom-Json) | Where-Object HourStart -le (get-date).Hour | Where-Object HourEnd -ge (get-date).Hour).CostKwh / $LocalBTCvalue} else {0}
+
     #Load information about the Miner asociated to each Coin-Algo-Miner
 
     $Miners = @()
@@ -316,8 +332,6 @@ while ($true) {
                                     $HashrateValue = ($Hrs | Measure-Object -property Speed -average).average
                                     $HashrateValueDual = ($Hrs | Measure-Object -property SpeedDual -average).average
                                     $PowerValue = ($Hrs | Measure-Object -property Power -average).average
-
-                                    $ElectricityCostValue = ((get_config_variable "ElectricityCost" | ConvertFrom-Json) | Where-Object  HourStart -le (get-date).Hour | Where-Object  HourEnd -ge (get-date).Hour).CostKwhBTC
 
                                     $enableSSL = ($Miner.SSL -and $_.SSL)
 
@@ -692,7 +706,7 @@ while ($true) {
                 Select-Object -ExpandProperty id)
         if ($BestIdNow -eq $null) {
             $BestIdNow = ($ActiveMiners |
-                    Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and $_.GroupId -eq $Type.Id} |
+                    Where-Object {$_.IsValid -and $_.status -ne "Canceled" -and $_.GroupId -eq $Type.Id -and $_.Profits -gt 0} |
                     Sort-Object -Descending {$_.Profits} |
                     Select-Object -First 1 |
                     Select-Object -ExpandProperty id)
@@ -780,23 +794,6 @@ while ($true) {
             }
         }
     } #end stating miners
-
-
-
-
-    #Call api to local currency conversion
-    try {
-        $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 |
-            ConvertFrom-Json |
-            Select-Object -ExpandProperty BPI
-        Clear-Host
-        $repaintScreen = $true
-    } catch {
-        Clear-Host
-        $repaintScreen = $true
-        writelog "COINDESK API NOT RESPONDING, NOT LOCAL COIN CONVERSION" $logfile $true
-    }
-    $localBTCvalue = $CDKResponse.$LocalCurrency.rate_float
 
 
     $FirstLoopExecution = $True
@@ -991,8 +988,8 @@ while ($true) {
             # @{Label = "PowLmt"; Expression ={if ($_.PowerLimit -gt 0) {$_.PowerLimit}};align='right'},
             @{Label = "LocalSpeed"; Expression = {(ConvertTo_Hash $_.SpeedLive) + '/s' + $(if ($_.AlgorithmDual -ne $null) {'|' + (ConvertTo_Hash $_.SpeedLiveDual) + '/s'})}; Align = 'right'},
             @{Label = "mBTC/Day"; Expression = {((([double]$_.RevenueLive + [double]$_.RevenueLiveDual) * 1000).tostring("n5"))}; Align = 'right'},
-            @{Label = $LocalCurrency + "/Day"; Expression = {((([double]$_.RevenueLive + [double]$_.RevenueLiveDual) * [double]$localBTCvalue ).tostring("n2"))}; Align = 'right'},
-            @{Label = "Profit/Day"; Expression = {(([double]$_.ProfitsLive * [double]$localBTCvalue ).tostring("n2")) + " " + $LocalCurrency}; Align = 'right'},
+            @{Label = $LocalCurrency + "/Day"; Expression = {((([double]$_.RevenueLive + [double]$_.RevenueLiveDual) * [double]$LocalBTCvalue ).tostring("n2"))}; Align = 'right'},
+            @{Label = "Profit/Day"; Expression = {(([double]$_.ProfitsLive * [double]$LocalBTCvalue ).tostring("n2")) + " " + $LocalCurrency}; Align = 'right'},
             @{Label = "Algorithm"; Expression = {$_.Algorithm + $_.AlgoLabel + $(if ($_.AlgorithmDual -ne $null) {'|' + $_.AlgorithmDual}) + $_.BestBySwitch}},
             @{Label = "Coin"; Expression = {$_.Symbol + $(if ($_.SymbolDual -ne $null) {'|' + $_.SymbolDual})}},
             @{Label = "Miner"; Expression = {$_.Name}},
@@ -1068,8 +1065,8 @@ while ($true) {
                 @{Label = "PowerAvg"; Expression = {if (-not $_.NeedBenchmark) {$_.PowerAvg.tostring("n0")}}; Align = 'right'},
                 @{Label = "StatsSpeed"; Expression = {if ($_.NeedBenchmark) {"Benchmarking"} else {$_.Hashrates}}; Align = 'right'},
                 @{Label = "mBTC/Day"; Expression = {((($_.Revenue + $_.RevenueDual) * 1000).tostring("n5"))}; Align = 'right'},
-                @{Label = $LocalCurrency + "/Day"; Expression = {((($_.Revenue + $_.RevenueDual) * [double]$localBTCvalue ).tostring("n2"))}; Align = 'right'},
-                @{Label = "Profit/Day"; Expression = {if (-not $_.NeedBenchmark) {($_.Profits * [double]$localBTCvalue).tostring("n2") + " " + $LocalCurrency}}; Align = 'right'},
+                @{Label = $LocalCurrency + "/Day"; Expression = {((($_.Revenue + $_.RevenueDual) * [double]$LocalBTCvalue ).tostring("n2"))}; Align = 'right'},
+                @{Label = "Profit/Day"; Expression = {if (-not $_.NeedBenchmark) {($_.Profits * [double]$LocalBTCvalue).tostring("n2") + " " + $LocalCurrency}}; Align = 'right'},
                 @{Label = "PoolFee"; Expression = {if ($_.PoolFee -gt 0) {"{0:P2}" -f $_.PoolFee}}; Align = 'right'},
                 @{Label = "MinerFee"; Expression = {if ($_.MinerFee -gt 0) {"{0:P2}" -f $_.MinerFee}}; Align = 'right'},
                 @{Label = "Pool"; Expression = {$_.PoolAbbName}},
