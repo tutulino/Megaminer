@@ -85,7 +85,7 @@ $Screen = get_config_variable "STARTSCREEN"
 
 #---Parameters checking
 
-if ($MiningMode -ne 'Automatic' -and $MiningMode -ne 'Manual' -and $MiningMode -ne 'Automatic24h') {
+if ($MiningMode -NotIn @('Manual', 'Automatic', 'Automatic24h')) {
     "Parameter MiningMode not valid, valid options: Manual, Automatic, Automatic24h" | Out-Host
     EXIT
 }
@@ -274,8 +274,6 @@ while ($true) {
         $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 |
             ConvertFrom-Json |
             Select-Object -ExpandProperty BPI
-        Clear-Host
-        $repaintScreen = $true
     } catch {
         Clear-Host
         $repaintScreen = $true
@@ -768,17 +766,24 @@ while ($true) {
             #run prelaunch command
             if ($_.PrelaunchCommand -ne $null -and $_.PrelaunchCommand -ne "") {Start-Process -FilePath $_.PrelaunchCommand}
 
-            if ($_.GroupType = 'NVIDIA' -and $_.PowerLimit -gt 0) {set_Nvidia_Powerlimit $_.PowerLimit $_.GroupDevices}
-            if ($_.GroupType = 'AMD' -and $_.PowerLimit -gt 0) {}
+            if ($_.GroupType -eq 'NVIDIA' -and $_.PowerLimit -gt 0) {set_Nvidia_Powerlimit $_.PowerLimit $_.GroupDevices}
+            if ($_.GroupType -eq 'AMD' -and $_.PowerLimit -gt 0) {}
             $Arguments = $_.Arguments
             if ($_.NeedBenchmark -and ($_.BenchmarkArg).length -gt 0 ) {$Arguments += (" " + $_.BenchmarkArg) }
 
             if ($_.Wrap -eq $true) {
-                $_.Process = Start-Process -FilePath "PowerShell" `
-                    -WindowStyle Minimized `
-                    -PassThru `
-                    -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$Arguments' -WorkingDirectory '$(Split-Path $_.Path)'"
-            } else {$_.Process = Start_SubProcess -FilePath $_.Path -ArgumentList $Arguments -WorkingDirectory (Split-Path $_.Path)}
+                $_.Process = Start_SubProcess `
+                    -FilePath ((Get-Process -Id $Global:PID).path) `
+                    -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $Global:PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$Arguments' -WorkingDirectory '$(Split-Path $_.Path)'" `
+                    -WorkingDirectory (Split-Path $_.Path) `
+                    -Priority $(if ($_.GroupType -eq "CPU") {-2} else {-1})
+            } else {
+                $_.Process = Start_SubProcess `
+                    -FilePath $_.Path `
+                    -ArgumentList $Arguments `
+                    -WorkingDirectory (Split-Path $_.Path) `
+                    -Priority $(if ($_.GroupType -eq "CPU") {-2} else {-1})
+            }
 
             start-sleep 1
 
@@ -804,6 +809,8 @@ while ($true) {
 
     while ($Host.UI.RawUI.KeyAvailable) {$host.ui.RawUi.Flushinputbuffer()} #keyb buffer flush
 
+    Clear-Host
+    $repaintScreen = $true
 
 
     #---------------------------------------------------------------------------

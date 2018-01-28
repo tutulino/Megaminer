@@ -852,67 +852,86 @@ function ConvertTo_Hash {
 
 
 function Start_SubProcess {
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [String]$FilePath,
         [Parameter(Mandatory = $false)]
         [String]$ArgumentList = "",
         [Parameter(Mandatory = $false)]
-        [String]$WorkingDirectory = ""
-
+        [String]$WorkingDirectory = "",
+        [ValidateRange(-2, 3)]
+        [Parameter(Mandatory = $false)]
+        [Int]$Priority = 0,
+        [Parameter(Mandatory = $false)] <# UselessGuru #>
+        [String]$MinerWindowStyle = "Minimized", <# UselessGuru #>
+        [Parameter(Mandatory = $false)] <# UselessGuru #>
+        [String]$UseAlternateMinerLauncher = $true <# UselessGuru #>
     )
 
-    $Job = Start-Job -ArgumentList $PID, (Resolve-Path ".\Includes\CreateProcess.cs"), $FilePath, $ArgumentList, $WorkingDirectory {
-        param($ControllerProcessID, $CreateProcessPath, $FilePath, $ArgumentList, $WorkingDirectory)
+    $PriorityNames = [PSCustomObject]@{-2 = "Idle"; -1 = "BelowNormal"; 0 = "Normal"; 1 = "AboveNormal"; 2 = "High"; 3 = "RealTime"}
 
-        $ControllerProcess = Get-Process -Id $ControllerProcessID
-        if ($ControllerProcess -eq $null) {return}
+    if ($UseAlternateMinerLauncher) {
 
-        #CreateProcess won't be usable inside this job if Add-Type is run outside the job
-        Add-Type -Path $CreateProcessPath
+        $ShowWindow = [PSCustomObject]@{"Normal" = "SW_SHOW"; "Maximized" = "SW_SHOWMAXIMIZE"; "Minimized" = "SW_SHOWMINNOACTIVE"; "Hidden" = "SW_HIDDEN"}
 
-        $lpApplicationName = $FilePath;
+        $Job = Start-Job `
+            -InitializationScript ([scriptblock]::Create("Set-Location('$(Get-Location)');. .\Includes\CreateProcess.ps1")) `
+            -ArgumentList $PID, $FilePath, $ArgumentList, $ShowWindow.$MinerWindowStyle, $PriorityNames.$Priority, $WorkingDirectory {
+            param($ControllerProcessID, $FilePath, $ArgumentList, $ShowWindow, $Priority, $WorkingDirectory)
 
-        $lpCommandLine = ""
-        $lpCommandLine = '"' + $FilePath + '"' #Windows paths cannot contain ", so there is no need to escape
-        if ($ArgumentList -ne "") {$lpCommandLine += " " + $ArgumentList}
+            . .\Includes\CreateProcess.ps1
+            $ControllerProcess = Get-Process -Id $ControllerProcessID
+            if ($ControllerProcess -eq $null) {return}
 
-        $lpProcessAttributes = New-Object SECURITY_ATTRIBUTES
-        $lpProcessAttributes.Length = [System.Runtime.InteropServices.Marshal]::SizeOf($lpProcessAttributes)
+            $Process = Invoke-CreateProcess `
+                -Binary $FilePath `
+                -Arguments $ArgumentList `
+                -CreationFlags CREATE_NEW_CONSOLE `
+                -ShowWindow $ShowWindow `
+                -StartF STARTF_USESHOWWINDOW `
+                -Priority $Priority `
+                -WorkingDirectory $WorkingDirectory
+            if ($Process -eq $null) {
+                [PSCustomObject]@{ProcessId = $null}
+                return
+            }
 
-        $lpThreadAttributes = New-Object SECURITY_ATTRIBUTES
-        $lpThreadAttributes.Length = [System.Runtime.InteropServices.Marshal]::SizeOf($lpThreadAttributes)
+            [PSCustomObject]@{ProcessId = $Process.Id; ProcessHandle = $Process.Handle}
 
-        $bInheritHandles = $false
+            $ControllerProcess.Handle | Out-Null
+            $Process.Handle | Out-Null
 
-        $dwCreationFlags = [CreationFlags]::CREATE_NEW_CONSOLE
-
-        $lpEnvironment = [IntPtr]::Zero
-
-        if ($WorkingDirectory -ne "") {$lpCurrentDirectory = $WorkingDirectory} else {$lpCurrentDirectory = [IntPtr]::Zero}
-
-        $lpStartupInfo = New-Object STARTUPINFO
-        $lpStartupInfo.cb = [System.Runtime.InteropServices.Marshal]::SizeOf($lpStartupInfo)
-        $lpStartupInfo.wShowWindow = [ShowWindow]::SW_SHOWMINNOACTIVE
-        $lpStartupInfo.dwFlags = [STARTF]::STARTF_USESHOWWINDOW
-
-        $lpProcessInformation = New-Object PROCESS_INFORMATION
-
-        [Kernel32]::CreateProcess($lpApplicationName, $lpCommandLine, [ref] $lpProcessAttributes, [ref] $lpThreadAttributes, $bInheritHandles, $dwCreationFlags, $lpEnvironment, $lpCurrentDirectory, [ref] $lpStartupInfo, [ref] $lpProcessInformation)
-
-        $Process = Get-Process -Id $lpProcessInformation.dwProcessId
-        if ($Process -eq $null) {
-            [PSCustomObject]@{ProcessId = $null}
-            return
+            do {if ($ControllerProcess.WaitForExit(1000)) {$Process.CloseMainWindow() | Out-Null}}
+            while ($Process.HasExited -eq $false)
         }
+    } else {
+        $Job = Start-Job -ArgumentList $PID, $FilePath, $ArgumentList, $WorkingDirectory, $MinerWindowStyle {
+            param($ControllerProcessID, $FilePath, $ArgumentList, $WorkingDirectory, $MinerWindowStyle)
 
-        [PSCustomObject]@{ProcessId = $Process.Id; ProcessHandle = $Process.Handle}
+            $ControllerProcess = Get-Process -Id $ControllerProcessID
+            if ($ControllerProcess -eq $null) {return}
 
-        $ControllerProcess.Handle | Out-Null
-        $Process.Handle | Out-Null
+            $ProcessParam = @{}
+            $ProcessParam.Add("FilePath", $FilePath)
+            $ProcessParam.Add("WindowStyle", $MinerWindowStyle)
+            if ($ArgumentList -ne "") {$ProcessParam.Add("ArgumentList", $ArgumentList)}
+            if ($WorkingDirectory -ne "") {$ProcessParam.Add("WorkingDirectory", $WorkingDirectory)}
+            $Process = Start-Process @ProcessParam -PassThru
+            if ($Process -eq $null) {
+                [PSCustomObject]@{ProcessId = $null}
+                return
+            }
 
-        do {if ($ControllerProcess.WaitForExit(1000)) {$Process.CloseMainWindow() | Out-Null}}
-        while ($Process.HasExited -eq $false)
+            [PSCustomObject]@{ProcessId = $Process.Id; ProcessHandle = $Process.Handle}
+
+            $ControllerProcess.Handle | Out-Null
+            $Process.Handle | Out-Null
+
+            do {if ($ControllerProcess.WaitForExit(1000)) {$Process.CloseMainWindow() | Out-Null}}
+            while ($Process.HasExited -eq $false)
+
+        }
     }
 
     do {Start-Sleep 1; $JobOutput = Receive-Job $Job}
@@ -921,6 +940,8 @@ function Start_SubProcess {
     $Process = Get-Process | Where-Object Id -EQ $JobOutput.ProcessId
     $Process.Handle | Out-Null
     $Process
+
+    if ($Process) {$Process.PriorityClass = $PriorityNames.$Priority}
 }
 
 
