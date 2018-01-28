@@ -1,4 +1,6 @@
-This Megaminer fork is aimed at AMD + CPU usage.
+This Megaminer fork is aimed at AMD + CPU usage without interfering with normal PC usage.
+AMD miners tuned for RX480/580 with low memory timings
+Recommeded drivers are Radeon Blockchain beta from August 23
 New features from tutulino are merged manually after a review to ensure stability.
 NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 
@@ -19,11 +21,14 @@ NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 	- CPU XMR-Stak
 	- NVidia XMR-Stak
 * Miner optimizations for CPU and AMD
-* Use C# assembly to prevent miners from steal focus (except miners that use wrapper, for now)
+* Low process priority for cpu miners to prevent responsiveness issue
+* Use C# assembly to prevent miners from steal focus
 * Poll mining api to display projected profits for Manual mining
 * Allow mining specific Algo instead of coin in Manual mode
 * Profit display in mBTC instead of BTC with too many zeroes
 * Support profitability info for Custom coins from WhatToMine pool
+* Power usage aproximation for AMD and CPU
+	- You will need to add TDP values for your hardware in _cpu-tdp.json_ or _amd-cards-tdp.json_ if they are not there
 * Support any fiat currency which is supported by CoinDesk for profit display
 * Allow dual mining any Ethash coin instead of ETH/ETC only
 * Filter out algos without solved blocks in 24h on MPH and YIIMP type pools
@@ -37,6 +42,8 @@ NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 	- FairPool
 	- BlockMunch
 	- Suprnova (up to date algos)
+	- AntMinePool
+	- Bilbotel.fr
 * More small fixes, code optimizations and formatting changes
 
 ### Donations are welcome
