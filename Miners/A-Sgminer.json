@@ -9,12 +9,14 @@
     "Algorithms": [
 		{"Blake":"-k blake -I d"},
         {"Blakecoin":"-k blakecoin -g 4 -I 20"},
-        {"Decred":"-k decred -g 2 -w 64 -I 21"},
+        {"#Decred":"-k decred -g 2 -w 64 -I 21"},
         {"Groestl":"-k groestlcoin -I 22"},
+        {"Fresh":"-k fresh -g 2 -w 256 -I 20"},
         {"Keccak":"-k maxcoin -g 2 -I 10"},
         {"Lyra2RE2":"-k lyra2rev2 -g 2 -w 64 -I 16"},
         {"MyriadGroestl":"-k myriadcoin-groestl -g 2 -w 64 -I 16"},
         {"Pascal":"-k pascal -g 1 -w 64 -I 21"},
+        {"ScryptN":"-k scrypt-n --nfactor 12 -I 15"},
         {"Sib":"-k sibcoin-mod -g 2 -w 128 -I 20"}
     ]
 }

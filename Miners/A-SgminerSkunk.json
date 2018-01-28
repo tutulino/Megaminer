@@ -1,0 +1,12 @@
+﻿{
+    "Path" : ".\\Bin\\AMD-SgminerSkunk\\sig-miner\\sgminer.exe",
+    "ExtractionPath" : ".\\Bin\\AMD-SgminerSkunk\\",
+    "Uri" : "https://github.com/signatumd/releases/raw/master/sigt-miner.zip",
+    "Types" : ["AMD"],
+    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API" : "Xgminer",
+    "APIPort" : 4028,
+    "Algorithms": [
+        {"Skunk":" -k skunkhash -I 20"}
+    ]
+}

@@ -4,7 +4,7 @@
     "Uri" : "https://rvn.suprnova.cc/cpuminer-multi-rel1.3.3-x64.7z",
     "Types" : ["CPU"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# #ALGORITHMPARAMETERS# -q",
-    "#BenchmarkArg": "--benchmark",
+    "BenchmarkArg": "--benchmark",
     "API" : "Ccminer",
     "APIPort" : 4048,
     "Algorithms": [

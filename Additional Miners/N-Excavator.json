@@ -1,13 +1,23 @@
 {
-    "Path" : ".\\Bin\\Excavator\\Excavator.exe",
+    "Path" : ".\\Bin\\Excavator\\excavator_cuda9.1\\excavator.exe",
     "ExtractionPath" : ".\\Bin\\Excavator\\",
-    "Uri" : "https://github.com/nicehash/excavator/releases/download/v1.3.7a/excavator_v1.3.7a_NVIDIA_Win64.zip",
+    "Uri" : "https://github.com/nicehash/excavator/releases/download/v1.4.1a/excavator_v1.4.1a_NVIDIA_Win64_CUDA_9.1.zip",
     "Types" : ["NVIDIA"],
-    "GenerateConfigFile" : ".\\Bin\\Excavator\\#GROUPNAME#.json",
+    "GenerateConfigFile" : ".\\Bin\\Excavator\\excavator_cuda9.1\\#GROUPNAME#.json",
     "PatternConfigFile": ".\\Patterns\\excavatorPattern.txt",
     "Arguments" : "-p #APIPORT# -c #GROUPNAME#.json -na ",
     "API" : "excavator",
     "Algorithms": [
-        {"Lyra2RE2":"lyra2rev2"}
+        {"Lyra2RE2": "lyra2rev2"},
+        {"neoscrypt": "neoscrypt"},
+        {"pascal": "pascal"},
+        {"blake14r": "decred"},
+        {"blake2b": "sia"},
+        {"lbry": "lbry"},
+        {"blake2s": "blake2s"},
+        {"ethash": "daggerhashimoto"},
+        {"cryptonight": "cryptonight"},
+        {"keccak": "keccak"},
+        {"nist5": "nist5"}
     ]
 }
