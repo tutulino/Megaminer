@@ -1,8 +1,13 @@
 This Megaminer fork is aimed at AMD + CPU usage without interfering with normal PC usage.
+
 AMD miners tuned for RX480/580 with low memory timings
-Recommeded drivers are Radeon Blockchain beta from August 23
+
+Recommended drivers are Radeon Blockchain beta from August 23
+
 New features from tutulino are merged manually after a review to ensure stability.
+
 NVidia miners are copied as is from tutulino's branch unless there fixes needed.
+
 
 ## Changes from tutulino's branch
 
