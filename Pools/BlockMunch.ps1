@@ -79,6 +79,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "blakecoin" {$Divisor *= 1000}
             "decred" {$Divisor *= 1000}
             "sha256" {$Divisor *= 1000}
+            "x11" {$Divisor *= 1000}
         }
 
         if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0) {

@@ -1,6 +1,6 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null ,
+    [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
     [pscustomobject]$Info
 )
@@ -9,13 +9,13 @@
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
-$ActiveOnAutomaticMode = $false
+$ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $false
-$AbbName = 'UNI'
+$AbbName = 'BLB'
 $WalletMode = 'WALLET'
-$ApiUrl = 'http://pool.unimining.net/api'
-$MineUrl = 'pool.unimining.net'
-$Location = 'US'
+$ApiUrl = 'https://www.bilbotel.fr/api'
+$MineUrl = 'pool.bilbotel.fr'
+$Location = 'Europe'
 $UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
@@ -72,6 +72,7 @@ if ($Querymode -eq "wallet") {
         }
     }
     remove-variable Request
+    Start-Sleep -Seconds 1 # Prevent API Saturation
 }
 
 
@@ -116,6 +117,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         switch ($Pool_Algo) {
             "blake2s" {$Divisor *= 1000}
             "blakecoin" {$Divisor *= 1000}
+            "equihash" {$Divisor /= 1000}
+            "scrypt" {$Divisor *= 1000}
             "sha256" {$Divisor *= 1000}
         }
 
@@ -139,7 +142,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             PoolHashRate          = $coin.hashrate
             Blocks_24h            = $coin.'24h_blocks'
             WalletMode            = $WalletMode
-            WalletSymbol          = $Pool_Symbol
+            Walletsymbol          = $Pool_Symbol
             PoolName              = $Name
             Fee                   = $Request2.($coin.algo).Fees / 100
         }

@@ -10,7 +10,7 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
-$ActiveOnAutomatic24hMode = $false
+$ActiveOnAutomatic24hMode = $true
 $AbbName = 'NH'
 $WalletMode = "WALLET"
 $Result = @()
@@ -18,12 +18,13 @@ $Result = @()
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer            = "No registration, Autoexchange to BTC always"
-        ActiveOnManualMode    = $ActiveOnManualMode
-        ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-        ApiData               = $True
-        AbbName               = $AbbName
-        WalletMode            = $WalletMode
+        Disclaimer               = "No registration, Autoexchange to BTC always"
+        ActiveOnManualMode       = $ActiveOnManualMode
+        ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
+        ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
+        ApiData                  = $True
+        AbbName                  = $AbbName
+        WalletMode               = $WalletMode
     }
 }
 

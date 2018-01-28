@@ -131,7 +131,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Host                  = $MineUrl
             Port                  = $coin.port
             User                  = $CoinsWallets.get_item($Pool_symbol)
-            Pass                  = "c=$Pool_symbol,ID=#WorkerName#"
+            Pass                  = "c=$Pool_symbol,#WorkerName#"
             Location              = $Location
             SSL                   = $false
             Symbol                = $Pool_Symbol

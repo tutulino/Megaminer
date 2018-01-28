@@ -193,7 +193,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Location              = $_.Location
             SSL                   = $_.SSL
             Symbol                = $_.symbol
-            AbbName               = "WTM-" + $_.Abbname
+            AbbName               = "W-" + $_.Abbname
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
             PoolName              = $_.PoolName

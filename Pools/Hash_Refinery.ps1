@@ -101,7 +101,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         switch ($Pool_Algo) {
             "blake2s" {$Divisor *= 1000}
             "blakecoin" {$Divisor *= 1000}
-            "scrypt" {$Divisor *= 1000}
             "sha256" {$Divisor *= 1000}
         }
 
