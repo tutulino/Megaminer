@@ -11,6 +11,7 @@
     "Algorithms": [
                     {"blakecoin":"-a blakecoin"},
                     {"x11gost" : "-a sib"},
+                    {"x17" : "-a x17" },
                     {"x11evo" : "-a x11evo"}
 
                   ]
