@@ -3,7 +3,7 @@
 "ExtractionPath" : ".\\Bin\\NVIDIA-ccminer-2.2\\",
 "Uri" : "http://ccminer.org/preview/ccminer-2.2-skunk.7z",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# --api-remote --api-allow=0/0 ",
 "API" : "Ccminer",
 "Wrap" : false,
 "Fee" : 0,

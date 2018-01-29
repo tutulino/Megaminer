@@ -3,7 +3,7 @@
     "ExtractionPath" : ".\\Bin\\NVIDIA-Palgin\\",
     "Uri" : "https://github.com/tutulino/Software/releases/download/0/NVIDIA-Palgin.rar",
     "Types" : ["NVIDIA"],
-    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# --api-remote --api-allow=0/0 ",
     "API" : "Ccminer",
     "Wrap" : false,
     "APIPort" : 4068,
@@ -15,7 +15,6 @@
                     {"x11evo" : "-a x11evo"}
 
                   ]
-    
-    
+
+
     }
-    
