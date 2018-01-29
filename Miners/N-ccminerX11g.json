@@ -3,18 +3,16 @@
 "ExtractionPath" : ".\\Bin\\NVIDIA-ccminex11gost\\",
 "Uri" : "https://github.com/nicehash/ccminer-x11gost/releases/download/ccminer-x11gost_windows/ccminer_x11gost.7z",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# --api-remote --api-allow=0/0 ",
 "API" : "Ccminer",
 "Wrap" : false,
 "Dualmining":false,
 "APIPort" : 4068,
 "PrelaunchCommand":"",
 "Algorithms": [
-               
+
                 {"x11gost" : "-a sib -i 20"}
 
               ]
 
 }
-
- 

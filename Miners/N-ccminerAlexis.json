@@ -1,9 +1,9 @@
 {
-"Path" : ".\\Bin\\NVIDIA-Alexis78\\ccminer-alexis78-ms2013-cuda7.5\\ccminer.exe",
+	"Path" : ".\\Bin\\NVIDIA-Alexis78\\ccminer.exe",
 "ExtractionPath" : ".\\Bin\\NVIDIA-Alexis78\\",
-"Uri" : "https://github.com/nemosminer/ccminer-Alexis78/releases/download/ccminer-alexis78/ccminer-alexis78-ms2013-cuda7.5.7z",
+"Uri" : "https://github.com/tutulino/Software/releases/download/0/ccminer-alexis78-ms2013-cuda7.5.zip",
 "Types" : ["NVIDIA"],
-"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# --api-remote --api-allow=0/0 ",
 "API" : "Ccminer",
 "Fee" : 0,
 "Wrap" : false,
@@ -11,8 +11,8 @@
 "APIPort" : 4068,
 "PrelaunchCommand":"",
 "Algorithms": [
-                
-                {"c11" : "-a c11 -i 20" },  
+
+                {"c11" : "-a c11 -i 20" },
                 {"lbry" : "-a lbry" },
                 {"skein" : "-a skein"},
                 {"x14" : "-a x14" },
@@ -21,7 +21,7 @@
                 {"nist5" : "-a nist5" },
                 {"blakecoin" : "-a blakecoin" }
 
-                
+
               ]
 
 }
