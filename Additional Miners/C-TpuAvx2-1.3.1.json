@@ -2,9 +2,10 @@
     "Path" : ".\\Bin\\cpuminer-multi\\cpuminer-gw64-avx2.exe",
     "ExtractionPath" : ".\\Bin\\cpuminer-multi\\",
     "Uri" : "https://github.com/tpruvot/cpuminer-multi/releases/download/v1.3.1-multi/cpuminer-multi-rel1.3.1-x64.zip",
+    "SHA256": "1208fb1c3cbdcbfc5089d46f4ab339d494139ba904e84a41a1707f7723edb7e2",
     "Types" : ["CPU"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# #ALGORITHMPARAMETERS# -q",
-    "BenchmarkArg": "--benchmark",
+    "#BenchmarkArg": "--benchmark",
     "API" : "Ccminer",
     "APIPort" : 4048,
     "Algorithms": [

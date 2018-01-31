@@ -2,6 +2,7 @@
     "Path" : ".\\Bin\\AMD-OptiminerZcash\\optiminer-zcash-win\\optiminer.exe",
     "ExtractionPath" : ".\\Bin\\AMD-OptiminerZcash\\",
     "Uri" : "https://github.com/Optiminer/OptiminerZcash/raw/master/optiminer-zcash-1.7.0.zip",
+    "SHA256": "6b28dda4cfd6eca8e59044dd560046b5100f74b1c4dd54d57e261292ad9dd142",
     "Types" : ["AMD"],
     "Arguments" : "-m #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #DEVICESNSGMODE# #ALGORITHMPARAMETERS#",
     "API" : "optiminer",

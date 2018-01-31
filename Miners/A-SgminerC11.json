@@ -2,6 +2,7 @@
     "Path" : ".\\Bin\\AMD-SgminerC11\\Chaincoin SGMINER\\sgminer.exe",
     "ExtractionPath" : ".\\Bin\\AMD-SgminerC11\\",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Chaincoin.SGMINER.zip",
+    "SHA256": "84e519b353ba571cdc6ec33c59b20e7e6d06d7acce7b8fb32212a83c9c6e0c7b",
     "Types" : ["AMD"],
     "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "Xgminer",

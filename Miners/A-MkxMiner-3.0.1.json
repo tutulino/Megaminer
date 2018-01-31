@@ -2,6 +2,7 @@
     "Path" : ".\\Bin\\AMD-MkxMiner\\mkxminer301\\mkxminer.exe",
     "ExtractionPath" : ".\\Bin\\AMD-MkxMiner\\",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/mkxminer301.7z",
+    "SHA256": "e979c14687e4fed11ca8a7473d92ac3599a8054d6b008d0523fc4573b30d8992",
     "Types" : ["AMD"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# --exitsick --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API" : "wrapper",

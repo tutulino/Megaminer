@@ -2,6 +2,7 @@
     "Path" : ".\\Bin\\CPU-XMrig_GCC\\xmrig.exe",
     "ExtractionPath" : ".\\Bin\\CPU-XMrig_GCC\\",
     "Uri" : "https://github.com/xmrig/xmrig/releases/download/v2.4.4/xmrig-2.4.4-gcc-win64.zip",
+    "SHA256": "3cbde113d6f5cf8911a3c02734b83717acc4632f2e2338337bf7881fd24a6a7a",
     "Types" : ["CPU"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --donate-level 1 #ALGORITHMPARAMETERS#",
     "API" : "XMRig",
