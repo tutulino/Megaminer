@@ -1,4 +1,18 @@
 {
-    "Intel(R) Core(TM) i5-7600K CPU @ 3.80GHz": 95,
+    "Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz": 65,
+    "Intel(R) Core(TM) i7-7700K CPU @ 4.20GHz": 91,
+    "Intel(R) Core(TM) i7-7700T CPU @ 2.90GHz": 35,
+    "Intel(R) Core(TM) i7-7660U CPU @ 2.50GHz": 15,
+    "Intel(R) Core(TM) i7-7600U CPU @ 2.80GHz": 15,
+    "Intel(R) Core(TM) i7-7567U CPU @ 3.50GHz": 28,
+    "Intel(R) Core(TM) i7-7560U CPU @ 2.40GHz": 15,
+    "Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz": 15,
+
+    "Intel(R) Core(TM) i5-7600K CPU @ 3.80GHz": 91,
+    "Intel(R) Core(TM) i5-7600T CPU @ 2.80GHz": 35,
+    "Intel(R) Core(TM) i5-7600 CPU @ 3.50GHz": 65,
+    "Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz": 65,
+    "Intel(R) Core(TM) i5-7500T CPU @ 2.70GHz": 35,
+	
     "Intel(R) Core(TM) i3-6100U CPU @ 2.30GHz": 15
 }
