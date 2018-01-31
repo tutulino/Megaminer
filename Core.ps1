@@ -453,8 +453,8 @@ while ($true) {
                                         CoinDual            = $PoolDual.Info
                                         ConfigFileArguments = $ConfigFileArguments
                                         DualMining          = $Miner.Dualmining
-                                        ExtractionPath      = $Miner.ExtractionPath
-                                        GenerateConfigFile  = $miner.GenerateConfigFile -replace '#GROUPNAME#', $TypeGroup.Groupname
+                                        ExtractionPath      = ".\Bin\" + $Minerfile.basename + "\"
+                                        GenerateConfigFile  = $(if (![string]::IsNullOrEmpty($Miner.GenerateConfigFile)) {".\Bin\" + $Minerfile.basename + "\" + $Miner.GenerateConfigFile -Replace [RegEx]::Escape($Miner.ExtractionPath), "" -Replace '#GROUPNAME#', $TypeGroup.GroupName} else {$null})
                                         GroupId             = $TypeGroup.Id
                                         GroupName           = $TypeGroup.GroupName
                                         GroupType           = $TypeGroup.Type
@@ -466,7 +466,7 @@ while ($true) {
                                         Location            = $_.location
                                         MinerFee            = if ($enableSSL -and [double]$Miner.FeeSSL -gt 0) {[double]$Miner.feeSSL} elseif ([double]$Miner.Fee -gt 0) {[double]$Miner.Fee} else {$null}
                                         Name                = $Minerfile.basename
-                                        Path                = $Miner.Path
+                                        Path                = ".\Bin\" + $Minerfile.basename + "\" + $Miner.Path -Replace [RegEx]::Escape($Miner.ExtractionPath), ""
                                         PoolAbbName         = $PoolAbbName
                                         PoolFee             = if ($_.Fee -eq $null) {$null} else {[double]$_.fee}
                                         PoolName            = $_.PoolName
@@ -762,7 +762,7 @@ while ($true) {
 
             $_.ActivatedTimes++
 
-            if ($_.GenerateConfigFile -ne "") {$_.ConfigFileArguments | Set-Content ($_.GenerateConfigFile)}
+            if (![string]::IsNullOrEmpty($_.GenerateConfigFile)) {$_.ConfigFileArguments | Set-Content ($_.GenerateConfigFile)}
 
             #run prelaunch command
             if ($_.PrelaunchCommand -ne $null -and $_.PrelaunchCommand -ne "") {Start-Process -FilePath $_.PrelaunchCommand}
