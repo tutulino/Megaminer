@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\CPU-ClaymoreCryptonote\\Claymore CryptoNote CPU Miner v3.9 - POOL\\NsCpuCNMiner64.exe",
-    "ExtractionPath" : ".\\Bin\\CPU-ClaymoreCryptonote\\",
+    "Path" : "Claymore CryptoNote CPU Miner v3.9 - POOL\\NsCpuCNMiner64.exe",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/Claymore.CryptoNote.CPU.Miner.v3.9.-.POOL.zip",
     "SHA256": "c8008cc0997a9541f25c28738ac478373a878a5b2458be7c1f67591f477e3262",
     "Types" : ["CPU"],

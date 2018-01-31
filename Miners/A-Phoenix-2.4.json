@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\PhoenixMiner\\PhoenixMiner_2.4\\PhoenixMiner.exe",
-    "ExtractionPath" : ".\\Bin\\PhoenixMiner\\",
+    "Path" : "PhoenixMiner_2.4\\PhoenixMiner.exe",
     "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/PhoenixMiner_2.4.zip",
     "SHA256": "a116d27815b156780a8000b599ee90d76334bd2ed3f3ffc4145c0cde3b69a60d",
     "Types" : ["AMD"],

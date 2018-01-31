@@ -1,9 +1,8 @@
 {
-    "Path" : ".\\Bin\\Excavator\\excavator_cuda9.1\\excavator.exe",
-    "ExtractionPath" : ".\\Bin\\Excavator\\",
+    "Path" : "excavator_cuda9.1\\excavator.exe",
     "Uri" : "https://github.com/nicehash/excavator/releases/download/v1.4.1a/excavator_v1.4.1a_NVIDIA_Win64_CUDA_9.1.zip",
     "Types" : ["NVIDIA"],
-    "GenerateConfigFile" : ".\\Bin\\Excavator\\excavator_cuda9.1\\#GROUPNAME#.json",
+    "GenerateConfigFile" : "excavator_cuda9.1\\#GROUPNAME#.json",
     "PatternConfigFile": ".\\Patterns\\excavatorPattern.txt",
     "Arguments" : "-p #APIPORT# -c #GROUPNAME#.json -na ",
     "API" : "excavator",

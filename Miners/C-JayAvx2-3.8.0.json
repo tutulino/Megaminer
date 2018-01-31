@@ -1,6 +1,5 @@
 ﻿{
-    "Path" : ".\\Bin\\cpuminer-opt\\cpuminer-opt-3.8.0-windows\\cpuminer-avx2.exe",
-    "ExtractionPath" : ".\\Bin\\cpuminer-opt\\",
+    "Path" : "cpuminer-opt-3.8.0-windows\\cpuminer-avx2.exe",
     "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1658246/cpuminer-opt-3.8.0-windows.zip",
     "SHA256": "f66050634cc9633c647ec306518759339a8432bfcd18759fd0e762e59e07025c",
     "Types" : ["CPU"],

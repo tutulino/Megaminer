@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\AMD-SgminerPolytimos\\sgminer-polytimos\\sgminer.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-SgminerPolytimos\\",
+    "Path" : "sgminer-polytimos\\sgminer.exe",
     "Uri" : "https://github.com/polytimos/release/raw/master/sgminer-polytimos.zip",
     "SHA256": "04818d662a75ae393944c3e69a735fa33b66ca83e3f78db3415a37b7dc9dd449",
     "Types" : ["AMD"],

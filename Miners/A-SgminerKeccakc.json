@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\AMD-SgminerKeccakC\\SG-Miner-CREA-Win\\sgminer.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-SgminerKeccakC\\",
+    "Path" : "SG-Miner-CREA-Win\\sgminer.exe",
     "Uri" : "https://www.creativechain.org/wp-content/uploads/2017/10/SG-Miner-CREA-Win.zip",
     "SHA256": "ec75ed8ebe85b708a9ffc6741b059e284535a574cfe9c29deeeff15ebae58aab",
     "Types" : ["AMD"],

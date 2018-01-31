@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\NVIDIA-Palgin\\ccminer.exe",
-    "ExtractionPath" : ".\\Bin\\NVIDIA-Palgin\\",
+    "Path" : "ccminer.exe",
     "Uri" : "https://github.com/tutulino/Software/releases/download/0/NVIDIA-Palgin.rar",
     "Types" : ["NVIDIA"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",

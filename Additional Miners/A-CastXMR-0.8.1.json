@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\AMD-CastXMR\\cast_xmr-vega.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-CastXMR\\",
+    "Path" : "cast_xmr-vega.exe",
     "Uri" : "http://www.gandalph3000.com/download/cast_xmr-vega-win64_081.zip",
     "SHA256": "da92b746ed894577dc8879b5976b654cc32e952edd923264c0b16ce363e50106",
     "Types" : ["AMD"],

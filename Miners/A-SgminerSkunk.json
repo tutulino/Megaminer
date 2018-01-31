@@ -1,6 +1,5 @@
 ﻿{
-    "Path" : ".\\Bin\\AMD-SgminerSkunk\\sig-miner\\sgminer.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-SgminerSkunk\\",
+    "Path" : "sig-miner\\sgminer.exe",
     "Uri" : "https://github.com/signatumd/releases/raw/master/sigt-miner.zip",
     "SHA256": "eb91b571e1e7781f5cf632a8998b2f8ef5595528ef95586ded0264773ac1d9c1",
     "Types" : ["AMD"],

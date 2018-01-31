@@ -1,6 +1,5 @@
 ﻿{
-    "Path" : ".\\Bin\\AMD-XMRig\\xmrig-amd.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-XMRig\\",
+    "Path" : "xmrig-amd.exe",
     "Uri" : "https://github.com/xmrig/xmrig-amd/releases/download/v2.4.3-beta2/xmrig-amd-2.4.3-beta2-win64.zip",
     "SHA256": "db05038ad1a8e954ec025c28899784c5313cc04340087535c9e45c3f086337a5",
     "Types" : ["AMD"],

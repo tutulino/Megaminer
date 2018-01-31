@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\AMD-SgminerTribus\\sgminer.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-SgminerTribus\\",
+    "Path" : "sgminer.exe",
     "Uri" : "http://ccminer.org/preview/sgminer-x64-5.3.8.zip",
     "SHA256": "47494c7c939d661e48675e203d52e3e423cce09b606a68f12efe9087a6ff91fd",
     "Types" : ["AMD"],

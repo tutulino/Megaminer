@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\NVIDIA-Alexis78\\ccminer-alexis78-ms2013-cuda7.5\\ccminer.exe",
-    "ExtractionPath" : ".\\Bin\\NVIDIA-Alexis78\\",
+    "Path" : "ccminer-alexis78-ms2013-cuda7.5\\ccminer.exe",
     "Uri" : "https://github.com/tutulino/Software/releases/download/0/ccminer-alexis78-ms2013-cuda7.5.zip",
     "Types" : ["NVIDIA"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",

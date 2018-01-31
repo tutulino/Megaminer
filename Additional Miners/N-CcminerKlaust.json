@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\NVIDIA-CcminerKlaust\\ccminer.exe",
-    "ExtractionPath" : ".\\Bin\\NVIDIA-CcminerKlaust\\",
+    "Path" : "ccminer.exe",
     "Uri" : "https://github.com/KlausT/ccminer/releases/download/8.19/ccminer-819final-cuda91-x64.zip",
     "Types" : ["NVIDIA"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",

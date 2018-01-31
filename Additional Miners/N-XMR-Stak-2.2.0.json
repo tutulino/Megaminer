@@ -1,9 +1,9 @@
 {
-    "Path" : ".\\Bin\\XMR-Stak\\xmr-stak-win64\\xmr-stak.exe",
-    "ExtractionPath" : ".\\Bin\\XMR-Stak\\",
+    "Path" : "xmr-stak-win64\\xmr-stak.exe",
     "Uri" : "https://github.com/fireice-uk/xmr-stak/releases/download/v2.2.0/xmr-stak-win64.zip",
+    "SHA256": "d0af667f47fc3bd32bbf5a91a9984356c1d03036fcfb03c05342049fda9c1058",
     "Types" : ["NVIDIA"],
-    "GenerateConfigFile" : ".\\Bin\\xmr-stak\\xmr-stak-win64\\config-#GROUPNAME#.txt",
+    "GenerateConfigFile" : "xmr-stak-win64\\config-#GROUPNAME#.txt",
     "PatternConfigFile": ".\\Patterns\\xmr-stak-Pattern.txt",
     "Arguments" : "-c config#GROUPNAME#.txt --noCPU --noAMD --noUAC",
     "API" : "XMRig",

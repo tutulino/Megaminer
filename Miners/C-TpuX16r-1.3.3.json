@@ -1,6 +1,5 @@
 ﻿{
-    "Path" : ".\\Bin\\cpuminer-multi\\x16r\\cpuminer-x64.exe",
-    "ExtractionPath" : ".\\Bin\\cpuminer-multi\\x16r\\",
+    "Path" : "cpuminer-x64.exe",
     "Uri" : "https://rvn.suprnova.cc/cpuminer-multi-rel1.3.3-x64.7z",
     "SHA256": "36082c14272c57fa43fb8aa85c62d2c20678ecb82ccd461e9d143e7e18994e3c",
     "Types" : ["CPU"],

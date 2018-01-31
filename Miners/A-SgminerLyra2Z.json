@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\AMD-SgminerLyra2z\\kernel\\sgminer.exe",
-    "ExtractionPath" : ".\\Bin\\AMD-SgminerLyra2z\\",
+    "Path" : "kernel\\sgminer.exe",
     "Uri" : "https://github.com/djm34/sgminer-msvc2015/releases/download/v0.3/kernel.rar",
     "SHA256": "538937f503cedaabd2930de486a2ad27e3ea5435a5af504c58fd8f1c3104bca4",
     "Types" : ["AMD"],

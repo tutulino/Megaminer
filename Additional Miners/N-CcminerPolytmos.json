@@ -1,6 +1,5 @@
 {
-    "Path" : ".\\Bin\\NVIDIA-ccminerpolytimos\\ccminer.exe",
-    "ExtractionPath" : ".\\Bin\\NVIDIA-ccminerpolytimos\\",
+    "Path" : "ccminer.exe",
     "Uri" : "https://github.com/nemosminer/ccminerpolytimos/releases/download/Alexis78-1.0/ccminer-polytimos.7z",
     "Types" : ["NVIDIA"],
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
