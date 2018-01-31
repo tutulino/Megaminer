@@ -6,7 +6,6 @@
     "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL# -wd 1 -di #DEVICESCLAYMODE# -mport #APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
     "API" : "Claymore",
     "Fee" : 0.02,
-    "DualMiningMainCoin": ["Ethereum","EthereumClassic"],
     "DualMiningMainAlgo": "Ethash",
     "Algorithms": [
         {"Ethash_Decred_40":" -dcoin dcr -dcri 40"},

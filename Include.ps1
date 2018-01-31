@@ -592,7 +592,7 @@ function Clear_Screen_Zone {
         [int]$endY
     )
 
-    $BlankLine = "                                                                                                                    "
+    $BlankLine = " " * $Host.UI.RawUI.WindowSize.Width
 
     Set_ConsolePosition 0 $start
 
@@ -661,7 +661,6 @@ function Invoke_httpRequest {
     )
 
     try {
-
         $response = Invoke-WebRequest "http://$($Server):$Port$Request" -UseBasicParsing -TimeoutSec $timeout
     } catch {$Error.Remove($error[$Error.Count - 1])}
 
@@ -1202,18 +1201,17 @@ function Get_ConsolePosition ([ref]$x, [ref]$y) {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
-function Print_Horizontal_line ([string]$Tittle) {
+function Print_Horizontal_line ([string]$Title) {
 
     $Width = $Host.UI.RawUI.WindowSize.Width
-    $A = $tittle.Length
+    $A = $Title.Length
 
-    if ($Tittle -eq "") {$str = "-" * $Width}
+    if ([string]::IsNullOrEmpty($Title)) {$str = "-" * $Width}
     else {
-        $str = ("-" * ($Width / 2 - ($tittle.Length / 2) - 4)) + "  " + $Tittle + "  "
+        $str = ("-" * ($Width / 2 - ($Title.Length / 2) - 4)) + "  " + $Title + "  "
         $str += "-" * ($Width - $str.Length)
     }
     $str | Out-host
-
 }
 
 
