@@ -171,7 +171,7 @@ function Kill_ProcessId {
         do {
             if ($sw.Elapsed.TotalSeconds -gt 1) {
                 Stop-Process -InputObject $Process -Force
-}
+            }
             if (!$Process.HasExited) {
                 Start-Sleep -Milliseconds 1
             }
@@ -972,7 +972,9 @@ function Expand_WebRequest {
         [Parameter(Mandatory = $true)]
         [String]$Uri,
         [Parameter(Mandatory = $true)]
-        [String]$Path
+        [String]$Path,
+        [Parameter(Mandatory = $false)]
+        [String]$SHA256
     )
 
 
@@ -983,14 +985,22 @@ function Expand_WebRequest {
 
     if (Test-Path $FileName) {Remove-Item $FileName}
 
-
     Invoke-WebRequest $Uri -OutFile $FileName -UseBasicParsing
 
-    $Command = 'x "' + $FilePath + '" -o"' + $DestinationFolder + '" -y -spe'
-    Start-Process "./bin/7z.exe" $Command -Wait
+    if (Test-Path $FileName) {
+        if (![string]::IsNullOrEmpty($SHA256)) {
+            $FileHash = (Get-FileHash -Path $FileName -Algorithm SHA256).Hash
+            if ($FileHash -ne $SHA256) {
+                "File hash doesn't match. Skipping miner." + $FileHash + " " + $SHA256 | Write-Host
+                Remove-Item $FileName
+                Return
+            }
+        }
 
-    if (Test-Path $FileName) {Remove-Item $FileName}
-
+        $Command = 'x "' + $FilePath + '" -o"' + $DestinationFolder + '" -y -spe'
+        Start-Process ".\bin\7z.exe" $Command -Wait
+        Remove-Item $FileName
+    }
 }
 
 
@@ -1341,23 +1351,30 @@ function Start_Downloader {
         [Parameter(Mandatory = $true)]
         [String]$ExtractionPath,
         [Parameter(Mandatory = $true)]
-        [String]$Path
+        [String]$Path,
+        [Parameter(Mandatory = $false)]
+        [String]$SHA256
     )
 
 
     if (-not (Test-Path $Path)) {
         try {
-
-
             if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
                 New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
                 Invoke-WebRequest $URI -OutFile $Path -UseBasicParsing -ErrorAction Stop
+                if (![string]::IsNullOrEmpty($SHA256)) {
+                    if ((Get-FileHash -Path $Path -Algorithm SHA256).Hash -ne $SHA256) {
+                        "File hash doesn't match. Skipping miner." | Write-Host
+                        Remove-Item $Path
+                        Return
+                    }
+                }
             } else {
                 Clear-Host
                 $Message = "Downloading....$($URI)"
                 Write-Host -BackgroundColor green -ForegroundColor Black  $Message
                 Writelog $Message $logfile
-                Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop
+                Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop -SHA256 $SHA256
             }
         } catch {
 

@@ -482,6 +482,7 @@ while ($true) {
                                         Profits             = $MinerRevenue + $MinerRevenueDual - ($ElectricityCostValue * ($PowerValue * 24) / 1000) #Profit is revenue less electricity cost, can separate profit in dual and non dual because electricity cost can be divided
                                         Revenue             = $MinerRevenue
                                         RevenueDual         = $MinerRevenueDual
+                                        SHA256              = $Miner.SHA256
                                         SpeedReads          = $Hrs
                                         Symbol              = $_.Symbol
                                         SymbolDual          = $PoolDual.Symbol
@@ -512,10 +513,10 @@ while ($true) {
 
     #Launch download of miners
     $Miners |
-        Where-Object {$_.URI -ne $null -and $_.ExtractionPath -ne $null -and $_.Path -ne $null -and $_.URI -ne "" -and $_.ExtractionPath -ne "" -and $_.Path -ne ""} |
-        Select-Object URI, ExtractionPath, Path -Unique |
+        Where-Object {![string]::IsNullOrEmpty($_.URI) -and ![string]::IsNullOrEmpty($_.ExtractionPath) -and ![string]::IsNullOrEmpty($_.Path)} |
+        Select-Object URI, ExtractionPath, Path, SHA256 -Unique |
         ForEach-Object {
-        Start_Downloader -URI $_.URI  -ExtractionPath $_.ExtractionPath -Path $_.Path
+        Start_Downloader -URI $_.URI -ExtractionPath $_.ExtractionPath -Path $_.Path -SHA256 $_.SHA256
     }
 
     ErrorsToLog $LogFile
