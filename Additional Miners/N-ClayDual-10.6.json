@@ -9,14 +9,6 @@
     "DualMiningMainCoin": ["Ethereum","EthereumClassic"],
     "DualMiningMainAlgo": "Ethash",
     "Algorithms": [
-        {"Ethash_Sia_40":" -dcoin sc -dcri 40"},
-        {"Ethash_Sia_60":" -dcoin sc -dcri 60"},
-        {"Ethash_Sia_80":" -dcoin sc -dcri 80"},
-        {"Ethash_Sia_100":" -dcoin sc -dcri 100"},
-        {"Ethash_Sia_120":" -dcoin sc -dcri 120"},
-        {"Ethash_Sia_140":" -dcoin sc -dcri 140"},
-        {"Ethash_Sia_160":" -dcoin sc -dcri 160"},
-
         {"Ethash_Decred_40":" -dcoin dcr -dcri 40"},
         {"Ethash_Decred_60":" -dcoin dcr -dcri 60"},
         {"Ethash_Decred_80":" -dcoin dcr -dcri 80"},

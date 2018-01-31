@@ -8,15 +8,14 @@
     "API" : "excavator",
     "Algorithms": [
         {"Lyra2RE2": "lyra2rev2"},
-        {"neoscrypt": "neoscrypt"},
-        {"pascal": "pascal"},
-        {"blake14r": "decred"},
-        {"blake2b": "sia"},
-        {"lbry": "lbry"},
-        {"blake2s": "blake2s"},
-        {"ethash": "daggerhashimoto"},
-        {"cryptonight": "cryptonight"},
-        {"keccak": "keccak"},
-        {"nist5": "nist5"}
+        {"Neoscrypt": "neoscrypt"},
+        {"Pascal": "pascal"},
+        {"Decred": "decred"},
+        {"Lbry": "lbry"},
+        {"Blake2s": "blake2s"},
+        {"Ethash": "daggerhashimoto"},
+        {"CryptoNight": "cryptonight"},
+        {"Keccak": "keccak"},
+        {"Nist5": "nist5"}
     ]
 }
