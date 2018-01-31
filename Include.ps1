@@ -162,11 +162,27 @@ function Kill_ProcessId {
         [int]$ProcessId
     )
 
+    $Process = Get-Process -Id $ProcessId
+
+    $sw = [Diagnostics.Stopwatch]::new()
     try {
-        $_.Process.CloseMainWindow() | Out-Null
-        Start-Sleep 2
-        Stop-Process $ProcessId -force -wa SilentlyContinue -ea SilentlyContinue
-    } catch {}
+        $Process.CloseMainWindow()
+        $sw.Start()
+        do {
+            if ($sw.Elapsed.TotalSeconds -gt 1) {
+                Stop-Process -InputObject $Process -Force
+}
+            if (!$Process.HasExited) {
+                Start-Sleep -Milliseconds 1
+            }
+        } while (!$Process.HasExited)
+    } finally {
+        $sw.Stop()
+        if (!$Process.HasExited) {
+            Stop-Process -InputObject $Process -Force
+        }
+    }
+    Remove-Variable sw
 }
 
 
