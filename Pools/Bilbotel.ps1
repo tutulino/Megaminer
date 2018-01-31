@@ -70,8 +70,8 @@ if ($Querymode -eq "wallet") {
             currency = $Request.currency
             balance  = $Request.balance
         }
+        remove-variable Request
     }
-    remove-variable Request
     Start-Sleep -Seconds 1 # Prevent API Saturation
 }
 

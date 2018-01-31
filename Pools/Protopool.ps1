@@ -1,6 +1,6 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null ,
+    [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
     [pscustomobject]$Info
 )
@@ -10,19 +10,19 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
-$ActiveOnAutomatic24hMode = $true
-$AbbName = 'AHASH'
+$ActiveOnAutomatic24hMode = $false
+$AbbName = 'PRO'
 $WalletMode = 'WALLET'
-$ApiUrl = 'http://www.ahashpool.com/api'
-$MineUrl = 'mine.ahashpool.com'
-$Location = 'US'
+$ApiUrl = 'https://protopool.net/api'
+$MineUrl = 'eu1.protopool.net'
+$Location = 'Europe'
 $UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "Autoexchange to BTC wallet, no registration required"
+        Disclaimer               = "No registration, No autoexchange, need wallet for each coin on config.txt"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
@@ -72,6 +72,7 @@ if ($Querymode -eq "wallet") {
         }
         remove-variable Request
     }
+    Start-Sleep -Seconds 1 # Prevent API Saturation
 }
 
 
@@ -79,7 +80,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $retries = 1
     do {
         try {
-            $http = $ApiUrl + "/status"
+            $http = $ApiUrl + "/currencies"
             $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
         } catch {start-sleep 2}
         $retries++
@@ -90,53 +91,75 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
-
+    $retries = 1
+    do {
+        try {
+            $http = $ApiUrl + "/status"
+            $Request2 = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+        } catch {start-sleep 2}
+        $retries++
+        if ($Request2 -eq $null -or $Request -eq "") {start-sleep 3}
+    } while ($Request2 -eq $null -and $retries -le 3)
+    if ($retries -gt 3) {
+        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+    }
 
     $Request | Get-Member -MemberType Properties | ForEach-Object {
 
         $coin = $Request | Select-Object -ExpandProperty $_.name
-        $Pool_Algo = get_algo_unified_name $coin.name
+        $Pool_Algo = get_algo_unified_name $coin.algo
+
+        $Pool_coin = get_coin_unified_name $coin.name
+        $Pool_symbol = $_.name
 
         $Divisor = 1000000
 
         switch ($Pool_Algo) {
             "blake2s" {$Divisor *= 1000}
             "blakecoin" {$Divisor *= 1000}
-            "quark" {$Divisor *= 1000}
-            "qubit" {$Divisor *= 1000}
+            "equihash" {$Divisor /= 1000}
             "scrypt" {$Divisor *= 1000}
-            "sha256" {$Divisor *= 1000000}
-            "x11" {$Divisor *= 1000}
-            "yescrypt" {$Divisor /= 1000}
+            "sha256" {$Divisor *= 1000}
         }
 
-        if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0) {
-            $Result += [PSCustomObject]@{
-                Algorithm             = $Pool_Algo
-                Info                  = $null
-                Price                 = $coin.estimate_current / $Divisor
-                Price24h              = $coin.estimate_last24h / $Divisor
-                Protocol              = "stratum+tcp"
-                Host                  = $coin.name + "." + $MineUrl
-                Port                  = $coin.port
-                User                  = $CoinsWallets.get_item("BTC")
-                Pass                  = "c=BTC,#WorkerName#"
-                Location              = $Location
-                SSL                   = $false
-                Symbol                = $null
-                AbbName               = $AbbName
-                ActiveOnManualMode    = $ActiveOnManualMode
-                ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                PoolWorkers           = $coin.Workers
-                PoolHashRate          = $coin.hashrate
-                WalletMode            = $WalletMode
-                WalletSymbol          = $currency
-                PoolName              = $Name
-                Fee                   = $coin.Fees / 100
-            }
+        switch ($Pool_symbol) {
+            'BTX' { $Port = 3557 }
+            'BWK' { $Port = 3832 }
+            'ARGO' { $Port = 4932 }
+            'LIZ' { $Port = 4922 }
+            'TIN' { $Port = 8532 }
+            'BHD' { $Port = 3572 }
+            'CBS' { $Port = 4231 }
+            Default { $Port = $Coin.Port}
+        }
+
+        $Result += [PSCustomObject]@{
+            Algorithm             = $Pool_Algo
+            Info                  = $Pool_coin
+            Price                 = $coin.estimate / $Divisor
+            Price24h              = $coin.'24h_btc' / $Divisor
+            Protocol              = "stratum+tcp"
+            Host                  = $MineUrl
+            Port                  = $Port
+            User                  = $CoinsWallets.get_item($Pool_symbol)
+            Pass                  = "c=$Pool_symbol,#WorkerName#"
+            Location              = $Location
+            SSL                   = $false
+            Symbol                = $Pool_Symbol
+            AbbName               = $AbbName
+            ActiveOnManualMode    = $ActiveOnManualMode
+            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+            PoolWorkers           = $coin.Workers
+            PoolHashRate          = $coin.hashrate
+            Blocks_24h            = $coin.'24h_blocks'
+            WalletMode            = $WalletMode
+            Walletsymbol          = $Pool_Symbol
+            PoolName              = $Name
+            Fee                   = $Request2.($coin.algo).Fees / 100
         }
     }
     remove-variable Request
+    remove-variable Request2
 }
 
 

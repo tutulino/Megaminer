@@ -70,8 +70,8 @@ if ($Querymode -eq "wallet") {
             currency = $Request.currency
             balance  = $Request.balance
         }
+        remove-variable Request
     }
-    remove-variable Request
 }
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {

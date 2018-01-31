@@ -67,8 +67,8 @@ if ($Querymode -eq "wallet") {
             currency = "BTC"
             balance  = ($Request | Measure-Object -Sum balance).sum
         }
+        Remove-variable Request
     }
-    Remove-variable Request
 }
 
 
