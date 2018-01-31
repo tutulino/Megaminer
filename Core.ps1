@@ -945,7 +945,7 @@ while ($true) {
 
         if ($SwitchLoop = 1) {
 
-            writelog ($ActiveMiners | Where-Object Status -eq 'Running' | select-object id, process.Id, groupname, name, poolabbname, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, location, port, arguments | ConvertTo-Json) $logfile $false
+            writelog ("Running miners: " + ($ActiveMiners | Where-Object Status -eq 'Running' | select-object Id, @{Name = 'ProcessId'; Expression = {$_.Process.Id}}, GroupName, Name, PoolAbbName, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, Location, Port, Path, Arguments | ConvertTo-Json)) $logfile $false
 
             #To get pool speed
             $PoolsSpeed = @()
@@ -1144,8 +1144,8 @@ while ($true) {
                     "                                                                         " | Out-host
                     set_ConsolePosition 0 $YToWriteMessages
 
-                    if ($_.WalletMode -eq "WALLET") {writelog ("Checking " + $_.PoolName + " - " + $_.symbol) $logfile $true}
-                    else {writelog ("Checking " + $_.PoolName + " - " + $_.coin + ' (' + $_.Algorithm + ')') $logfile $true}
+                    if ($_.WalletMode -eq "WALLET") {writelog ("Checking " + $_.PoolName + " - " + $_.Symbol) $logfile $true}
+                    else {writelog ("Checking " + $_.PoolName + " - " + $_.Symbol + ' (' + $_.Algorithm + ')') $logfile $true}
 
                     $Ws = Get_Pools -Querymode $_.WalletMode -PoolsFilterList $_.Poolname -Info ($_)
 
