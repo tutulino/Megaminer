@@ -94,3 +94,9 @@
 
 -- Coin IDs from http://whattomine.com/calculators, separated by ",". 192 - Aeon, 210 - Zero, 213 - ETN, 177 - PASL
 -- @@CUSTOM_WTM_COINS=177
+
+
+-- Reporting mining status to https://multipoolminer.io/monitor/
+-- get ApiKey from the site
+@@MinerStatusUrl=https://multipoolminer.io/monitor/miner.php
+@@MinerStatusKey=

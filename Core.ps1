@@ -248,6 +248,10 @@ while ($true) {
     }
 
 
+    $MinerStatusUrl = get_config_variable "MinerStatusUrl"
+    $MinerStatusKey = get_config_variable "MinerStatusKey"
+    if (![string]::IsNullOrEmpty($MinerStatusKey)) {$CoinsWallets.get_item("BTC")}
+
     ErrorsToLog $LogFile
 
 
@@ -1016,6 +1020,8 @@ while ($true) {
 
         ) | Out-Host
 
+        # Report stats
+        if ($MinerStatusURL -and $MinerStatusKey) { & .\Includes\ReportStatus.ps1 -Key $MinerStatusKey -WorkerName $WorkerName -ActiveMiners $ActiveMiners -Miners $Miners -MinerStatusURL $MinerStatusURL }
 
         $XToWrite = [ref]0
         $YToWrite = [ref]0
