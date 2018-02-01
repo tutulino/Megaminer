@@ -11,6 +11,12 @@
     "DualMiningMainAlgo": "Ethash",
     "Fee" : 0.02,
     "Algorithms": [
+        {"Ethash_Sia_10":" -dcoin sc -dcri 10"},
+        {"Ethash_Sia_15":" -dcoin sc -dcri 15"},
+        {"Ethash_Sia_20":" -dcoin sc -dcri 20"},
+        {"Ethash_Sia_25":" -dcoin sc -dcri 25"},
+        {"Ethash_Sia_30":" -dcoin sc -dcri 30"},
+
         {"Ethash_Decred_25":" -dcoin dcr -dcri 25"},
         {"Ethash_Decred_30":" -dcoin dcr -dcri 30"},
         {"Ethash_Decred_35":" -dcoin dcr -dcri 35"},
