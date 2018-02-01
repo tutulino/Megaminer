@@ -29,6 +29,7 @@ NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 * Low process priority for cpu miners to prevent responsiveness issue
 * Use C# assembly to prevent miners from steal focus
 * Poll mining api to display projected profits for Manual mining
+* Support reporting mining stats to multipoolminer.io/monitor
 * Allow mining specific Algo instead of coin in Manual mode
 * Profit display in mBTC instead of BTC with too many zeroes
 * Support profitability info for Custom coins from WhatToMine pool
@@ -49,6 +50,8 @@ NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 	- Suprnova (up to date algos)
 	- AntMinePool
 	- Bilbotel.fr
+	- Zergpool
+	- Protopool
 * More small fixes, code optimizations and formatting changes
 
 ### Donations are welcome
