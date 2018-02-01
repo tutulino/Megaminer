@@ -250,7 +250,7 @@ while ($true) {
 
     $MinerStatusUrl = get_config_variable "MinerStatusUrl"
     $MinerStatusKey = get_config_variable "MinerStatusKey"
-    if (![string]::IsNullOrEmpty($MinerStatusKey)) {$CoinsWallets.get_item("BTC")}
+    if ([string]::IsNullOrEmpty($MinerStatusKey)) {$MinerStatusKey = $CoinsWallets.get_item("BTC")}
 
     ErrorsToLog $LogFile
 

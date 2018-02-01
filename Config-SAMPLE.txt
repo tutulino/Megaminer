@@ -97,6 +97,6 @@
 
 
 -- Reporting mining status to https://multipoolminer.io/monitor/
--- get ApiKey from the site
+-- get ApiKey from the site or BTC wallet address will be used as key
 @@MinerStatusUrl=https://multipoolminer.io/monitor/miner.php
 @@MinerStatusKey=

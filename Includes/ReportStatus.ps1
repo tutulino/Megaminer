@@ -18,7 +18,7 @@ $ActiveMiners | Where-Object Best | ForEach-Object {
     $minerreport = ConvertTo-Json @(
         [pscustomobject]@{
             Name           = $_.Name
-            Path           = Resolve-Path -Relative $_.Path
+            Path           = " " #Resolve-Path -Relative $_.Path
             Type           = $_.Groupname
             Active         = "{0:N1} min" -f ($_.ActiveTime.TotalMinutes)
             Algorithm      = $_.Algorithm + $_.AlgoLabel + $(if ($_.AlgorithmDual -ne $null) {'|' + $_.AlgorithmDual}) + $_.BestBySwitch
@@ -30,5 +30,5 @@ $ActiveMiners | Where-Object Best | ForEach-Object {
             'BTC/day'      = $Profit
         }
     )
-    Invoke-RestMethod -Uri $MinerStatusURL -Method Post -Body @{address = $Key; workername = $WorkerName2; miners = $minerreport; profit = $profit; profitcur = $profitcur; status = $WorkerStatus; currency = $LocalCurrency }
+    Invoke-RestMethod -Uri $MinerStatusURL -Method Post -Body @{address = $Key; workername = $WorkerName2; miners = $minerreport; profit = $profit; profitcur = $profitcur; status = $WorkerStatus; currency = $LocalCurrency } | Out-Null
 }
