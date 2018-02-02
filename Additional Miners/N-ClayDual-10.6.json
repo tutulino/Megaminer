@@ -6,6 +6,7 @@
     "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL# -wd 1 -di #DEVICESCLAYMODE# -mport #APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
     "API" : "Claymore",
     "Fee" : 0.02,
+    "DualMining": true,
     "DualMiningMainAlgo": "Ethash",
     "Algorithms": [
         {"Ethash_Decred_40":" -dcoin dcr -dcri 40"},
@@ -22,6 +23,14 @@
         {"Ethash_Lbry_100":" -dcoin lbc -dcri 100"},
         {"Ethash_Lbry_120":" -dcoin lbc -dcri 120"},
         {"Ethash_Lbry_140":" -dcoin lbc -dcri 140"},
-        {"Ethash_Lbry_160":" -dcoin lbc -dcri 160"}
+        {"Ethash_Lbry_160":" -dcoin lbc -dcri 160"},
+
+        {"Ethash_Pascal_40":" -dcoin pasc -dcri 40"},
+        {"Ethash_Pascal_60":" -dcoin pasc -dcri 60"},
+        {"Ethash_Pascal_80":" -dcoin pasc -dcri 80"},
+        {"Ethash_Pascal_100":" -dcoin pasc -dcri 100"},
+        {"Ethash_Pascal_120":" -dcoin pasc -dcri 120"},
+        {"Ethash_Pascal_140":" -dcoin pasc -dcri 140"},
+        {"Ethash_Pascal_160":" -dcoin pasc -dcri 160"}
     ]
 }
