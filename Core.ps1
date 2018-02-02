@@ -59,7 +59,7 @@ $progressPreference = 'silentlyContinue' #No progress message on web requests
 Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
 
 Get-ChildItem . -Recurse | Unblock-File
-try {if ((Get-MpPreference).ExclusionPath -notcontains (Convert-Path .)) {Start-Process powershell -Verb runAs -ArgumentList "Add-MpPreference -ExclusionPath '$(Convert-Path .)'"}}catch {}
+try {if ((Get-MpPreference).ExclusionPath -notcontains (Convert-Path .)) {Start-Process powershell -Verb runAs -ArgumentList "Add-MpPreference -ExclusionPath '$(Convert-Path .)'"}} catch {}
 
 
 
@@ -163,16 +163,15 @@ WriteLog $msg $LogFile $False
 
 while ($true) {
 
-    Clear-Host; $repaintScreen = $true
+    Clear-Host
+    $repaintScreen = $true
 
     WriteLog "New interval starting............." $LogFile $True
     Writelog ( Get_ComputerStats | ConvertTo-Json) $logfile $false
 
     $Location = get_config_variable "LOCATION"
 
-
-    if ($PercentToSwitch -eq "") {$PercentToSwitch2 = [int](get_config_variable "PERCENTTOSWITCH")} else {$PercentToSwitch2 = [int]$PercentToSwitch}
-    $DelayCloseMiners = get_config_variable "DELAYCLOSEMINERS"
+    if ([string]::IsNullOrWhiteSpace($PercentToSwitch)) {$PercentToSwitch2 = [int](get_config_variable "PERCENTTOSWITCH")} else {$PercentToSwitch2 = [int]$PercentToSwitch}
 
     $Types = Get_Mining_Types -filter $Groupnames
 
@@ -182,7 +181,7 @@ while ($true) {
 
 
     $Currency = get_config_variable "CURRENCY"
-    $BechmarkintervalTime = [int](get_config_variable "BENCHMARKTIME" )
+    $BechmarkintervalTime = [int](get_config_variable "BENCHMARKTIME")
     $LocalCurrency = get_config_variable "LOCALCURRENCY"
     if ([string]::IsNullOrWhiteSpace($LocalCurrency)) {
         #for old config.txt compatibility
@@ -197,7 +196,7 @@ while ($true) {
 
 
     #Donation
-    $LastIntervalTime = (get-date) - $IntervalStartAt
+    $LastIntervalTime = (Get-Date) - $IntervalStartAt
     $IntervalStartAt = (Get-Date)
     $DonationPastTime = ((Get-Content Donation.ctr) -split '_')[0]
     $DonatedTime = ((Get-Content Donation.ctr) -split '_')[1]
@@ -217,8 +216,8 @@ while ($true) {
         $DonationInterval = $true
         $UserName = "ffwd"
         $WorkerName = "Donate"
-        $CoinsWallets=@{}
-        $CoinsWallets.add("BTC","3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL")
+        $CoinsWallets = @{}
+        $CoinsWallets.add("BTC", "3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL")
 
         $NextInterval = ($ConfigDonateTime - $ElapsedDonatedTime ) * 60
 
@@ -294,7 +293,7 @@ while ($true) {
     #Load information about the Miner asociated to each Coin-Algo-Miner
     $Miners = @()
 
-    foreach ($MinerFile in (Get-ChildItem "Miners" | Where-Object extension -eq '.json')) {
+    foreach ($MinerFile in (Get-ChildItem "Miners" -Filter "*.json")) {
         try { $Miner = $MinerFile | Get-Content | ConvertFrom-Json }
         catch {
             Writelog "-------BAD FORMED JSON: $MinerFile" $LogFile $true
@@ -340,9 +339,11 @@ while ($true) {
 
                                     $enableSSL = ($Miner.SSL -and $_.SSL)
 
-                                    if (($Types | Measure-Object).Count -gt 1) {
-                                        if ($_.name -eq 'Nicehash') {$WorkerName2 = $WorkerName + $TypeGroup.GroupName} else {$WorkerName2 = $WorkerName + '_' + $TypeGroup.GroupName}
-                                    } else {$WorkerName2 = $WorkerName}
+                                    if ($_.name -eq 'Nicehash') {
+                                        $WorkerName2 = $WorkerName + $TypeGroup.GroupName #Nicehash reqauires alphanumeric workernames
+                                    } else {
+                                        $WorkerName2 = $WorkerName + '_' + $TypeGroup.GroupName
+                                    }
 
 
                                     $Arguments = $Miner.Arguments `
@@ -361,7 +362,7 @@ while ($true) {
                                         -replace '#GROUPNAME#', $TypeGroup.Groupname `
                                         -replace "#ETHSTMODE#", $_.EthStMode `
                                         -replace "#DEVICESNSGMODE#", $TypeGroup.GpusNsgMode
-                                    if ($Miner.PatternConfigFile -ne $null) {
+                                    if (![string]::IsNullOrEmpty($Miner.PatternConfigFile)) {
                                         $ConfigFileArguments = replace_foreach_gpu (get-content $Miner.PatternConfigFile -raw) $TypeGroup.Gpus
                                         $ConfigFileArguments = $ConfigFileArguments `
                                             -replace '#PORT#', $(if ($enableSSL -and $_.PortSSL -ne $null) {$_.PortSSL} else {$_.Port}) `
@@ -467,7 +468,7 @@ while ($true) {
                                         GroupType           = $TypeGroup.Type
                                         GroupDevices        = $TypeGroup.gpus
                                         HashRate            = $HashRateValue
-                                        Hashrates           = if ($Miner.Dualmining -eq $true) {(ConvertTo_Hash ($HashRateValue)) + "/s|" + (ConvertTo_Hash $HashrateValueDual) + "/s"} else {(ConvertTo_Hash $HashRateValue) + "/s"}
+                                        Hashrates           = (ConvertTo_Hash $HashRateValue) + "/s" + $(if ($Miner.Dualmining) {"|" + (ConvertTo_Hash $HashrateValueDual) + "/s"})
                                         HashRateDual        = $HashrateValueDual
                                         Host                = $_.Host
                                         Location            = $_.location
@@ -486,7 +487,7 @@ while ($true) {
                                         PowerAvg            = $PowerValue
                                         PowerLimit          = [int]$PowerLimit
                                         PrelaunchCommand    = $Miner.PrelaunchCommand
-                                        Profits             = $MinerRevenue + $MinerRevenueDual - ($ElectricityCostValue * ($PowerValue * 24) / 1000) #Profit is revenue less electricity cost, can separate profit in dual and non dual because electricity cost can be divided
+                                        Profits             = $MinerRevenue + $MinerRevenueDual - ($ElectricityCostValue * $PowerValue * 24 / 1000) #Profit is revenue minus electricity cost
                                         Revenue             = $MinerRevenue
                                         RevenueDual         = $MinerRevenueDual
                                         SHA256              = $Miner.SHA256
@@ -745,7 +746,7 @@ while ($true) {
 
     #Stop miners running if they arent best now
     $ActiveMiners | Where-Object {!$_.Best -and $_.Process -ne $null} | ForEach-Object {
-        Kill_ProcessId $_.Process.Id
+        Kill_Process $_.Process
         $_.Process = $null
         $_.Status = "Idle"
         WriteLog ("Killing " + $_.name + "/" + $_.Algorithms + "(id " + [string]$_.Id + ")") $LogFile
@@ -765,18 +766,19 @@ while ($true) {
             $_.Arguments = $_.Arguments -replace '#APIPORT#', $_.Port
 
             if (![string]::IsNullOrEmpty($_.GenerateConfigFile)) {
-                $_.ConfigFileArguments = $_.ConfigFileArguments -replace '#APIPORT#', $_.Port
-                $_.ConfigFileArguments | Set-Content ($_.GenerateConfigFile)
+                $_.ConfigFileArguments -replace '#APIPORT#', $_.Port | Set-Content $_.GenerateConfigFile
             }
 
             #run prelaunch command
-            if (![string]::IsNullOrWhiteSpace($_.PrelaunchCommand)) {Start-Process -FilePath $_.PrelaunchCommand}
+            if (![string]::IsNullOrWhiteSpace($_.PrelaunchCommand)) {
+                Start-Process -FilePath $_.PrelaunchCommand
+            }
 
             if ($_.GroupType -eq 'NVIDIA' -and $_.PowerLimit -gt 0) {set_Nvidia_Powerlimit $_.PowerLimit $_.GroupDevices}
             if ($_.GroupType -eq 'AMD' -and $_.PowerLimit -gt 0) {}
 
             $Arguments = $_.Arguments
-            if ($_.NeedBenchmark -and ![string]::IsNullOrWhiteSpace($_.BenchmarkArg)) {$Arguments += (" " + $_.BenchmarkArg) }
+            if ($_.NeedBenchmark -and ![string]::IsNullOrWhiteSpace($_.BenchmarkArg)) {$Arguments += " " + $_.BenchmarkArg }
 
             if ($_.Wrap -eq $true) {
                 $_.Process = Start_SubProcess `
@@ -792,7 +794,7 @@ while ($true) {
                     -Priority $(if ($_.GroupType -eq "CPU") {-2} else {-1})
             }
 
-            start-sleep 1
+            Start-Sleep -Seconds 1
 
             if ($_.Process -eq $null) {
                 $_.Status = "Failed"
@@ -1319,6 +1321,6 @@ while ($true) {
 
 Writelog "Program end" $logfile
 
-$ActiveMiners | ForEach-Object { Kill_ProcessId $_.Process.Id}
+$ActiveMiners | ForEach-Object { Kill_Process $_.Process}
 
 #Stop-Transcript

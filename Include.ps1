@@ -156,13 +156,11 @@ function Query_TCPPort {
 #************************************************************************************************************************************************************************************
 
 
-function Kill_ProcessId {
+function Kill_Process {
     param(
         [Parameter(Mandatory = $true)]
-        [int]$ProcessId
+        $Process
     )
-
-    $Process = Get-Process -Id $ProcessId
 
     $sw = [Diagnostics.Stopwatch]::new()
     try {
