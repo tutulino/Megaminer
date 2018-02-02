@@ -130,6 +130,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             'TIN' { $Port = 8532 }
             'BHD' { $Port = 3572 }
             'CBS' { $Port = 4231 }
+            'RACE' { $Port = 4532 }
             Default { $Port = $Coin.Port}
         }
 

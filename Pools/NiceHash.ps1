@@ -107,7 +107,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Algorithm             = $Algo
                 Info                  = $coin
                 Price                 = [double]($_.paying / $Divisor)
-                Price24h              = $null
+                Price24h              = [double]($_.paying / $Divisor)
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = if ($enableSSL) {"stratum+tls"} else {$null}
                 Host                  = $_.name + "." + $location.NhLocation + ".nicehash.com"

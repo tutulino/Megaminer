@@ -217,11 +217,13 @@ while ($true) {
         $DonationInterval = $true
         $UserName = "ffwd"
         $WorkerName = "Donate"
+        $CoinsWallets=@{}
+        $CoinsWallets.add("BTC","3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL")
 
         $NextInterval = ($ConfigDonateTime - $ElapsedDonatedTime ) * 60
 
         $Algorithm = $null
-        $PoolsName = "Mining_Pool_Hub"
+        $PoolsName = "NiceHash"
         $CoinsName = $null
         $MiningMode = "Automatic"
 
@@ -742,7 +744,7 @@ while ($true) {
     ErrorsToLog $LogFile
 
     #Stop miners running if they arent best now
-    $ActiveMiners | Where-Object {$_.Best -eq $false -and $_.Process -ne $null} | ForEach-Object {
+    $ActiveMiners | Where-Object {!$_.Best -and $_.Process -ne $null} | ForEach-Object {
         Kill_ProcessId $_.Process.Id
         $_.Process = $null
         $_.Status = "Idle"
@@ -751,12 +753,12 @@ while ($true) {
 
 
     #Start all Miners marked as Best (if they are running does nothing)
-    $ActiveMiners | Where-Object Best -eq $true | ForEach-Object {
+    $ActiveMiners | Where-Object Best | ForEach-Object {
 
         if ($_.NeedBenchmark) {$NextInterval = $BechmarkintervalTime} #if one need benchmark next interval will be short and fast change
 
         #Launch
-        if ($_.Process -eq $null -or $_.Process.HasExited -ne $false) {
+        if ($_.Process -eq $null -or $_.Process.HasExited) {
 
             #assign a free random api port (not if it is forced in miner file or calculated before)
             if ($_.Port -eq $null) { $_.Port = get_next_free_port (Get-Random -minimum 20000 -maximum 48000)}
@@ -774,7 +776,7 @@ while ($true) {
             if ($_.GroupType -eq 'AMD' -and $_.PowerLimit -gt 0) {}
 
             $Arguments = $_.Arguments
-            if ($_.NeedBenchmark -and ($_.BenchmarkArg).length -gt 0 ) {$Arguments += (" " + $_.BenchmarkArg) }
+            if ($_.NeedBenchmark -and ![string]::IsNullOrWhiteSpace($_.BenchmarkArg)) {$Arguments += (" " + $_.BenchmarkArg) }
 
             if ($_.Wrap -eq $true) {
                 $_.Process = Start_SubProcess `
@@ -929,7 +931,7 @@ while ($true) {
         $TimetoNextIntervalSeconds = ($TimetoNextInterval.Hours * 3600) + ($TimetoNextInterval.Minutes * 60) + $TimetoNextInterval.Seconds
         if ($TimetoNextIntervalSeconds -lt 0) {$TimetoNextIntervalSeconds = 0}
 
-        set_ConsolePosition ($Host.UI.RawUI.WindowSize.Width - 31) 2
+        set_ConsolePosition ($Host.UI.RawUI.WindowSize.Width - 31) 1
         " | Next Interval:  $TimetoNextIntervalSeconds secs..." | Out-host
         set_ConsolePosition 0 0
 

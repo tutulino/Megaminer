@@ -29,7 +29,8 @@ if ($Querymode -eq "info") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
 
-    $Pools += [pscustomobject]@{"coin" = "Aeon"; "algo" = "CryptoLight"; "symbol" = "AEON"; "server" = "mine.aeon-pool.com"; "port" = "5555"; "fee" = "0.01"}
+    $Pools += [pscustomobject]@{"coin" = "Aeon"; "algo" = "CryptoLight"; "symbol" = "AEON"; "server" = "mine.aeon-pool.com"; "port" = "5555"; "fee" = "0.01"; "User" = $CoinsWallets.get_item('AEON')}
+    $Pools += [pscustomobject]@{"coin" = "HPPcoin"; "algo" = "Lyra2h"; "symbol" = "HPP"; "server" = "pool.hppcoin.com"; "port" = "3008"; "fee" = "0"; "User" = "$Username.#Workername#"}
 
     $Pools |ForEach-Object {
         $Result += [PSCustomObject]@{
@@ -40,7 +41,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Protocol              = "stratum+tcp"
             Host                  = $_.Server
             Port                  = $_.Port
-            User                  = $CoinsWallets.get_item($_.symbol)
+            User                  = $_.User
             Pass                  = "x"
             Location              = "Europe"
             SSL                   = $false
