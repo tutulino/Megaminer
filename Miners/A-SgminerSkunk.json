@@ -7,6 +7,6 @@
     "API" : "Xgminer",
     "APIPort" : 4028,
     "Algorithms": [
-        {"Skunk":" -k skunkhash -I 20"}
+        {"Skunk":" -k skunkhash -I 23"}
     ]
 }

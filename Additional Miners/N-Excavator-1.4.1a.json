@@ -11,7 +11,6 @@
         {"Neoscrypt": "neoscrypt"},
         {"Pascal": "pascal"},
         {"Decred": "decred"},
-        {"Sia": "sia"},
         {"Lbry": "lbry"},
         {"Blake2s": "blake2s"},
         {"Ethash": "daggerhashimoto"},
