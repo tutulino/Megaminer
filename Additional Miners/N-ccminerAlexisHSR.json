@@ -1,18 +1,18 @@
 {
-    "Path" : "ccminer-alexis.exe",
-    "Uri" : "http://ccminer.org/preview/ccminer-hsr-alexis-x86-cuda8.7z",
-    "Types" : ["NVIDIA"],
-    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
-    "API" : "Ccminer",
-    "Algorithms": [
-        {"HSR":"-a hsr"},
-        {"Blake2s":"-a blake2s"},
-        {"Blakecoin":"-a blakecoin"},
-        {"Veltor":"-a veltor"},
-        {"Lyra2RE2":"-a lyra2v2"},
-        {"Nist5":"-a nist5"},
-        {"Sib":"-a sib"},
-        {"Keccak":"-a keccak -m 2"},
-        {"Lbry":"-a lbry"}
-    ]
+    "Path": "ccminer-alexis.exe",
+    "Uri": "http://ccminer.org/preview/ccminer-hsr-alexis-x86-cuda8.7z",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "Algorithms": {
+        "Blake2s": "-a blake2s",
+        "Blakecoin": "-a blakecoin",
+        "HSR": "-a hsr",
+        "Keccak": "-a keccak -m 2",
+        "Lbry": "-a lbry",
+        "Lyra2RE2": "-a lyra2v2",
+        "Nist5": "-a nist5",
+        "Sib": "-a sib",
+        "Veltor": "-a veltor"
+    }
 }

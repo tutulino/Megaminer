@@ -1,11 +1,11 @@
 {
-    "Path" : "ccminer-x64.exe",
-    "Uri" : "http://ccminer.org/preview/ccminer-2.2-skunk.7z",
-    "Types" : ["NVIDIA"],
-    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
-    "API" : "Ccminer",
-    "Algorithms": [
-        {"Bitcore":"-a bitcore"},
-        {"Timetravel":"-a timetravel"}
-    ]
+    "Path": "ccminer-x64.exe",
+    "Uri": "http://ccminer.org/preview/ccminer-2.2-skunk.7z",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "Algorithms": {
+        "Bitcore": "-a bitcore",
+        "Timetravel": "-a timetravel"
+    }
 }

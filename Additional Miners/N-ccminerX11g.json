@@ -1,10 +1,10 @@
 {
-    "Path" : "ccminer_x11gost.exe",
-    "Uri" : "https://github.com/nicehash/ccminer-x11gost/releases/download/ccminer-x11gost_windows/ccminer_x11gost.7z",
-    "Types" : ["NVIDIA"],
-    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
-    "API" : "Ccminer",
-    "Algorithms": [
-        {"Sib" : "-a sib -i 20"}
-    ]
+    "Path": "ccminer_x11gost.exe",
+    "Uri": "https://github.com/nicehash/ccminer-x11gost/releases/download/ccminer-x11gost_windows/ccminer_x11gost.7z",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "Algorithms": {
+        "Sib": "-a sib -i 20"
+    }
 }

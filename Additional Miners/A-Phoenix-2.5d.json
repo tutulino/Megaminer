@@ -2,12 +2,12 @@
     "Path": "PhoenixMiner_2.5d\\PhoenixMiner.exe",
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/PhoenixMiner_2.5d.zip",
     "SHA256": "4c9d98fb2041da99f407c6356248719603a6354a5e9ba477e20c3463f368391d",
-    "Types": ["AMD"],
+    "Type": "AMD",
     "Arguments": "-pool #SERVER#:#PORT# -wal #LOGIN# -pass #PASSWORD# -esm #ETHSTMODE# -wd 1 -r -1 -di #DEVICESCLAYMODE# -cdmport #APIPORT# -cdm 1 -amd #ALGORITHMPARAMETERS#",
     "API": "Claymore",
     "APIPort": 3333,
     "Fee": 0.0065,
-    "Algorithms": [
-        {"Ethash": ""}
-    ]
+    "Algorithms": {
+        "Ethash": ""
+    }
 }

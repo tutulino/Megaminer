@@ -1,0 +1,22 @@
+{
+    "Path": "excavator\\excavator.exe",
+    "Uri": "https://github.com/nicehash/excavator/releases/download/v1.4.3a/excavator_v1.4.3a_NVIDIA_Win64.zip",
+    "Type": "NVIDIA",
+    "GenerateConfigFile": "excavator\\#GROUPNAME#.json",
+    "PatternConfigFile": ".\\Patterns\\excavatorPattern.txt",
+    "Arguments": "-p #APIPORT# -c #GROUPNAME#.json -na ",
+    "API": "excavator",
+    "Algorithms": {
+        "Blake2s": "blake2s",
+        "CryptoNight": "cryptonight",
+        "Decred": "decred",
+        "Equihash": "equihash",
+        "Ethash": "daggerhashimoto",
+        "Keccak": "keccak",
+        "Lbry": "lbry",
+        "Lyra2RE2": "lyra2rev2",
+        "Neoscrypt": "neoscrypt",
+        "Nist5": "nist5",
+        "Pascal": "pascal"
+    }
+}

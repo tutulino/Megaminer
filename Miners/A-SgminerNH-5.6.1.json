@@ -1,21 +1,21 @@
 {
-    "Path" : "sgminer.exe",
-    "Uri" : "https://github.com/nicehash/sgminer/releases/download/5.6.1/sgminer-5.6.1-nicehash-51-windows-amd64.zip",
+    "Path": "sgminer.exe",
+    "Uri": "https://github.com/nicehash/sgminer/releases/download/5.6.1/sgminer-5.6.1-nicehash-51-windows-amd64.zip",
     "SHA256": "0e668bf0e65c0a574bc28e225aeda97586e278252700307eadf22e2d7943e348",
-    "Types" : ["AMD"],
-    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-    "API" : "Xgminer",
-    "APIPort" : 4028,
-    "Algorithms": [
-        {"Blake":"-k blake -I d"},
-        {"Blakecoin":"-k blakecoin -g 4 -I 20"},
-        {"Groestl":"-k groestlcoin -I 22"},
-        {"Fresh":"-k fresh -g 2 -w 256 -I 20"},
-        {"Keccak":"-k maxcoin -g 2 -I 10"},
-        {"Lyra2RE2":"-k lyra2rev2 -g 2 -w 64 -I 16"},
-        {"MyriadGroestl":"-k myriadcoin-groestl -g 2 -w 64 -I 16"},
-        {"Pascal":"-k pascal -g 1 -w 64 -I 21"},
-        {"ScryptN":"-k scrypt-n --nfactor 12 -I 15"},
-        {"Sib":"-k sibcoin-mod -g 2 -w 128 -I 20"}
-    ]
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Algorithms": {
+        "Blake": "-k blake -I d",
+        "Blakecoin": "-k blakecoin -g 4 -I 20",
+        "Groestl": "-k groestlcoin -I 22",
+        "Fresh": "-k fresh -g 2 -w 256 -I 20",
+        "Keccak": "-k maxcoin -g 2 -I 10",
+        "Lyra2RE2": "-k lyra2rev2 -g 2 -w 64 -I 16",
+        "MyriadGroestl": "-k myriadcoin-groestl -g 2 -w 64 -I 16",
+        "Pascal": "-k pascal -g 1 -w 64 -I 21",
+        "ScryptN": "-k scrypt-n --nfactor 12 -I 15",
+        "Sib": "-k sibcoin-mod -g 2 -w 128 -I 20"
+    }
 }

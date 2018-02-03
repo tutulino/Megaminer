@@ -1,12 +1,12 @@
 {
-    "Path" : "sgminer.exe",
-    "Uri" : "https://github.com/LIMXTEC/Xevan-GPU-Miner/releases/download/1/sgminer-xevan-5.5.0-nicehash-1-windows-amd64.zip",
+    "Path": "sgminer.exe",
+    "Uri": "https://github.com/LIMXTEC/Xevan-GPU-Miner/releases/download/1/sgminer-xevan-5.5.0-nicehash-1-windows-amd64.zip",
     "SHA256": "18184875c6570755cca1f18ed035319198d4ef1d159757c9344047b0b3c200ac",
-    "Types" : ["AMD"],
-    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-    "API" : "Xgminer",
-    "APIPort" : 4028,
-    "Algorithms": [
-        {"Xevan":"-k xevan-mod -g 2 -I 16"}
-    ]
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Algorithms": {
+        "Xevan": "-k xevan-mod -g 2 -I 16"
+    }
 }

@@ -1,19 +1,19 @@
 {
-    "Path" : "ccminer.exe",
-    "Uri" : "https://github.com/nemosminer/ccminerpolytimos/releases/download/Alexis78-1.0/ccminer-polytimos.7z",
-    "Types" : ["NVIDIA"],
-    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
-    "API" : "Ccminer",
-    "Algorithms": [
-        {"Polytimos" : "-a poly"},
-        {"Blake2s":"-a blake2s"},
-        {"Blakecoin":"-a blakecoin"},
-        {"Keccak":"-a keccak -m 2"},
-        {"Lbry":"-a lbry"},
-        {"Lyra2RE2":"-a lyra2v2"},
-        {"MyriadGroestl" : "-a myr-gr"},
-        {"Skein" : "-a skein"},
-        {"Veltor":"-a veltor"},
-        {"Nist5" : "-a nist5" }
-    ]
+    "Path": "ccminer.exe",
+    "Uri": "https://github.com/nemosminer/ccminerpolytimos/releases/download/Alexis78-1.0/ccminer-polytimos.7z",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "Algorithms": {
+        "Blake2s": "-a blake2s",
+        "Blakecoin": "-a blakecoin",
+        "Keccak": "-a keccak -m 2",
+        "Lbry": "-a lbry",
+        "Lyra2RE2": "-a lyra2v2",
+        "MyriadGroestl": "-a myr-gr",
+        "Nist5": "-a nist5",
+        "Polytimos": "-a poly",
+        "Skein": "-a skein",
+        "Veltor": "-a veltor"
+    }
 }

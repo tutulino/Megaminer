@@ -1,12 +1,12 @@
 {
-    "Path" : "sgminer.exe",
-    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/sgminer-phi-5.6.1-1-windows-amd64.zip",
+    "Path": "sgminer.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/sgminer-phi-5.6.1-1-windows-amd64.zip",
     "SHA256": "b54cd79eba20422dfefe857b4ab39c14cc980bff90f8c6fca66b5b016ae92dd3",
-    "Types" : ["AMD"],
-    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-    "API" : "Xgminer",
-    "APIPort" : 4028,
-    "Algorithms": [
-        {"PHI":"-k phi -I 20"}
-    ]
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Algorithms": {
+        "PHI": "-k phi -I 20"
+    }
 }

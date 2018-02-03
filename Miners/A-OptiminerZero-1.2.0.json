@@ -1,11 +1,11 @@
 {
-    "Path" : "optiminer-zero-win\\optiminer.exe",
-    "Uri" : "https://github.com/Optiminer/OptiminerZero/raw/master/optiminer-zero-1.2.0.zip",
+    "Path": "optiminer-zero-win\\optiminer.exe",
+    "Uri": "https://github.com/Optiminer/OptiminerZero/raw/master/optiminer-zero-1.2.0.zip",
     "SHA256": "92eb9623184a187ca1a35486aa1aa198e9e69ac2c099348d60f2b7cdb37eda89",
-    "Types" : ["AMD"],
-    "Arguments" : "-m #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #DEVICESNSGMODE# #ALGORITHMPARAMETERS#",
-    "API" : "optiminer",
-    "Algorithms": [
-        {"Zero":""}
-    ]
+    "Type": "AMD",
+    "Arguments": "-m #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #DEVICESNSGMODE# #ALGORITHMPARAMETERS#",
+    "API": "optiminer",
+    "Algorithms": {
+        "Zero": ""
+    }
 }

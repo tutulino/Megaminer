@@ -1,15 +1,15 @@
 {
-    "Path" : "mkxminer301\\mkxminer.exe",
-    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/mkxminer301.7z",
+    "Path": "mkxminer301\\mkxminer.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/mkxminer301.7z",
     "SHA256": "e979c14687e4fed11ca8a7473d92ac3599a8054d6b008d0523fc4573b30d8992",
-    "Types" : ["AMD"],
-    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# --exitsick --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-    "API" : "wrapper",
-    "APIPort" : 3333,
+    "Type": "AMD",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# --exitsick --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "wrapper",
+    "APIPort": 3333,
     "Wrap": true,
     "SSL": true,
-    "Algorithms": [
-        {"Lyra2RE2":"-I 23"},
-        {"Lyra2RE2__asm":"-I 23 --asm"}
-    ]
+    "Algorithms": {
+        "Lyra2RE2": "-I 23",
+        "Lyra2RE2__asm": "-I 23 --asm"
+    }
 }

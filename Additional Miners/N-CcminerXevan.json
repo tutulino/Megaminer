@@ -1,10 +1,10 @@
 {
-    "Path" : "ccminer.exe",
-    "Uri" : "https://github.com/krnlx/ccminer-xevan/releases/download/0.1/ccminer.exe",
-    "Types" : ["NVIDIA"],
-    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
-    "API" : "Ccminer",
-    "Algorithms": [
-        {"Xevan":"-a xevan"}
-    ]
+    "Path": "ccminer.exe",
+    "Uri": "https://github.com/krnlx/ccminer-xevan/releases/download/0.1/ccminer.exe",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "Algorithms": {
+        "Xevan": "-a xevan"
+    }
 }

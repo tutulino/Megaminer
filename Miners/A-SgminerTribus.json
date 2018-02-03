@@ -1,13 +1,13 @@
 {
-    "Path" : "sgminer.exe",
-    "Uri" : "http://ccminer.org/preview/sgminer-x64-5.3.8.zip",
+    "Path": "sgminer.exe",
+    "Uri": "http://ccminer.org/preview/sgminer-x64-5.3.8.zip",
     "SHA256": "47494c7c939d661e48675e203d52e3e423cce09b606a68f12efe9087a6ff91fd",
-    "Types" : ["AMD"],
-    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-    "API" : "Xgminer",
-    "APIPort" : 4028,
-    "Algorithms": [
-        {"Tribus":"-k tribus --shaders 2304 --lookup-gap 4 -I 21"},
-        {"Veltor":"-k veltor -I 21"}
-    ]
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Algorithms": {
+        "Tribus": "-k tribus --shaders 2304 --lookup-gap 4 -I 21",
+        "Veltor": "-k veltor -I 21"
+    }
 }

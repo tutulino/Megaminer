@@ -1,12 +1,12 @@
 {
-    "Path" : "SG-Miner-CREA-Win\\sgminer.exe",
-    "Uri" : "https://www.creativechain.org/wp-content/uploads/2017/10/SG-Miner-CREA-Win.zip",
+    "Path": "SG-Miner-CREA-Win\\sgminer.exe",
+    "Uri": "https://www.creativechain.org/wp-content/uploads/2017/10/SG-Miner-CREA-Win.zip",
     "SHA256": "ec75ed8ebe85b708a9ffc6741b059e284535a574cfe9c29deeeff15ebae58aab",
-    "Types" : ["AMD"],
-    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-    "API" : "Xgminer",
-    "APIPort" : 4028,
-    "Algorithms": [
-        {"KeccakC":"-k keccakc"}
-    ]
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Algorithms": {
+        "KeccakC": "-k keccakc"
+    }
 }

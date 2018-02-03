@@ -301,16 +301,16 @@ while ($true) {
         }
 
 
-        foreach ($Algo in ($Miner.Algorithms)) {
+        foreach ($Algo in $Miner.Algorithms.psobject.Properties) {
             $HashrateValue = 0
             $HashrateValueDual = 0
             $Hrs = $null
 
             ##Algoname contains real name for dual and no dual miners
-            $AlgoName = (($Algo.PSObject.Properties.Name -split ("_"))[0]).Trim()
-            $AlgoNameDual = (($Algo.PSObject.Properties.Name -split ("_"))[1])
+            $AlgoName = get_algo_unified_name (($Algo.Name -split ("_"))[0]).Trim()
+            $AlgoNameDual = get_algo_unified_name (($Algo.Name -split ("_"))[1])
             if ($AlgoNameDual -eq '') {$AlgoNameDual = $null}
-            $AlgoLabel = ($Algo.PSObject.Properties.Name -split ("_"))[2]
+            $AlgoLabel = ($Algo.Name -split ("_"))[2]
             if ($AlgoNameDual -eq $null) {$Algorithms = $AlgoName} else {$Algorithms = $AlgoName + "_" + $AlgoNameDual}
 
 
@@ -324,7 +324,7 @@ while ($true) {
 
                 Foreach ($PowerLimit in $PowerLimits) {
 
-                    if ($TypeGroup.type -in $Miner.Types) {
+                    if ($TypeGroup.type -eq $Miner.Type) {
                         #check group and miner types are the same
                         $Pools | Where-Object Algorithm -eq $AlgoName | ForEach-Object {   #Search pools for that algo
 
@@ -354,7 +354,7 @@ while ($true) {
                                         -replace '#PASSWORD#', $_.Pass `
                                         -replace "#GpuPlatform#", $TypeGroup.GpuPlatform  `
                                         -replace '#ALGORITHM#', $Algoname `
-                                        -replace '#ALGORITHMPARAMETERS#', $Algo.PSObject.Properties.Value `
+                                        -replace '#ALGORITHMPARAMETERS#', $Algo.Value `
                                         -replace '#WORKERNAME#', $WorkerName2 `
                                         -replace '#DEVICES#', $TypeGroup.Gpus `
                                         -replace '#DEVICESCLAYMODE#', $TypeGroup.GpusClayMode `
@@ -372,7 +372,7 @@ while ($true) {
                                             -replace '#PASSWORD#', $_.Pass `
                                             -replace "#GpuPlatform#", $TypeGroup.GpuPlatform `
                                             -replace '#ALGORITHM#', $Algoname `
-                                            -replace '#ALGORITHMPARAMETERS#', $Algo.PSObject.Properties.Value `
+                                            -replace '#ALGORITHMPARAMETERS#', $Algo.Value `
                                             -replace '#WORKERNAME#', $WorkerName2 `
                                             -replace '#DEVICES#', $TypeGroup.Gpus `
                                             -replace '#DEVICESCLAYMODE#', $TypeGroup.GpusClayMode `
@@ -559,7 +559,7 @@ while ($true) {
 
         if (($Miner | Measure-Object).count -gt 1) {
             Clear-Host; $repaintScreen = $true
-            "DUPLICATED ALGO " + $MINER.ALGORITHM + " ON " + $MINER.NAME | Out-host
+            "DUPLICATED ALGO " + $Miner.Algorithms.psobject.Properties.Name + " IN " + $Miner.Name | Out-host
             EXIT
         }
 
@@ -574,12 +574,12 @@ while ($true) {
             $_.HashRateDual = [double]$Miner.HashRateDual
             $_.SpeedReads = $Miner.SpeedReads
             $_.PowerAvg = $Miner.PowerAvg
-            $_.Hashrates = $miner.hashrates
+            $_.Hashrates = $Miner.hashrates
             $_.PoolWorkers = $Miner.PoolWorkers
             $_.PoolFee = $Miner.PoolFee
             $_.IsValid = $true #not remove, necessary if pool fail and is operative again
             $_.BestBySwitch = ""
-            $_.Arguments = $miner.Arguments
+            $_.Arguments = $Miner.Arguments
         } else {
             $_.IsValid = $false #simulates a delete
         }

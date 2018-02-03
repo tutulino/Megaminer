@@ -1,13 +1,13 @@
 {
-    "Path" : "kernel\\sgminer.exe",
-    "Uri" : "https://github.com/djm34/sgminer-msvc2015/releases/download/v0.3/kernel.rar",
+    "Path": "kernel\\sgminer.exe",
+    "Uri": "https://github.com/djm34/sgminer-msvc2015/releases/download/v0.3/kernel.rar",
     "SHA256": "538937f503cedaabd2930de486a2ad27e3ea5435a5af504c58fd8f1c3104bca4",
-    "Types" : ["AMD"],
-    "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
-    "API" : "Xgminer",
-    "APIPort" : 4028,
-    "Algorithms": [
-        {"Lyra2z":"-k lyra2z -w 32 -I 18"},
-        {"Lyra2h":"-k lyra2h -w 16 -I 16"}
-    ]
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Algorithms": {
+        "Lyra2z": "-k lyra2z -w 32 -I 18",
+        "Lyra2h": "-k lyra2h -w 16 -I 16"
+    }
 }

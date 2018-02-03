@@ -1,13 +1,13 @@
 {
-    "Path" : "ccminer.exe",
-    "Uri" : "https://github.com/tutulino/Software/releases/download/0/NVIDIA-Palgin.rar",
-    "Types" : ["NVIDIA"],
-    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
-    "API" : "Ccminer",
-    "Algorithms": [
-        {"Blakecoin":"-a blakecoin"},
-        {"Sib" : "-a sib"},
-        {"X17" : "-a x17" },
-        {"X11evo" : "-a x11evo"}
-    ]
+    "Path": "ccminer.exe",
+    "Uri": "https://github.com/tutulino/Software/releases/download/0/NVIDIA-Palgin.rar",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "Algorithms": {
+        "Blakecoin": "-a blakecoin",
+        "Sib": "-a sib",
+        "X11evo": "-a x11evo",
+        "X17": "-a x17"
+    }
 }

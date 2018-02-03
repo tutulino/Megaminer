@@ -1,14 +1,14 @@
 {
-    "Path" : "ccminer.exe",
-    "Uri" : "https://github.com/KlausT/ccminer/releases/download/8.19/ccminer-819final-cuda91-x64.zip",
-    "Types" : ["NVIDIA"],
-    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
-    "API" : "Ccminer",
-    "Algorithms": [
-        {"Groestl":"-a groestl"},
-        {"Sib" : "-a sib"},
-        {"MyriadGroestl" : "-a myr-gr"},
-        {"Keccak" : "-a Keccak -m 2"},
-        {"Neoscrypt":"-a Neoscrypt"}
-    ]
+    "Path": "ccminer.exe",
+    "Uri": "https://github.com/KlausT/ccminer/releases/download/8.19/ccminer-819final-cuda91-x64.zip",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "Algorithms": {
+        "Groestl": "-a groestl",
+        "Sib": "-a sib",
+        "MyriadGroestl": "-a myr-gr",
+        "Keccak": "-a Keccak -m 2",
+        "Neoscrypt": "-a Neoscrypt"
+    }
 }

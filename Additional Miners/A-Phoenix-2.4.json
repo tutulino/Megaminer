@@ -1,13 +1,13 @@
 {
-    "Path" : "PhoenixMiner_2.4\\PhoenixMiner.exe",
-    "Uri" : "https://github.com/yuzi-co/miners/releases/download/1/PhoenixMiner_2.4.zip",
+    "Path": "PhoenixMiner_2.4\\PhoenixMiner.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/PhoenixMiner_2.4.zip",
     "SHA256": "a116d27815b156780a8000b599ee90d76334bd2ed3f3ffc4145c0cde3b69a60d",
-    "Types" : ["AMD"],
-    "Arguments" : "-pool #SERVER#:#PORT# -wal #LOGIN# -pass #PASSWORD# -esm #ETHSTMODE# -wd 1 -r -1 -di #DEVICESCLAYMODE# -cdmport #APIPORT# -cdm 1 -amd #ALGORITHMPARAMETERS#",
-    "API" : "Claymore",
-    "APIPort" : 3333,
-    "Fee" : 0.0065,
-    "Algorithms": [
-        {"Ethash":""}
-    ]
+    "Type": "AMD",
+    "Arguments": "-pool #SERVER#:#PORT# -wal #LOGIN# -pass #PASSWORD# -esm #ETHSTMODE# -wd 1 -r -1 -di #DEVICESCLAYMODE# -cdmport #APIPORT# -cdm 1 -amd #ALGORITHMPARAMETERS#",
+    "API": "Claymore",
+    "APIPort": 3333,
+    "Fee": 0.0065,
+    "Algorithms": {
+        "Ethash": ""
+    }
 }
