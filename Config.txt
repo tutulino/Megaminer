@@ -45,10 +45,10 @@
 @@CPUMINING=DISABLED
 
 --Electricity cost, you can use this converter to get your BTC cost http://www.xe.com/es/currencyconverter/convert/?Amount=0%2C012&From=EUR&To=XBT
---Example for all day cost [{"HourStart":0,"HourEnd":23,"CostKwhBTC":0.00000105609}]
---Example for two periods cost [{"HourStart":12,"HourEnd":21,"CostKwhBTC":0.00000105609},{"HourStart":22,"HourEnd":11,"CostKwhBTC":0.00000703759}]
+--Example for all day cost [{"HourStart":0,"HourEnd":23,"CostKwh":0.105609}]
+--Example for two periods cost [{"HourStart":12,"HourEnd":21,"CostKwh":0.105609},{"HourStart":22,"HourEnd":11,"CostKwh":0.703759}]
 
-@@ELECTRICITYCOST=[{"HourStart":0,"HourEnd":23,"CostKwhBTC":0.00000105609}]
+@@ELECTRICITYCOST=[{"HourStart":0,"HourEnd":23,"CostKwh":0}]
 
 
 
