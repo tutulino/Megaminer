@@ -471,7 +471,7 @@ NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YOU MUST BENCHMARK A
 
 
 ------------------------------------------------
-5.3
+6.0
 
 --FEATURES CHANGES:
 
