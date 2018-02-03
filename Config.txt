@@ -61,14 +61,20 @@
 -- **********************************************************************************************************
 
 
--- Profit recheck interval time (in seconds - less than 600 not recommended)
+
+-- Profit recheck interval time (in seconds) for each kind of pool
 -- This interval recalculates and selects the most profitable algorithm 
 
-@@INTERVAL=600
+@@INTERVAL_PPS=180
+@@INTERVAL_PPLS=1800
 
--- Benchmarks interval time (less than 300 not recommended for GPU due to miners ramp time)
+-- Benchmarks interval time (less than 300 not recommended for GPU due to miners ramp time), if you want to use automatic gpu power limit configuration is recomended at least 600
 
-@@BENCHMARKTIME=300
+@@BENCHMARKTIME=600
+
+- When enabled miners stats are updated while real mining, if disabled miner stats only are updated while benchmarking (ENABLED/DISABLED)
+
+@@LIVESTATSUPDATE=ENABLED
 
 -- Screen to be shown at script start-up (WALLETS/CURRENT/HISTORY/PROFITS/STATS)
 
@@ -91,13 +97,43 @@
 
 
 
--- [OPTIONAL] GPU Groups
+-- [OPTIONAL] GPU Groups/PowerLimits
+-- if you don´t set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
+-- If you activate this option miners ports will be calculated dynamic mode, some software like ethmonitoring will not work due to miner dynamic port assignation
 -- You can group your cards as you want. It's recommended to create a group for each card model in your rig, each group will be benchmarked and run separately (you can identify your GPU id's by launching GpuList.bat)
--- If you change any of your group names you must delete the stats folder contents and re-run benchmarks.
--- Type must be NVIDIA or AMD, if you dont set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
--- If you activate this option miners ports will be calculated dynamic mode, some software like ethmonitoring will not work
--- Example for rig with 3 NVIDIA gpu, each gpu alone @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0"}]
--- Example for rig with 5 NVIDIA and 2 AMD @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1"} ]
+-- Type must be NVIDIA or AMD, 
+-- You can set Powerlimits (MM must run in administrator mode) for each NVIDIA group, MM will benchmark all miners with maximum value, done this, when a miner is maximum profit candidate MM will benchmark other power limits of tahat miner to find best. (zero means MM will not change Power Limit) 
+-- Example1: @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"}]
+-- Example2: @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"100,90,80"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
 
 
---@@GPUGROUPS= XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+--@@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"110,100,90,80"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
+
+
+
+
+--[OPTIONAL]  Pools profit correction factors
+--Usually pools revenue is overestimated, this factor allows manual correction (Profit= ReportedPoolProfit * @@POOLPROFITFACTOR)
+--This values are based on experience
+
+
+@@POOLPROFITFACTOR_AHASHPOOL=0.7
+@@POOLPROFITFACTOR_NICEHASH=1
+@@POOLPROFITFACTOR_MININGPOOLHUB=0.8
+@@POOLPROFITFACTOR_ZPOOL=0.7
+@@POOLPROFITFACTOR_ZERGPOOL=0.7
+
+
+--Enabled or disable detailed log
+
+@@DEBUGLOG=DISABLED
+
+
+--Delayed miners closing, while new miner is starting, old one continue mining for specified seconds
+
+@@DELAYCLOSEMINERS=0
+ 
+ 
+--Min number of workers in a pool to be considered as "good"
+
+@@MINWORKERS=20

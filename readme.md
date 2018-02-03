@@ -13,7 +13,9 @@ SUPRNOVA -- registration required, one registration for all pools except bitcoin
 UNIMINING -- No registration, No autoexchange, need wallet for each coin on config.txt
 WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to us
 YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin
+ZERGPOOL -- Anonymous, autoexchange to selected coin in config.txt
 ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
+
 
 ---- INSTRUCTIONS ----------------------------------------------
 
@@ -30,12 +32,11 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 	- PercentToSwitch = Overrides config.txt config, percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit in specified percent (optional)
  
 
-3. Firt time, software will be donwloaded from miners github repositories and 
-	- As usual, some miners are detected as virus by Windows Defender, to avoid this you must set your instalation directory as excluded on Windows Defender 
+3. Firt time, software will be donwloaded from miners github repositories
+	- As usual, some miners are detected as virus by your Antivirus, to avoid this you must set your instalation directory as excluded. For Windows Defender MM path is excluded automatic
 
 4. Your system will be benchmarked (long process)
-	- After benchmark check profits are razonables, sometimes miner return hashrates peaks. If you need repeat benchmark delete file from stats folder
-
+ 
 5. Make profit
 	- Except Nicehash (where you sell your power to indicated price), pools always overstimated profit, you must understand profit column as a way to get best algoritmh. Your real profit will be lower.
 
@@ -45,7 +46,6 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 	- for advanced users, you can create miners or pools if are based on existing one.
 
  
-
 
 ---- UPGRADE PROCEDURE ------------------------------------
 
@@ -96,8 +96,9 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -Option to switch miner only if profit is a percent upper than actual (defined by you)
 
+-Automatic NVIDIA Gpu Power limit, you can define any power limit values (90%, 80%, etc) for each winner miner/algo MM checks what of that power limit point is more profitable at each interval based in power cost, hashrate and reward.
 
-
+-Delayed miners closing, while new miner is starting, old one continue mining
 
 ----- DISCLAIMER ---- ------------------------------------------
 

@@ -5,7 +5,6 @@
 "Types" : ["AMD"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# --exitsick  --asm --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
 "API" : "Xgminer",
-"Wrap" : false,
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [

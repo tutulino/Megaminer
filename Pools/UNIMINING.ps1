@@ -14,6 +14,7 @@ $ActiveOnAutomatic24hMode = $true
 $AbbName = 'UNI'
 $WalletMode ='WALLET'
 $Result = @()
+$RewardType='PPS'
 
 
 
@@ -31,6 +32,7 @@ if ($Querymode -eq "info"){
                     ApiData = $True
                     AbbName=$AbbName
                     WalletMode=$WalletMode
+                    RewardType=$RewardType
                          }
     }
 
@@ -192,6 +194,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 WalletSymbol = $Uni_Simbol
                                 PoolName = $Name
                                 Fee = $coin.Fees/100
+                                RewardType=$RewardType
                                 }
                         
                 

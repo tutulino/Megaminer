@@ -5,7 +5,6 @@
   "Types" : ["AMD"],
   "Arguments" : "-zpool #PROTOCOL#://#SERVER#:#PORT# -zwal #LOGIN# -zpsw #PASSWORD# -allpools 1 -di #DEVICESCLAYMODE# -mport #APIPORT# #ALGORITHMPARAMETERS#",
   "API" : "ClaymoreV2",
-  "Wrap" : false,
   "Fee" : "0.025",
   "APIPort" : 3333,
   "DualMining": false,

@@ -13,6 +13,7 @@ $ActiveOnAutomaticMode = $false
 $AbbName='B.FTRY'
 $WalletMode = "NONE"
 $Result=@()
+$RewardType='PPLS'
 
 
 
@@ -25,6 +26,7 @@ if ($Querymode -eq "info"){
                     ApiData = $true
                     AbbName=$AbbName
                     WalletMode = $WalletMode
+                    RewardType=$RewardType
                           }
     }
 
@@ -62,6 +64,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                                     PoolName = $Name
                                     WalletMode      = $WalletMode
+                                    RewardType=$RewardType
 
                                 }
 

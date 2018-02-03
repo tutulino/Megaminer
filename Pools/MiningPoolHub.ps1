@@ -14,6 +14,7 @@ $ActiveOnAutomatic24hMode = $false
 $AbbName="MPH"
 $WalletMode="APIKEY"
 $Result=@()
+$RewardType='PPLS'
 
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
@@ -27,6 +28,7 @@ if ($Querymode -eq "info"){
                     ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
                     AbbName=$AbbName
                     WalletMode=$WalletMode
+                    RewardType=$RewardType
                          }
     }
 
@@ -165,7 +167,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             Pass          = "x"
                                             Location      = $Location
                                             SSL           = $false
-                                            Symbol        = ""
+                                            Symbol        = $MiningPoolHub_Coin
                                             AbbName       = $AbbName
                                             ActiveOnManualMode    = $ActiveOnManualMode
                                             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
@@ -176,6 +178,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             OriginalCoin = $MiningPoolHub_OriginalCoin
                                             Fee = 0.009
                                             EthStMode = 3
+                                            RewardType=$RewardType
                                             }
                         }
 

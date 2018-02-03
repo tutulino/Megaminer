@@ -14,6 +14,7 @@ $ActiveOnAutomatic24hMode = $true
 $AbbName = 'ITY'
 $WalletMode ='WALLET'
 $Result = @()
+$RewardType='PPS'
 
 
 
@@ -31,6 +32,7 @@ if ($Querymode -eq "info"){
                     ApiData = $True
                     AbbName=$AbbName
                     WalletMode=$WalletMode
+                    RewardType=$RewardType
                          }
     }
 
@@ -160,9 +162,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                                     PoolWorkers = $Ita_Request.$_.workers
                                                     WalletMode=$WalletMode
                                                     WalletSymbol=$Currency
-
                                                     PoolName = $Name
                                                     Fee = $Ita_Request.$_.Fees/100
+                                                    RewardType=$RewardType
                                         
                                     }
                                 }

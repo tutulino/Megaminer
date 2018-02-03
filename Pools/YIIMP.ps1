@@ -14,6 +14,7 @@ $ActiveOnAutomatic24hMode = $true
 $AbbName = 'YIIMP'
 $WalletMode ='WALLET'
 $Result = @()
+$RewardType='PPS'
 
 
 
@@ -31,6 +32,7 @@ if ($Querymode -eq "info"){
                     ApiData = $True
                     AbbName=$AbbName
                     WalletMode=$WalletMode
+                    RewardType=$RewardType
                          }
     }
 
@@ -144,7 +146,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Algorithm     = $Yiimp_Algorithm
                                 Info          = $Yiimp_coin
                                 Price         = [Double]$coin.estimate / $Divisor
-                                Price24h      = [Double]$coin.actual_last24h / $Divisor
+                                Price24h      = [Double]$coin.estimate_last24h  / $Divisor
                                 Protocol      = "stratum+tcp"
                                 Host          = "yiimp.eu"
                                 Port          = $coin.port
@@ -163,6 +165,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Walletsymbol = $Yiimp_Symbol
                                 PoolName = $Name
                                 Fee = ($Request2.($coin.algo).Fees)/100
+                                RewardType=$RewardType
                                 }
                         
                 

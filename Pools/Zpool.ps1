@@ -9,12 +9,13 @@
 #. .\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
-$ActiveOnManualMode    = $false
+$ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
 $AbbName ='ZPOOL'
 $WalletMode='WALLET'
 $Result=@()
+$RewardType='PPS'
 
            
 
@@ -32,6 +33,7 @@ if ($Querymode -eq "info"){
                     ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
                     AbbName=$AbbName
                     WalletMode=$WalletMode
+                    RewardType=$RewardType
                          }
     }
 
@@ -144,10 +146,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     "keccak"{$Divisor *= 1000}
                                     }
 
-                                
+                                    $Currency= get_config_variable "CURRENCY"
+                                    
                                     $Result+=[PSCustomObject]@{
                                             Algorithm     = $Zpool_Algo
-                                            Info          = $null
+                                            Info          = $Zpool_Algo
                                             Price         = $coin.estimate_current / $Divisor
                                             Price24h      = $coin.estimate_last24h / $Divisor
                                             Protocol      = "stratum+tcp"
@@ -166,6 +169,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             WalletSymbol=$Currency
                                             PoolName = $Name
                                             Fee = $coin.Fees/100
+                                            RewardType=$RewardType
                                             }
                            }
 

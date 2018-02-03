@@ -1,0 +1,19 @@
+{
+    "Path" : ".\\Bin\\NVIDIA-PalginNeo\\hsrminer_neoscrypt.exe",
+    "ExtractionPath" : ".\\Bin\\NVIDIA-PalginNeo\\",
+    "Uri" : "https://github.com/palginpav/hsrminer/raw/master/Neoscrypt%20algo/Windows/hsrminer_neoscrypt.exe",
+    "Types" : ["NVIDIA"],
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#  -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API" : "wrapper",
+    "Wrap" : true,
+    "APIPort": 4068,
+    "Fee": 0.01,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+                    {"neoscrypt":""}
+                  ]
+    
+
+    }
+    

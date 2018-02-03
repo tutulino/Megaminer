@@ -5,7 +5,6 @@
 "Types" : ["AMD"],
 "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
 "API" : "Xgminer",
-"Wrap" : false,
 "Fee" : 0,
 "Dualmining":false,
 "APIPort" : 4028,

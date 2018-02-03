@@ -14,6 +14,7 @@ $ActiveOnAutomatic24hMode = $true
 $AbbName= 'H.RFRY'
 $WalletMode='WALLET'
 $Result=@()
+$RewardType='PPS'
 
 
 
@@ -31,6 +32,7 @@ if ($Querymode -eq "info"){
                     ActiveOnAutomatic24hMode=$ActiveOnAutomatic24hMode
                     AbbName=$AbbName
                     WalletMode=$WalletMode
+                    RewardType=$RewardType
                          }
     }
 
@@ -144,6 +146,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                                 WalletSymbol    = $currency
                                                 PoolName = $Name
                                                 Fee = $Request.$_.Fees/100
+                                                RewardType=$RewardType
                                     
                                 }
                             

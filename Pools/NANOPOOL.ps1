@@ -14,6 +14,7 @@ $ActiveOnAutomatic24hMode=$false
 $AbbName='NP'
 $WalletMode="WALLET"
 $Result=@()
+$RewardType='PPLS'
 
 if ($Querymode -eq "info"){
     $Result = [PSCustomObject]@{
@@ -24,6 +25,7 @@ if ($Querymode -eq "info"){
                     ApiData = $true
                     AbbName=$AbbName
                     WalletMode=$WalletMode
+                    RewardType=$RewardType
                           }
     }
 
@@ -43,15 +45,19 @@ if ($Querymode -eq "SPEED")    {
     try {
         $http="https://api.nanopool.org/v1/"+$Info.symbol.tolower()+"/history/"+$Info.user
         $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+
+        if ($Request.data -ne "") {
+                $Result=[PSCustomObject]@{
+                    PoolName =$name
+                    Workername = $Info.WorkerName
+                    Hashrate = ($Request.data)[0].hashrate
+                }
+        }
     }
     catch {}
 
 
-    $Result=[PSCustomObject]@{
-                            PoolName =$name
-                            Workername = $Info.WorkerName
-                            Hashrate = ($Request.data)[0].hashrate
-                        }
+    
 }
 
 
@@ -144,6 +150,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         OriginalCoin = $_.Coin
                                         Fee = $_.fee
                                         EthStMode = 0
+                                        RewardType=$RewardType
                                         
                                 }
 

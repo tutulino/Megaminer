@@ -440,14 +440,13 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 5.2
 
 
-*More acurated benchmark system, now benchmark is also updated while mining
+*More acurated benchmark system, now benchmarks are also updated while mining
 *Power cost now affects profit (real for NVIDIA, estimated model based for AMD)
 *Added Power, revenues, efficiency and pool detected hashrate, to active miners section, note: this speed is usually based on las 5 minutes shares and is pools refresh speed dependant.
 *Redesigned and more informatives log files
 *Added screen info while interval is starting
 
 *Added power limit percent and Gpu Group in current screen
-*Minimum donation is now 5 minutes per day (0.34%)
 *New stats screen (old screens are reorganize)
 *Changed default miner intensities and config options to ensure default options stability
 *Removed delay close miner option from code due to unstable executions
@@ -467,4 +466,60 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Fixed: donation time not used for donation if next interval is for benchmark
 
 NOTE: YOU MUST ADD THIS VARIABLE TO CONFIG.TXT OR CONFIGURE FROM NEW RELEASE WHERE IT IS INCLUDED : @@ELECTRICITYCOST
-NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YU MUST BENCHMARK AGAIN
+NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YOU MUST BENCHMARK AGAIN
+
+
+
+------------------------------------------------
+5.3
+
+--FEATURES CHANGES:
+
+*NVIDIA Automatic Gpu Power limit, you can define any power limit values (90%, 80%, etc) for each winner miner/algo MM checks what of that power limit point is more profitable at each interval based in power cost, hashrate and reward. (REQUIRES MM RUN AS ADMIN)
+*Added pool´s profit  correction factor config option (recommended if powerlimit feature is used)
+*New gpu activity based watchdog, if gpu group activity goes down miner is considered dead and it will be killed.
+*Added Different config interval time based on pool reward type (PPLS/PPS)
+*Changed @@electricitycost config variable to local currency instead of BTC
+*Changed some pool filenames (check your old .bat files)
+*Added config option for enable/disable live stats updating.
+*Added miner speed abnormal peaks detection (not recorded as valid speed now)
+*Reactivated option for delay closing miners
+*Enabled manual mine selection for algo level pools (zpool and ahashpool)
+*Added config variable to define a minimum number of workers of a pool to be considered as "good" (this avoid you mine in a pool with few people)
+
+
+
+---POOLS CHANGES:
+*Added ZergPool
+*Removed altminer.net due to pool api restrictions
+*Moved config for Whattomine virtual pool (pools selected/pools order) to config file and optimized working
+
+---MINERS CHANGES:
+*Added Palgin Neoscrypt miner (via API) to additional miners folders - THIS MINER ONLY WORKS IF NO MORE THAN ONE NVIDIA TYPE GPUGROUP
+*Added Palgin Neoscrypt miner (via wrapper) to additional miners folders - THIS MINER NEEDS A MINIMUM OF 600s-900s BENCHMARK TIME TO WORK, IF YOU ONLY HAVE ONE NVIDIA GPU GROUP USE API VERSION
+*Updated excavator to 1.4.3a and moved to miners folders, stability problems solved
+*Updated xmrcast to 0.81
+*Updated cpu miner jaydee to 3.7.10
+*Updated Claymore Dual to 10.5
+*Updated ccminer klausT to 8.19
+*Updated bminer to 5.3.0
+*Updated Dtsm-equihash to 0.5.8
+*Changed Claymore Dual port to read only mode due to security bug.
+*Moved Nsgminer to additional miners folders due to instability
+*Moved Dual miners to additional miners folders due to low profit and high number of benchmarks
+
+---BUG FIXES:
+*Fixed: Ccminer tpruvot lyra2v2 referencing lyra2z
+*Fixed: Stats screen time value bad calculation
+*Fixed: Nvidia smi values not showing for some gpu models
+*Fixed: Claymore Crypto fee error
+*Fixed: Sgminer Phi password protected
+*Fixed: All Jaydee CPU miners pointing SSE2
+*Fixed: Wallet coins are not shown for Mining pool hub
+*Fixed: Ccminer Alexis miner download url
+*Fixed: Current screen for AMD cards
+
+
+--RELEASE NOTES
+This release changes next config variables: @@ELECTRICITYCOST,@@GPUGROUPS,@@LIVESTATSUPDATE,@@INTERVAL,@@DEBUGLOG,@@DELAYCLOSEMINERS,@@MINWORKERS
+Older stats are not compatibles

@@ -6,16 +6,13 @@
     "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API" : "Ccminer",
     "Fee" : 0,
-    "Wrap" : false,
     "Dualmining":false,
     "APIPort" : 4068,
     "PrelaunchCommand":"",
     "Algorithms": [
-                    
-
                     {"hsr":"-a hsr"},
-                    {"blake2s":"-a blake2s"},
                     {"blakecoin":"-a blakecoin"},
+                    {"blake2s":"-a blake2s"},
                     {"veltor":"-a veltor"},
                     {"lyra2v2":"-a lyra2v2"},
                     {"nist5":"-a nist5"},

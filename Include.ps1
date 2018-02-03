@@ -176,17 +176,23 @@ function Query_TCPPort {
 #************************************************************************************************************************************************************************************
 
 
-function Kill_ProcessId {
+function Kill_Process($Process) {
 
-    param(
-        [Parameter(Mandatory = $true)]
-        [int]$ProcessId
-        )
-
+    
     try {
-        $_.Process.CloseMainWindow() | Out-Null
-        Start-Sleep 2
-        Stop-Process $ProcessId -force -wa SilentlyContinue -ea SilentlyContinue 
+        if ((get-process |Where-Object id -eq $Process.Id) -ne $null) {
+            $Process.CloseMainWindow() | Out-Null
+            Writelog ("Closed Process "+[string]$Process.Id) $LogFile $false        
+            Start-Sleep 2
+            }
+        else 
+            { Writelog ("Process "+[string]$Process.Id+" not exists now") $LogFile $false    }
+        
+        if ((get-process |Where-Object id -eq $Process.Id) -ne $null) {
+            Stop-Process $Process.Id -force -wa SilentlyContinue -ea SilentlyContinue 
+            Writelog ("Killed Process"+[string]$Process.Id) $LogFile $false           
+            }
+        
     } catch {}
 }
 
@@ -214,17 +220,17 @@ function get_gpu_information ($Types) {
                             GpuId              = $GpuId
                             GpuGroup          = $GpuGroup
                             gpu_name           = $SMIresultSplit[0] 
-                            utilization_gpu    = [int]($SMIresultSplit[1] -replace '%','')
-                            utilization_memory = [int]($SMIresultSplit[2] -replace '%','')
-                            temperature_gpu    = [int]($SMIresultSplit[3] -replace '%','')
-                            power_draw         = [int]($SMIresultSplit[4] -replace 'W','')
-                            power_limit        = [int]($SMIresultSplit[5] -replace 'W','')
-                            FanSpeed           = [int]($SMIresultSplit[6] -replace '%','')
+                            utilization_gpu    = if ($SMIresultSplit[1] -ne "[Not Supported]") {[int]($SMIresultSplit[1] -replace '%','')} else {$null}
+                            utilization_memory = if ($SMIresultSplit[2] -ne "[Not Supported]") {[int]($SMIresultSplit[2] -replace '%','')} else {$null}
+                            temperature_gpu    = if ($SMIresultSplit[3] -ne "[Not Supported]") {[int]($SMIresultSplit[3] -replace '%','')} else {$null}
+                            power_draw         = if ($SMIresultSplit[4] -ne "[Not Supported]") {[int]($SMIresultSplit[4] -replace 'W','')} else {$null}
+                            power_limit        = if ($SMIresultSplit[5] -ne "[Not Supported]") {[int]($SMIresultSplit[5] -replace 'W','')} else {$null}
                             pstate             = $SMIresultSplit[7]
-                            ClockGpu           = [int]($SMIresultSplit[8] -replace 'Mhz','')
-                            ClockMem           = [int]($SMIresultSplit[9] -replace 'Mhz','')
-                            Power_MaxLimit     =  [int]($SMIresultSplit[10] -replace 'W','')
-                            Power_DefaultLimit  =  [int]($SMIresultSplit[11] -replace 'W','')
+                            FanSpeed           = if ($SMIresultSplit[6] -ne "[Not Supported]") {[int]($SMIresultSplit[6] -replace '%','')} else {$null}
+                            ClockGpu           = if ($SMIresultSplit[8] -ne "[Not Supported]") {[int]($SMIresultSplit[8] -replace 'Mhz','')} else {$null}
+                            ClockMem           = if ($SMIresultSplit[9] -ne "[Not Supported]") {[int]($SMIresultSplit[9] -replace 'Mhz','')} else {$null}
+                            Power_MaxLimit     = if ($SMIresultSplit[10] -ne "[Not Supported]") { [int]($SMIresultSplit[10] -replace 'W','')} else {$null}
+                            Power_DefaultLimit = if ($SMIresultSplit[11] -ne "[Not Supported]") {[int]($SMIresultSplit[11] -replace 'W','')} else {$null}
                         }
                         if ($Card.Power_DefaultLimit -gt 0) { $card |add-member Power_limit_percent ([math]::Floor(($Card.power_limit*100) / $Card.Power_DefaultLimit))}
 
@@ -242,12 +248,12 @@ function get_gpu_information ($Types) {
 
                   #ADL
                     $GpuId=0
-
-                    invoke-expression "./OverdriveN"  | ForEach-Object {
+ 
+                    invoke-expression "./OverdriveN"  | Where-Object {$_ -like "*E4A"} | ForEach-Object {
               
                         $AdlResultSplit = $_ -split (",")   
 
-                            $GpuId=[int]$AdlResultSplit[0]
+                           
                     
                             $GpuGroup=($Types  | where-object type -eq 'AMD' |where-object GpusArray -contains $GpuId ).groupname
 
@@ -256,6 +262,7 @@ function get_gpu_information ($Types) {
                                     Type               = 'AMD'
                                     GpuId              = $GpuId 
                                     GpuGroup           = $GpuGroup
+                                    GpuAdapterId       =[int]$AdlResultSplit[0]
                                     FanSpeed           = [int][int]([int]$AdlResultSplit[1] /[int]$AdlResultSplit[2]*100)
                                     ClockGpu           = [int]([int]($AdlResultSplit[3] / 100))
                                     ClockMem           = [int]([int]($AdlResultSplit[4] / 100))
@@ -273,6 +280,8 @@ function get_gpu_information ($Types) {
                                     Name               = $AdlResultSplit[8]
                                     UDID               = $AdlResultSplit[9]
                                     }
+
+                            $GpuId++
                           }               
     
                           
@@ -407,10 +416,10 @@ Function get_config_variable {
 
         $A=Get-Content config.txt | Where-Object {$_ -like $SearchPattern} 
         $A | ForEach-Object {$content += ($_ -split '=')[1]}
-        if (($content | Measure-Object).count -gt 1) {$var=$content} else {$var=[string]$content}
+        if (($content | Measure-Object).count -gt 1) {$var=$content} else {$var=[string]$content[0]}
         if ($Var -ne $null) {($Var.TrimEnd()).TrimStart()}
        
-        
+   
 }
 
 
@@ -453,6 +462,7 @@ Function Get_Mining_Types () {
                                                             GroupName ="NVIDIA"
                                                             Type = "NVIDIA"
                                                             Gpus = (get_comma_separated_string 0 $NumberNvidiaGPU)
+                                                            Powerlimits="0"
                                                             }
                                                 }
 
@@ -460,8 +470,9 @@ Function Get_Mining_Types () {
                                             $Types0 += [pscustomobject] @{ 
                                                             GroupName = "AMD"
                                                             Type = "AMD"
-                                                            Gpus = (get_comma_separated_string 0 $NumberAmdGPU )
-                                                                    }
+                                                            Gpus = (get_comma_separated_string 0 $NumberAmdGPU)
+                                                            Powerlimits="0"
+                                                            }
                                                         }
                                                         
 
@@ -471,7 +482,7 @@ Function Get_Mining_Types () {
         if  (
                 ((get_config_variable "CPUMINING") -eq 'ENABLED' -and ($Filter |Measure-Object).count -eq 0)   -or  ((compare-object "CPU" $Filter -IncludeEqual -ExcludeDifferent |Measure-Object).count -gt 0)
             ) 
-            {$Types0+=[pscustomobject]@{GroupName="CPU";Type="CPU"}}         
+            {$Types0+=[pscustomobject]@{GroupName="CPU";Type="CPU";PowerLimits="0"} }       
 
 
         $c=0
@@ -485,8 +496,15 @@ Function Get_Mining_Types () {
                                         $_ | Add-Member GpusNsgMode ("-d "+$_.gpus -replace ',',' -d ')
                                         $_ | Add-Member GpuPlatform (Get_Gpu_Platform $_.Type)
                                         $_ | Add-Member GpusArray ($_.gpus -split ",")
+                                        $Pl=@()
+                                        ($_.PowerLimits -split ',') |foreach-object {$Pl+=[int]$_} 
+                                        $_.PowerLimits = $Pl |Sort-Object -Descending
+                                        
+                                        if ($_.PowerLimits.count -eq 0 -or $_.type -eq 'AMD') {$_.PowerLimits=[array](0) }
 
                                         $Types+=$_
+
+                                       
                                         }
                         }
                         
@@ -511,9 +529,10 @@ Function WriteLog {
     )
   
 
-    
-    [string](get-date)+"...... "+$Message | Add-Content  -Path $LogFile -Force
-    if ($SendToScreen) { $Message | out-host}
+    if ($message -ne $null -and $message -ne "") {
+            [string](get-date)+"...... "+$Message | Add-Content  -Path $LogFile -Force
+            if ($SendToScreen) { $Message | out-host}
+        }
 
     #if ($object -ne $null) {$object | convertto-json | Set-Content  -Path $LogFile}
     
@@ -730,6 +749,14 @@ function Get_Live_HashRate {
                                 }
 
                       }
+
+
+            "palgin" {
+                        $Request = Invoke_TcpRequest $server $port  "summary" 5
+                        $Data = $Request -split ";"
+                        $HashRate = [double]($Data[5] -split '=')[1] *1000
+                   }
+                
             "ccminer" {
                 
                     $Request = Invoke_TcpRequest $server $port  "summary" 5
@@ -738,21 +765,14 @@ function Get_Live_HashRate {
 
 
                   }
-            "nicehashequihash" {
-                
-
-                    $Request = Invoke_TcpRequest $server $port  "status" 5
-                    $Data = $Request | ConvertFrom-Json
-                    $HashRate = $Data.result.speed_hps
-                    if ($HashRate -eq $null) {$HashRate = $Data.result.speed_sps}
-
-                 }
             "excavator" {
                     $Message = @{id = 1; method = "algorithm.list"; params = @()} | ConvertTo-Json -Compress
                     $Request = Invoke_TcpRequest $server $port $message 5
-                    $Data = ($Request | ConvertFrom-Json).Algorithms
-                    $HashRate = [Double](($Data.workers.speed) | Measure-Object -Sum).Sum
 
+                    if ($Request -ne "" -and $request -ne $null) {
+                                $Data = ($Request | ConvertFrom-Json).Algorithms
+                                $HashRate = [Double](($Data.workers.speed) | Measure-Object -Sum).Sum
+                                }
                   }
             "ewbf" {
                     $Message = @{id = 1; method = "getstat"} | ConvertTo-Json -Compress
@@ -761,7 +781,6 @@ function Get_Live_HashRate {
                     $HashRate = [Double](($Data.result.speed_sps) | Measure-Object -Sum).Sum
                     }
             "claymore" {
-
 
                     $Request = Invoke_httpRequest $Server $Port "" 5
                     if ($Request -ne "" -and $request -ne $null) {
@@ -1093,13 +1112,12 @@ function Get_Algo_Divisor {
 
                     $Divisor = 1000000000
                     
-                    switch($Algo)
+                    switch(get_algo_unified_name $Algo)
                     {
                         "skein"{$Divisor *= 1000}
                         "equihash"{$Divisor /= 1000}
                         "blake2s"{$Divisor *= 1000}
                         "blakecoin"{$Divisor *= 1000}
-                        "decred"{$Divisor *= 1000}
                         "blake14r"{$Divisor *= 1000}
                         "keccakc"{$Divisor *= 1000}
                         "yescrypt"{$Divisor /= 1000}
@@ -1249,10 +1267,11 @@ function Get_Hashrates  {
         [String]$MinerName,
         [Parameter(Mandatory = $true)]
         [String]$GroupName,
-        [Parameter(Mandatory = $false)]
-        [String]$AlgoLabel,
         [Parameter(Mandatory = $true)]
-        [String]$Powerlimit
+        [String]$Powerlimit,
+        [Parameter(Mandatory = $false)]
+        [String]$AlgoLabel
+
         
 
     )
@@ -1260,13 +1279,18 @@ function Get_Hashrates  {
  
 
     if ($AlgoLabel -eq "") {$AlgoLabel='X'}
-    $Pattern=$MinerName+"_"+$Algorithm+"_"+$GroupName+"_"+$AlgoLabel+"_PL"+$PowerLimit+"_HashRate.txt"
-
+    $Pattern=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_"+$GroupName+"_"+$AlgoLabel+"_PL"+$PowerLimit+"_HashRate.txt"
     
 
-    try {$Content=(Get-ChildItem ($PSScriptRoot+"\Stats")  | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {}
+    if (test-path -path $pattern) {
+            $Content=(Get-Content -path $pattern)
+            try {$Content=$Content| ConvertFrom-Json} catch { #if error from convert from json delete file
+                    writelog "Corrupted file $Pattern, deleting"
+                    remove-item -path $pattern
+                } 
+            }
 
-    
+
     if ($Content -eq $null) {$Content=@()}
     $content
     
@@ -1308,6 +1332,77 @@ function Set_Hashrates {
 
 
 
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+function Get_Stats {
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]$Algorithm,
+        [Parameter(Mandatory = $true)]
+        [String]$MinerName,
+        [Parameter(Mandatory = $true)]
+        [String]$GroupName,
+        [Parameter(Mandatory = $true)]
+        [String]$Powerlimit,
+        [Parameter(Mandatory = $false)]
+        [String]$AlgoLabel
+
+        
+
+    )
+
+ 
+
+    if ($AlgoLabel -eq "") {$AlgoLabel='X'}
+    $Pattern=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_"+$GroupName+"_"+$AlgoLabel+"_PL"+$PowerLimit+"_stats.txt"
+
+
+    if (test-path -path $pattern) {
+            $Content=(Get-Content -path $pattern)
+            try {$Content=$Content| ConvertFrom-Json} catch { #if error from convert from json delete file
+                    writelog "Corrupted file $Pattern, deleting"
+                    remove-item -path $pattern
+                } 
+            }
+   
+    $content
+    
+
+}
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+#************************************************************************************************************************************************************************************
+
+
+function Set_stats{
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]$Algorithm,
+        [Parameter(Mandatory = $true)]
+        [String]$MinerName,
+        [Parameter(Mandatory = $true)]
+        [String]$GroupName,
+        [Parameter(Mandatory = $false)]
+        [String]$AlgoLabel,
+        [Parameter(Mandatory = $true)]
+        [pscustomobject]$value,
+        [Parameter(Mandatory = $true)]
+        [String]$Powerlimit
+    )
+
+
+    if ($AlgoLabel -eq "") {$AlgoLabel='X'}
+ 
+    $Path=$PSScriptRoot+"\Stats\"+$MinerName+"_"+$Algorithm+"_"+$GroupName+"_"+$AlgoLabel+"_PL"+$PowerLimit+"_stats.txt"
+   
+   
+    $Value | Convertto-Json | Set-Content  -Path $Path
+    
+
+    
+}
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
@@ -1385,6 +1480,16 @@ function clear_log{
 
     $Files |ForEach-Object {Remove-Item $_.fullname}
 
+    
+    $TargetFolder = "."
+    $Extension = "wrapper*.txt"
+
+    $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse 
+    $Files |ForEach-Object {Remove-Item $_.fullname}
+    
+ 
+    
+
 }
 
 
@@ -1399,21 +1504,22 @@ function get_WhattomineFactor ([string]$Algo) {
    #WTM json is for 3xAMD 480 hashrate must adjust, 
    # to check result with WTM set WTM on "Difficulty for revenue" to "current diff" and "and sort by "current profit" set your algo hashrate from profits screen, WTM "Rev. BTC" and MM BTC/Day must be the same
             
-            switch ($_.Algo)
+            switch ($Algo)
                         {
-                                "Ethash"{$WTMFactor=79500000}
-                                "Groestl"{$WTMFactor=54000000}
+                                "Ethash"{$WTMFactor=84000000}
+                                "Groestl"{$WTMFactor=63900000}
                                 "Myriad-Groestl"{$WTMFactor=79380000}
                                 "X11Gost"{$WTMFactor=20100000}
                                 "Cryptonight"{$WTMFactor=2190}
                                 "equihash"{$WTMFactor=870}
                                 "lyra2v2"{$WTMFactor=14700000}
                                 "Neoscrypt"{$WTMFactor=1950000}
-                                "Lbry"{$WTMFactor=285000000}
-                                "Blake2b"{$WTMFactor=2970000000} 
-                                "Blake14r"{$WTMFactor=4200000000}
-                                "Pascal"{$WTMFactor=2070000000}
+                                "Lbry"{$WTMFactor=315000000}
+                                "Blake2b"{$WTMFactor=3450000000} 
+                                "Blake14r"{$WTMFactor=5910000000}
+                                "Pascal"{$WTMFactor=2100000000}
                                 "skunk"{$WTMFactor=54000000}
+                                "nist5"{$WTMFactor=57000000}
                         }
 
 

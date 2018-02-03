@@ -14,6 +14,7 @@ $ActiveOnAutomatic24hMode = $false
 $AbbName = 'NH'
 $WalletMode = "WALLET"
 $Result=@()
+$RewardType='PPS'
 
 
 #****************************************************************************************************************************************************************************************
@@ -30,6 +31,7 @@ if ($Querymode -eq "info"){
                     ApiData = $True
                     AbbName=$AbbName
                     WalletMode=$WalletMode
+                    RewardType=$RewardType
                          }
     }
 
@@ -174,6 +176,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                         OriginalCoin = $NH_coin
                                         Fee = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {0.02} else {0.04})
                                         EthStMode = 3
+                                        RewardType=$RewardType
                                             
                                         }
                         }

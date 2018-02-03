@@ -8,7 +8,6 @@
 "Arguments" : "-c #GROUPNAME#.toml",
 "API" : "prospector",
 "APIPort" : "42000",
-"Wrap" : false,
 "DualMining": false,
 "PrelaunchCommand":"",
 "Fee" : "0.01",

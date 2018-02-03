@@ -5,7 +5,6 @@
 "Types" : ["CPU"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --donate-level 1 #ALGORITHMPARAMETERS#",
 "API" : "XMRig",
-"Wrap" : false,
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Fee" : 0.01,
