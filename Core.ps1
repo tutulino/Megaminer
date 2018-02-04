@@ -181,7 +181,7 @@ while ($true) {
 
 
     $Currency = get_config_variable "CURRENCY"
-    $BechmarkintervalTime = [int](get_config_variable "BENCHMARKTIME")
+    $BenchmarkIntervalTime = [int](get_config_variable "BENCHMARKTIME")
     $LocalCurrency = get_config_variable "LOCALCURRENCY"
     if ([string]::IsNullOrWhiteSpace($LocalCurrency)) {
         #for old config.txt compatibility
@@ -301,7 +301,7 @@ while ($true) {
         }
 
 
-        foreach ($Algo in $Miner.Algorithms.psobject.Properties) {
+        foreach ($Algo in $Miner.Algorithms.PSObject.Properties) {
             $HashrateValue = 0
             $HashrateValueDual = 0
             $Hrs = $null
@@ -340,11 +340,10 @@ while ($true) {
                                     $enableSSL = ($Miner.SSL -and $_.SSL)
 
                                     if ($_.name -eq 'Nicehash') {
-                                        $WorkerName2 = $WorkerName + $TypeGroup.GroupName #Nicehash reqauires alphanumeric workernames
+                                        $WorkerName2 = $WorkerName + $TypeGroup.GroupName #Nicehash requires alphanumeric workernames
                                     } else {
                                         $WorkerName2 = $WorkerName + '_' + $TypeGroup.GroupName
                                     }
-
 
                                     $Arguments = $Miner.Arguments `
                                         -replace '#PORT#', $(if ($enableSSL -and $_.PortSSL -ne $null) {$_.PortSSL} else {$_.Port}) `
@@ -559,7 +558,7 @@ while ($true) {
 
         if (($Miner | Measure-Object).count -gt 1) {
             Clear-Host; $repaintScreen = $true
-            "DUPLICATED ALGO " + $Miner.Algorithms.psobject.Properties.Name + " IN " + $Miner.Name | Out-host
+            "DUPLICATED ALGO " + $Miner.Algorithms.PSObject.Properties.Name + " IN " + $Miner.Name | Out-host
             EXIT
         }
 
@@ -703,7 +702,7 @@ while ($true) {
 
     Writelog ("Active Miners-pools selected for benchmark: " + [string](($ActiveMiners | Where-Object NeedBenchmark -eq $true).count) + ".........") $LogFile $true
 
-    #For each type, select most profitable miner, not benchmarked has priority, only new miner is lauched if new profit is greater than old by percenttoswitch
+    #For each type, select most profitable miner, not benchmarked has priority, only new miner is launched if new profit is greater than old by percenttoswitch
     foreach ($Type in $Types) {
 
         $BestIdNow = ($ActiveMiners |
@@ -744,7 +743,7 @@ while ($true) {
 
     ErrorsToLog $LogFile
 
-    #Stop miners running if they arent best now
+    #Stop miners running if they aren't best now
     $ActiveMiners | Where-Object {!$_.Best -and $_.Process -ne $null} | ForEach-Object {
         Kill_Process $_.Process
         $_.Process = $null
@@ -756,7 +755,7 @@ while ($true) {
     #Start all Miners marked as Best (if they are running does nothing)
     $ActiveMiners | Where-Object Best | ForEach-Object {
 
-        if ($_.NeedBenchmark) {$NextInterval = $BechmarkintervalTime} #if one need benchmark next interval will be short and fast change
+        if ($_.NeedBenchmark) {$NextInterval = $BenchmarkIntervalTime} #if one need benchmark next interval will be short and fast change
 
         #Launch
         if ($_.Process -eq $null -or $_.Process.HasExited) {
@@ -929,12 +928,12 @@ while ($true) {
         #############################################################
 
         #display interval
-        $TimetoNextInterval = NEW-TIMESPAN (Get-Date) ($LoopStarttime.AddSeconds($NextInterval))
-        $TimetoNextIntervalSeconds = ($TimetoNextInterval.Hours * 3600) + ($TimetoNextInterval.Minutes * 60) + $TimetoNextInterval.Seconds
-        if ($TimetoNextIntervalSeconds -lt 0) {$TimetoNextIntervalSeconds = 0}
+        $TimeToNextInterval = New-TimeSpan (Get-Date) ($LoopStarttime.AddSeconds($NextInterval))
+        $TimeToNextIntervalSeconds = ($TimeToNextInterval.Hours * 3600) + ($TimeToNextInterval.Minutes * 60) + $TimeToNextInterval.Seconds
+        if ($TimeToNextIntervalSeconds -lt 0) {$TimeToNextIntervalSeconds = 0}
 
         set_ConsolePosition ($Host.UI.RawUI.WindowSize.Width - 31) 1
-        " | Next Interval:  $TimetoNextIntervalSeconds secs..." | Out-host
+        " | Next Interval:  $TimeToNextIntervalSeconds secs..." | Out-host
         set_ConsolePosition 0 0
 
         #display header
@@ -1290,7 +1289,7 @@ while ($true) {
 
         if (((Get-Date) -ge ($LoopStarttime.AddSeconds($NextInterval)))  ) {
             #If time of interval has over, exit of main loop
-            $ActiveMiners | Where-Object Best -eq $true | ForEach-Object { #if a miner ends inteval without speed reading mark as failed
+            $ActiveMiners | Where-Object Best -eq $true | ForEach-Object { #if a miner ends interval without speed reading mark as failed
                 if ($_.AnyNonZeroSpeed -eq $false) {$_.FailedTimes++; $_.status = "Failed"}
             }
             break
@@ -1305,7 +1304,7 @@ while ($true) {
     Remove-variable miners
     Remove-variable pools
     Get-Job -State Completed | Remove-Job
-    [GC]::Collect() #force garbage recollector for free memory
+    [GC]::Collect() #force garbage collector for free memory
     $FirstTotalExecution = $False
 
 

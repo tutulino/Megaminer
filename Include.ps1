@@ -196,41 +196,35 @@ function get_gpu_information ($Types) {
     $GpuId = 0
 
     #NVIDIA
-    $NVIDIAPlatform = [OpenCl.Platform]::GetPlatformIDs() | Where-Object vendor -like "*NVIDIA*"
-    if ($NVIDIAPlatform -ne $null) {
-        $SMIResult = invoke-expression ".\bin\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader"
 
-        if ($SMIResult -notlike "*couldn't find nvml.dll*") {
+    Invoke-Expression ".\bin\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader" | ForEach-Object {
+        if ($_ -NotLike "*nvml.dll*") {
+            $SMIresultSplit = $_ -split (",")
 
-            $SMIResult | ForEach-Object {
+            $GpuGroup = ($Types | where-object type -eq 'NVIDIA' | where-object GpusArray -contains $GpuId).groupname
 
-                $SMIresultSplit = $_ -split (",")
-
-                $GpuGroup = ($Types | where-object type -eq 'NVIDIA' | where-object GpusArray -contains $GpuId).groupname
-
-                $Card = [pscustomObject]@{
-                    Type               = 'NVIDIA'
-                    GpuId              = $GpuId
-                    GpuGroup           = $GpuGroup
-                    gpu_name           = $SMIresultSplit[0].Trim()
-                    utilization_gpu    = [int]($SMIresultSplit[1] -replace '%', '')
-                    utilization_memory = [int]($SMIresultSplit[2] -replace '%', '')
-                    temperature_gpu    = [int]($SMIresultSplit[3] -replace '%', '')
-                    power_draw         = [int]($SMIresultSplit[4] -replace 'W', '')
-                    power_limit        = [int]($SMIresultSplit[5] -replace 'W', '')
-                    FanSpeed           = [int]($SMIresultSplit[6] -replace '%', '')
-                    pstate             = $SMIresultSplit[7].Trim()
-                    ClockGpu           = [int]($SMIresultSplit[8] -replace 'Mhz', '')
-                    ClockMem           = [int]($SMIresultSplit[9] -replace 'Mhz', '')
-                    Power_MaxLimit     = [int]($SMIresultSplit[10] -replace 'W', '')
-                    Power_DefaultLimit = [int]($SMIresultSplit[11] -replace 'W', '')
-                }
-
-                if ($Card.Power_DefaultLimit -gt 0) { $card | add-member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
-
-                $Devices += $card
-                $GpuId += 1
+            $Card = [pscustomObject]@{
+                Type               = 'NVIDIA'
+                GpuId              = $GpuId
+                GpuGroup           = $GpuGroup
+                gpu_name           = $SMIresultSplit[0]
+                utilization_gpu    = if ($SMIresultSplit[1] -like "*Supported*") {$null} else {[int]($SMIresultSplit[1] -replace '%', '')}
+                utilization_memory = if ($SMIresultSplit[2] -like "*Supported*") {$null} else {[int]($SMIresultSplit[2] -replace '%', '')}
+                temperature_gpu    = if ($SMIresultSplit[3] -like "*Supported*") {$null} else {[int]($SMIresultSplit[3] -replace '%', '')}
+                power_draw         = if ($SMIresultSplit[4] -like "*Supported*") {$null} else {[int]($SMIresultSplit[4] -replace 'W', '')}
+                power_limit        = if ($SMIresultSplit[5] -like "*Supported*") {$null} else {[int]($SMIresultSplit[5] -replace 'W', '')}
+                pstate             = $SMIresultSplit[7]
+                FanSpeed           = if ($SMIresultSplit[6] -like "*Supported*") {$null} else {[int]($SMIresultSplit[6] -replace '%', '')}
+                ClockGpu           = if ($SMIresultSplit[8] -like "*Supported*") {$null} else {[int]($SMIresultSplit[8] -replace 'Mhz', '')}
+                ClockMem           = if ($SMIresultSplit[9] -like "*Supported*") {$null} else {[int]($SMIresultSplit[9] -replace 'Mhz', '')}
+                Power_MaxLimit     = if ($SMIresultSplit[10] -like "*Supported*") {$null} else { [int]($SMIresultSplit[10] -replace 'W', '')}
+                Power_DefaultLimit = if ($SMIresultSplit[11] -like "*Supported*") {$null} else {[int]($SMIresultSplit[11] -replace 'W', '')}
             }
+
+            if ($Card.Power_DefaultLimit -gt 0) { $card | add-member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
+
+            $Devices += $card
+            $GpuId += 1
         }
     }
 
@@ -251,7 +245,6 @@ function get_gpu_information ($Types) {
 
                 $AdlResultSplit = $_ -split (",")
 
-                $GpuId = [int]$AdlResultSplit[0]
 
                 $GpuGroup = ($Types | where-object type -eq 'AMD' | where-object GpusArray -contains $GpuId).groupname
 
@@ -259,6 +252,7 @@ function get_gpu_information ($Types) {
                     Type                = 'AMD'
                     GpuId               = $GpuId
                     GpuGroup            = $GpuGroup
+                    GpuAdapterId        = [int]$AdlResultSplit[0]
                     FanSpeed            = [int][int]([int]$AdlResultSplit[1] / [int]$AdlResultSplit[2] * 100)
                     ClockGpu            = [int]([int]($AdlResultSplit[3] / 100))
                     ClockMem            = [int]([int]($AdlResultSplit[4] / 100))
@@ -455,17 +449,19 @@ Function Get_Mining_Types () {
 
         if ($NumberNvidiaGPU -gt 0) {
             $Types0 += [pscustomobject] @{
-                GroupName = "NVIDIA"
-                Type      = "NVIDIA"
-                Gpus      = (get_comma_separated_string 0 $NumberNvidiaGPU)
+                GroupName   = "NVIDIA"
+                Type        = "NVIDIA"
+                Gpus        = (get_comma_separated_string 0 $NumberNvidiaGPU)
+                Powerlimits = "0"
             }
         }
 
         if ($NumberAmdGPU -gt 0) {
             $Types0 += [pscustomobject] @{
-                GroupName = "AMD"
-                Type      = "AMD"
-                Gpus      = (get_comma_separated_string 0 $NumberAmdGPU )
+                GroupName   = "AMD"
+                Type        = "AMD"
+                Gpus        = (get_comma_separated_string 0 $NumberAmdGPU)
+                Powerlimits = "0"
             }
         }
     }
@@ -476,9 +472,10 @@ Function Get_Mining_Types () {
         ((compare-object "CPU" $Filter -IncludeEqual -ExcludeDifferent | Measure-Object).count -gt 0)
     ) {
         $Types0 += [pscustomobject]@{
-            GroupName = "CPU"
-            Type      = "CPU"
-            Gpus      = $null
+            GroupName   = "CPU"
+            Type        = "CPU"
+            Gpus        = $null
+            PowerLimits = "0"
         }
     }
 
@@ -497,6 +494,11 @@ Function Get_Mining_Types () {
             $_ | Add-Member GpusNsgMode ("-d " + $_.gpus -replace ',', ' -d ')
             $_ | Add-Member GpuPlatform (Get_Gpu_Platform $_.Type)
             $_ | Add-Member GpusArray ($_.gpus -split ",")
+            $Pl = @()
+            ($_.PowerLimits -split ',') |foreach-object {$Pl += [int]$_}
+            $_.PowerLimits = $Pl |Sort-Object -Descending
+
+            if ($_.PowerLimits.count -eq 0 -or $_.type -eq 'AMD') {$_.PowerLimits = [array](0) }
 
             $Types += $_
         }
@@ -522,10 +524,10 @@ Function WriteLog {
 
 
 
-    [string](get-date) + "...... " + $Message | Add-Content  -Path $LogFile -Force
-    if ($SendToScreen) { $Message | out-host}
-
-    #if ($object -ne $null) {$object | convertto-json | Set-Content  -Path $LogFile}
+    if (![string]::IsNullOrWhitespace($message)) {
+        [string](get-date) + "...... " + $Message | Add-Content  -Path $LogFile -Force
+        if ($SendToScreen) { $Message | out-host}
+    }
 }
 
 
@@ -683,89 +685,101 @@ function Get_Live_HashRate {
 
     $Server = "localhost"
 
-    $Multiplier = 1000
-    #$Delta = 0.05
-    #$Interval = 5
-    #$HashRates = @()
-    #$HashRates_Dual = @()
-
     try {
         switch ($API) {
 
             "Dtsm" {
 
                 $Request = Invoke_TcpRequest $server $port "empty" 5
-                $Data = $Request | ConvertFrom-Json | Select-Object  -ExpandProperty result
-                $HashRate = [Double](($Data.sol_ps) | Measure-Object -Sum).Sum
+                if (![string]::IsNullOrEmpty($Request)) {
+                    $Data = $Request | ConvertFrom-Json | Select-Object  -ExpandProperty result
+                    $HashRate = [Double](($Data.sol_ps) | Measure-Object -Sum).Sum
+                }
             }
 
             "xgminer" {
                 $Message = @{command = "summary"; parameter = ""} | ConvertTo-Json -Compress
                 $Request = Invoke_TcpRequest $server $port $Message 5
 
-                if ($Request -ne "" -and $request -ne $null) {
+                if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request.Substring($Request.IndexOf("{"), $Request.LastIndexOf("}") - $Request.IndexOf("{") + 1) -replace " ", "_" | ConvertFrom-Json
 
-                    $HashRate = if ($Data.SUMMARY.HS_5s -ne $null) {[Double]$Data.SUMMARY.HS_5s * [math]::Pow($Multiplier, 0)}
-                    elseif ($Data.SUMMARY.KHS_5s -ne $null) {[Double]$Data.SUMMARY.KHS_5s * [math]::Pow($Multiplier, 1)}
-                    elseif ($Data.SUMMARY.MHS_5s -ne $null) {[Double]$Data.SUMMARY.MHS_5s * [math]::Pow($Multiplier, 2)}
-                    elseif ($Data.SUMMARY.GHS_5s -ne $null) {[Double]$Data.SUMMARY.GHS_5s * [math]::Pow($Multiplier, 3)}
-                    elseif ($Data.SUMMARY.THS_5s -ne $null) {[Double]$Data.SUMMARY.THS_5s * [math]::Pow($Multiplier, 4)}
-                    elseif ($Data.SUMMARY.PHS_5s -ne $null) {[Double]$Data.SUMMARY.PHS_5s * [math]::Pow($Multiplier, 5)}
+                    $HashRate = if ($Data.SUMMARY.HS_5s -ne $null) {[Double]$Data.SUMMARY.HS_5s * [math]::Pow(1000, 0)}
+                    elseif ($Data.SUMMARY.KHS_5s -ne $null) {[Double]$Data.SUMMARY.KHS_5s * [math]::Pow(1000, 1)}
+                    elseif ($Data.SUMMARY.MHS_5s -ne $null) {[Double]$Data.SUMMARY.MHS_5s * [math]::Pow(1000, 2)}
+                    elseif ($Data.SUMMARY.GHS_5s -ne $null) {[Double]$Data.SUMMARY.GHS_5s * [math]::Pow(1000, 3)}
+                    elseif ($Data.SUMMARY.THS_5s -ne $null) {[Double]$Data.SUMMARY.THS_5s * [math]::Pow(1000, 4)}
+                    elseif ($Data.SUMMARY.PHS_5s -ne $null) {[Double]$Data.SUMMARY.PHS_5s * [math]::Pow(1000, 5)}
 
                     if ($HashRate -eq $null) {
-                        $HashRate = if ($Data.SUMMARY.HS_av -ne $null) {[Double]$Data.SUMMARY.HS_av * [math]::Pow($Multiplier, 0)}
-                        elseif ($Data.SUMMARY.KHS_av -ne $null) {[Double]$Data.SUMMARY.KHS_av * [math]::Pow($Multiplier, 1)}
-                        elseif ($Data.SUMMARY.MHS_av -ne $null) {[Double]$Data.SUMMARY.MHS_av * [math]::Pow($Multiplier, 2)}
-                        elseif ($Data.SUMMARY.GHS_av -ne $null) {[Double]$Data.SUMMARY.GHS_av * [math]::Pow($Multiplier, 3)}
-                        elseif ($Data.SUMMARY.THS_av -ne $null) {[Double]$Data.SUMMARY.THS_av * [math]::Pow($Multiplier, 4)}
-                        elseif ($Data.SUMMARY.PHS_av -ne $null) {[Double]$Data.SUMMARY.PHS_av * [math]::Pow($Multiplier, 5)}
+                        $HashRate = if ($Data.SUMMARY.HS_av -ne $null) {[Double]$Data.SUMMARY.HS_av * [math]::Pow(1000, 0)}
+                        elseif ($Data.SUMMARY.KHS_av -ne $null) {[Double]$Data.SUMMARY.KHS_av * [math]::Pow(1000, 1)}
+                        elseif ($Data.SUMMARY.MHS_av -ne $null) {[Double]$Data.SUMMARY.MHS_av * [math]::Pow(1000, 2)}
+                        elseif ($Data.SUMMARY.GHS_av -ne $null) {[Double]$Data.SUMMARY.GHS_av * [math]::Pow(1000, 3)}
+                        elseif ($Data.SUMMARY.THS_av -ne $null) {[Double]$Data.SUMMARY.THS_av * [math]::Pow(1000, 4)}
+                        elseif ($Data.SUMMARY.PHS_av -ne $null) {[Double]$Data.SUMMARY.PHS_av * [math]::Pow(1000, 5)}
                     }
                 }
             }
 
-            "ccminer" {
 
+            "palgin" {
                 $Request = Invoke_TcpRequest $server $port  "summary" 5
-                $Data = $Request -split ";" | ConvertFrom-StringData
-                $HashRate = if ([Double]$Data.KHS -ne 0 -or [Double]$Data.ACC -ne 0) {[Double]$Data.KHS * $Multiplier}
+                if (![string]::IsNullOrEmpty($Request)) {
+                    $Data = $Request -split ";"
+                    $HashRate = [double]($Data[5] -split '=')[1] * 1000
+                }
+            }
+
+            "ccminer" {
+                $Request = Invoke_TcpRequest $server $port  "summary" 5
+                if (![string]::IsNullOrEmpty($Request)) {
+                    $Data = $Request -split ";" | ConvertFrom-StringData
+                    $HashRate = if ([Double]$Data.KHS -ne 0 -or [Double]$Data.ACC -ne 0) {[Double]$Data.KHS * 1000}
+                }
             }
 
             "nicehashequihash" {
                 $Request = Invoke_TcpRequest $server $port  "status" 5
-                $Data = $Request | ConvertFrom-Json
-                $HashRate = $Data.result.speed_hps
-                if ($HashRate -eq $null) {$HashRate = $Data.result.speed_sps}
+                if (![string]::IsNullOrEmpty($Request)) {
+                    $Data = $Request | ConvertFrom-Json
+                    $HashRate = $Data.result.speed_hps
+                    if ($HashRate -eq $null) {$HashRate = $Data.result.speed_sps}
+                }
             }
 
             "excavator" {
                 $Message = @{id = 1; method = "algorithm.list"; params = @()} | ConvertTo-Json -Compress
                 $Request = Invoke_TcpRequest $server $port $message 5
-                $Data = ($Request | ConvertFrom-Json).Algorithms
-                $HashRate = [Double](($Data.workers.speed) | Measure-Object -Sum).Sum
+                if (![string]::IsNullOrEmpty($Request)) {
+                    $Data = ($Request | ConvertFrom-Json).Algorithms
+                    $HashRate = [Double](($Data.workers.speed) | Measure-Object -Sum).Sum
+                }
             }
 
             "ewbf" {
                 $Message = @{id = 1; method = "getstat"} | ConvertTo-Json -Compress
                 $Request = Invoke_TcpRequest $server $port $message 5
-                $Data = $Request | ConvertFrom-Json
-                $HashRate = [Double](($Data.result.speed_sps) | Measure-Object -Sum).Sum
+                if (![string]::IsNullOrEmpty($Request)) {
+                    $Data = $Request | ConvertFrom-Json
+                    $HashRate = [Double](($Data.result.speed_sps) | Measure-Object -Sum).Sum
+                }
             }
 
             "Claymore" {
                 $Message = '{"id":0,"jsonrpc":"2.0","method":"miner_getstat1"}'
                 $Request = Invoke_TcpRequest -Server $Server -Port $Port -Request $Message -Timeout 5
-                if ($Request -ne "" -and $request -ne $null) {
+                if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [double]$Data.result[2].Split(";")[0] * $Multiplier
-                    $HashRate_Dual = [double]$Data.result[4].Split(";")[0] * $Multiplier
+                    $HashRate = [double]$Data.result[2].Split(";")[0] * 1000
+                    $HashRate_Dual = [double]$Data.result[4].Split(";")[0] * 1000
                 }
             }
 
             "ClaymoreV2" {
                 $Message = '{"id":0,"jsonrpc":"2.0","method":"miner_getstat1"}'
                 $Request = Invoke_TcpRequest -Server $Server -Port $Port -Request $Message -Timeout 5
-                if ($Request -ne "" -and $request -ne $null) {
+                if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [double]$Data.result[2].Split(";")[0]
                     $HashRate_Dual = [double]$Data.result[4].Split(";")[0]
@@ -774,7 +788,7 @@ function Get_Live_HashRate {
 
             "prospector" {
                 $Request = Invoke_httpRequest $Server 42000 "/api/v0/hashrates" 5
-                if ($Request -ne "" -and $request -ne $null) {
+                if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [Double]($Data.rate | Measure-Object -Sum).sum
                 }
@@ -782,13 +796,15 @@ function Get_Live_HashRate {
 
             "wrapper" {
                 $HashRate = ""
-                if (Test-Path -Path ".\Wrapper_$Port.txt") { $HashRate = Get-Content ".\Wrapper_$Port.txt" }
-                $HashRate = $HashRate -replace ',', '.'
+                if (Test-Path -Path ".\Wrapper_$Port.txt") {
+                    $HashRate = Get-Content ".\Wrapper_$Port.txt"
+                    $HashRate = $HashRate -replace ',', '.'
+                }
             }
 
             "castXMR" {
                 $Request = Invoke_httpRequest $Server $Port "" 5
-                if ($Request -ne "" -and $request -ne $null) {
+                if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [Double]($Data.devices.hash_rate | Measure-Object -Sum).Sum / 1000
                 }
@@ -796,7 +812,7 @@ function Get_Live_HashRate {
 
             "XMrig" {
                 $Request = Invoke_httpRequest $Server $Port "/api.json" 5
-                if ($Request -ne "" -and $request -ne $null) {
+                if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [Double]$Data.hashrate.total[0]
                 }
@@ -804,7 +820,7 @@ function Get_Live_HashRate {
 
             "Bminer" {
                 $Request = Invoke_httpRequest $Server $Port "/api/status" 5
-                if ($Request -ne "" -and $request -ne $null) {
+                if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request.content | ConvertFrom-Json
                     $HashRate = 0
                     $Data.miners | Get-Member -MemberType NoteProperty | ForEach-Object {
@@ -815,7 +831,7 @@ function Get_Live_HashRate {
 
             "optiminer" {
                 $Request = Invoke_httpRequest $Server $Port "" 5
-                if ($Request -ne "" -and $request -ne $null) {
+                if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [Double]($Data.solution_rate.Total."60s" | Measure-Object -Sum).sum
                     if ($HashRate -eq 0) { $HashRate = [Double]($Data.solution_rate.Total."5s" | Measure-Object -Sum).sum }
@@ -1186,7 +1202,7 @@ function set_ConsolePosition ([int]$x, [int]$y) {
 
 function Get_ConsolePosition ([ref]$x, [ref]$y) {
 
-    $position = $host.ui.rawui.cursorposition
+    $position = $host.UI.RawUI.CursorPosition
     $x.value = $position.x
     $y.value = $position.y
     remove-variable position
@@ -1287,17 +1303,24 @@ function Get_Hashrates {
         [String]$MinerName,
         [Parameter(Mandatory = $true)]
         [String]$GroupName,
-        [Parameter(Mandatory = $false)]
-        [String]$AlgoLabel,
         [Parameter(Mandatory = $true)]
-        [String]$Powerlimit
+        [String]$Powerlimit,
+        [Parameter(Mandatory = $false)]
+        [String]$AlgoLabel
     )
 
 
     if ($AlgoLabel -eq "") {$AlgoLabel = 'X'}
-    $Pattern = $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.txt"
+    $Pattern = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.txt"
 
-    try {$Content = (Get-ChildItem ($PSScriptRoot + "\Stats") | Where-Object pschildname -eq $Pattern | Get-Content | ConvertFrom-Json)} catch {}
+    if (test-path -path $pattern) {
+        $Content = (Get-Content -path $pattern)
+        try {$Content = $Content| ConvertFrom-Json} catch {
+            #if error from convert from json delete file
+            writelog "Corrupted file $Pattern, deleting"
+            remove-item -path $pattern
+        }
+    }
 
     if ($Content -eq $null) {$Content = @()}
     $content
@@ -1411,6 +1434,11 @@ function clear_log {
     $Files = Get-Childitem $TargetFolder -Include $Extension -Exclude "empty.txt" -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
 
     $Files | ForEach-Object {Remove-Item $_.fullname}
+    $TargetFolder = "."
+    $Extension = "wrapper_*.txt"
+
+    $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse
+    $Files |ForEach-Object {Remove-Item $_.fullname}
 }
 
 
