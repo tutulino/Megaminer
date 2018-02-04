@@ -13,6 +13,7 @@ $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $false
 $AbbName = "MPH"
 $WalletMode = "APIKEY"
+$RewardType = "PPLS"
 $Result = @()
 
 #****************************************************************************************************************************************************************************************
@@ -27,6 +28,7 @@ if ($Querymode -eq "info") {
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
         AbbName                  = $AbbName
         WalletMode               = $WalletMode
+        RewardType               = $RewardType
     }
 }
 
@@ -148,6 +150,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 PoolName              = $Name
                 Fee                   = 0.009
                 EthStMode             = 2
+                RewardType            = $RewardType
             }
         }
     }

@@ -13,6 +13,7 @@ $ActiveOnAutomaticMode = $false
 $ActiveOnAutomatic24hMode = $false
 $AbbName = 'DMN'
 $WalletMode = "NONE"
+$RewardType = "PROP"
 $Result = @()
 
 if ($Querymode -eq "info") {
@@ -24,6 +25,7 @@ if ($Querymode -eq "info") {
         ApiData                  = $true
         AbbName                  = $AbbName
         WalletMode               = $WalletMode
+        RewardType               = $RewardType
     }
 }
 
@@ -85,6 +87,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             WalletSymbol          = $_.Symbol
             Fee                   = 0.02
             EthStMode             = 3
+            RewardType            = $RewardType
         }
     }
     Remove-Variable Pools

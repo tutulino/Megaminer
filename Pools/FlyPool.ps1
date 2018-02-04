@@ -13,6 +13,7 @@ $ActiveOnAutomaticMode = $false
 $ActiveOnAutomatic24hMode = $false
 $AbbName = 'FLYP'
 $WalletMode = "NONE"
+$RewardType = "PPLS"
 $Result = @()
 
 
@@ -31,6 +32,7 @@ if ($Querymode -eq "info") {
         ApiData                  = $True
         AbbName                  = $AbbName
         WalletMode               = $WalletMode
+        RewardType               = $RewardType
     }
 }
 
@@ -82,12 +84,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Blocks_24h            = $null
             WalletMode            = $WalletMode
             PoolName              = $Name
+            RewardType            = $RewardType
         }
-
-
     }
-
-
 }
 
 

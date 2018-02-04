@@ -16,6 +16,7 @@ $WalletMode = 'WALLET'
 $ApiUrl = 'http://blockmunch.club/api'
 $MineUrl = 'blockmunch.club'
 $Location = 'US'
+$RewardType = "PROP"
 $UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
@@ -29,6 +30,7 @@ if ($Querymode -eq "info") {
         ApiData                  = $True
         AbbName                  = $AbbName
         WalletMode               = $WalletMode
+        RewardType               = $RewardType
     }
 }
 
@@ -130,6 +132,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 WalletSymbol          = $Currency
                 PoolName              = $Name
                 Fee                   = $coin.Fees / 100
+                RewardType            = $RewardType
             }
         }
     }

@@ -10,6 +10,6 @@ cd /d %~dp0
 :LOOP
 
 powershell -version 5.0 -noexit -executionpolicy bypass -command ^
-    "&.\Core.ps1 -MiningMode AUTOMATIC -PoolsName Hash_Refinery
+    "&.\Core.ps1 -MiningMode AUTOMATIC -PoolsName HashRefinery
 
 GOTO LOOP

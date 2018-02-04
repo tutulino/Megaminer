@@ -13,6 +13,7 @@ $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $false
 $AbbName = 'NP'
 $WalletMode = "WALLET"
+$RewardType = "PPLS"
 $Result = @()
 
 if ($Querymode -eq "info") {
@@ -24,6 +25,7 @@ if ($Querymode -eq "info") {
         ApiData                  = $true
         AbbName                  = $AbbName
         WalletMode               = $WalletMode
+        RewardType               = $RewardType
     }
 }
 
@@ -220,6 +222,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 WalletSymbol          = $_.symbol
                 Fee                   = $_.fee
                 EthStMode             = 0
+                RewardType            = $RewardType
             }
         }
     }

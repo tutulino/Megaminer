@@ -11,6 +11,7 @@ $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $false
 $AbbName = 'B.FTRY'
 $WalletMode = "NONE"
+$RewardType = "PPLS"
 $Result = @()
 
 
@@ -22,6 +23,7 @@ if ($Querymode -eq "info") {
         ApiData               = $true
         AbbName               = $AbbName
         WalletMode            = $WalletMode
+        RewardType            = $RewardType
     }
 }
 
@@ -55,6 +57,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
             PoolName              = $Name
             WalletMode            = $WalletMode
+            RewardType            = $RewardType
         }
     }
     remove-variable Pools

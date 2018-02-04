@@ -22,6 +22,7 @@ if ($Querymode -eq "info") {
         ApiData               = $true
         AbbName               = $AbbName
         WalletMode            = $WalletMode
+        RewardType            = $RewardType
     }
 }
 
@@ -57,6 +58,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             PoolName              = $Name
             WalletMode            = $WalletMode
             Fee                   = $_.Fee
+            RewardType            = $RewardType
         }
     }
     remove-variable Pools

@@ -11,6 +11,7 @@ $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $false
 $AbbName = 'FAIR'
 $WalletMode = "WALLET"
+$RewardType = "PROP"
 $Result = @()
 
 
@@ -22,6 +23,7 @@ if ($Querymode -eq "info") {
         ApiData               = $true
         AbbName               = $AbbName
         WalletMode            = $WalletMode
+        RewardType            = $RewardType
     }
 }
 
@@ -99,6 +101,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 WalletMode            = $WalletMode
                 WalletSymbol          = $_.Symbol
                 Fee                   = $_.Fee
+                RewardType            = $RewardType
             }
         }
     }

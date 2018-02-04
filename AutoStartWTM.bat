@@ -10,6 +10,6 @@ cd /d %~dp0
 :LOOP
 
 powershell -version 5.0 -noexit -executionpolicy bypass -command ^
-    "&.\Core.ps1 -MiningMode AUTOMATIC -PoolsName WhatToMine_Virtual
+    "&.\Core.ps1 -MiningMode AUTOMATIC -PoolsName WhatToMine
 
 GOTO LOOP
