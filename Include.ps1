@@ -220,17 +220,17 @@ function get_gpu_information ($Types) {
                             GpuId              = $GpuId
                             GpuGroup          = $GpuGroup
                             gpu_name           = $SMIresultSplit[0] 
-                            utilization_gpu    = if ($SMIresultSplit[1].TrimEnd.TrimStart -ne "[Not Supported]") {[int]($SMIresultSplit[1] -replace '%','')} else {$null}
-                            utilization_memory = if ($SMIresultSplit[2].TrimEnd.TrimStart -ne "[Not Supported]") {[int]($SMIresultSplit[2] -replace '%','')} else {$null}
-                            temperature_gpu    = if ($SMIresultSplit[3].TrimEnd.TrimStart -ne "[Not Supported]") {[int]($SMIresultSplit[3] -replace '%','')} else {$null}
-                            power_draw         = if ($SMIresultSplit[4].TrimEnd.TrimStart -ne "[Not Supported]") {[int]($SMIresultSplit[4] -replace 'W','')} else {$null}
-                            power_limit        = if ($SMIresultSplit[5].TrimEnd.TrimStart -ne "[Not Supported]") {[int]($SMIresultSplit[5] -replace 'W','')} else {$null}
-                            pstate             = $SMIresultSplit[7].TrimEnd.TrimStart
-                            FanSpeed           = if ($SMIresultSplit[6].TrimEnd.TrimStart -ne "[Not Supported]") {[int]($SMIresultSplit[6] -replace '%','')} else {$null}
-                            ClockGpu           = if ($SMIresultSplit[8].TrimEnd.TrimStart -ne "[Not Supported]") {[int]($SMIresultSplit[8] -replace 'Mhz','')} else {$null}
-                            ClockMem           = if ($SMIresultSplit[9].TrimEnd.TrimStart -ne "[Not Supported]") {[int]($SMIresultSplit[9] -replace 'Mhz','')} else {$null}
-                            Power_MaxLimit     = if ($SMIresultSplit[10].TrimEnd.TrimStart -ne "[Not Supported]") { [int]($SMIresultSplit[10] -replace 'W','')} else {$null}
-                            Power_DefaultLimit = if ($SMIresultSplit[11].TrimEnd.TrimStart -ne "[Not Supported]") {[int]($SMIresultSplit[11] -replace 'W','')} else {$null}
+                            utilization_gpu    = if ($SMIresultSplit[1] -like "*Supported*") {$null} else {[int]($SMIresultSplit[1] -replace '%','')}
+                            utilization_memory = if ($SMIresultSplit[2] -like "*Supported*") {$null} else {[int]($SMIresultSplit[2] -replace '%','')} 
+                            temperature_gpu    = if ($SMIresultSplit[3] -like "*Supported*") {$null} else {[int]($SMIresultSplit[3] -replace '%','')} 
+                            power_draw         = if ($SMIresultSplit[4] -like "*Supported*") {$null} else {[int]($SMIresultSplit[4] -replace 'W','')} 
+                            power_limit        = if ($SMIresultSplit[5] -like "*Supported*") {$null} else {[int]($SMIresultSplit[5] -replace 'W','')} 
+                            pstate             = $SMIresultSplit[7]
+                            FanSpeed           = if ($SMIresultSplit[6] -like "*Supported*") {$null} else {[int]($SMIresultSplit[6] -replace '%','')} 
+                            ClockGpu           = if ($SMIresultSplit[8] -like "*Supported*") {$null} else {[int]($SMIresultSplit[8] -replace 'Mhz','')}
+                            ClockMem           = if ($SMIresultSplit[9] -like "*Supported*") {$null} else {[int]($SMIresultSplit[9] -replace 'Mhz','')}
+                            Power_MaxLimit     = if ($SMIresultSplit[10] -like "*Supported*") {$null} else { [int]($SMIresultSplit[10] -replace 'W','')}
+                            Power_DefaultLimit = if ($SMIresultSplit[11] -like "*Supported*") {$null} else {[int]($SMIresultSplit[11] -replace 'W','')} 
                         }
                         if ($Card.Power_DefaultLimit -gt 0) { $card |add-member Power_limit_percent ([math]::Floor(($Card.power_limit*100) / $Card.Power_DefaultLimit))}
 
