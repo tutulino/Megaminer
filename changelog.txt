@@ -471,7 +471,7 @@ NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YOU MUST BENCHMARK A
 
 
 ------------------------------------------------
-6.0
+6.0b1
 
 --FEATURES CHANGES:
 
@@ -523,3 +523,13 @@ NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YOU MUST BENCHMARK A
 --RELEASE NOTES
 This release changes next config variables: @@ELECTRICITYCOST,@@GPUGROUPS,@@LIVESTATSUPDATE,@@INTERVAL,@@DEBUGLOG,@@DELAYCLOSEMINERS,@@MINWORKERS
 Older stats are not compatibles
+
+
+
+------------------------------------------------
+6.0b2
+
+---BUG FIXES:
+
+*Fixed: Whattomine pool order variable not in config.txt
+*Fixed: Not supported message error for old NVIDIA cards
