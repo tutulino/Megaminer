@@ -9,5 +9,5 @@
     "Algorithms": {
         "CryptoNight": "-a cryptonight",
         "CryptoLight": "-a cryptonight-lite"
-    ]
+    }
 }

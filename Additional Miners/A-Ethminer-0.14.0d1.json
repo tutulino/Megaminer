@@ -6,7 +6,6 @@
     "Arguments": "-G -SP 2 -S #SERVER#:#PORT# -O #LOGIN#:#PASSWORD# --api-port #APIPORT# --opencl-devices #DEVICESETHMODE# --opencl-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API": "Claymore",
     "APIPort": 3333,
-    "Fee": 0.01,
     "Algorithms": {
         "Ethash": ""
     }

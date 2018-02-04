@@ -1,0 +1,25 @@
+{
+    "Path": "ccminer.exe",
+    "Uri": "https://github.com/KlausT/ccminer/releases/download/8.20/ccminer-820-cuda8-x64.zip",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "Algorithms": {
+        "Blakecoin": "-a blakecoin",
+        "C11": "-a c11",
+        "DiamondGroestl": "-a dmd-gr",
+        "Fresh": "-a fresh",
+        "Groestl": "-a groestl",
+        "Keccak": "-a keccak -m 2",
+        "Lyra2RE2": "-a lyra2v2",
+        "MyriadGroestl": "-a myr-gr",
+        "Neoscrypt": "-a neoscrypt",
+        "Nist5": "-a nist5",
+        "SHA256t": "-a s3",
+        "Sib": "-a sib",
+        "Skein": "-a skein",
+        "WhirlpoolX": "-a whirlpoolx",
+        "Whirpool": "-a whirl",
+        "X17": "-a x17"
+    }
+}
