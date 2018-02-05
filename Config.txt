@@ -65,7 +65,7 @@
 -- Profit recheck interval time (in seconds) for each kind of pool
 -- This interval recalculates and selects the most profitable algorithm 
 
-@@INTERVAL_PPS=180
+@@INTERVAL_PPS=300
 @@INTERVAL_PPLS=1800
 
 -- Benchmarks interval time (less than 300 not recommended for GPU due to miners ramp time), if you want to use automatic gpu power limit configuration is recomended at least 600
