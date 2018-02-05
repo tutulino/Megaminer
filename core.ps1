@@ -947,7 +947,7 @@ while ($true) {
 
                     $GpuActivityAverage = ($Cards | Where-Object gpugroup -eq ($ActiveMiners[$_.IdF].GpuGroup.GroupName) | Measure-Object -property utilization_gpu -average).average
 
-                    if ($ActiveMiners[$_.IdF].Process -eq $null -or $ActiveMiners[$_.IdF].Process.HasExited -or ($GpuActivityAverage -le 70 -and $TimeSinceStartInterval -gt 100) ) {
+                    if ($ActiveMiners[$_.IdF].Process -eq $null -or $ActiveMiners[$_.IdF].Process.HasExited -or ($GpuActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100) ) {
                             $ExitLoop = $true
                             $_.Status = "PendingCancellation"
                             $_.Stats.FailedTimes++
@@ -1049,7 +1049,7 @@ while ($true) {
               @{Label = "Coin"; Expression = {if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null) {$ActiveMiners[$_.IdF].Coin} else  {($ActiveMiners[$_.IdF].Coin)+ '|' + ($ActiveMiners[$_.IdF].CoinDual)}}},   
               @{Label = "Miner"; Expression = {$ActiveMiners[$_.IdF].Name}}, 
               @{Label = "Power"; Expression = {[string]$_.PowerLive+'W'};Align = 'right'}, 
-              @{Label = "Efficiency"; Expression = {if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.SpeedLive/$_.PowerLive))+'/W'} else {$null} }; Align = 'right'},     
+              @{Label = "Efficiency"; Expression = {if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null -and $_.PowerLive -gt 0) {(ConvertTo_Hash  ($_.SpeedLive/$_.PowerLive))+'/W'} else {$null} }; Align = 'right'},     
               
               @{Label = "PoolSpeed"; Expression = {if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null) {(ConvertTo_Hash  ($ActiveMiners[$_.IdF].PoolHashrate))+'/s'} else {(ConvertTo_Hash  ($ActiveMiners[$_.IdF].PoolHashrate))+'/s|'+(ConvertTo_Hash ($ActiveMiners[$_.IdF].PoolHashrateDual))+'/s'} }; Align = 'right'},     
               @{Label = "Workers"; Expression = {if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null)  {$ActiveMiners[$_.IdF].PoolWorkers} else {[string]$ActiveMiners[$_.IdF].PoolWorkers+'|'+[string]$ActiveMiners[$_.IdF].PoolWorkersDual}}; Align = 'right'},
@@ -1116,7 +1116,7 @@ while ($true) {
                                     }
                            }
                     else 
-                           { $ActiveMiners.Subminers | ForEach-Object {
+                           { $ActiveMiners.Subminers | Where-Object {$_.IsValid} | ForEach-Object {
                                         $ProfitMiner = $ActiveMiners[$_.Idf] |Select-Object * -ExcludeProperty Subminers
                                         $ProfitMiner| add-member Subminer $_
                                         $ProfitMiner| add-member GroupName $ProfitMiner.GpuGroup.Groupname #needed for groupby 
@@ -1146,7 +1146,7 @@ while ($true) {
                         @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else  {($_.Symbol)+ '|' + ($_.SymbolDual)}}},   
                         @{Label = "Miner"; Expression = {$_.Name}}, 
                         @{Label = "PowLmt"; Expression ={if ($_.Subminer.PowerLimit -gt 0) {$_.Subminer.PowerLimit}};align='right'}, 
-                        @{Label = "StatsSpeed"; Expression = {if ($_.Subminer.NeedBenchmark) {"Benchmarking"} else {if  ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.Subminer.hashrate))+'/s'} else {(ConvertTo_Hash  ($_.Subminer.hashrate))+'/s|'+(ConvertTo_Hash ($_.Subminer.hashratedual))+'/s'}}}; Align = 'right'}, 
+                        @{Label = "StatsSpeed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.Subminer.hashrate))+'/s'} else {(ConvertTo_Hash  ($_.Subminer.hashrate))+'/s|'+(ConvertTo_Hash ($_.Subminer.hashratedual))+'/s'}}; Align = 'right'}, 
                         @{Label = "PowerAvg"; Expression = {if ($_.Subminer.NeedBenchmark) {"Benchmarking"} else {$_.Subminer.PowerAvg.tostring("n0")}}; Align = 'right'}, 
                         @{Label = "Efficiency"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.Subminer.hashrate/$_.Subminer.PowerAvg))+'/W'} else {$null} }; Align = 'right'},    
                         @{Label = "Rev./Day"; Expression = {(($_.Subminer.Revenue+$_.Subminer.RenevueDual).tostring("n5"))+"btc" } ; Align = 'right'},
@@ -1315,7 +1315,7 @@ while ($true) {
                         @{Label = "LastTime"; Expression = {$_.Stats.LastTimeActive}}, 
                         @{Label = "GroupName"; Expression = {$Activeminers[$_.Idf].GpuGroup.GroupName}}, 
                         @{Label = "PowLmt";Expression = {if ($_.PowerLimit -gt 0) {$_.PowerLimit}}}, 
-                        @{Label = "Command"; Expression = {$($Activeminers[$_.Idf].Path.TrimStart((Convert-Path ".\"))) +$($Activeminers[$_.Idf].Arguments)}}
+                        @{Label = "Command"; Expression = {$($Activeminers[$_.Idf].Path.TrimStart((Convert-Path ".\"))) +" "+$($Activeminers[$_.Idf].Arguments)}}
                     )  | Out-Host
 
 

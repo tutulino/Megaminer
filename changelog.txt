@@ -533,3 +533,5 @@ Older stats are not compatibles
 
 *Fixed: Whattomine pool order variable not in config.txt
 *Fixed: Not supported message error for old NVIDIA cards
+*Fixed: Best miners filter in profits screen not returning to initial state
+*Fixed: lower sensitivity for watchdog
