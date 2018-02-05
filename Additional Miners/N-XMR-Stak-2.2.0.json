@@ -5,7 +5,7 @@
     "Type": "NVIDIA",
     "GenerateConfigFile": "xmr-stak-win64\\config-#GROUPNAME#.txt",
     "PatternConfigFile": ".\\Patterns\\xmr-stak-Pattern.txt",
-    "Arguments": "-c config#GROUPNAME#.txt --noCPU --noAMD --noUAC",
+    "Arguments": "-c config-#GROUPNAME#.txt --noCPU --noAMD --noUAC",
     "API": "XMRig",
     "Fee": 0.01,
     "Algorithms": {
