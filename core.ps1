@@ -1116,7 +1116,7 @@ while ($true) {
                                     }
                            }
                     else 
-                           { $ActiveMiners.Subminers | Where-Object {$_.IsValid} | ForEach-Object {
+                           { $ActiveMiners.Subminers | Where-Object {$ActiveMiners[$_.Idf].IsValid} | ForEach-Object {
                                         $ProfitMiner = $ActiveMiners[$_.Idf] |Select-Object * -ExcludeProperty Subminers
                                         $ProfitMiner| add-member Subminer $_
                                         $ProfitMiner| add-member GroupName $ProfitMiner.GpuGroup.Groupname #needed for groupby 
