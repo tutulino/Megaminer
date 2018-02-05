@@ -48,7 +48,7 @@ if ($Querymode -eq "APIKEY") {
     } catch {}
 
 
-    if ($Request -ne $null -and $Request -ne "") {
+    if (![string]::IsNullOrEmpty($Request)) {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Info.Symbol
@@ -72,7 +72,7 @@ if ($Querymode -eq "SPEED") {
     } catch {
     }
 
-    if ($Request -ne $null -and $Request -ne "") {
+    if (![string]::IsNullOrEmpty($Request)) {
         $Request.getuserworkers.data | ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name

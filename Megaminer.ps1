@@ -22,7 +22,7 @@ if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY 
 
 #--------------Load config.txt file
 
-$Currency= get_config_variable "CURRENCY"
+$Currency = get_config_variable "CURRENCY"
 $Location = get_config_variable "LOCATION"
 $LocalCurrency = get_config_variable "LOCALCURRENCY"
 if ($LocalCurrency.length -eq 0) {
@@ -168,16 +168,17 @@ if ($MiningMode -eq "manual") {
 
 
         if ($ManualMiningApiUse -eq $true) {
-            try {
-                write-host CALLING WHATTOMINE API.........
-                $WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing -TimeoutSec 3 | ConvertFrom-Json | Select-Object -ExpandProperty coins
-                write-host CALLING BITTREX API............
-                $BTXResponse = (Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -TimeoutSec 5| ConvertFrom-Json|Select-Object -ExpandProperty result)
-                write-host CALLING COINDESK API............
-                $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 3 | ConvertFrom-Json | Select-Object -ExpandProperty BPI
-                write-host CALLING CoinMarketCap API............
-                $CMCResponse = Invoke-WebRequest "https://api.coinmarketcap.com/v1/ticker/?limit=0" -UseBasicParsing -TimeoutSec 3 | ConvertFrom-Json
-            } catch {}
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            'Calling Bittrex API' | Write-Host
+            $BTXResponse = Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'result'
+            'Calling CoinMarketCap API' | Write-Host
+            $CMCResponse = Invoke-WebRequest "https://api.coinmarketcap.com/v1/ticker/?limit=0" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json
+            'Calling Cryptopia API' | Write-Host
+            $CRYResponse = Invoke-WebRequest "https://www.cryptopia.co.nz/api/GetMarkets/BTC" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'data'
+            'Calling StocksExchange API' | Write-Host
+            $SEXResponse = Invoke-WebRequest "https://stocks.exchange/api2/prices" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json
+            'Calling CryptoID API' | Write-Host
+            $CIDResponse = Invoke-WebRequest "https://chainz.cryptoid.info/explorer/api.dws?q=summary" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json
         }
 
         $Counter = 0
@@ -186,34 +187,30 @@ if ($MiningMode -eq "manual") {
             $counter++
             $_.YourHashRate = (Get_Best_Hashrate_Algo $_.Algorithm).hashrate
 
-            if ($ManualMiningApiUse -eq $true -and $_.symbol -ne "" -and $_.symbol -ne $null) {
+            if ($ManualMiningApiUse -eq $true -and ![string]::IsNullOrEmpty($_.Symbol)) {
 
-                #Get data from bittrex global api call
-                if ($BTXResponse -ne $null) {
-                    foreach ($BtxCoin in $BTXResponse)
-                    {if ($BtxCoin.marketname -eq ("btc-" + $_.symbol)) {  $_.BTCPrice = $BtxCoin.Last}}
+                $PriceBTX = [decimal]($BTXResponse | Where-Object MarketName -eq ('BTC-' + $_.Symbol) | Select-Object -ExpandProperty Last)
+                $PriceCMC = [decimal]($CMCResponse | Where-Object Symbol -eq $_.Symbol | Select-Object -ExpandProperty price_btc)
+                $PriceCRY = [decimal]($CRYResponse | Where-Object Label -eq ($_.Symbol + '/BTC') | Select-Object -ExpandProperty LastPrice)
+                $PriceSEX = [decimal]($SEXResponse | Where-Object market_name -eq ($_.Symbol + '_BTC') | ForEach-Object {([double]$_.buy + [double]$_.sell) / 2})
+                $PriceCID = [decimal]($CIDResponse.($_.Symbol).ticker.btc)
+
+                if ($PriceBTX -gt 0) {
+                    $_.BTCPrice = $PriceBTX
+                } elseif ($PriceCMC -gt 0) {
+                    $_.BTCPrice = $PriceCMC
+                } elseif ($PriceCRY -gt 0) {
+                    $_.BTCPrice = $PriceCRY
+                } elseif ($PriceSEX -gt 0) {
+                    $_.BTCPrice = $PriceSEX
+                } elseif ($PriceCID -gt 0) {
+                    $_.BTCPrice = $PriceCID
                 }
-
-                if ($CMCResponse -ne $null) {
-                    foreach ($CMCCoin in $CMCResponse)
-                    {if ($CMCCoin.Symbol -eq $_.symbol) {  $_.BTCPrice = $CMCCoin.price_btc}}
-                }
-
-                #If no data try with CRYPTOPIA
-                if ($_.BTCPrice -eq 0) {
-                    $ApiResponse = $null
-                    "CALLING CRYPTOPIA API........" + $_.symbol + "_BTC" | out-Host
-                    try {
-                        $Apicall = "https://www.cryptopia.co.nz/api/GetMarket/" + $_.symbol + '_BTC'
-                        $ApiResponse = (Invoke-WebRequest $ApiCall -UseBasicParsing  -TimeoutSec 2| ConvertFrom-Json|Select-Object -ExpandProperty data)
-                    } catch {}
-
-                    if ($ApiResponse -ne $null) {
-                        $_.BTCPrice = $ApiResponse.LastPrice
-                        #$_.BTCChange24h=$ApiResponse.Change
-                    }
-                }
-
+                Remove-Variable PriceBTX
+                Remove-Variable PriceCMC
+                Remove-Variable PriceCRY
+                Remove-Variable PriceSEX
+                Remove-Variable PriceCID
 
                 #Data from WTM
                 if ($WTMResponse -ne $null) {
@@ -234,6 +231,7 @@ if ($MiningMode -eq "manual") {
                 $_.LocalPrice = $CDKResponse.$LocalCurrency.rate_float * [double]$_.BtcPrice
             }
         }
+        pause
 
         Clear-Host
         write-host ....................................................................................................

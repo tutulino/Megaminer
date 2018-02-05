@@ -43,7 +43,7 @@ if ($Querymode -eq "speed") {
 
     $Result = @()
 
-    if ($Request -ne $null -and $Request -ne "") {
+    if (![string]::IsNullOrEmpty($Request)) {
         $Request.Miners |ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
@@ -66,7 +66,7 @@ if ($Querymode -eq "wallet") {
         $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
     } catch {}
 
-    if ($Request -ne $null -and $Request -ne "") {
+    if (![string]::IsNullOrEmpty($Request)) {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Request.currency
@@ -84,7 +84,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
         } catch {start-sleep 2}
         $retries++
-        if ($Request -eq $null -or $Request -eq "") {start-sleep 3}
+        if ([string]::IsNullOrEmpty($Request)) {start-sleep 3}
     } while ($Request -eq $null -and $retries -le 3)
 
     if ($retries -gt 3) {

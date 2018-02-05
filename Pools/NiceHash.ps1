@@ -41,9 +41,8 @@ if ($Querymode -eq "speed") {
 
     $Result = @()
 
-    if ($Request.Result.Workers -ne $null -and $Request.Result.Workers -ne "") {
-        $A = $Request.Result.Workers
-        $Request.Result.Workers |ForEach-Object {
+    if (![string]::IsNullOrEmpty($Request.Result.Workers)) {
+        $Request.Result.Workers | ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
                 WorkerName = $_[0]
@@ -60,10 +59,10 @@ if ($Querymode -eq "wallet") {
     $Info.user = ($Info.user -split '\.')[0]
     try {
         $http = "https://api.nicehash.com/api?method=stats.provider&addr=" + $Info.user
-        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats
+        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json |Select-Object -ExpandProperty result | Select-Object -ExpandProperty stats
     } catch {}
 
-    if ($Request -ne $null -and $Request -ne "") {
+    if (![string]::IsNullOrEmpty($Request)) {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = "BTC"
@@ -83,7 +82,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $Request = Invoke-WebRequest $http -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json |Select-Object -expand result |Select-Object -expand simplemultialgo
         } catch {start-sleep 2}
         $retries++
-        if ($Request -eq $null -or $Request -eq "") {start-sleep 3}
+        if ([string]::IsNullOrEmpty($Request)) {start-sleep 3}
     } while ($Request -eq $null -and $retries -le 3)
 
     if ($retries -gt 3) {
@@ -94,6 +93,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Locations = @()
     $Locations += [PSCustomObject]@{NhLocation = 'USA'; MMlocation = 'US'}
     $Locations += [PSCustomObject]@{NhLocation = 'EU'; MMlocation = 'Europe'}
+    $Locations += [PSCustomObject]@{NhLocation = 'HK'; MMlocation = 'Asia'}
 
     $Request | Where-Object {$_.paying -gt 0 } | ForEach-Object {
 

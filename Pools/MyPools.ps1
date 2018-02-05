@@ -29,20 +29,18 @@ if ($Querymode -eq "info") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
 
-    $Pools += [pscustomobject]@{"coin" = "Aeon"; "algo" = "CryptoLight"; "symbol" = "AEON"; "server" = "mine.aeon-pool.com"; "port" = "5555"; "fee" = "0.01"; "User" = $CoinsWallets.get_item('AEON')}
-    $Pools += [pscustomobject]@{"coin" = "HPPcoin"; "algo" = "Lyra2h"; "symbol" = "HPP"; "server" = "pool.hppcoin.com"; "port" = "3008"; "fee" = "0"; "User" = "$Username.#Workername#"}
+    $Pools += [pscustomobject]@{"coin" = "Aeon"; "algo" = "CryptoLight"; "symbol" = "AEON"; "server" = "mine.aeon-pool.com"; "port" = 5555; "fee" = 0.01; "User" = $CoinsWallets.get_item('AEON')}
+    $Pools += [pscustomobject]@{"coin" = "HPPcoin"; "algo" = "Lyra2h"; "symbol" = "HPP"; "server" = "pool.hppcoin.com"; "port" = 3008; "fee" = 0; "User" = "$Username.#Workername#"}
 
     $Pools |ForEach-Object {
         $Result += [PSCustomObject]@{
             Algorithm             = $_.Algo
             Info                  = $_.Coin
-            Price                 = $Null
-            Price24h              = $Null
             Protocol              = "stratum+tcp"
             Host                  = $_.Server
             Port                  = $_.Port
             User                  = $_.User
-            Pass                  = "x"
+            Pass                  = if ([string]::IsNullOrEmpty($_.Pass)) {"x"} else {$_.Pass}
             Location              = "Europe"
             SSL                   = $false
             Symbol                = $_.symbol

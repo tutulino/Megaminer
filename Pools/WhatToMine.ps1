@@ -49,7 +49,8 @@ if (($Querymode -eq "speed") ) {
 if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
     if ($PoolRealName -ne $null) {
         $Info.poolname = $PoolRealName
-        $result = Get_Pools -Querymode $info.WalletMode -PoolsFilterList $Info.PoolName -Info $Info   | select-object Pool, currency, balance
+        $result = Get_Pools -Querymode $info.WalletMode -PoolsFilterList $Info.PoolName -Info $Info |
+            select-object Pool, currency, balance
     }
 }
 
@@ -57,50 +58,25 @@ if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     #Data from WTM
-    $retries = 1
-    do {
-        try {
-            $http = "https://whattomine.com/coins.json"
-            $Response = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5
-            If ($Response.StatusCode -eq 200) {
-                $WTMResponse = $Response.Content | ConvertFrom-Json | Select-Object -ExpandProperty coins
-                remove-variable Response
-            }
-        } catch {start-sleep 2}
-        $retries++
-        if ([string]::IsNullOrEmpty($WTMCoinResponse)) {start-sleep 3}
-    } while ($WTMResponse -eq $null -and $retries -le 3)
-
-    if ($retries -gt 3) {
-        Write-Host $Name 'API NOT RESPONDING...'
-    }
+    try {
+        $http = "https://whattomine.com/coins.json"
+        $WTMResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty coins
+    } catch { Write-Host $Name 'API NOT RESPONDING...' }
 
     $CustomCoins = (get_config_variable "WhatToMineCustomCoins")
     if (![string]::IsNullOrWhiteSpace($CustomCoins)) {
         WriteLog "Custom WTM Coins: $CustomCoins" $LogFile $True
         foreach ($c in $CustomCoins.Split(',')) {
-            $retries = 1
-            do {
-                try {
-                    $http = "http://whattomine.com/coins/$($c.Trim()).json"
-                    $Response = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5
-                    If ($Response.StatusCode -eq 200) {
-                        $WTMCoinResponse = $Response.Content | ConvertFrom-Json
-                    }
-                } catch {start-sleep 2}
-                $retries++
-                if ([string]::IsNullOrEmpty($WTMCoinResponse)) {start-sleep 3}
-            } while ($WTMCoinResponse -eq $null -and $retries -le 3)
-            if ($retries -gt 3) {
-                Write-Host $Name 'COIN API NOT RESPONDING...'
-            }
-
             try {
-                $WTMResponse | Add-Member $WTMCoinResponse.Name $WTMCoinResponse
-            } catch {
-                $WTMResponse | Add-Member $($WTMCoinResponse.Name + "-" + $WTMCoinResponse.Algorithm) $WTMCoinResponse
-            }
-            remove-variable WTMCoinResponse
+                $http = "http://whattomine.com/coins/$($c.Trim()).json"
+                $WTMCoinResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+                if (![string]::IsNullOrEmpty($WTMCoinResponse)) {
+                    try { $WTMResponse | Add-Member $WTMCoinResponse.Name $WTMCoinResponse }
+                    catch { $WTMResponse | Add-Member $($WTMCoinResponse.Name + "-" + $WTMCoinResponse.Algorithm) $WTMCoinResponse }
+                    Remove-Variable WTMCoinResponse
+
+                }
+            } catch { Write-Host $Name 'COIN API NOT RESPONDING...' }
             Start-Sleep -Seconds 1 # Prevent API Saturation
         }
     }

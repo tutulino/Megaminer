@@ -43,7 +43,7 @@ if ($Querymode -eq "speed") {
 
     $Result = @()
 
-    if ($Request -ne $null -and $Request -ne "") {
+    if (![string]::IsNullOrEmpty($Request)) {
         $Request.Miners |ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
@@ -66,7 +66,7 @@ if ($Querymode -eq "wallet") {
         $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
     } catch {}
 
-    if ($Request -ne $null -and $Request -ne "") {
+    if (![string]::IsNullOrEmpty($Request)) {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Request.currency
@@ -86,7 +86,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
         } catch {start-sleep 2}
         $retries++
-        if ($Request -eq $null -or $Request -eq "") {start-sleep 3}
+        if ([string]::IsNullOrEmpty($Request)) {start-sleep 3}
     } while ($Request -eq $null -and $retries -le 3)
 
     if ($retries -gt 3) {
@@ -100,7 +100,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $Request2 = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
         } catch {start-sleep 2}
         $retries++
-        if ($Request2 -eq $null -or $Request -eq "") {start-sleep 3}
+        if ([string]::IsNullOrEmpty($Request2)) {start-sleep 3}
     } while ($Request2 -eq $null -and $retries -le 3)
     if ($retries -gt 3) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
@@ -124,6 +124,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "sha256" {$Divisor *= 1000}
         }
 
+        # Comment the coins if you use 6-8 GPUs
         switch ($Pool_symbol) {
             'BTX' { $Port = 3557 }
             'BWK' { $Port = 3832 }
