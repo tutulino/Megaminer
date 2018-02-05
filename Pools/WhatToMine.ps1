@@ -107,11 +107,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     #search on pools where to mine coins, order is determined by config.txt @@WhatToMinePoolOrder variable
     $ConfigOrder = (get_config_variable "WhatToMinePoolOrder") -split ','
+    $MinWorkers = [int](get_config_variable "MinWorkers")
     foreach ($PoolToSearch in $ConfigOrder) {
 
         $HPools = Get_Pools -Querymode "core" -PoolsFilterList $PoolToSearch -location $Info.Location
         #Filter by MinWorkers variable (must be here for not selecting now a pool and after that discarded on core.ps1 filter)
-        $HPools = $HPools | Where-Object {$_.PoolWorkers -ge (get_config_variable "MinWorkers") -or $_.PoolWorkers -eq $null}
+        $HPools = $HPools | Where-Object {$_.PoolWorkers -ge $MinWorkers -or $_.PoolWorkers -eq $null}
 
         ForEach ($WtmCoinName in $WTMResponse.PSObject.Properties.Name) {
 
@@ -120,8 +121,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
             #search if this coin was added before
             if (($Result | where-object { $_.Info -eq $Coin -and $_.Algorithm -eq $Algorithm}).count -eq 0) {
-                $HPool = $HPools | where-object { $_.Info -eq $coin -and $_.Algorithm -eq $Algorithm}
-                if ($HPool -ne $null) {
+                foreach ($HPool in $($HPools | where-object { $_.Info -eq $coin -and $_.Algorithm -eq $Algorithm})) {
                     #Search if each pool has coin correspondence in WTM
 
                     $WTMFactor = get_WhatToMineFactor ($HPool.Algorithm)
@@ -132,7 +132,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                             Algorithm             = $HPool.Algorithm
                             Price                 = [Double]($WTMResponse.($WtmCoinName).btc_revenue / $WTMFactor)
                             Price24h              = [Double]($WTMResponse.($WtmCoinName).btc_revenue24 / $WTMFactor)
-                            Symbol                = $WTMResponse.($HPool.Info).tag
+                            Symbol                = $WTMResponse.($WtmCoinName).tag
                             Host                  = $HPool.Host
                             HostSSL               = $HPool.HostSSL
                             Port                  = $HPool.Port
@@ -153,6 +153,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                             ActiveOnManualMode    = $ActiveOnManualMode
                             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                         }
+                    } else {
+                        Out-Host "Missing WTF Factor for $WtmCoinName"
                     }
                 }
             }
