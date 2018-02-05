@@ -170,42 +170,49 @@ if ($MiningMode -eq "manual") {
         if ($ManualMiningApiUse -eq $true) {
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             'Calling Bittrex API' | Write-Host
-            $BTXResponse = Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'result'
+            $BTXResponse = try { Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'result' } catch { $null; Write-Host "Not responding" }
             'Calling CoinMarketCap API' | Write-Host
-            $CMCResponse = Invoke-WebRequest "https://api.coinmarketcap.com/v1/ticker/?limit=0" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json
+            $CMCResponse = try { Invoke-WebRequest "https://api.coinmarketcap.com/v1/ticker/?limit=0" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json } catch { $null; Write-Host "Not responding" }
             'Calling Cryptopia API' | Write-Host
-            $CRYResponse = Invoke-WebRequest "https://www.cryptopia.co.nz/api/GetMarkets/BTC" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'data'
+            $CRYResponse = try { Invoke-WebRequest "https://www.cryptopia.co.nz/api/GetMarkets/BTC" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'data' } catch { $null; Write-Host "Not responding" }
             'Calling StocksExchange API' | Write-Host
-            $SEXResponse = Invoke-WebRequest "https://stocks.exchange/api2/prices" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json
+            $SEXResponse = try { Invoke-WebRequest "https://stocks.exchange/api2/prices" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json } catch { $null; Write-Host "Not responding" }
             'Calling CryptoID API' | Write-Host
-            $CIDResponse = Invoke-WebRequest "https://chainz.cryptoid.info/explorer/api.dws?q=summary" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json
+            $CIDResponse = try { Invoke-WebRequest "https://chainz.cryptoid.info/explorer/api.dws?q=summary" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json } catch { $null; Write-Host "Not responding" }
+            'Calling WhatToMine API' | Write-Host
+            $WTMResponse = try { Invoke-WebRequest "http://whattomine.com/coins.json" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'coins' } catch { $null; Write-Host "Not responding" }
+            'Calling Coindesk API' | Write-Host
+            $CDKResponse = try { Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json | Select-Object -ExpandProperty BPI } catch { $null; Write-Host "Not responding" }
         }
 
         $Counter = 0
-        $CoinsPool | ForEach-Object {
-            $_.Option = $Counter
+        # $CoinsPool | ForEach-Object {
+        foreach ($Coin in $CoinsPool) {
+            $Coin.Option = $Counter
             $counter++
-            $_.YourHashRate = (Get_Best_Hashrate_Algo $_.Algorithm).hashrate
+            $Coin.YourHashRate = (Get_Best_Hashrate_Algo $Coin.Algorithm).hashrate
 
-            if ($ManualMiningApiUse -eq $true -and ![string]::IsNullOrEmpty($_.Symbol)) {
+            if ($ManualMiningApiUse -eq $true -and ![string]::IsNullOrEmpty($Coin.Symbol)) {
+                "Processing: " + $Coin.Symbol | Write-Host
 
-                $PriceBTX = [decimal]($BTXResponse | Where-Object MarketName -eq ('BTC-' + $_.Symbol) | Select-Object -ExpandProperty Last)
-                $PriceCMC = [decimal]($CMCResponse | Where-Object Symbol -eq $_.Symbol | Select-Object -ExpandProperty price_btc)
-                $PriceCRY = [decimal]($CRYResponse | Where-Object Label -eq ($_.Symbol + '/BTC') | Select-Object -ExpandProperty LastPrice)
-                $PriceSEX = [decimal]($SEXResponse | Where-Object market_name -eq ($_.Symbol + '_BTC') | ForEach-Object {([double]$_.buy + [double]$_.sell) / 2})
-                $PriceCID = [decimal]($CIDResponse.($_.Symbol).ticker.btc)
+                $PriceBTX = [decimal]($BTXResponse | Where-Object MarketName -eq ('BTC-' + $Coin.Symbol) | Select-Object -ExpandProperty Last)
+                $PriceCMC = [decimal]($CMCResponse | Where-Object Symbol -eq $Coin.Symbol | Select-Object -First 1 -ExpandProperty price_btc)
+                $PriceCRY = [decimal]($CRYResponse | Where-Object Label -eq ($Coin.Symbol + '/BTC') | Select-Object -ExpandProperty LastPrice)
+                $PriceSEX = [decimal]($SEXResponse | Where-Object market_name -eq ($Coin.Symbol + '_BTC') | ForEach-Object {([double]$Coin.buy + [double]$Coin.sell) / 2})
+                $PriceCID = [decimal]($CIDResponse.($Coin.Symbol).ticker.btc)
 
                 if ($PriceBTX -gt 0) {
-                    $_.BTCPrice = $PriceBTX
+                    $Coin.BTCPrice = $PriceBTX
                 } elseif ($PriceCMC -gt 0) {
-                    $_.BTCPrice = $PriceCMC
+                    $Coin.BTCPrice = $PriceCMC
                 } elseif ($PriceCRY -gt 0) {
-                    $_.BTCPrice = $PriceCRY
+                    $Coin.BTCPrice = $PriceCRY
                 } elseif ($PriceSEX -gt 0) {
-                    $_.BTCPrice = $PriceSEX
+                    $Coin.BTCPrice = $PriceSEX
                 } elseif ($PriceCID -gt 0) {
-                    $_.BTCPrice = $PriceCID
+                    $Coin.BTCPrice = $PriceCID
                 }
+
                 Remove-Variable PriceBTX
                 Remove-Variable PriceCMC
                 Remove-Variable PriceCRY
@@ -214,26 +221,24 @@ if ($MiningMode -eq "manual") {
 
                 #Data from WTM
                 if ($WTMResponse -ne $null) {
-                    $WtmCoin = $WTMResponse.($_.Info)
+                    $WtmCoin = $WTMResponse.PSObject.Properties.Value | Where-Object tag -eq $Coin.Symbol | ForEach-Object {if ($(get_algo_unified_name $_.algorithm) -eq $Coin.Algorithm){$_}}
                     if ($WtmCoin -ne $null) {
 
-                        if ($WtmCoin.difficulty24 -ne 0) {$_.DiffChange24h = (1 - ($WtmCoin.difficulty / $WtmCoin.difficulty24)) * 100}
-                        $WTMFactor = get_WhattomineFactor $_.Algorithm
+                        if ($WtmCoin.difficulty24 -ne 0) {$Coin.DiffChange24h = (1 - ($WtmCoin.difficulty / $WtmCoin.difficulty24)) * 100}
+                        $WTMFactor = get_WhattomineFactor $Coin.Algorithm
 
                         if ($WTMFactor -ne $null) {
-                            $_.Reward = [double]([double]$WtmCoin.estimated_rewards * ([double]$_.YourHashRate / [double]$WTMFactor))
-                            $_.BtcProfit = [double]([double]$WtmCoin.Btc_revenue * ([double]$_.YourHashRate / [double]$WTMFactor))
-                        }
+                            $Coin.Reward = [double]([double]$WtmCoin.estimated_rewards * ([double]$Coin.YourHashRate / [double]$WTMFactor))
+                            $Coin.BtcProfit = [double]([double]$WtmCoin.Btc_revenue * ([double]$Coin.YourHashRate / [double]$WTMFactor))
+                        } else { "WTM Factor is missing for " + $Coin.Algorithm | Write-Host }
                     }
                 }
-
-                $_.LocalProfit = $CDKResponse.$LocalCurrency.rate_float * [double]$_.BtcProfit
-                $_.LocalPrice = $CDKResponse.$LocalCurrency.rate_float * [double]$_.BtcPrice
+                $Coin.LocalProfit = $CDKResponse.$LocalCurrency.rate_float * [double]$Coin.BtcProfit
+                $Coin.LocalPrice = $CDKResponse.$LocalCurrency.rate_float * [double]$Coin.BtcPrice
             }
         }
-        pause
 
-        Clear-Host
+        # Clear-Host
         write-host ....................................................................................................
         write-host ............................SELECT COIN TO MINE.....................................................
         write-host ....................................................................................................
