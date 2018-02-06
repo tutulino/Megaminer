@@ -710,7 +710,7 @@ while ($true) {
 
         
 
-        #look for last roud best
+        #look for last round best
             $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id}
             $BestLast = $Candidates.subminers | Where-Object {$_.Status -eq "Running" -or $_.Status -eq 'PendingCancellation'}
             if ($BestLast -ne $null) {
@@ -1099,7 +1099,7 @@ while ($true) {
 
                     $ProfitMiners=@()
                     if ($ShowBestMinersOnly) {
-                        foreach ($subminer in ($ActiveMiners.Subminers|Where-Object Status -ne "Cancelled")) {
+                        foreach ($subminer in ($ActiveMiners.Subminers|Where-Object  {$ActiveMiners[$_.Idf].IsValid -and $_.Status -ne "Cancelled"})) {
                                     $Candidates = $ActiveMiners | Where-Object {$_.IsValid -and $_.GpuGroup.Id -eq $ActiveMiners[$Subminer.Idf].GpuGroup.Id -and $_.Algorithm -eq $ActiveMiners[$Subminer.Idf].Algorithm -and $_.AlgorithmDual -eq $ActiveMiners[$Subminer.Idf].AlgorithmDual }
                                     $ExistsBest = $Candidates.Subminers | Where-Object {$_.Profits -gt $subminer.Profits}
                                     if ($ExistsBest -eq $null -and $Subminer.Profits -eq 0) { 
@@ -1111,6 +1111,7 @@ while ($true) {
                                                 $ProfitMiner| add-member GroupName $ProfitMiner.GpuGroup.Groupname #needed for groupby 
                                                 $ProfitMiner| add-member NeedBenchmark $ProfitMiner.subminer.NeedBenchmark #needed for sort 
                                                 $ProfitMiner| add-member Profits $ProfitMiner.subminer.Profits #needed for sort 
+                                                $ProfitMiner| add-member Status $ProfitMiner.subminer.Status #needed for sort 
                                                 $ProfitMiners +=  $ProfitMiner
                                             }
                                     }
@@ -1122,6 +1123,7 @@ while ($true) {
                                         $ProfitMiner| add-member GroupName $ProfitMiner.GpuGroup.Groupname #needed for groupby 
                                         $ProfitMiner| add-member NeedBenchmark $ProfitMiner.subminer.NeedBenchmark #needed for sort 
                                         $ProfitMiner| add-member Profits $ProfitMiner.subminer.Profits #needed for sort 
+                                        $ProfitMiner| add-member Status $ProfitMiner.subminer.Status #needed for sort 
                                         $ProfitMiners +=  $ProfitMiner
                                 }
                             }
@@ -1137,10 +1139,10 @@ while ($true) {
     
                         
 
-
+                        
 
                     #Display profits  information
-                    $ProfitMiners2 | Sort-Object @{expression="GroupName";Ascending=$true}, @{expression="NeedBenchmark";Descending=$true}, @{expression="Profits";Descending=$true} | Format-Table (
+                    $ProfitMiners2 | Sort-Object @{expression="GroupName";Ascending=$true},@{expression="Status";Descending=$true}, @{expression="NeedBenchmark";Descending=$true}, @{expression="Profits";Descending=$true} | Format-Table (
                         #@{Label = "Id"; Expression = {$_.Id}; Align = 'right'},   
                         @{Label = "Algorithm"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Algorithm+$_.AlgoLabel} else  {$_.Algorithm+$_.AlgoLabel+ '|' + $_.AlgorithmDual}}},   
                         @{Label = "Coin"; Expression = {if ($_.AlgorithmDual -eq $null) {$_.Coin} else  {($_.Symbol)+ '|' + ($_.SymbolDual)}}},   
