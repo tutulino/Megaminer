@@ -29,14 +29,14 @@ param(
 ##Parameters for testing, must be commented on real use
 
 
-#$MiningMode='Automatic'
+$MiningMode='Automatic'
 #$MiningMode='Manual'
 
 #$PoolsName=('ahashpool','mining_pool_hub','hash_refinery')
 #$PoolsName='whattomine'
 #$PoolsName='zergpool'
 #$PoolsName='yiimp'
-#$PoolsName='ahashpool'
+$PoolsName='ahashpool'
 #$PoolsName=('hash_refinery','zpool')
 #$PoolsName='mining_pool_hub'
 #$PoolsName='zpool'
@@ -849,6 +849,7 @@ while ($true) {
 
     ErrorsToLog $LogFile
     $SwitchLoop = 0
+    $GpuActivityAverages=@()
 
     Clear-Host;$repaintScreen=$true
 
@@ -945,7 +946,15 @@ while ($true) {
 
                     #WATCHDOG
 
-                    $GpuActivityAverage = ($Cards | Where-Object gpugroup -eq ($ActiveMiners[$_.IdF].GpuGroup.GroupName) | Measure-Object -property utilization_gpu -average).average
+                    $GpuActivityAverages += [pscustomobject]@{Average= ($Cards | Where-Object gpugroup -eq ($ActiveMiners[$_.IdF].GpuGroup.GroupName) | Measure-Object -property utilization_gpu -average).average}
+
+                    if ($GpuActivityAverages.count -gt 20) {
+                                $GpuActivityAverages = $GpuActivityAverages[($GpuActivityAverages.count-20)..($GpuActivityAverages.count-1)]
+                                $GpuActivityAverage = ($GpuActivityAverages | Measure-Object -property average -maximum).maximum
+                                }
+                    else 
+                        {$GpuActivityAverage = 100} #only want watchdog works with at least 5 reads
+                    
 
                     if ($ActiveMiners[$_.IdF].Process -eq $null -or $ActiveMiners[$_.IdF].Process.HasExited -or ($GpuActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100) ) {
                             $ExitLoop = $true
