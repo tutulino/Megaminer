@@ -115,6 +115,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 do {
                         try {
                             $Request = Invoke-WebRequest "http://api.yiimp.eu/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5  | ConvertFrom-Json 
+                            start-sleep 5
                             $Request2 = Invoke-WebRequest "http://api.yiimp.eu/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 | ConvertFrom-Json  
 
                         }
