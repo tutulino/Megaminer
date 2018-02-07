@@ -1,0 +1,16 @@
+{
+"Path" : ".\\Bin\\NVIDIA-CcminerX16R\\ccminer-x64.exe",
+"ExtractionPath" : ".\\Bin\\NVIDIA-CcminerX16R\\",
+"Uri" : "https://github.com/MSFTserver/ccminer/releases/download/2.2.5-rvn/ccminer-x64-2.2.5-rvn-cuda9.7z",
+"Types" : ["NVIDIA"],
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+"API" : "Ccminer",
+"Dualmining":false,
+"APIPort" : 4068,
+"PrelaunchCommand":"",
+"Algorithms": [
+                {"x16r":"-a x16r  "}
+                
+              ]
+}
+
