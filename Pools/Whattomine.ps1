@@ -88,13 +88,8 @@ if (($Querymode -eq "speed") )    {
 
 if ($Querymode -eq "core"  -or $Querymode -eq "Menu"){
 
-        $Pools=@()
-
-        #Manual Pools zone (you cand add your pools here - wallet for that coins must exists on config.txt)
-
-                 #$Pools +=[pscustomobject]@{"coin" = "PIRL";"algo"="Ethash"; "symbol"= "PIRL";"server"="pirl.minerpool.net"; "port"= "8004";"location"="US";"User"="XXX";"Pass" = "YYY";"fee"="0";"Abbname"="MinerP";"WalletMode"="NONE"}
-                        
-        #Data from WTM
+      
+   #Data from WTM
                 try {$WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins} catch { WRITE-HOST 'WTM API NOT RESPONDING...ABORTING';EXIT}
          
         #search on pools where to mine coins, order is determined by config.txt @@WHATTOMINEPOOLORDER variable
