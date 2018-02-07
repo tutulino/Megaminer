@@ -812,9 +812,22 @@ while ($true) {
                             if ($ActiveMiners[$BestNow.IdF].GenerateConfigFile -ne "") {$ActiveMiners[$BestNow.IdF].ConfigFileArguments | Set-Content ($ActiveMiners[$BestNow.IdF].GenerateConfigFile)}
                             if ($ActiveMiners[$BestNow.IdF].PrelaunchCommand -ne $null -and $ActiveMiners[$BestNow.IdF].PrelaunchCommand -ne "") {Start-Process -FilePath $ActiveMiners[$BestNow.IdF].PrelaunchCommand}                                             #run prelaunch command
 
-                            if ($ActiveMiners[$BestNow.IdF].Api -eq "Wrapper") {$ActiveMiners[$BestNow.IdF].Process = Start-Process -FilePath "PowerShell" -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($ActiveMiners[$BestNow.IdF].Port)' -FilePath '$($ActiveMiners[$BestNow.IdF].Path)' -ArgumentList '$($ActiveMiners[$BestNow.IdF].Arguments)' -WorkingDirectory '$(Split-Path $ActiveMiners[$BestNow.IdF].Path)'" -PassThru}
-                            else {$ActiveMiners[$BestNow.IdF].Process = Start_SubProcess -FilePath $ActiveMiners[$BestNow.IdF].Path -ArgumentList $ActiveMiners[$BestNow.IdF].Arguments -WorkingDirectory (Split-Path $ActiveMiners[$BestNow.IdF].Path)}
-                            
+                            if ($ActiveMiners[$BestNow.IdF].Api -eq "Wrapper") {
+                                $ActiveMiners[$BestNow.IdF].Process = Start-Process `
+                                -FilePath ((Get-Process -Id $Global:PID).path) `
+                                -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $Global:PID -Id '$($ActiveMiners[$BestNow.IdF].Port)' -FilePath '$($ActiveMiners[$BestNow.IdF].Path)' -ArgumentList '$($ActiveMiners[$BestNow.IdF].Arguments)' -WorkingDirectory '$(Split-Path $ActiveMiners[$BestNow.IdF].Path)'" `
+                                -WorkingDirectory (Split-Path $ActiveMiners[$BestNow.IdF].Path) `
+                                -MinerWindowStyle 'Minimized' `
+                                -Priority $(if ($ActiveMiners[$BestNow.IdF].GroupType -contains "CPU") {-2} else {-1})
+                            }
+                            else {
+                                $ActiveMiners[$BestNow.IdF].Process = Start_SubProcess `
+                                -FilePath $ActiveMiners[$BestNow.IdF].Path `
+                                -ArgumentList $ActiveMiners[$BestNow.IdF].Arguments `
+                                -WorkingDirectory (Split-Path $ActiveMiners[$BestNow.IdF].Path) `
+                                -MinerWindowStyle 'Minimized' `
+                                -Priority $(if ($ActiveMiners[$BestNow.IdF].GroupType -contains "CPU") {-2} else {-1})
+                            }
   
                             $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].Status =  "Running"
                             $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].Stats.LastTimeActive = get-date
