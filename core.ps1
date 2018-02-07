@@ -951,6 +951,7 @@ while ($true) {
                     if ($GpuActivityAverages.count -gt 20) {
                                 $GpuActivityAverages = $GpuActivityAverages[($GpuActivityAverages.count-20)..($GpuActivityAverages.count-1)]
                                 $GpuActivityAverage = ($GpuActivityAverages | Measure-Object -property average -maximum).maximum
+                                writelog ("Last 20 reads maximum GPU activity is "+[string]$GpuActivityAverage+" for Gpugroup "+$ActiveMiners[$_.IdF].GpuGroup.GroupName)  $logfile $false
                                 }
                     else 
                         {$GpuActivityAverage = 100} #only want watchdog works with at least 5 reads
@@ -962,6 +963,7 @@ while ($true) {
                             $_.Stats.FailedTimes++
                             $_.StatsHistory.FailedTimes++
                             writelog ("Detected miner error "+$ActiveMiners[$_.IdF].name+"/"+$ActiveMiners[$_.IdF].Algorithm+" (id "+$_.IdF+'-'+$_.Id+") --> "+$ActiveMiners[$_.IdF].Path+" "+$ActiveMiners[$_.IdF].Arguments) $logfile $false
+                            writelog ([string]$ActiveMiners[$_.IdF].Process+','+[string]$ActiveMiners[$_.IdF].Process.HasExited+','+$GpuActivityAverage+','+$TimeSinceStartInterval) $logfile $false
                         }
                     
           } #End For each
@@ -1287,8 +1289,8 @@ while ($true) {
                 if ($Screen -eq "Wallets" -and $repaintScreen) {
                             
                             set_ConsolePosition 0 $YToWriteMessages
-                            "Start Time: $StartTime                                                                                                                                (U)pdate" | Out-Host
-                            set_ConsolePosition ($Host.UI.RawUI.WindowSize.Width-10) $YToWriteMessages
+                            "Start Time: $StartTime                                                                                                                          "
+                            set_ConsolePosition ($Host.UI.RawUI.WindowSize.Width-10)  $YToWriteMessages
                             "(U)pdate" | Out-Host
                             "" | Out-Host 
                                                     

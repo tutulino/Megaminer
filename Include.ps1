@@ -1285,7 +1285,7 @@ function Get_Hashrates  {
     if (test-path -path $pattern) {
             $Content=(Get-Content -path $pattern)
             try {$Content=$Content| ConvertFrom-Json} catch { #if error from convert from json delete file
-                    writelog "Corrupted file $Pattern, deleting"
+                    writelog "Corrupted file $Pattern, deleting" $logfile $true
                     remove-item -path $pattern
                 } 
             }

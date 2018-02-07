@@ -543,3 +543,4 @@ Older stats are not compatibles
 *Fixed: Best miners filter in profits screen not returning to initial state
 *Fixed: lower sensitivity for watchdog
 *Fixed: OverdriveN.exe requires VS debug dll
+*Fixed: writelog prompt msg when corrupted stats file
