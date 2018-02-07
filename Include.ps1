@@ -296,7 +296,8 @@ function get_gpu_information ($Types) {
     }
     $CpuResult = Get-WmiObject Win32_Processor
     $CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json
-    $CpuLoad = (Get-Counter '\Processor(_Total)\% Processor Time').countersamples.cookedvalue / 100
+    # Language independent version of Get-Counter '\Processor(_Total)\% Processor Time'
+    $CpuLoad = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue / 100
     $CpuResult | ForEach-Object {
         $Devices += [pscustomObject]@{
             Type            = 'CPU'
