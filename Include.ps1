@@ -1278,15 +1278,17 @@ function get_algo_unified_name ([string]$Algo) {
 
 function  get_coin_unified_name ([string]$Coin) {
 
-    $Result = $Coin
     switch -wildcard  ($Coin) {
         "Auroracoin-*" {$Result = "Auroracoin"}
         "Dgb-*" {$Result = "Digibyte"}
         "Digibyte-*" {$Result = "Digibyte"}
-        "EthereumClassic" {$Result = "Ethereum-Classic"}
+        "Ethereum-Classic" {$Result = "EthereumClassic"}
         "Myriad-*" {$Result = "Myriad"}
         "Myriadcoin-*" {$Result = "Myriad"}
         "Verge-*" {$Result = "Verge"}
+        "Bitcoin-Gold" {$Result = "BitcoinGold"}
+        "Bitcoin-Cash" {$Result = "BitcoinCash"}
+        Default {$Result = $Coin}
     }
     $Result
 }
@@ -1489,12 +1491,11 @@ function get_WhattomineFactor ([string]$Algo) {
 
 
 function get_coin_symbol ([string]$Coin) {
-    $Result = $Coin
     switch -wildcard  ($Coin) {
         "adzcoin" {$Result = "ADZ"}
         "auroracoin" {$Result = "AUR"}
-        "bitcoin-cash" {$Result = "BCH"}
-        "bitcoin-gold" {$Result = "BTG"}
+        "bitcoincash" {$Result = "BCH"}
+        "bitcoingold" {$Result = "BTG"}
         "bitcoin" {$Result = "BTC"}
         "dash" {$Result = "DASH"}
         "digibyte" {$Result = "DGB"}
@@ -1522,6 +1523,7 @@ function get_coin_symbol ([string]$Coin) {
         "zclassic" {$Result = "ZCL"}
         "zcoin" {$Result = "XZC"}
         "zencash" {$Result = "ZEN"}
+        Default {$Result = $Coin}
     }
     $Result
 }
