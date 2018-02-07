@@ -529,9 +529,17 @@ Older stats are not compatibles
 ------------------------------------------------
 6.0b2
 
+
+---POOLS CHANGES:
+*Added ravencoin pool to suprnova
+
+---MINERS CHANGES:
+*Added ccminer for x16r algo
+
 ---BUG FIXES:
 
 *Fixed: Whattomine pool order variable not in config.txt
 *Fixed: Not supported message error for old NVIDIA cards
 *Fixed: Best miners filter in profits screen not returning to initial state
 *Fixed: lower sensitivity for watchdog
+*Fixed: OverdriveN.exe requires VS debug dll
