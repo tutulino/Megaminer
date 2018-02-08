@@ -310,13 +310,13 @@ while ($true) {
 
     writelog ("Detected "+[string]$Pools.count+" pools......") $logfile $true
 
-  
 
-
-    #Filter by minworkes variable
+    #Filter by minworkers variable
     $Pools = $Pools | Where-Object {$_.Poolworkers -ge (get_config_variable "MINWORKERS") -or $_.Poolworkers -eq $null}
     writelog ([string]$Pools.count+" pools left after min workers filter.....") $logfile $true
 
+
+    
     #Call api to local currency conversion
     try {
         $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice.json" -UseBasicParsing -TimeoutSec 2 | ConvertFrom-Json | Select-Object -ExpandProperty BPI
@@ -341,6 +341,9 @@ while ($true) {
     
     #Load information about the Miner asociated to each Coin-Algo-Miner
 
+ 
+    
+
     $Miners= @()
 
     foreach ($MinerFile in (Get-ChildItem "Miners" | Where-Object extension -eq '.json'))  
@@ -363,7 +366,7 @@ while ($true) {
                             $AlgoLabel = ($Algo.PSObject.Properties.Name -split ("_"))[2]
                             if ($AlgoNameDual -eq $null) {$Algorithms=$AlgoName} else {$Algorithms=$AlgoName+"_"+$AlgoNameDual}
                             
-                            ForEach ( $TypeGroup in $types) { #generate a line for each gpu group
+                            ForEach ( $TypeGroup in ($types | Where-object {$_.Algorithms -contains $Algorithms})) { #generate a line for each gpu group that has algorithm as valid
                                     
                                     if  ((Compare-object $TypeGroup.type $Miner.Types -IncludeEqual -ExcludeDifferent | Measure-Object).count -gt 0) { #check group and miner types are the same
                                         Foreach ($Pool in ($Pools | where-object Algorithm -eq $AlgoName))  {   #Search pools for that algo
@@ -708,8 +711,6 @@ while ($true) {
     #This section changes subminer 
     foreach ($Type in $Types) {
 
-        
-
         #look for last round best
             $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id}
             $BestLast = $Candidates.subminers | Where-Object {$_.Status -eq "Running" -or $_.Status -eq 'PendingCancellation'}
@@ -723,7 +724,7 @@ while ($true) {
             
         #check if must cancell miner/algo/coin combo
             if ($BestLast.Status -eq 'PendingCancellation') {
-                $A=($ActiveMiners[$BestLast.IdF].subminers.stats.FailedTimes | Measure-Object -sum ).sum
+               
                 if (($ActiveMiners[$BestLast.IdF].subminers.stats.FailedTimes | Measure-Object -sum).sum -ge 2) {
                                     $ActiveMiners[$BestLast.IdF].subminers |foreach-object{$_.Status='Cancelled'}
                                     Writelog ("Detected more than 3 fails,cancelling combination  for $BestNowLogMsg") $LogFile $true           
@@ -733,6 +734,7 @@ while ($true) {
         #look for best for next round
             $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id -and $_.IsValid}
             $BestNow = $Candidates.Subminers |where-object Status -ne 'Cancelled' | Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, Profits,{$Activeminers[$_.IdF].Algorithm},{$Activeminers[$_.IdF].PoolPrice},PowerLimit | Select-Object -First 1 
+            if ($BestNow -eq $null) {Writelog ("No detected any valid candidate for gpu group "+$Type.groupname) $LogFile $true  ; break  }
             $BestNowLogMsg=$ActiveMiners[$BestNow.IdF].name+"/"+$ActiveMiners[$BestNow.IdF].Algorithms+'/'+$ActiveMiners[$BestNow.IdF].Coin+" with Power Limit "+[string]$BestNow.PowerLimit+" (id "+[string]$BestNow.IdF+"-"+[string]$BestNow.Id+") for group "+$Type.groupname
             $ProfitNow=$BestNow.Profits
 
@@ -1047,7 +1049,7 @@ while ($true) {
 
     
   
-          $ActiveMiners.Subminers | Where-Object Status -eq 'Running'| Sort-Object GroupId -Descending | Format-Table -Wrap  (
+          $ActiveMiners.Subminers | Where-Object Status -eq 'Running'| Sort-Object {$ActiveMiners[$_.idf].GpuGroup.GroupName}  | Format-Table -Wrap  (
              # @{Label = "Id"; Expression = {$_.IdF}; Align = 'right'},   
               @{Label = "GroupName"; Expression ={$ActiveMiners[$_.IdF].GpuGroup.GroupName}}, 
               @{Label = "MMPowLmt"; Expression ={if ($_.PowerLimit -gt 0) {$_.PowerLimit}};align='right'}, 
