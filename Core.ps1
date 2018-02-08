@@ -70,7 +70,7 @@ $LogFile = ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 Start-Transcript $LogFile #for start log msg
 Stop-Transcript
 $Types = Get_Mining_Types -filter $Groupnames
-writelog ( get_gpu_information $Types | ConvertTo-Json) $logfile $false
+writelog ( get_devices_information $Types | ConvertTo-Json) $logfile $false
 
 
 $ActiveMiners = @()
@@ -784,12 +784,14 @@ while ($true) {
                     -FilePath ((Get-Process -Id $Global:PID).path) `
                     -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $Global:PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$Arguments' -WorkingDirectory '$(Split-Path $_.Path)'" `
                     -WorkingDirectory (Split-Path $_.Path) `
+                    -MinerWindowStyle 'Minimized' `
                     -Priority $(if ($_.GroupType -eq "CPU") {-2} else {-1})
             } else {
                 $_.Process = Start_SubProcess `
                     -FilePath $_.Path `
                     -ArgumentList $Arguments `
                     -WorkingDirectory (Split-Path $_.Path) `
+                    -MinerWindowStyle 'Minimized' `
                     -Priority $(if ($_.GroupType -eq "CPU") {-2} else {-1})
             }
 
@@ -846,10 +848,8 @@ while ($true) {
 
 
         $LoopTime = (get-date) - $LoopStarttime
-        $LoopSeconds = $LoopTime.seconds + $LoopTime.minutes * 60 + $LoopTime.hours * 3600
 
-
-        $Devices = get_gpu_information $Types
+        $Devices = get_devices_information $Types
 
         #############################################################
 
@@ -882,7 +882,7 @@ while ($true) {
                     $_.SpeedLiveDual = [double]($Miner_HashRates[1])
                     $_.RevenueLive = $_.SpeedLive * $_.PoolPrice
                     $_.RevenueLiveDual = $_.SpeedLiveDual * $_.PoolPriceDual
-                    $_.PowerLive = ($Devices | Where-Object gpugroup -eq $_.GroupName | Measure-Object -property power_draw -sum).sum
+                    $_.PowerLive = ($Devices | Where-Object group -eq $_.GroupName | Measure-Object -property power_draw -sum).sum
                     $_.Profitslive = $_.RevenueLive + $_.RevenueLiveDual - ($ElectricityCostValue * ($_.PowerLive * 24) / 1000)
 
                     $_.TimeRunning += (get-date) - $_.LastTimeActive
@@ -1117,7 +1117,7 @@ while ($true) {
             set_ConsolePosition 0 $YToWriteData
 
             # Display devices info
-            print_gpu_information $Devices
+            print_devices_information $Devices
         }
 
 

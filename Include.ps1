@@ -33,10 +33,10 @@ function set_Nvidia_Powerlimit ([int]$PowerLimitPercent, [string]$Devices) {
 
 function Get_ComputerStats {
     [cmdletbinding()]
-    $avg = Get-WmiObject win32_processor | Measure-Object -property LoadPercentage -Average | ForEach-Object {$_.Average}
-    $mem = Get-WmiObject win32_operatingsystem | Foreach-Object {"{0:N2}" -f ((($_.TotalVisibleMemorySize - $_.FreePhysicalMemory) * 100) / $_.TotalVisibleMemorySize)}
-    $memV = Get-WmiObject win32_operatingsystem | Foreach-Object {"{0:N2}" -f ((($_.TotalVirtualMemorySize - $_.FreeVirtualMemory) * 100) / $_.TotalVirtualMemorySize)}
-    $free = Get-WmiObject Win32_Volume -Filter "DriveLetter = 'C:'" | Foreach-Object {"{0:N2}" -f (($_.FreeSpace / $_.Capacity) * 100)}
+    $avg = Get-CimInstance win32_processor | Measure-Object -property LoadPercentage -Average | ForEach-Object {$_.Average}
+    $mem = Get-CimInstance win32_operatingsystem | Foreach-Object {"{0:N2}" -f ((($_.TotalVisibleMemorySize - $_.FreePhysicalMemory) * 100) / $_.TotalVisibleMemorySize)}
+    $memV = Get-CimInstance win32_operatingsystem | Foreach-Object {"{0:N2}" -f ((($_.TotalVirtualMemorySize - $_.FreeVirtualMemory) * 100) / $_.TotalVirtualMemorySize)}
+    $free = Get-CimInstance Win32_Volume -Filter "DriveLetter = 'C:'" | Foreach-Object {"{0:N2}" -f (($_.FreeSpace / $_.Capacity) * 100)}
     $nprocs = (Get-Process).count
     $Conns = (Get-NetTCPConnection).count
 
@@ -188,46 +188,41 @@ function Kill_Process {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
-function get_gpu_information ($Types) {
+function get_devices_information ($Types) {
     [cmdletbinding()]
 
-
     $Devices = @()
-    $GpuId = 0
 
     #NVIDIA
-
     $NVPlatform = [OpenCl.Platform]::GetPlatformIDs() | Where-Object vendor -like "*NVIDIA*"
     if ($NVPlatform -ne $null) {
-
+        $GpuId = 0
         Invoke-Expression ".\bin\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader" | ForEach-Object {
             if ($_ -NotLike "*nvml.dll*") {
                 $SMIresultSplit = $_ -split (",")
 
-                $GpuGroup = ($Types | where-object type -eq 'NVIDIA' | where-object GpusArray -contains $GpuId).groupname
+                $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object GpusArray -contains $GpuId).groupname
 
                 $Card = [pscustomObject]@{
                     Type               = 'NVIDIA'
-                    GpuId              = $GpuId
-                    GpuGroup           = $GpuGroup
-                    gpu_name           = $SMIresultSplit[0]
-                    utilization_gpu    = if ($SMIresultSplit[1] -like "*Supported*") {$null} else {[int]($SMIresultSplit[1] -replace '%', '')}
-                    utilization_memory = if ($SMIresultSplit[2] -like "*Supported*") {$null} else {[int]($SMIresultSplit[2] -replace '%', '')}
-                    temperature_gpu    = if ($SMIresultSplit[3] -like "*Supported*") {$null} else {[int]($SMIresultSplit[3] -replace '%', '')}
-                    power_draw         = if ($SMIresultSplit[4] -like "*Supported*") {$null} else {[int]($SMIresultSplit[4] -replace 'W', '')}
-                    power_limit        = if ($SMIresultSplit[5] -like "*Supported*") {$null} else {[int]($SMIresultSplit[5] -replace 'W', '')}
-                    pstate             = $SMIresultSplit[7]
+                    Id                 = $GpuId
+                    Group              = $Group
+                    Name               = $SMIresultSplit[0]
+                    Utilization        = if ($SMIresultSplit[1] -like "*Supported*") {$null} else {[int]($SMIresultSplit[1] -replace '%', '')}
+                    Utilization_Memory = if ($SMIresultSplit[2] -like "*Supported*") {$null} else {[int]($SMIresultSplit[2] -replace '%', '')}
+                    Temperature        = if ($SMIresultSplit[3] -like "*Supported*") {$null} else {[int]($SMIresultSplit[3] -replace '%', '')}
+                    Power_Draw         = if ($SMIresultSplit[4] -like "*Supported*") {$null} else {[int]($SMIresultSplit[4] -replace 'W', '')}
+                    Power_Limit        = if ($SMIresultSplit[5] -like "*Supported*") {$null} else {[int]($SMIresultSplit[5] -replace 'W', '')}
+                    Pstate             = $SMIresultSplit[7]
                     FanSpeed           = if ($SMIresultSplit[6] -like "*Supported*") {$null} else {[int]($SMIresultSplit[6] -replace '%', '')}
-                    ClockGpu           = if ($SMIresultSplit[8] -like "*Supported*") {$null} else {[int]($SMIresultSplit[8] -replace 'Mhz', '')}
+                    Clock              = if ($SMIresultSplit[8] -like "*Supported*") {$null} else {[int]($SMIresultSplit[8] -replace 'Mhz', '')}
                     ClockMem           = if ($SMIresultSplit[9] -like "*Supported*") {$null} else {[int]($SMIresultSplit[9] -replace 'Mhz', '')}
                     Power_MaxLimit     = if ($SMIresultSplit[10] -like "*Supported*") {$null} else { [int]($SMIresultSplit[10] -replace 'W', '')}
                     Power_DefaultLimit = if ($SMIresultSplit[11] -like "*Supported*") {$null} else {[int]($SMIresultSplit[11] -replace 'W', '')}
                 }
-
-                if ($Card.Power_DefaultLimit -gt 0) { $card | add-member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
-
-                $Devices += $card
-                $GpuId += 1
+                if ($Card.Power_DefaultLimit -gt 0) { $Card | Add-Member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
+                $Devices += $Card
+                $GpuId++
             }
         }
     }
@@ -236,11 +231,8 @@ function get_gpu_information ($Types) {
     #AMD
     $AMDPlatform = [OpenCl.Platform]::GetPlatformIDs() | Where-Object vendor -like "*Advanced Micro Devices*"
     if ($AMDPlatform -ne $null) {
-
-
         #ADL
         $GpuId = 0
-
         $AdlResult = invoke-expression ".\bin\OverdriveN.exe"
         $AmdCardsTDP = Get-Content .\Includes\amd-cards-tdp.json | ConvertFrom-Json
 
@@ -248,25 +240,24 @@ function get_gpu_information ($Types) {
             $AdlResult | ForEach-Object {
 
                 $AdlResultSplit = $_ -split (",")
-
-
-                $GpuGroup = ($Types | where-object type -eq 'AMD' | where-object GpusArray -contains $GpuId).groupname
+                $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object GpusArray -contains $GpuId).groupname
 
                 $Devices += [pscustomObject]@{
                     Type                = 'AMD'
-                    GpuId               = $GpuId
-                    GpuGroup            = $GpuGroup
-                    GpuAdapterId        = [int]$AdlResultSplit[0]
+                    Id                  = $GpuId
+                    Group               = $Group
+                    AdapterId           = [int]$AdlResultSplit[0]
                     FanSpeed            = [int][int]([int]$AdlResultSplit[1] / [int]$AdlResultSplit[2] * 100)
-                    ClockGpu            = [int]([int]($AdlResultSplit[3] / 100))
+                    Clock               = [int]([int]($AdlResultSplit[3] / 100))
                     ClockMem            = [int]([int]($AdlResultSplit[4] / 100))
-                    utilization_gpu     = [int]$AdlResultSplit[5]
-                    temperature_gpu     = [int]$AdlResultSplit[6] / 1000
-                    power_limit_percent = 100 + [int]$AdlResultSplit[7]
+                    Utilization         = [int]$AdlResultSplit[5]
+                    Temperature         = [int]$AdlResultSplit[6] / 1000
+                    Power_Limit_Percent = 100 + [int]$AdlResultSplit[7]
                     Power_draw          = $AmdCardsTDP.$($AdlResultSplit[8].Trim()) * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100)
                     Name                = $AdlResultSplit[8].Trim()
                     UDID                = $AdlResultSplit[9].Trim()
                 }
+                $GpuId++
             }
         } else {
             # For older drivers
@@ -274,42 +265,39 @@ function get_gpu_information ($Types) {
             $AdlResult | ForEach-Object {
 
                 $AdlResultSplit = $_ -split (",")
-
                 $GpuId = [int]$AdlResultSplit[0]
-
-                $GpuGroup = ($Types | where-object type -eq 'AMD' | where-object GpusArray -contains $GpuId ).groupname
-
+                $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object GpusArray -contains $GpuId ).groupname
 
                 $Devices += [pscustomObject]@{
                     Type                = 'AMD'
-                    GpuId               = $GpuId
-                    GpuGroup            = $GpuGroup
+                    Id                  = $GpuId
+                    Group               = $Group
                     FanSpeed            = [int]$AdlResultSplit[3]
-                    temperature_gpu     = [int]$AdlResultSplit[2]
-                    power_limit_percent = 100
-                    Power_draw          = $AmdCardsTDP.$($AdlResultSplit[1].Trim())
+                    temperature         = [int]$AdlResultSplit[2]
+                    Power_Limit_Percent = 100
+                    Power_Draw          = $AmdCardsTDP.$($AdlResultSplit[1].Trim())
                     Name                = $AdlResultSplit[1].Trim()
                 }
             }
         }
         Clear-Variable AmdCardsTDP
     }
-    $CpuResult = Get-WmiObject Win32_Processor
+    $CpuResult = Get-CimInstance Win32_Processor
     $CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json
     # Language independent version of Get-Counter '\Processor(_Total)\% Processor Time'
     $CpuLoad = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue / 100
     $CpuResult | ForEach-Object {
         $Devices += [pscustomObject]@{
-            Type            = 'CPU'
-            GpuId           = $_.DeviceID
-            GpuGroup        = "CPU"
-            ClockCpu        = $_.MaxClockSpeed
-            utilization_cpu = $_.LoadPercentage
-            CacheL3         = $_.L3CacheSize
-            Cores           = $_.NumberOfCores
-            Threads         = $_.NumberOfLogicalProcessors
-            Power_draw      = [int]($CpuTDP.($_.Name) * $CpuLoad)
-            Name            = $_.Name
+            Type        = 'CPU'
+            Id          = $_.DeviceID
+            Group       = "CPU"
+            Clock       = $_.MaxClockSpeed
+            Utilization = $_.LoadPercentage
+            CacheL3     = $_.L3CacheSize
+            Cores       = $_.NumberOfCores
+            Threads     = $_.NumberOfLogicalProcessors
+            Power_Draw  = [int]($CpuTDP.($_.Name) * $CpuLoad)
+            Name        = $_.Name
         }
     }
     Clear-Variable CpuTDP
@@ -321,47 +309,47 @@ function get_gpu_information ($Types) {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
-function print_gpu_information ($Devices) {
+function print_devices_information ($Devices) {
 
-    $Devices | where-object Type -eq 'NVIDIA' | Format-Table -Wrap  (
-        @{Label = "GpuId"; Expression = {$_.gpuId}; Align = 'right'},
-        @{Label = "Group"; Expression = {$_.gpuGroup}; Align = 'right'},
-        @{Label = "Name"; Expression = {$_.gpu_name}},
-        @{Label = "Gpu"; Expression = {[string]$_.utilization_gpu + "%"}; Align = 'right'},
-        @{Label = "Mem"; Expression = {[string]$_.utilization_memory + "%"}; Align = 'right'},
-        @{Label = "Temp"; Expression = {$_.temperature_gpu}; Align = 'right'},
+    $Devices | Where-Object Type -eq 'NVIDIA' | Format-Table -Wrap  (
+        @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
+        @{Label = "Group"; Expression = {$_.Group}; Align = 'right'},
+        @{Label = "Name"; Expression = {$_.Name}},
+        @{Label = "Load"; Expression = {[string]$_.Utilization + "%"}; Align = 'right'},
+        @{Label = "Mem"; Expression = {[string]$_.Utilization_Memory + "%"}; Align = 'right'},
+        @{Label = "Temp"; Expression = {$_.Temperature}; Align = 'right'},
         @{Label = "Fan"; Expression = {[string]$_.FanSpeed + "%"}; Align = 'right'},
-        @{Label = "Power"; Expression = {[string]$_.power_draw + "W/" + [string]$_.power_limit + "W"}; Align = 'right'},
-        @{Label = "PowLmt"; Expression = {[string]$_.Power_limit_percent + '%'}; Align = 'right'},
+        @{Label = "Power"; Expression = {[string]$_.Power_Draw + "W/" + [string]$_.Power_Limit + "W"}; Align = 'right'},
+        @{Label = "PowLmt"; Expression = {[string]$_.Power_Limit_Percent + '%'}; Align = 'right'},
         @{Label = "Pstate"; Expression = {$_.pstate}; Align = 'right'},
-        @{Label = "ClkGpu"; Expression = {[string]$_.ClockGpu + "Mhz"}; Align = 'right'},
+        @{Label = "Clock"; Expression = {[string]$_.Clock + "Mhz"}; Align = 'right'},
         @{Label = "ClkMem"; Expression = {[string]$_.ClockMem + "Mhz"}; Align = 'right'}
     ) -groupby Type | Out-Host
 
 
-    $Devices | where-object Type -eq 'AMD' | Format-Table -Wrap  (
-        @{Label = "GpuId"; Expression = {$_.gpuId}; Align = 'right'},
-        @{Label = "Group"; Expression = {$_.gpuGroup}; Align = 'right'},
-        @{Label = "Name"; Expression = {$_.name}},
-        @{Label = "Gpu"; Expression = {[string]$_.utilization_gpu + "%"}; Align = 'right'},
-        @{Label = "Temp"; Expression = {$_.temperature_gpu}; Align = 'right'},
+    $Devices | Where-Object Type -eq 'AMD' | Format-Table -Wrap  (
+        @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
+        @{Label = "Group"; Expression = {$_.Group}; Align = 'right'},
+        @{Label = "Name"; Expression = {$_.Name}},
+        @{Label = "Load"; Expression = {[string]$_.Utilization + "%"}; Align = 'right'},
+        @{Label = "Temp"; Expression = {$_.temperature}; Align = 'right'},
         @{Label = "FanSpeed"; Expression = {[string]$_.FanSpeed + "%"}; Align = 'right'},
-        @{Label = "Power*"; Expression = {[string]$_.power_draw + "W"}; Align = 'right'},
-        @{Label = "PowLmt"; Expression = {[string]$_.Power_limit_percent + '%'}; Align = 'right'},
-        @{Label = "ClkGpu"; Expression = {[string]$_.ClockGpu + "Mhz"}; Align = 'right'},
+        @{Label = "Power*"; Expression = {[string]$_.Power_Draw + "W"}; Align = 'right'},
+        @{Label = "PowLmt"; Expression = {[string]$_.Power_Limit_Percent + '%'}; Align = 'right'},
+        @{Label = "Clock"; Expression = {[string]$_.Clock + "Mhz"}; Align = 'right'},
         @{Label = "ClkMem"; Expression = {[string]$_.ClockMem + "Mhz"}; Align = 'right'}
     )  -groupby Type | Out-Host
 
-    $Devices | where-object Type -eq 'CPU' | Format-Table -Wrap  (
-        @{Label = "CpuId"; Expression = {$_.gpuId}; Align = 'right'},
-        @{Label = "Group"; Expression = {$_.gpuGroup}; Align = 'right'},
-        @{Label = "Name"; Expression = {$_.name}},
+    $Devices | Where-Object Type -eq 'CPU' | Format-Table -Wrap  (
+        @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
+        @{Label = "Group"; Expression = {$_.Group}; Align = 'right'},
+        @{Label = "Name"; Expression = {$_.Name}},
         @{Label = "Cores"; Expression = {$_.Cores}},
         @{Label = "Threads"; Expression = {$_.Threads}},
         @{Label = "CacheL3"; Expression = {[string]$_.CacheL3 + "kb"}; Align = 'right'},
-        @{Label = "CpuClock"; Expression = {[string]$_.ClockCpu + "Mhz"}; Align = 'right'},
-        @{Label = "CpuLoad"; Expression = {[string]$_.utilization_cpu + "%"}; Align = 'right'},
-        @{Label = "Power*"; Expression = {[string]$_.power_draw + "W"}; Align = 'right'}
+        @{Label = "Clock"; Expression = {[string]$_.Clock + "Mhz"}; Align = 'right'},
+        @{Label = "Load"; Expression = {[string]$_.Utilization + "%"}; Align = 'right'},
+        @{Label = "Power*"; Expression = {[string]$_.Power_Draw + "W"}; Align = 'right'}
     )  -groupby Type | Out-Host
 }
 
@@ -442,11 +430,8 @@ Function Get_Mining_Types () {
     $OCLPlatforms = [OpenCl.Platform]::GetPlatformIDs()
     for ($i = 0; $i -lt $OCLPlatforms.length; $i++) {$OCLDevices += ([OpenCl.Device]::GetDeviceIDs($OCLPlatforms[$i], "ALL"))}
 
-
     $NumberNvidiaGPU = ($OCLDevices | Where-Object Vendor -like '*NVIDIA*' | Measure-Object).count
     $NumberAmdGPU = ($OCLDevices | Where-Object Vendor -like '*Advanced Micro Devices*' | Measure-Object).count
-    $NumberAmdGPU = ($OCLDevices | Where-Object Vendor -like '*Advanced Micro Devices*' | Measure-Object).count
-
 
     if ($Types0 -eq $null) {
         #Autodetection on, must add types manually
@@ -1057,7 +1042,7 @@ function Get_Pools {
     if ($info -eq $null) {$Info = [pscustomobject]@{}
     }
 
-    if (($info | Get-Member -MemberType NoteProperty | where-object name -eq location) -eq $null) {$info | Add-Member Location $Location}
+    if (($info | Get-Member -MemberType NoteProperty | Where-Object name -eq location) -eq $null) {$info | Add-Member Location $Location}
 
     $info | Add-Member SharedFile [string]$null
 
