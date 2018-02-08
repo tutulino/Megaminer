@@ -502,6 +502,9 @@ Function Get_Mining_Types () {
                                         
                                         if ($_.PowerLimits.count -eq 0 -or $_.type -eq 'AMD') {$_.PowerLimits=[array](0) }
 
+
+                                        $_ | Add-Member Algorithms ((get_config_variable ("ALGORITHMS_"+$_.type)) -split ',')
+
                                         $Types+=$_
 
                                        
@@ -819,8 +822,12 @@ function Get_Live_HashRate {
                         }
             "wrapper" {
                     $HashRate = ""
-                    $HashRate = if (test-path ".\Wrapper_$Port.txt") {Get-Content ".\Wrapper_$Port.txt"}
-                    $HashRate =  $HashRate -replace ',','.'
+                    $wrpath=".\Wrapper_$Port.txt"
+                    $HashRate = if (test-path -path $wrpath ) {
+                            Get-Content  $wrpath
+                            $HashRate =  $HashRate -replace ',','.'
+                            }
+                        else {$hashrate=0}
                         }
 
              "castXMR" {
@@ -1333,7 +1340,7 @@ function Get_Hashrates  {
     if (test-path -path $pattern) {
             $Content=(Get-Content -path $pattern)
             try {$Content=$Content| ConvertFrom-Json} catch { #if error from convert from json delete file
-                    writelog "Corrupted file $Pattern, deleting" $logfile $true
+                    writelog ("Corrupted file $Pattern, deleting") $logfile $true
                     remove-item -path $pattern
                 } 
             }

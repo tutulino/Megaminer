@@ -530,6 +530,11 @@ Older stats are not compatibles
 6.0b2
 
 
+--FEATURES CHANGES:
+
+*Added minable algorithms selection in config.txt
+
+
 ---POOLS CHANGES:
 *Added ravencoin pool to suprnova
 
@@ -544,3 +549,10 @@ Older stats are not compatibles
 *Fixed: lower sensitivity for watchdog
 *Fixed: OverdriveN.exe requires VS debug dll
 *Fixed: writelog prompt msg when corrupted stats file
+*Fixed: distinct gpu groups order between active miners and profits zones
+
+--RELEASE NOTES
+This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD,@@ALGORITHMS_CPU
+
+
+
