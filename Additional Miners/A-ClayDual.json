@@ -7,7 +7,7 @@
 "API" : "Claymore",
 "Wrap" : false,
 "DualMining": true,
-"APIPort" : 3333,
+"APIPort" : 3335,
 "DualMiningMainCoin": ["Ethereum","ETHEREUMCLASIC"],
 "Fee" : "0.02",
 "Algorithms": [
