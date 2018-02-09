@@ -40,7 +40,7 @@
           {"Ethash_keccak_15":" -dcoin keccak -dcri 15"},
           {"Ethash_keccak_20":" -dcoin keccak -dcri 20"},
           {"Ethash_keccak_25":" -dcoin keccak -dcri 25"},
-          {"Ethash_keccak_35":" -dcoin keccak -dcri 35"},
+          {"Ethash_keccak_35":" -dcoin keccak -dcri 35"}
 
  
               ]
