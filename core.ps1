@@ -761,7 +761,7 @@ while ($true) {
                             $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].TimeSinceStartInterval = [TimeSpan]0
                             $ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].best=$false
                             Switch ($BestLast.Status) {
-                                    "Running"{$ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].Status="Iddle"}
+                                    "Running"{$ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].Status="Idle"}
                                     "PendingCancellation"{$ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].Status="Failed"}
                                     "Cancelled"{$ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].Status="Cancelled"}
                                      }
@@ -794,7 +794,7 @@ while ($true) {
                                     $ActiveMiners[$BestLast.IdF].Process=$null
                                     $ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].best=$false
                                     Switch ($BestLast.Status) {
-                                        "Running" {$ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].Status="Iddle"}
+                                        "Running" {$ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].Status="Idle"}
                                         "PendingCancellation" {$ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].Status="Failed"}
                                         "Cancelled" {$ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].Status="Cancelled"}
                                           }
@@ -1170,7 +1170,7 @@ while ($true) {
                         @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:P2}" -f $_.PoolFee}}; Align = 'right'},
                         @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:P2}" -f $_.MinerFee}}; Align = 'right'},
                         @{Label = "Pool"; Expression = {$_.PoolAbbName}},
-                        @{Label = "Location"; Expression = {$_.Location}}
+                        @{Label = "Location"; Expression = {$_.Location}} 
 
                       
 
