@@ -534,12 +534,13 @@ Older stats are not compatibles
 
 *Added minable algorithms selection in config.txt
 
-
 ---POOLS CHANGES:
 *Added ravencoin pool to suprnova
 
 ---MINERS CHANGES:
 *Added ccminer for x16r algo
+*Updated claymore to 11 (added pascal, keccak and blake2s for dualmining)
+
 
 ---BUG FIXES:
 
@@ -547,9 +548,10 @@ Older stats are not compatibles
 *Fixed: Not supported message error for old NVIDIA cards
 *Fixed: Best miners filter in profits screen not returning to initial state
 *Fixed: lower sensitivity for watchdog
-*Fixed: OverdriveN.exe requires VS debug dll
+*Fixed: OverdriveN.exe requires Visual Studio debug dlls
 *Fixed: writelog prompt msg when corrupted stats file
 *Fixed: distinct gpu groups order between active miners and profits zones
+*Fixed: mining pool hub excavator error (now mining pool hub uses IP address )
 
 --RELEASE NOTES
 This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD,@@ALGORITHMS_CPU

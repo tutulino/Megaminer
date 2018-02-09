@@ -32,15 +32,15 @@ param(
 #$MiningMode='Automatic'
 #$MiningMode='Manual'
 
-#$PoolsName=('ahashpool','mining_pool_hub','hash_refinery')
+#$PoolsName=('ahashpool','miningpoolhub','hashrefinery')
 #$PoolsName='whattomine'
 #$PoolsName='zergpool'
 #$PoolsName='yiimp'
 #$PoolsName='ahashpool'
-#$PoolsName=('hash_refinery','zpool')
-#$PoolsName='mining_pool_hub'
+#$PoolsName=('hashrefinery','zpool')
+#$PoolsName='miningpoolhub'
 #$PoolsName='zpool'
-#$PoolsName='hash_refinery'
+#$PoolsName='hashrefinery'
 #$PoolsName='altminer'
 
 #$PoolsName="Nicehash"

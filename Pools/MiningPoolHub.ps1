@@ -123,70 +123,73 @@ if ($Querymode -eq "info"){
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
 
-            try {
-                $Request = Invoke-WebRequest "http://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
-            }
-            catch {
-                    WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'
-                    EXIT
-            }
-            
-            if (-not $Request.success) { WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'; EXIT}
-
-
-            $Locations = "Europe", "US", "Asia"
-
-            $Request.return | ForEach-Object {
-
-                $MiningPoolHub_Algorithm= get_algo_unified_name $_.algo
-                $MiningPoolHub_Coin =   get_coin_unified_name $_.coin_name
-
-                $MiningPoolHub_OriginalAlgorithm=  $_.algo
-                $MiningPoolHub_OriginalCoin=  $_.coin_name
-
-
-                $MiningPoolHub_Hosts = $_.host_list.split(";")
-                $MiningPoolHub_Port = $_.port
-
-                $Divisor = [double]1000000000
+    try {
+        $Request = Invoke-WebRequest "http://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
+    }
+    catch {
+            WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'
+            EXIT
+    }
     
-                $MiningPoolHub_Price=[Double]($_.profit / $Divisor)
+    if (-not $Request.success) { WRITE-HOST 'MINING POOL HUB API NOT RESPONDING...ABORTING'; EXIT}
 
-                $Locations | ForEach-Object {
-                        $Location = $_
 
-                                $Result+=[PSCustomObject]@{
-                                            Algorithm     = $MiningPoolHub_Algorithm
-                                            Info          = $MiningPoolHub_Coin
-                                            Price         = $MiningPoolHub_Price
-                                            Price24h      = $null #MPH not send this on api
-                                            Protocol      = "stratum+tcp"
-                                            Host          = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
-                                            Port          = $MiningPoolHub_Port
-                                            User          = "$UserName.#WorkerName#"
-                                            Pass          = "x"
-                                            Location      = $Location
-                                            SSL           = $false
-                                            Symbol        = $MiningPoolHub_Coin
-                                            AbbName       = $AbbName
-                                            ActiveOnManualMode    = $ActiveOnManualMode
-                                            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                            WalletMode     = $WalletMode
-                                            WalletSymbol= $_.coin_name
-                                            PoolName = $Name
-                                            OriginalAlgorithm = $MiningPoolHub_OriginalAlgorithm
-                                            OriginalCoin = $MiningPoolHub_OriginalCoin
-                                            Fee = 0.009
-                                            EthStMode = 3
-                                            RewardType=$RewardType
-                                            }
-                        }
+    $Locations = "Europe", "US", "Asia"
 
-            }
+    $Request.return | ForEach-Object {
+
+        $MiningPoolHub_Algorithm= get_algo_unified_name $_.algo
+        $MiningPoolHub_Coin =   get_coin_unified_name $_.coin_name
+
+        $MiningPoolHub_OriginalAlgorithm=  $_.algo
+        $MiningPoolHub_OriginalCoin=  $_.coin_name
+
+        $MiningPoolHub_Hosts = $_.host_list.split(";")
+        $MiningPoolHub_Port = $_.port
+
+        $Divisor = [double]1000000000
+
+        $MiningPoolHub_Price=[Double]($_.profit / $Divisor)
+
+        $Locations | ForEach-Object {
+                        $Server = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$_*"} | Select-Object -First 1
+                        $IP =  ([Net.DNS]::Resolve($Server).AddressList.IPAddressToString | Select-Object -First 1)
+                       
+
+                        $Result+=[PSCustomObject]@{
+                                    Algorithm     = $MiningPoolHub_Algorithm
+                                    Info          = $MiningPoolHub_Coin
+                                    Price         = $MiningPoolHub_Price
+                                    Price24h      = $null #MPH not send this on api
+                                    Protocol      = "stratum+tcp"
+                                    Host          = $IP
+                                    Port          = $MiningPoolHub_Port
+                                    User          = "$UserName.#WorkerName#"
+                                    Pass          = "x"
+                                    Location      = $_
+                                    SSL           = $false
+                                    Symbol        = $MiningPoolHub_Coin
+                                    AbbName       = $AbbName
+                                    ActiveOnManualMode    = $ActiveOnManualMode
+                                    ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                                    WalletMode     = $WalletMode
+                                    WalletSymbol= $_.coin_name
+                                    PoolName = $Name
+                                    OriginalAlgorithm = $MiningPoolHub_OriginalAlgorithm
+                                    OriginalCoin = $MiningPoolHub_OriginalCoin
+                                    Fee = 0.009
+                                    EthStMode = 3
+                                    RewardType=$RewardType
+                                    }
+                } #foreach location
+
+    } #foreach pool
 
 
 Remove-variable Request
-}
+} #end mode
+
+
 
 #****************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************
