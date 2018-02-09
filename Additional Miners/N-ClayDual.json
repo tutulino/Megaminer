@@ -8,7 +8,7 @@
 "Wrap" : false,
 "DualMining": true,
 "APIPort" : 3336,
-"Fee" : "0.02",
+"Fee" : "0.015",
 "DualMiningMainCoin": ["Ethereum","ETHEREUMCLASIC"],
 "PrelaunchCommand":"",
 "Algorithms": [

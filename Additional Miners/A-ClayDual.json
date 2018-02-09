@@ -9,7 +9,7 @@
 "DualMining": true,
 "APIPort" : 3335,
 "DualMiningMainCoin": ["Ethereum","ETHEREUMCLASIC"],
-"Fee" : "0.02",
+"Fee" : "0.015",
 "Algorithms": [
       
 
