@@ -1,7 +1,7 @@
 {
-"Path" : ".\\Bin\\NA-ClaymoreDual\\Claymore's Dual Ethereum+Decred_Siacoin_Lbry_Pascal AMD+NVIDIA GPU Miner v10.6\\EthDcrMiner64.exe",
+"Path" : ".\\Bin\\NA-ClaymoreDual\\Claymore's Dual Ethereum+Decred_Siacoin_Lbry_Pascal AMD+NVIDIA GPU Miner v11\\EthDcrMiner64.exe",
 "ExtractionPath" : ".\\Bin\\NA-ClaymoreDual\\",
-"Uri" : "https://github.com/tutulino/Software/releases/download/0/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.6.-.Catalyst.15.12-18.x.-.CUDA.8.0_9.1_7.5_6.5.zip",
+"Uri" : "https://github.com/tutulino/Software/releases/download/0/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal_Blake2s_Keccak.AMD.NVIDIA.GPU.Miner.v11.0.-.Catalyst.15.12-18.x.-.CUDA.8.0_9.1_7.5_6.5.zip",
 "Types" : ["NVIDIA"],
 "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL#  -dpsw #PASSWORDDUAL# -wd 1 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
 "API" : "Claymore",
@@ -12,32 +12,30 @@
 "DualMiningMainCoin": ["Ethereum","ETHEREUMCLASIC"],
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"Ethash_Blake2b_40":" -dcoin sc -dcri 40"},
-                {"Ethash_Blake2b_60":" -dcoin sc -dcri 60"},
-                {"Ethash_Blake2b_80":" -dcoin sc -dcri 80"},
-                {"Ethash_Blake2b_100":" -dcoin sc -dcri 100"},
-                {"Ethash_Blake2b_120":" -dcoin sc -dcri 120"},
-                {"Ethash_Blake2b_140":" -dcoin sc -dcri 140"},
-                {"Ethash_Blake2b_160":" -dcoin sc -dcri 160"},
 
+                {"Ethash_Blake2s_40":" -dcoin blake2s -dcri 40"},
+                {"Ethash_Blake2s_60":" -dcoin blake2s -dcri 60"},
+                {"Ethash_Blake2s_80":" -dcoin blake2s -dcri 80"},
+                {"Ethash_Blake2s_100":" -dcoin blake2s -dcri 100"},
+                {"Ethash_Blake2s_120":" -dcoin blake2s -dcri 120"},
+                {"Ethash_Blake2s_140":" -dcoin blake2s -dcri 140"},
+                {"Ethash_Blake2s_160":" -dcoin blake2s -dcri 160"},
 
+                {"Ethash_Keccak_40":" -dcoin Keccak -dcri 40"},
+                {"Ethash_Keccak_60":" -dcoin Keccak -dcri 60"},
+                {"Ethash_Keccak_80":" -dcoin Keccak -dcri 80"},
+                {"Ethash_Keccak_100":" -dcoin Keccak -dcri 100"},
+                {"Ethash_Keccak_120":" -dcoin Keccak -dcri 120"},
+                {"Ethash_Keccak_140":" -dcoin Keccak -dcri 140"},
+                {"Ethash_Keccak_160":" -dcoin Keccak -dcri 160"},
 
-                {"Ethash_Blake14r_40":" -dcoin dcr -dcri 40"},
-                {"Ethash_Blake14r_60":" -dcoin dcr -dcri 60"},
-                {"Ethash_Blake14r_80":" -dcoin dcr -dcri 80"},
-                {"Ethash_Blake14r_100":" -dcoin dcr -dcri 100"},
-                {"Ethash_Blake14r_120":" -dcoin dcr -dcri 120"},
-                {"Ethash_Blake14r_140":" -dcoin dcr -dcri 140"},
-                {"Ethash_Blake14r_160":" -dcoin dcr -dcri 160"},
-
-
-                {"Ethash_Lbry_40":" -dcoin lbc -dcri 40"},
-                {"Ethash_Lbry_60":" -dcoin lbc -dcri 60"},
-                {"Ethash_Lbry_80":" -dcoin lbc -dcri 80"},
-                {"Ethash_Lbry_100":" -dcoin lbc -dcri 100"},
-                {"Ethash_Lbry_120":" -dcoin lbc -dcri 120"},
-                {"Ethash_Lbry_140":" -dcoin lbc -dcri 140"},
-                {"Ethash_Lbry_160":" -dcoin lbc -dcri 160"}
+                {"Ethash_Pascal_40":" -dcoin pasc -dcri 40"},
+                {"Ethash_Pascal_60":" -dcoin pasc -dcri 60"},
+                {"Ethash_Pascal_80":" -dcoin pasc -dcri 80"},
+                {"Ethash_Pascal_100":" -dcoin pasc -dcri 100"},
+                {"Ethash_Pascal_120":" -dcoin pasc -dcri 120"},
+                {"Ethash_Pascal_140":" -dcoin pasc -dcri 140"},
+                {"Ethash_Pascal_160":" -dcoin pasc -dcri 160"}
                 
               ]
 
