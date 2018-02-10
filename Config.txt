@@ -136,7 +136,7 @@
  
 --Min number of workers in a pool to be considered as "good"
 
-@@MINWORKERS=20
+@@MINWORKERS=10
 
 -- This variable defines order for Whattomine based stats virtual pool, for each coin MM find in WTM it will search what real pool has this coin available, first found (in specified order) is selected.
 -- Only this pools are compatible (they works at coin level): Yiimp, Suprnova, MiningPoolHub, ZergPool 
