@@ -51,7 +51,7 @@ if ($Querymode -eq "info"){
         
                             
                             try {
-                                $http="http://zergpool.com/api/wallet?address="+$Info.user
+                                $http="http://api.zergpool.com:8080/api/wallet?address="+$Info.user
                                 $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
                             }
                             catch {}
@@ -79,7 +79,7 @@ if ($Querymode -eq "speed")    {
         
                             
     try {
-        $http="http://zergpool.com/api/walletEx?address="+$Info.user
+        $http="http://api.zergpool.com:8080/api/walletEx?address="+$Info.user
         $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
     }
     catch {}
@@ -114,9 +114,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $retries=1
                 do {
                         try {
-                            $Request = Invoke-WebRequest "http://zergpool.com/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 10  | ConvertFrom-Json 
+                            $Request = Invoke-WebRequest "http://api.zergpool.com:8080/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 10  | ConvertFrom-Json 
                             start-sleep 5
-                            $Request2 = Invoke-WebRequest "http://zergpool.com/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 10 | ConvertFrom-Json  
+                            $Request2 = Invoke-WebRequest "http://api.zergpool.com:8080/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 10 | ConvertFrom-Json  
+                            
 
                         }
                         catch {}
@@ -150,7 +151,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Price         = [Double]$coin.estimate / $Divisor
                                 Price24h      = [Double]$coin.estimate_last24h  / $Divisor
                                 Protocol      = "stratum+tcp"
-                                Host          = "zergpool.com"
+                                Host          = "mine.zergpool.com"
                                 Port          = $coin.port
                                 User          = $CoinsWallets.get_item($Currency)
                                 Pass          = "c=$Currency,mc=$zerg_symbol,ID=#WorkerName#"
@@ -173,8 +174,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 
                 }
 
-        remove-variable Request                
-        remove-variable Request2                
+                  
     }
 
 
