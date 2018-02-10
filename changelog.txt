@@ -536,6 +536,7 @@ Older stats are not compatibles
 
 ---POOLS CHANGES:
 *Added ravencoin pool to suprnova
+*Adapted zergpool to new api adress
 
 ---MINERS CHANGES:
 *Added ccminer for x16r algo
