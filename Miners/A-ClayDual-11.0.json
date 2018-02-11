@@ -1,0 +1,35 @@
+{
+    "Path": "Claymore's Dual Ethereum+Decred_Siacoin_Lbry_Pascal AMD+NVIDIA GPU Miner v11.0\\EthDcrMiner64.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v11.0.-.Catalyst.15.12-18.x.-.CUDA.8.0_9.1_7.5_6.5.zip",
+    "SHA256": "3ae01cc8d1cae0ad2bd1da2bfd6c7c698078d0cc0e43bfbbd80b0a6b8d62d3fd",
+    "Type": "AMD",
+    "Arguments": "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL# -dpsw #PASSWORDDUAL# -wd 1 -r -1 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
+    "API": "Claymore",
+    "APIPort": 3333,
+    "DualMining": true,
+    "DualMiningMainAlgo": "Ethash",
+    "Fee": 0.015,
+    "Algorithms": {
+        "Ethash_Blake2s_55": "-dcoin blake2s -dcri 55",
+        "Ethash_Blake2s_60": "-dcoin blake2s -dcri 60",
+        "Ethash_Blake2s_65": "-dcoin blake2s -dcri 65",
+        "Ethash_Blake2s_70": "-dcoin blake2s -dcri 70",
+        "Ethash_Blake2s_75": "-dcoin blake2s -dcri 75",
+
+        "Ethash_Decred_35": "-dcoin dcr -dcri 35",
+        "Ethash_Decred_40": "-dcoin dcr -dcri 40",
+        "Ethash_Decred_45": "-dcoin dcr -dcri 45",
+
+        "Ethash_Keccak_08": "-dcoin keccak -dcri 8",
+        "Ethash_Keccak_10": "-dcoin keccak -dcri 10",
+        "Ethash_Keccak_12": "-dcoin keccak -dcri 12",
+
+        "Ethash_Lbry_30": "-dcoin lbc -dcri 30",
+        "Ethash_Lbry_35": "-dcoin lbc -dcri 35",
+        "Ethash_Lbry_40": "-dcoin lbc -dcri 40",
+
+        "Ethash_Pascal_15": "-dcoin pasc -dcri 15",
+        "Ethash_Pascal_20": "-dcoin pasc -dcri 20",
+        "Ethash_Pascal_25": "-dcoin pasc -dcri 25"
+    }
+}

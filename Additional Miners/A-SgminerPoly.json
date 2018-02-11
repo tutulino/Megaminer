@@ -1,12 +1,12 @@
-﻿{
-    "Path": "sgminer.exe",
-    "Uri": "https://github.com/miningpoolhub/sgminer/releases/download/5.3.1/Release.zip",
-    "SHA256": "f8599a76695f4425ef4c836184725539aa15f81e96967989e356b2df359803b3",
+{
+    "Path": "sgminer-polytimos\\sgminer.exe",
+    "Uri": "https://github.com/polytimos/release/raw/master/sgminer-polytimos.zip",
+    "SHA256": "04818d662a75ae393944c3e69a735fa33b66ca83e3f78db3415a37b7dc9dd449",
     "Type": "AMD",
     "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "Skein": "-k skeincoin -g 2 -w 256 -I 23"
+        "Polytimos": "-k polytimos -I 20 -T"
     }
 }
