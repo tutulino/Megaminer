@@ -438,7 +438,7 @@ while ($true) {
                                                 -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL -and $PoolDual.ProtocolSSL -ne $null) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
                                                 -replace '#LOGINDUAL#', $PoolUserDual `
                                                 -replace '#PASSWORDDUAL#', $PoolPassDual `
-                                                -replace '#ALGORITHMDUAL#' `
+                                                -replace '#ALGORITHMDUAL#', $AlgoNameDual `
                                                 -replace '#WORKERNAME#', $WorkerName3
                                         }
 
