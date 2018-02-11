@@ -74,6 +74,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "BitcoinZ"; "algo" = "Equihash"; "symbol" = "BTCZ"; "server" = "btcz.suprnova.cc"; "port" = 5586; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "BitCore"; "algo" = "Bitcore"; "symbol" = "BTX"; "server" = "btx.suprnova.cc"; "port" = 3629; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "BitSend"; "algo" = "Xevan"; "symbol" = "BSD"; "server" = "bsd.suprnova.cc"; "port" = 8686; "location" = "US"};
+    $Pools += [pscustomobject]@{"coin" = "Criptoreal"; "algo" = "Lyra2Z"; "symbol" = "CRS"; "server" = "crs.suprnova.cc"; "port" = 4155; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Decred"; "algo" = "Decred"; "symbol" = "DCR"; "server" = "dcr.suprnova.cc"; "port" = 3252; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Digibyte"; "algo" = "MyriadGroestl"; "symbol" = "DGB"; "server" = "dgbg.suprnova.cc"; "port" = 7978; "location" = "US"; "WalletSymbol" = "DGBG"};
     $Pools += [pscustomobject]@{"coin" = "Digibyte"; "algo" = "Skein"; "symbol" = "DGB"; "server" = "dgbs.suprnova.cc"; "port" = 5226; "location" = "US"; "WalletSymbol" = "DGBS"};
