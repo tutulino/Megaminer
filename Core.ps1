@@ -263,24 +263,26 @@ while ($true) {
         $Pools = Get_Pools -Querymode "core" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $Location -AlgoFilterList $Algorithm
         if ($Pools.Count -eq 0) {
             $Msg = "NO POOLS!....retry in 10 sec --- REMEMBER, IF YOUR ARE MINING ON ANONYMOUS WITHOUT AUTOEXCHANGE POOLS LIKE YIIMP, NANOPOOL, ETC. YOU MUST SET WALLET FOR AT LEAST ONE POOL COIN IN CONFIG.TXT"
-            WriteLog $msg $logFile $true
+            WriteLog $msg $LogFile $True
 
             Start-Sleep 10
         }
     }
     while ($Pools.Count -eq 0)
 
-    $Pools | Select-Object name -unique | ForEach-Object {Writelog ("Pool " + $_.name + " was responsive....") $logfile $true}
+    $Pools | Select-Object name -unique | ForEach-Object {Writelog ("Pool " + $_.name + " was responsive....") $LogFile $True}
 
     #Call api to local currency conversion
     try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 |
             ConvertFrom-Json |
             Select-Object -ExpandProperty BPI
+        Writelog ("CoinDesk API was responsive....") $LogFile $True
     } catch {
         Clear-Host
         $repaintScreen = $true
-        writelog "COINDESK API NOT RESPONDING, NOT LOCAL COIN CONVERSION" $logfile $true
+        writelog "COINDESK API NOT RESPONDING, NO LOCAL COIN CONVERSION" $LogFile $True
     }
     $LocalBTCvalue = $CDKResponse.$LocalCurrency.rate_float
 
@@ -296,7 +298,7 @@ while ($true) {
     foreach ($MinerFile in (Get-ChildItem "Miners" -Filter "*.json")) {
         try { $Miner = $MinerFile | Get-Content | ConvertFrom-Json }
         catch {
-            Writelog "-------BAD FORMED JSON: $MinerFile" $LogFile $true
+            Writelog "-------BAD FORMED JSON: $MinerFile" $LogFile $True
             Exit
         }
 
@@ -309,9 +311,8 @@ while ($true) {
             ##Algoname contains real name for dual and no dual miners
             $AlgoName = get_algo_unified_name (($Algo.Name -split ("_"))[0]).Trim()
             $AlgoNameDual = get_algo_unified_name (($Algo.Name -split ("_"))[1])
-            if ($AlgoNameDual -eq '') {$AlgoNameDual = $null}
             $AlgoLabel = ($Algo.Name -split ("_"))[2]
-            if ($AlgoNameDual -eq $null) {$Algorithms = $AlgoName} else {$Algorithms = $AlgoName + "_" + $AlgoNameDual}
+            if ([string]::IsNullOrEmpty($AlgoNameDual)) {$Algorithms = $AlgoName} else {$Algorithms = $AlgoName + "_" + $AlgoNameDual}
 
 
             $PowerLimits = get_config_variable "AUTOPOWERLIMIT" | ConvertFrom-Json
@@ -329,7 +330,6 @@ while ($true) {
                         $Pools | Where-Object Algorithm -eq $AlgoName | ForEach-Object {   #Search pools for that algo
 
                             if ((($Pools | Where-Object Algorithm -eq $AlgoNameDual) -ne $null) -or ($Miner.Dualmining -ne $true)) {
-                                if ($_.Algorithm -eq $Miner.DualMiningMainAlgo -or $Miner.Dualmining -ne $true) {
 
                                     $Hrs = Get_Hashrates -minername $Minerfile.basename -algorithm $Algorithms -GroupName $TypeGroup.GroupName -AlgoLabel $AlgoLabel -PowerLimit $PowerLimit | Where-Object TimeRunning -gt 100
 
@@ -504,10 +504,8 @@ while ($true) {
                                         WalletSymbolDual    = $PoolDual.WalletSymbol
                                         Workername          = $WorkerName2
                                         WorkernameDual      = $WorkerName3
-                                        Wrap                = $Miner.Wrap
                                     }
                                 }
-                            }
                         }  #end foreach pool
                     } #  end if types
                 } #end power limits
@@ -516,7 +514,7 @@ while ($true) {
     }
 
 
-    Writelog ("Miners detected: " + [string]($Miners.count) + ".........") $LogFile $true
+    Writelog ("Miners detected: " + [string]($Miners.count) + ".........") $LogFile $True
 
     #Launch download of miners
     $Miners |
@@ -530,7 +528,7 @@ while ($true) {
 
     #Paint no miners message
     $Miners = $Miners | Where-Object {Test-Path $_.Path}
-    if ($Miners.Count -eq 0) {Writelog "NO MINERS!" $LogFile $true; EXIT}
+    if ($Miners.Count -eq 0) {Writelog "NO MINERS!" $LogFile $True; EXIT}
 
 
     #Update the active miners list which is alive for  all execution time
@@ -678,7 +676,6 @@ while ($true) {
                 WalletSymbolDual     = $_.WalletSymbolDual
                 Workername           = $_.Workername
                 WorkernameDual       = $_.WorkernameDual
-                Wrap                 = $_.Wrap
             }
             $ActiveMinersIdCounter++
         }
@@ -686,7 +683,7 @@ while ($true) {
 
 
 
-    Writelog ("Active Miners-pools: " + [string]($ActiveMiners.count) + ".........") $LogFile $true
+    Writelog ("Active Miners-pools: " + [string]($ActiveMiners.count) + ".........") $LogFile $True
 
     ErrorsToLog $LogFile
 
@@ -694,13 +691,13 @@ while ($true) {
     #update miners that need benchmarks
 
     $ActiveMiners | ForEach-Object {
-        if ($_.BenchmarkedTimes -le 2 -and $_.isvalid -and ($_.Hashrate -eq 0 -or ($_.AlgorithmDual -ne $null -and $_.HashrateDual -eq 0)))
+        if ($_.BenchmarkedTimes -le 2 -and $_.IsValid -and ($_.Hashrate -eq 0 -or (![string]::IsNullOrEmpty($_.AlgorithmDual) -and $_.HashrateDual -eq 0)))
         {$_.NeedBenchmark = $true}
     }
 
 
 
-    Writelog ("Active Miners-pools selected for benchmark: " + [string](($ActiveMiners | Where-Object NeedBenchmark -eq $true).count) + ".........") $LogFile $true
+    Writelog ("Active Miners-pools selected for benchmark: " + [string](($ActiveMiners | Where-Object NeedBenchmark -eq $true).count) + ".........") $LogFile $True
 
     #For each type, select most profitable miner, not benchmarked has priority, only new miner is launched if new profit is greater than old by percenttoswitch
     foreach ($Type in $Types) {
@@ -724,7 +721,7 @@ while ($true) {
 
             $BestIdLast = ($ActiveMiners | Where-Object {$_.IsValid -and $_.status -eq "Running" -and $_.GroupId -eq $Type.Id} | Select-Object -ExpandProperty  id)
 
-            Writelog ($ActiveMiners[$BestIdNow].name + "/" + $ActiveMiners[$BestIdNow].Algorithms + "(id " + [string]$BestIdNow + ") is the best combination for gpu group " + $Type.groupname + " last was id " + [string]$BestIdLast) $LogFile $true
+            Writelog ($ActiveMiners[$BestIdNow].name + "/" + $ActiveMiners[$BestIdNow].Algorithms + "(id " + [string]$BestIdNow + ") is the best combination for gpu group " + $Type.groupname + " last was id " + [string]$BestIdLast) $LogFile $True
 
             if ($BestIdLast -ne $null) {$ProfitLast = $ActiveMiners[$BestIdLast].profits} else {$ProfitLast = 0}
 
@@ -734,7 +731,7 @@ while ($true) {
                 $ActiveMiners[$BestIdLast].best = $true
                 if ($Profitlast -lt $ProfitNow) {
                     $ActiveMiners[$BestIdLast].BestBySwitch = "*"
-                    Writelog ($ActiveMiners[$BestIdLast].name + "/" + $ActiveMiners[$BestIdLast].Algorithms + "(id " + [string]$BestIdLast + ") continue mining due to @@percenttoswitch value " + $Type.name) $LogFile $true
+                    Writelog ($ActiveMiners[$BestIdLast].name + "/" + $ActiveMiners[$BestIdLast].Algorithms + "(id " + [string]$BestIdLast + ") continue mining due to @@percenttoswitch value " + $Type.name) $LogFile $True
                 }
             }
         }
@@ -779,7 +776,7 @@ while ($true) {
             $Arguments = $_.Arguments
             if ($_.NeedBenchmark -and ![string]::IsNullOrWhiteSpace($_.BenchmarkArg)) {$Arguments += " " + $_.BenchmarkArg }
 
-            if ($_.Wrap -eq $true) {
+            if ($_.Api -eq "Wrapper") {
                 $_.Process = Start_SubProcess `
                     -FilePath ((Get-Process -Id $Global:PID).path) `
                     -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $Global:PID -Id '$($_.Port)' -FilePath '$($_.Path)' -ArgumentList '$Arguments' -WorkingDirectory '$(Split-Path $_.Path)'" `
@@ -1001,16 +998,16 @@ while ($true) {
             @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
             @{Label = "Group"; Expression = {$_.GroupName}},
             # @{Label = "PowLmt"; Expression ={if ($_.PowerLimit -gt 0) {$_.PowerLimit}};align='right'},
-            @{Label = "LocalSpeed"; Expression = {(ConvertTo_Hash $_.SpeedLive) + '/s' + $(if ($_.AlgorithmDual -ne $null) {'|' + (ConvertTo_Hash $_.SpeedLiveDual) + '/s'})}; Align = 'right'},
+            @{Label = "LocalSpeed"; Expression = {(ConvertTo_Hash $_.SpeedLive) + '/s' + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {'|' + (ConvertTo_Hash $_.SpeedLiveDual) + '/s'})}; Align = 'right'},
             @{Label = "mBTC/Day"; Expression = {((([double]$_.RevenueLive + [double]$_.RevenueLiveDual) * 1000).tostring("n5"))}; Align = 'right'},
             @{Label = $LocalCurrency + "/Day"; Expression = {((([double]$_.RevenueLive + [double]$_.RevenueLiveDual) * [double]$LocalBTCvalue ).tostring("n2"))}; Align = 'right'},
             @{Label = "Profit/Day"; Expression = {(([double]$_.ProfitsLive * [double]$LocalBTCvalue ).tostring("n2")) + " " + $LocalCurrency}; Align = 'right'},
-            @{Label = "Algorithm"; Expression = {$_.Algorithm + $_.AlgoLabel + $(if ($_.AlgorithmDual -ne $null) {'|' + $_.AlgorithmDual}) + $_.BestBySwitch}},
-            @{Label = "Coin"; Expression = {$_.Symbol + $(if ($_.SymbolDual -ne $null) {'|' + $_.SymbolDual})}},
+            @{Label = "Algorithm"; Expression = {$_.Algorithm + $_.AlgoLabel + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {'|' + $_.AlgorithmDual}) + $_.BestBySwitch}},
+            @{Label = "Coin"; Expression = {$_.Symbol + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {'|' + $_.SymbolDual})}},
             @{Label = "Miner"; Expression = {$_.Name}},
             @{Label = "Power"; Expression = {[string]$_.PowerLive + 'W'}; Align = 'right'},
-            # @{Label = "Efficiency"; Expression = {(ConvertTo_Hash ($_.SpeedLive / $_.PowerLive)) + '/W' + $(if ($_.AlgorithmDual -ne $null) {"*"}) }; Align = 'right'},
-            @{Label = "PoolSpeed"; Expression = {(ConvertTo_Hash $_.PoolHashrate) + '/s' + $(if ($_.AlgorithmDual -ne $null) {'|' + (ConvertTo_Hash $_.PoolHashrateDual) + '/s'})}; Align = 'right'},
+            # @{Label = "Efficiency"; Expression = {(ConvertTo_Hash ($_.SpeedLive / $_.PowerLive)) + '/W' + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {"*"}) }; Align = 'right'},
+            @{Label = "PoolSpeed"; Expression = {(ConvertTo_Hash $_.PoolHashrate) + '/s' + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {'|' + (ConvertTo_Hash $_.PoolHashrateDual) + '/s'})}; Align = 'right'},
             @{Label = "Workers"; Expression = {$_.PoolWorkers}; Align = 'right'},
             @{Label = "Loc."; Expression = {$_.Location}},
             @{Label = "Pool"; Expression = {$_.PoolAbbName}}
@@ -1071,25 +1068,23 @@ while ($true) {
                     }
                     if ($ExistsBest -eq $null -or $_.NeedBenchmark -eq $true) {$ProfitMiners += $_}
                 }
-            } else
-            {$ProfitMiners = $ActiveMiners}
+            } else { $ProfitMiners = $ActiveMiners }
 
 
             $ProfitMiners2 = @()
-            ForEach ( $TypeId in $types.Id) {
+            ForEach ($TypeId in $types.Id) {
                 $inserted = 1
                 $ProfitMiners | Where-Object IsValid | Where-Object GroupId -eq $TypeId | Sort-Object -Descending GroupName, NeedBenchmark, Profits | ForEach-Object {
                     if ($inserted -le $ProfitsScreenLimit) {$ProfitMiners2 += $_; $inserted++} #this can be done with select-object -first but then memory leak happens, ¿why?
                 }
             }
-
-
+            Remove-Variable ProfitMiners
 
             #Display profits  information
             $ProfitMiners2 | Sort-Object @{expression = "GroupName"; Ascending = $true}, @{expression = "NeedBenchmark"; Ascending = $true}, @{expression = "Profits"; Descending = $true} | Format-Table (
                 @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
-                @{Label = "Algorithm"; Expression = {$_.Algorithm + $_.AlgoLabel + $(if ($_.AlgorithmDual -ne $null) {'|' + $_.AlgorithmDual})}},
-                @{Label = "Coin"; Expression = {$_.Symbol + $(if ($_.SymbolDual -ne $null) {'|' + $_.SymbolDual})}},
+                @{Label = "Algorithm"; Expression = {$_.Algorithm + $_.AlgoLabel + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {'|' + $_.AlgorithmDual})}},
+                @{Label = "Coin"; Expression = {$_.Symbol + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {'|' + $_.SymbolDual})}},
                 @{Label = "Miner"; Expression = {$_.Name}},
                 # @{Label = "PowLmt"; Expression ={if ($_.PowerLimit -gt 0) {$_.PowerLimit}};align='right'},
                 @{Label = "PowerAvg"; Expression = {if (-not $_.NeedBenchmark) {$_.PowerAvg.tostring("n0")}}; Align = 'right'},
@@ -1102,11 +1097,7 @@ while ($true) {
                 @{Label = "Pool"; Expression = {$_.PoolAbbName}},
                 @{Label = "Location"; Expression = {$_.Location}}
 
-
             )  -GroupBy GroupName | Out-Host
-
-
-            Remove-Variable ProfitMiners
             Remove-Variable ProfitMiners2
         }
 
@@ -1166,8 +1157,8 @@ while ($true) {
                     "                                                                         " | Out-host
                     set_ConsolePosition 0 $YToWriteMessages
 
-                    if ($_.WalletMode -eq "WALLET") {writelog ("Checking " + $_.PoolName + " - " + $_.Symbol) $logfile $true}
-                    else {writelog ("Checking " + $_.PoolName + " - " + $_.Symbol + ' (' + $_.Algorithm + ')') $logfile $true}
+                    if ($_.WalletMode -eq "WALLET") {writelog ("Checking " + $_.PoolName + " - " + $_.Symbol) $LogFile $True}
+                    else {writelog ("Checking " + $_.PoolName + " - " + $_.Symbol + ' (' + $_.Algorithm + ')') $LogFile $True}
 
                     $Ws = Get_Pools -Querymode $_.WalletMode -PoolsFilterList $_.Poolname -Info ($_)
 
@@ -1249,8 +1240,8 @@ while ($true) {
             #Display activated miners list
             $ActiveMiners | Where-Object ActivatedTimes -GT 0 | Sort-Object @{expression = "GroupName"; Ascending = $true}, @{expression = {$_.ActiveTime.TotalMinutes}; Descending = $true} | Format-Table -Wrap  -GroupBy GroupName (
                 @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
-                @{Label = "Algorithm"; Expression = {$_.Algorithm + $(if ($_.AlgorithmDual -ne $null) {'|' + $_.AlgorithmDual})}},
-                @{Label = "Symbol"; Expression = {$_.Symbol + $(if ($_.SymbolDual -ne $null) {'|' + $_.SymbolDual})}},
+                @{Label = "Algorithm"; Expression = {$_.Algorithm + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {'|' + $_.AlgorithmDual})}},
+                @{Label = "Symbol"; Expression = {$_.Symbol + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {'|' + $_.SymbolDual})}},
                 @{Label = "Pool"; Expression = {$_.PoolAbbName}},
                 @{Label = "Miner"; Expression = {$_.Name}},
                 @{Label = "Launch"; Expression = {$_.ActivatedTimes}},

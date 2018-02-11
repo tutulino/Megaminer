@@ -987,7 +987,7 @@ function Expand_WebRequest {
 
 
     if (Test-Path $FileName) {Remove-Item $FileName}
-
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Invoke-WebRequest $Uri -OutFile $FileName -UseBasicParsing
 
     if (Test-Path $FileName) {
@@ -1309,7 +1309,7 @@ function Get_Hashrates {
         $Content = (Get-Content -path $pattern)
         try {$Content = $Content| ConvertFrom-Json} catch {
             #if error from convert from json delete file
-            writelog "Corrupted file $Pattern, deleting"
+            writelog "Corrupted file $Pattern, deleting" $LogFile
             remove-item -path $pattern
         }
     }
@@ -1372,6 +1372,7 @@ function Start_Downloader {
         try {
             if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
                 New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
+                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
                 Invoke-WebRequest $URI -OutFile $Path -UseBasicParsing -ErrorAction Stop
                 if (![string]::IsNullOrEmpty($SHA256)) {
                     if ((Get-FileHash -Path $Path -Algorithm SHA256).Hash -ne $SHA256) {
@@ -1486,7 +1487,7 @@ function get_coin_symbol ([string]$Coin) {
         "dash" {$Result = "DASH"}
         "digibyte" {$Result = "DGB"}
         "electroneum" {$Result = "ETN"}
-        "ethereum-classic" {$Result = "ETC"}
+        "ethereumclassic" {$Result = "ETC"}
         "ethereum" {$Result = "ETH"}
         "expanse" {$Result = "EXP"}
         "feathercoin" {$Result = "FTC"}
