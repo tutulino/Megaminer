@@ -533,6 +533,7 @@ Older stats are not compatibles
 --FEATURES CHANGES:
 
 *Added minable algorithms selection in config.txt
+*Faster boot and interval change
 
 ---POOLS CHANGES:
 *Added ravencoin pool to suprnova
@@ -553,6 +554,9 @@ Older stats are not compatibles
 *Fixed: writelog prompt msg when corrupted stats file
 *Fixed: distinct gpu groups order between active miners and profits zones
 *Fixed: mining pool hub excavator error (now mining pool hub uses IP address )
+*Fixed: dual mining info in profits screen and active miners section (revenue and pool)
+*Fixed: Active miners profit not including pool and miner fee
+*Fixed: AMD cards not showing in current screen
 
 --RELEASE NOTES
 This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD,@@ALGORITHMS_CPU

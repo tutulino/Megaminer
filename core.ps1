@@ -56,6 +56,11 @@ param(
 
 
 $ErrorActionPreference = "Continue"
+
+$config=get_config
+
+
+
 if ($Groupnames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($Groupnames -join "/")}
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
 
@@ -95,9 +100,9 @@ $FirstTotalExecution =$true
 $StartTime=get-date
 
 
-if ((get_config_variable "DEBUGLOG") -eq "ENABLED"){$DetailedLog=$True} else {$DetailedLog=$false}
+if (($config.DEBUGLOG) -eq "ENABLED"){$DetailedLog=$True} else {$DetailedLog=$false}
 
-$Screen = get_config_variable "STARTSCREEN"
+$Screen = $config.STARTSCREEN
   
 
 
@@ -187,16 +192,17 @@ WriteLog $msg $LogFile $False
 
 while ($true) {
 
+    $config=get_config
     Clear-Host;$repaintScreen=$true
 
     WriteLog "New interval starting............." $LogFile $True
     Writelog ( Get_ComputerStats |ConvertTo-Json) $logfile $false
 
-    $Location=get_config_variable "LOCATION"
+    $Location=$config.LOCATION
 
 
-    if ($PercentToSwitch -eq "") {$PercentToSwitch2 = [int](get_config_variable "PERCENTTOSWITCH")} else {$PercentToSwitch2=[int]$PercentToSwitch}
-    $DelayCloseMiners=get_config_variable "DELAYCLOSEMINERS"
+    if ($PercentToSwitch -eq "") {$PercentToSwitch2 = [int]($config.PERCENTTOSWITCH)} else {$PercentToSwitch2=[int]$PercentToSwitch}
+    $DelayCloseMiners=$config.DELAYCLOSEMINERS
     
     $Types=Get_Mining_Types -filter $Groupnames
     
@@ -205,9 +211,9 @@ while ($true) {
     if ($FirstTotalExecution) {$ProfitsScreenLimit=$InitialProfitsScreenLimit}
                          
 
-    $Currency= get_config_variable "CURRENCY"
-    $BenchmarkintervalTime=[int](get_config_variable "BENCHMARKTIME" )
-    $LocalCurrency= get_config_variable "LOCALCURRENCY"
+    $Currency= $config.CURRENCY
+    $BenchmarkintervalTime=[int]($config.BENCHMARKTIME )
+    $LocalCurrency= $config.LOCALCURRENCY
     if ($LocalCurrency.length -eq 0) { #for old config.txt compatibility
         switch ($location) {
             'Europe' {$LocalCurrency="EURO"}
@@ -218,7 +224,7 @@ while ($true) {
             }
         }
     
-    $DelayCloseMiners=[int](get_config_variable "DELAYCLOSEMINERS")        
+    $DelayCloseMiners=[int]($config.DELAYCLOSEMINERS)        
     
     #Donation
     $LastIntervalTime= (get-date) - $IntervalStartAt
@@ -233,7 +239,7 @@ while ($true) {
     $ElapsedDonatedTime = [int]($DonatedTime) + $LastIntervalTime.minutes + ($LastIntervalTime.hours *60)
 
     
-    $ConfigDonateTime= [int](get_config_variable "DONATE")
+    $ConfigDonateTime= [int]($config.DONATE)
     
 
     #if ($DonateTime -gt 5) {[int]$DonateTime=5}
@@ -264,7 +270,7 @@ while ($true) {
                     #get interval time based on pool kind (pps/ppls)
                     $NextInterval=0
                     Get_Pools -Querymode "Info" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $Location -AlgoFilterList $Algorithm | foreach-object {
-                        $PItime=get_config_variable ("INTERVAL_"+$_.Rewardtype)
+                        $PItime=$config.("INTERVAL_"+$_.Rewardtype)
                         if ([int]$PItime -gt $NextInterval) {$NextInterval= [int]$PItime}
                         }
 
@@ -272,8 +278,8 @@ while ($true) {
                     $PoolsName=$ParamPoolsNameBCK
                     $CoinsName=$ParamCoinsNameBCK
                     $MiningMode=$ParamMiningModeBCK
-                    $UserName= get_config_variable "USERNAME"
-                    $WorkerName= get_config_variable "WORKERNAME"
+                    $UserName= $config.USERNAME
+                    $WorkerName= $config.WORKERNAME
                     $CoinsWallets=@{} 
                     ((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*','').TrimEnd() | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0],($_ -split "=")[1])}
                 
@@ -287,7 +293,7 @@ while ($true) {
 
 
     #get actual hour electricity cost
-    $ElectricityCostValue= [double]((get_config_variable "ElectricityCost" |ConvertFrom-Json) |where-object  HourStart -le (get-date).Hour |where-object  HourEnd -ge (get-date).Hour).CostKwh
+    $ElectricityCostValue= [double](($config.ElectricityCost |ConvertFrom-Json) |where-object  HourStart -le (get-date).Hour |where-object  HourEnd -ge (get-date).Hour).CostKwh
 
 
 
@@ -312,7 +318,7 @@ while ($true) {
 
 
     #Filter by minworkers variable
-    $Pools = $Pools | Where-Object {$_.Poolworkers -ge (get_config_variable "MINWORKERS") -or $_.Poolworkers -eq $null}
+    $Pools = $Pools | Where-Object {$_.Poolworkers -ge ($config.MINWORKERS) -or $_.Poolworkers -eq $null}
     writelog ([string]$Pools.count+" pools left after min workers filter.....") $logfile $true
 
 
@@ -341,18 +347,19 @@ while ($true) {
     
     #Load information about the Miner asociated to each Coin-Algo-Miner
 
- 
-    
-
     $Miners= @()
 
     foreach ($MinerFile in (Get-ChildItem "Miners" | Where-Object extension -eq '.json'))  
         {
+
+
             try { $Miner =$MinerFile | Get-Content | ConvertFrom-Json } 
             catch 
                 {  Writelog "-------BAD FORMED JSON: $MinerFile" $LogFile $true
                 Exit}
-   
+
+                
+
                     foreach ($Algo in ($Miner.Algorithms))
                         {
                             $HashrateValue= 0
@@ -367,7 +374,7 @@ while ($true) {
                             if ($AlgoNameDual -eq $null) {$Algorithms=$AlgoName} else {$Algorithms=$AlgoName+"_"+$AlgoNameDual}
                             
                             ForEach ( $TypeGroup in ($types | Where-object {$_.Algorithms -contains $Algorithms})) { #generate a line for each gpu group that has algorithm as valid
-                                    
+
                                     if  ((Compare-object $TypeGroup.type $Miner.Types -IncludeEqual -ExcludeDifferent | Measure-Object).count -gt 0) { #check group and miner types are the same
                                         Foreach ($Pool in ($Pools | where-object Algorithm -eq $AlgoName))  {   #Search pools for that algo
                                             
@@ -394,7 +401,7 @@ while ($true) {
                                                     $PoolUser=$Pool.User -replace '#WORKERNAME#',$WorkerName2
                                             
                                                 #Adjust pool price by pool defined factor
-                                                    $PoolProfitFactor=[double](get_config_variable ("POOLPROFITFACTOR_"+$Pool.name))
+                                                    $PoolProfitFactor=[double]($config.("POOLPROFITFACTOR_"+$Pool.name))
                                                     if ($PoolProfitFactor -eq "") { $PoolProfitFactor=1}
 
                                                 #select correct price by mode        
@@ -404,7 +411,7 @@ while ($true) {
                                                 #Search for dualmining pool   
                                                     if ($Miner.Dualmining) {
                                                           #Adjust pool dual price by pool defined factor
-                                                          $PoolProfitFactorDual=[double](get_config_variable ("POOLPROFITFACTOR_"+$PoolDual.name))
+                                                          $PoolProfitFactorDual=[double]($config.("POOLPROFITFACTOR_"+$PoolDual.name))
                                                              if ($PoolProfitFactorDual -eq "") { $PoolProfitFactorDual=1}
 
                                                            #search dual pool and select correct price by mode   
@@ -436,7 +443,10 @@ while ($true) {
                                                 #Subminer are variations of miner that not need to relaunch
                                                 #Creates a "subminer" object for each PL
                                                     $Subminers=@()
-                                                    Foreach ($PowerLimit in ($TypeGroup.PowerLimits -split ',')) { #always exists as least a power limit 0 
+                                                    Foreach ($PowerLimit in ($TypeGroup.PowerLimits)) { #always exists as least a power limit 0 
+
+                                #writelog ("$MinerFile $AlgoName "+$TypeGroup.Groupname+" "+$Pool.Info+" $PowerLimit") $logfile $true                                                                                              
+
                                                                 $Hrs = Get_Hashrates -algorithm $Algorithms -minername $Minerfile.basename  -GroupName $TypeGroup.GroupName  -PowerLimit $PowerLimit -AlgoLabel  $AlgoLabel | Where-Object {$_.TimeSinceStartInterval -gt ($_.BenchmarkintervalTime * 0.66)}
                                                                 $PowerValue=[double]($Hrs | measure-object -property Power -average).average
                                                                 $HashrateValue=[double]($Hrs | measure-object -property Speed -average).average
@@ -667,6 +677,7 @@ while ($true) {
                             Name                 = $Miner.Name
                             Path                 = Convert-Path $Miner.Path
                             PoolAbbName          = $Miner.PoolAbbName
+                            PoolAbbNameDual      = $Miner.PoolAbbNameDual
                             PoolFee              = $Miner.PoolFee
                             PoolName             = $Miner.PoolName
                             PoolNameDual         = $Miner.PoolNameDual
@@ -911,7 +922,10 @@ while ($true) {
              
                     $_.PowerLive = ($Cards | Where-Object gpugroup -eq ($ActiveMiners[$_.IdF].GpuGroup.GroupName) | Measure-Object -property power_draw -sum).sum
 
-                    $_.Profitslive= (($_.RevenueLive + $_.RevenueLiveDual)* $LocalBTCvalue) - ($ElectricityCostValue*($_.PowerLive*24)/1000)
+                    $_.Profitslive= (($_.RevenueLive + $_.RevenueLiveDual)* $LocalBTCvalue) 
+                    $_.Profitslive-= ($ActiveMiners[$_.IdF].MinerFee*$_.Profitslive)
+                    $_.Profitslive-= ($ActiveMiners[$_.IdF].PoolFee*$_.Profitslive)
+                    $_.Profitslive-= ($ElectricityCostValue*($_.PowerLive*24)/1000) 
 
 
                     $_.TimeSinceStartInterval =(get-date) - $_.Stats.LastTimeActive 
@@ -938,7 +952,7 @@ while ($true) {
 
                             if ($_.SpeedReads.count -gt 2000) {$_.SpeedReads = $_.SpeedReads[1..($_.SpeedReads.length-1)]} #if array is greateher than  X delete first element    
 
-                            if ((get_config_variable "LIVESTATSUPDATE") -eq "ENABLED" -or $_.NeedBenchmark) {
+                            if (($config.LIVESTATSUPDATE) -eq "ENABLED" -or $_.NeedBenchmark) {
                                                     Set_Hashrates -algorithm $ActiveMiners[$_.IdF].Algorithms -minername $ActiveMiners[$_.IdF].Name -GroupName $ActiveMiners[$_.IdF].GpuGroup.GroupName -AlgoLabel $ActiveMiners[$_.IdF].AlgoLabel -Powerlimit $_.PowerLimit -value  $_.SpeedReads
                                                 }
                             
@@ -1007,7 +1021,7 @@ while ($true) {
                                                             $Info=[PSCustomObject]@{
                                                                                 User= $_.UsernameReal
                                                                                 PoolName=$_.Poolname
-                                                                                ApiKey = get_config_variable ("APIKEY_"+$_.PoolName)
+                                                                                ApiKey = $config.("APIKEY_"+$_.PoolName)
                                                                                 Symbol = $_.WalletSymbol
                                                                                 Coin= $_.coin
                                                                                 Workername= $_.Workername
@@ -1021,7 +1035,7 @@ while ($true) {
                                                             $Info=[PSCustomObject]@{
                                                                                 User= $_.UsernameRealDual
                                                                                 PoolName=$_.PoolnameDual
-                                                                                ApiKey = get_config_variable ("APIKEY_"+$_.PoolnameDual)
+                                                                                ApiKey = $config.("APIKEY_"+$_.PoolnameDual)
                                                                                 Symbol = $_.WalletSymbol
                                                                                 Coin= $_.coinDual
                                                                                 Workername= $_.WorkernameDual
@@ -1164,15 +1178,13 @@ while ($true) {
                         @{Label = "StatsSpeed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.Subminer.hashrate))+'/s'} else {(ConvertTo_Hash  ($_.Subminer.hashrate))+'/s|'+(ConvertTo_Hash ($_.Subminer.hashratedual))+'/s'}}; Align = 'right'}, 
                         @{Label = "PowerAvg"; Expression = {if ($_.Subminer.NeedBenchmark) {"Benchmarking"} else {$_.Subminer.PowerAvg.tostring("n0")}}; Align = 'right'}, 
                         @{Label = "Efficiency"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.Subminer.hashrate/$_.Subminer.PowerAvg))+'/W'} else {$null} }; Align = 'right'},    
-                        @{Label = "Rev./Day"; Expression = {(($_.Subminer.Revenue+$_.Subminer.RenevueDual).tostring("n5"))+"btc" } ; Align = 'right'},
-                        @{Label = "Rev./Day"; Expression = {((($_.Subminer.Revenue+$_.Subminer.RenevueDual) * [double]$localBTCvalue ).tostring("n2"))+$LocalSymbol } ; Align = 'right'},
+                        @{Label = "Rev./Day"; Expression = {(($_.Subminer.Revenue+$_.Subminer.RevenueDual).tostring("n5"))+"btc" } ; Align = 'right'},
+                        @{Label = "Rev./Day"; Expression = {((($_.Subminer.Revenue+$_.Subminer.RevenueDual) * [double]$localBTCvalue ).tostring("n2"))+$LocalSymbol } ; Align = 'right'},
                         @{Label = "Profit/Day"; Expression = {if ($_.Subminer.NeedBenchmark) {"Benchmarking"} else {($_.Subminer.Profits).tostring("n2")+$LocalSymbol}}; Align = 'right'}, 
                         @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:P2}" -f $_.PoolFee}}; Align = 'right'},
                         @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:P2}" -f $_.MinerFee}}; Align = 'right'},
-                        @{Label = "Pool"; Expression = {$_.PoolAbbName}},
-                        @{Label = "Location"; Expression = {$_.Location}} 
-
-                      
+                        @{Label = "Loc."; Expression = {$_.Location}} ,
+                        @{Label = "Pool"; Expression = {if ($_.AlgorithmDual -eq $null)  {$_.PoolAbbName} else {$_.PoolAbbName+'|'+$_.PoolAbbNameDual}}  }
 
                     )  -GroupBy GroupName |  Out-Host
 
@@ -1225,14 +1237,14 @@ while ($true) {
                                     
 
                                     
-                                    $ApiKey = get_config_variable ("APIKEY_"+$_.PoolName)
+                                    $ApiKey = $config.("APIKEY_"+$_.PoolName)
                                 
                                     if ($Apikey -ne "") {
                                             $WalletsToCheck += [pscustomObject]@{
                                                         PoolName   = $_.PoolName
                                                         AbbName = $_.AbbName
                                                         WalletMode = $_.WalletMode
-                                                        User       = $null
+                                                        User  = $null
                                                         Coin = $_.Info
                                                         Algorithm =$_.Algorithm
                                                         OriginalAlgorithm =$_.OriginalAlgorithm
