@@ -13,7 +13,7 @@ $ActiveOnAutomaticMode = $false
 $ActiveOnAutomatic24hMode = $false
 $AbbName = 'DMN'
 $WalletMode = "NONE"
-$RewardType = "PROP"
+$RewardType = "PPS"
 $Result = @()
 
 if ($Querymode -eq "info") {

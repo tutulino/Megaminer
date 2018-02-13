@@ -16,7 +16,7 @@ $WalletMode = 'WALLET'
 $ApiUrl = 'http://api.zergpool.com:8080/api'
 $MineUrl = 'mine.zergpool.com'
 $Location = 'Europe'
-$RewardType = "PROP"
+$RewardType = "PPS"
 $UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 

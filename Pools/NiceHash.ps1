@@ -79,7 +79,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     do {
         try {
             $http = "https://api.nicehash.com/api?method=simplemultialgo.info"
-            $Request = Invoke-WebRequest $http -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json |Select-Object -expand result |Select-Object -expand simplemultialgo
+            $Request = Invoke-WebRequest $http -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json |Select-Object -expand result | Select-Object -expand simplemultialgo
         } catch {start-sleep 2}
         $retries++
         if ([string]::IsNullOrEmpty($Request)) {start-sleep 3}
@@ -95,7 +95,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Locations += [PSCustomObject]@{NhLocation = 'EU'; MMlocation = 'Europe'}
     $Locations += [PSCustomObject]@{NhLocation = 'HK'; MMlocation = 'Asia'}
 
-    $Request | Where-Object {$_.paying -gt 0 } | ForEach-Object {
+    $Request | Where-Object {$_.paying -gt 0} | ForEach-Object {
 
         $Algo = get_algo_unified_name ($_.name)
 

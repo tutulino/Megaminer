@@ -6,8 +6,6 @@
     "Arguments": "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL# -dpsw #PASSWORDDUAL# -wd 1 -r -1 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
     "API": "Claymore",
     "APIPort": 3333,
-    "DualMining": true,
-    "DualMiningMainAlgo": "Ethash",
     "Fee": 0.015,
     "Algorithms": {
         "Ethash_Blake2s_55": "-dcoin blake2s -dcri 55",

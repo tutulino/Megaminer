@@ -6,18 +6,26 @@ param(
 )
 
 $Profit = 0
-$MinerReport = ConvertTo-Json @($ActiveMiners | Where-Object {$_.Best} | Foreach-Object {
-        $Profit += [decimal]$_.RevenueLive + [decimal]$_.RevenueLiveDual
+$MinerReport = ConvertTo-Json @($ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | ForEach-Object {
+        $Profit += [decimal]$ActiveMiners[$_.IdF].RevenueLive + [decimal]$ActiveMiners[$_.IdF].RevenueLiveDual
         [pscustomobject]@{
-            Name           = $_.Name
+            Name           = $ActiveMiners[$_.IdF].Name
             # Path           = Resolve-Path -Relative $_.Path
-            Type           = $_.Groupname
-            Active         = "{0:N1} min" -f ($_.ActiveTime.TotalMinutes)
-            Algorithm      = $_.Algorithm + $_.AlgoLabel + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {'|' + $_.AlgorithmDual}) + $_.BestBySwitch
-            Pool           = $_.PoolAbbName
-            CurrentSpeed   = (ConvertTo_Hash $_.SpeedLive) + '/s' + $(if (![string]::IsNullOrEmpty($_.AlgorithmDual)) {'|' + (ConvertTo_Hash $_.SpeedLiveDual) + '/s'}) -replace ",", "."
-            EstimatedSpeed = $_.Hashrates
-            PID            = $_.Process.Id
+            Type           = $ActiveMiners[$_.IdF].GpuGroup.GroupName
+            Active         = "{0:N1} min" -f ($_.Stats.ActiveTime.TotalMinutes)
+            Algorithm      = $ActiveMiners[$_.IdF].Algorithm + $ActiveMiners[$_.IdF].AlgoLabel + $(
+                if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + $ActiveMiners[$_.IdF].AlgorithmDual}
+            ) + $ActiveMiners[$_.IdF].BestBySwitch
+            Pool           = $ActiveMiners[$_.IdF].PoolAbbName + $(
+                if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + $ActiveMiners[$_.IdF].PoolAbbNameDual}
+            )
+            CurrentSpeed   = (ConvertTo_Hash $_.SpeedLive) + '/s' + $(
+                if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + (ConvertTo_Hash $_.SpeedLiveDual) + '/s'}
+            ) -replace ",", "."
+            EstimatedSpeed = (ConvertTo_Hash $_.Hashrate) + '/s' + $(
+                if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + (ConvertTo_Hash $_.HashrateDual) + '/s'}
+            ) -replace ",", "."
+            PID            = $ActiveMiners[$_.IdF].Process.Id
             StatusMiner    = $_.Status
             'BTC/day'      = [decimal]$_.RevenueLive + [decimal]$_.RevenueLiveDual
         }
@@ -25,3 +33,4 @@ $MinerReport = ConvertTo-Json @($ActiveMiners | Where-Object {$_.Best} | Foreach
 try {
     Invoke-RestMethod -Uri $MinerStatusURL -Method Post -Body @{address = $MinerStatusKey; workername = $WorkerName; miners = $MinerReport; profit = $Profit} | Out-Null
 } catch {}
+# $MinerReport | Set-Content report.txt

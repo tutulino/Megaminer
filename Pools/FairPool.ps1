@@ -11,7 +11,7 @@ $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $false
 $AbbName = 'FAIR'
 $WalletMode = "WALLET"
-$RewardType = "PROP"
+$RewardType = "PPS"
 $Result = @()
 
 
