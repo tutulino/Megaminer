@@ -40,6 +40,7 @@ param(
 #$PoolsName='zpool'
 #$PoolsName='hashrefinery'
 #$PoolsName='altminer'
+#$PoolsName='blazepool'
 
 #$PoolsName="Nicehash"
 #$PoolsName="Nanopool"
@@ -69,9 +70,13 @@ if ($DefenderExclusions.value -notcontains (Convert-Path .)) {Start-Process powe
 
 #Start log file
 Clear_log
-$LogFile = ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
-Start-Transcript $LogFile #for start log msg
+$logname = ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
+Start-Transcript $logname #for start log msg
 Stop-Transcript
+$LogFile = [System.IO.StreamWriter]::new( $logname, $true )
+$LogFile.AutoFlush = $true
+
+#get mining types
 $Types = Get_Mining_Types -filter $Groupnames
 writelog ( get_devices_information $Types | ConvertTo-Json) $logfile $false
 Writelog ( $Types |ConvertTo-Json) $logfile $false
@@ -287,22 +292,27 @@ while ($true) {
 
     writelog ("Detected " + [string]$Pools.count + " pools......") $logfile $true
 
-    #Filter by minworkers variable
-    $Pools = $Pools | Where-Object {$_.Poolworkers -ge ($config.MinWorkers) -or $_.PoolWorkers -eq $null}
-    writelog ([string]$Pools.count + " pools left after min workers filter.....") $logfile $true
+    #Filter by minworkers variable (only if there is any pool greater than minimum)
+    $PoolsFiltered = ($Pools | Where-Object {$_.Poolworkers -ge ($config.MinWorkers) -or $_.PoolWorkers -eq $null})
+    if ($PoolsFiltered.count -ge 1) {
+        $Pools = $PoolsFiltered
+        writelog ([string]$Pools.count + " pools left after min workers filter.....") $logfile $true
+    } else {
+        writelog ("No pools with workers greater than minimum config, filter is discarded.....") $logfile $true
+    }
+    Remove-Variable PoolsFiltered
     #Call api to local currency conversion
     try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 |
             ConvertFrom-Json |
             Select-Object -ExpandProperty BPI
+        $LocalBTCvalue = $CDKResponse.$LocalCurrency.rate_float
         Writelog ("CoinDesk API was responsive..........") $LogFile $True
     } catch {
-        Clear-Host
-        $repaintScreen = $true
-        writelog "COINDESK API NOT RESPONDING, NO LOCAL COIN CONVERSION" $LogFile $True
+
+        WriteLog "Coindesk api not responding, not possible/deactuallized local coin conversion.........." $logfile $true
     }
-    $LocalBTCvalue = $CDKResponse.$LocalCurrency.rate_float
 
 
     #Load information about the Miner asociated to each Coin-Algo-Miner
@@ -315,46 +325,62 @@ while ($true) {
             Exit
         }
 
-        foreach ($Algo in $Miner.Algorithms.PSObject.Properties) {
-            $HashRateValue = 0
-            $HashRateValueDual = 0
-            $Hrs = $null
+        ForEach ($TypeGroup in $types) {
+            #generate a line for each gpu group that has algorithm as valid
+            if ($Miner.Type -ne $TypeGroup.type) {continue} #check group and miner types are the same
 
-            ##Algoname contains real name for dual and no dual miners
-            $AlgoName = get_algo_unified_name (($Algo.Name -split ("_"))[0])
-            $AlgoNameDual = get_algo_unified_name (($Algo.Name -split ("_"))[1])
-            $AlgoLabel = ($Algo.Name -split ("_"))[2]
-            $Algorithms = $AlgoName
-            if (![string]::IsNullOrEmpty($AlgoNameDual)) {$Algorithms += "_" + $AlgoNameDual}
+            foreach ($Algo in $Miner.Algorithms.PSObject.Properties) {
 
-            ForEach ( $TypeGroup in ($types | Where-Object {$_.Algorithms -contains $Algorithms -or !$_.Algorithms})) {
-                #generate a line for each gpu group that has algorithm as valid
+                ##Algoname contains real name for dual and no dual miners
+                $AlgoName = get_algo_unified_name (($Algo.Name -split ("_"))[0])
+                $AlgoNameDual = get_algo_unified_name (($Algo.Name -split ("_"))[1])
+                $AlgoLabel = ($Algo.Name -split ("_"))[2]
+                $Algorithms = $AlgoName
+                if (![string]::IsNullOrEmpty($AlgoNameDual)) {$Algorithms += "_" + $AlgoNameDual}
 
-                if ($TypeGroup.Type -eq $Miner.Type) {
-                    #check group and miner types are the same
-                    Foreach ($Pool in ($Pools | Where-Object Algorithm -eq $AlgoName)) {
-                        #Search pools for that algo
+                if ($Typegroup.Algorithms -notcontains $Algorithms -and ![string]::IsNullOrEmpty($Typegroup.Algorithms)) {continue} #check config has this algo as minable
 
-                        if ((($Pools | Where-Object Algorithm -eq $AlgoNameDual) -ne $null) -or [string]::IsNullOrEmpty($AlgoNameDual)) {
+                Foreach ($Pool in ($Pools | Where-Object Algorithm -eq $AlgoName)) {
+                    #Search pools for that algo
 
-                            #Set flag if both Miner and Pool support SSL
-                            $enableSSL = ($Miner.SSL -and $Pool.SSL)
+                    if ((($Pools | Where-Object Algorithm -eq $AlgoNameDual) -ne $null) -or [string]::IsNullOrEmpty($AlgoNameDual)) {
 
-                            #Replace wildcards patterns
-                            if ($Pool.PoolName -eq 'Nicehash') {
-                                $WorkerName2 = $WorkerName + $TypeGroup.GroupName #Nicehash requires alphanumeric workernames
-                            } else {
-                                $WorkerName2 = $WorkerName + '_' + $TypeGroup.GroupName
-                            }
-                            $PoolUser = $Pool.User -replace '#WORKERNAME#', $WorkerName2
+                        #Set flag if both Miner and Pool support SSL
+                        $enableSSL = ($Miner.SSL -and $Pool.SSL)
 
-                            $Arguments = $Miner.Arguments `
+                        #Replace wildcards patterns
+                        if ($Pool.PoolName -eq 'Nicehash') {
+                            $WorkerName2 = $WorkerName + $TypeGroup.GroupName #Nicehash requires alphanumeric workernames
+                        } else {
+                            $WorkerName2 = $WorkerName + '_' + $TypeGroup.GroupName
+                        }
+                        $PoolUser = $Pool.User -replace '#WORKERNAME#', $WorkerName2
+
+                        $Arguments = $Miner.Arguments `
+                            -replace '#PORT#', $(if ($enableSSL -and $Pool.PortSSL -ne $null) {$Pool.PortSSL} else {$Pool.Port}) `
+                            -replace '#SERVER#', $(if ($enableSSL -and $Pool.HostSSL -ne $null) {$Pool.HostSSL} else {$Pool.Host}) `
+                            -replace '#PROTOCOL#', $(if ($enableSSL -and $Pool.ProtocolSSL -ne $null) {$Pool.ProtocolSSL} else {$Pool.Protocol}) `
+                            -replace '#LOGIN#', $Pool.User `
+                            -replace '#PASSWORD#', $Pool.Pass `
+                            -replace "#GpuPlatform#", $TypeGroup.GpuPlatform  `
+                            -replace '#ALGORITHM#', $Algoname `
+                            -replace '#ALGORITHMPARAMETERS#', $Algo.Value `
+                            -replace '#WORKERNAME#', $WorkerName2 `
+                            -replace '#DEVICES#', $TypeGroup.Gpus `
+                            -replace '#DEVICESCLAYMODE#', $TypeGroup.GpusClayMode `
+                            -replace '#DEVICESETHMODE#', $TypeGroup.GpusETHMode `
+                            -replace '#GROUPNAME#', $TypeGroup.Groupname `
+                            -replace "#ETHSTMODE#", $Pool.EthStMode `
+                            -replace "#DEVICESNSGMODE#", $TypeGroup.GpusNsgMode
+                        if (![string]::IsNullOrEmpty($Miner.PatternConfigFile)) {
+                            $ConfigFileArguments = replace_foreach_gpu (Get-Content $Miner.PatternConfigFile -raw) $TypeGroup.Gpus
+                            $ConfigFileArguments = $ConfigFileArguments `
                                 -replace '#PORT#', $(if ($enableSSL -and $Pool.PortSSL -ne $null) {$Pool.PortSSL} else {$Pool.Port}) `
                                 -replace '#SERVER#', $(if ($enableSSL -and $Pool.HostSSL -ne $null) {$Pool.HostSSL} else {$Pool.Host}) `
                                 -replace '#PROTOCOL#', $(if ($enableSSL -and $Pool.ProtocolSSL -ne $null) {$Pool.ProtocolSSL} else {$Pool.Protocol}) `
                                 -replace '#LOGIN#', $Pool.User `
                                 -replace '#PASSWORD#', $Pool.Pass `
-                                -replace "#GpuPlatform#", $TypeGroup.GpuPlatform  `
+                                -replace "#GpuPlatform#", $TypeGroup.GpuPlatform `
                                 -replace '#ALGORITHM#', $Algoname `
                                 -replace '#ALGORITHMPARAMETERS#', $Algo.Value `
                                 -replace '#WORKERNAME#', $WorkerName2 `
@@ -364,215 +390,196 @@ while ($true) {
                                 -replace '#GROUPNAME#', $TypeGroup.Groupname `
                                 -replace "#ETHSTMODE#", $Pool.EthStMode `
                                 -replace "#DEVICESNSGMODE#", $TypeGroup.GpusNsgMode
-                            if (![string]::IsNullOrEmpty($Miner.PatternConfigFile)) {
-                                $ConfigFileArguments = replace_foreach_gpu (Get-Content $Miner.PatternConfigFile -raw) $TypeGroup.Gpus
-                                $ConfigFileArguments = $ConfigFileArguments `
-                                    -replace '#PORT#', $(if ($enableSSL -and $Pool.PortSSL -ne $null) {$Pool.PortSSL} else {$Pool.Port}) `
-                                    -replace '#SERVER#', $(if ($enableSSL -and $Pool.HostSSL -ne $null) {$Pool.HostSSL} else {$Pool.Host}) `
-                                    -replace '#PROTOCOL#', $(if ($enableSSL -and $Pool.ProtocolSSL -ne $null) {$Pool.ProtocolSSL} else {$Pool.Protocol}) `
-                                    -replace '#LOGIN#', $Pool.User `
-                                    -replace '#PASSWORD#', $Pool.Pass `
-                                    -replace "#GpuPlatform#", $TypeGroup.GpuPlatform `
-                                    -replace '#ALGORITHM#', $Algoname `
-                                    -replace '#ALGORITHMPARAMETERS#', $Algo.Value `
-                                    -replace '#WORKERNAME#', $WorkerName2 `
-                                    -replace '#DEVICES#', $TypeGroup.Gpus `
-                                    -replace '#DEVICESCLAYMODE#', $TypeGroup.GpusClayMode `
-                                    -replace '#DEVICESETHMODE#', $TypeGroup.GpusETHMode `
-                                    -replace '#GROUPNAME#', $TypeGroup.Groupname `
-                                    -replace "#ETHSTMODE#", $Pool.EthStMode `
-                                    -replace "#DEVICESNSGMODE#", $TypeGroup.GpusNsgMode
+                        }
+
+                        #Adjust pool price by pool defined factor
+                        $PoolProfitFactor = [double]($config.("PoolProfitFactor_" + $Pool.name))
+                        if ($PoolProfitFactor -eq 0) { $PoolProfitFactor = 1}
+
+                        #select correct price by mode
+                        if ($MiningMode -eq 'Automatic24h') {$Price = [double]$Pool.Price24h * $PoolProfitFactor}
+                        else {$Price = [double]$Pool.Price * $PoolProfitFactor}
+
+                        #Search for dualmining pool
+                        if (![string]::IsNullOrEmpty($AlgoNameDual)) {
+                            #Adjust pool dual price by pool defined factor
+                            $PoolProfitFactorDual = [double]($config.("PoolProfitFactor_" + $PoolDual.name))
+                            if ($PoolProfitFactorDual -eq 0) { $PoolProfitFactorDual = 1}
+
+                            #search dual pool and select correct price by mode
+                            if ($MiningMode -eq 'Automatic24h') {
+                                $PoolDual = $Pools | Where-Object Algorithm -eq $AlgoNameDual | Sort-Object Price24h -Descending | Select-Object -First 1
+                                $PriceDual = [double]$PoolDual.Price24h * $PoolProfitFactor
+                            } else {
+                                $PoolDual = $Pools | Where-Object Algorithm -eq $AlgoNameDual | Sort-Object Price -Descending | Select-Object -First 1
+                                $PriceDual = [double]$PoolDual.Price * $PoolProfitFactor
                             }
 
-                            #Adjust pool price by pool defined factor
-                            $PoolProfitFactor = [double]($config.("PoolProfitFactor_" + $Pool.name))
-                            if ($PoolProfitFactor -eq 0) { $PoolProfitFactor = 1}
+                            #Set flag if both Miner and Pool support SSL
+                            $enableDualSSL = ($Miner.SSL -and $PoolDual.SSL)
 
-                            #select correct price by mode
-                            if ($MiningMode -eq 'Automatic24h') {$Price = [double]$Pool.Price24h * $PoolProfitFactor}
-                            else {$Price = [double]$Pool.Price * $PoolProfitFactor}
+                            #Replace wildcards patterns
+                            $WorkerName3 = $WorkerName2 + 'D'
+                            $PoolUserDual = $PoolDual.User -replace '#WORKERNAME#', $WorkerName3
 
-                            #Search for dualmining pool
-                            if (![string]::IsNullOrEmpty($AlgoNameDual)) {
-                                #Adjust pool dual price by pool defined factor
-                                $PoolProfitFactorDual = [double]($config.("PoolProfitFactor_" + $PoolDual.name))
-                                if ($PoolProfitFactorDual -eq 0) { $PoolProfitFactorDual = 1}
-
-                                #search dual pool and select correct price by mode
-                                if ($MiningMode -eq 'Automatic24h') {
-                                    $PoolDual = $Pools | Where-Object Algorithm -eq $AlgoNameDual | Sort-Object Price24h -Descending | Select-Object -First 1
-                                    $PriceDual = [double]$PoolDual.Price24h * $PoolProfitFactor
-                                } else {
-                                    $PoolDual = $Pools | Where-Object Algorithm -eq $AlgoNameDual | Sort-Object Price -Descending | Select-Object -First 1
-                                    $PriceDual = [double]$PoolDual.Price * $PoolProfitFactor
-                                }
-
-                                #Set flag if both Miner and Pool support SSL
-                                $enableDualSSL = ($Miner.SSL -and $PoolDual.SSL)
-
-                                #Replace wildcards patterns
-                                $WorkerName3 = $WorkerName2 + 'D'
-                                $PoolUserDual = $PoolDual.User -replace '#WORKERNAME#', $WorkerName3
-
-                                $Arguments = $Arguments `
+                            $Arguments = $Arguments `
+                                -replace '#PORTDUAL#', $(if ($enableDualSSL -and $PoolDual.PortSSL -ne $null) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
+                                -replace '#SERVERDUAL#', $(if ($enableDualSSL -and $PoolDual.HostSSL -ne $null) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
+                                -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL -and $PoolDual.ProtocolSSL -ne $null) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
+                                -replace '#LOGINDUAL#', $PoolDual.User `
+                                -replace '#PASSWORDDUAL#', $PoolDual.Pass `
+                                -replace '#ALGORITHMDUAL#', $AlgonameDual `
+                                -replace '#WORKERNAME#', $WorkerName3
+                            if (![string]::IsNullOrEmpty($Miner.PatternConfigFile)) {
+                                $ConfigFileArguments = $ConfigFileArguments `
                                     -replace '#PORTDUAL#', $(if ($enableDualSSL -and $PoolDual.PortSSL -ne $null) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
                                     -replace '#SERVERDUAL#', $(if ($enableDualSSL -and $PoolDual.HostSSL -ne $null) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
                                     -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL -and $PoolDual.ProtocolSSL -ne $null) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
                                     -replace '#LOGINDUAL#', $PoolDual.User `
                                     -replace '#PASSWORDDUAL#', $PoolDual.Pass `
-                                    -replace '#ALGORITHMDUAL#', $AlgonameDual `
+                                    -replace '#ALGORITHMDUAL#', $AlgoNameDual `
                                     -replace '#WORKERNAME#', $WorkerName3
-                                if (![string]::IsNullOrEmpty($Miner.PatternConfigFile)) {
-                                    $ConfigFileArguments = $ConfigFileArguments `
-                                        -replace '#PORTDUAL#', $(if ($enableDualSSL -and $PoolDual.PortSSL -ne $null) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
-                                        -replace '#SERVERDUAL#', $(if ($enableDualSSL -and $PoolDual.HostSSL -ne $null) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
-                                        -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL -and $PoolDual.ProtocolSSL -ne $null) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
-                                        -replace '#LOGINDUAL#', $PoolDual.User `
-                                        -replace '#PASSWORDDUAL#', $PoolDual.Pass `
-                                        -replace '#ALGORITHMDUAL#', $AlgoNameDual `
-                                        -replace '#WORKERNAME#', $WorkerName3
-                                }
+                            }
+                        }
+
+
+                        #SubMiner are variations of miner that not need to relaunch
+                        #Creates a "SubMiner" object for each PL
+                        $SubMiners = @()
+                        Foreach ($PowerLimit in ($TypeGroup.PowerLimits)) {
+                            #always exists as least a power limit 0
+
+                            #writelog ("$MinerFile $AlgoName "+$TypeGroup.Groupname+" "+$Pool.Info+" $PowerLimit") $logfile $true
+
+                            $Hrs = Get_HashRates `
+                                -Algorithm $Algorithms `
+                                -MinerName $Minerfile.Basename `
+                                -GroupName $TypeGroup.GroupName `
+                                -PowerLimit $PowerLimit `
+                                -AlgoLabel  $AlgoLabel |
+                                Where-Object {$_.TimeSinceStartInterval -gt ($_.BenchmarkintervalTime * 0.66)}
+                            $PowerValue = [double]($Hrs | Measure-Object -property Power -average).average
+                            $HashRateValue = [double]($Hrs | Measure-Object -property Speed -average).average
+                            $HashRateValueDual = [double]($Hrs | Measure-Object -property SpeedDual -average).average
+
+
+                            #calculates revenue
+                            $SubMinerRevenue = [double]($HashRateValue * $Price)
+                            $SubMinerRevenueDual = [Double]([double]$HashRateValueDual * $PriceDual)
+
+                            #apply fee to revenues
+                            if ($enableSSL -and [double]$Miner.FeeSSL -gt 0) {
+                                $SubMinerRevenue -= ($SubMinerRevenue * [double]$Miner.feeSSL)
+                            } elseif ([double]$Miner.Fee -gt 0) {
+                                $SubMinerRevenue -= ($SubMinerRevenue * [double]$Miner.fee)
                             }
 
-
-                            #SubMiner are variations of miner that not need to relaunch
-                            #Creates a "SubMiner" object for each PL
-                            $SubMiners = @()
-                            Foreach ($PowerLimit in ($TypeGroup.PowerLimits)) {
-                                #always exists as least a power limit 0
-
-                                #writelog ("$MinerFile $AlgoName "+$TypeGroup.Groupname+" "+$Pool.Info+" $PowerLimit") $logfile $true
-
-                                $Hrs = Get_HashRates `
-                                    -Algorithm $Algorithms `
-                                    -MinerName $Minerfile.Basename `
-                                    -GroupName $TypeGroup.GroupName `
-                                    -PowerLimit $PowerLimit `
-                                    -AlgoLabel  $AlgoLabel |
-                                    Where-Object {$_.TimeSinceStartInterval -gt ($_.BenchmarkintervalTime * 0.66)}
-                                $PowerValue = [double]($Hrs | Measure-Object -property Power -average).average
-                                $HashRateValue = [double]($Hrs | Measure-Object -property Speed -average).average
-                                $HashRateValueDual = [double]($Hrs | Measure-Object -property SpeedDual -average).average
-
-
-                                #calculates revenue
-                                $SubMinerRevenue = [double]($HashRateValue * $Price)
-                                $SubMinerRevenueDual = [Double]([double]$HashRateValueDual * $PriceDual)
-
-                                #apply fee to revenues
-                                if ($enableSSL -and [double]$Miner.FeeSSL -gt 0) {
-                                    $SubMinerRevenue -= ($SubMinerRevenue * [double]$Miner.feeSSL)
-                                } elseif ([double]$Miner.Fee -gt 0) {
-                                    $SubMinerRevenue -= ($SubMinerRevenue * [double]$Miner.fee)
-                                }
-
-                                if ($enableDualSSL -and [double]$Miner.FeeSSL -gt 0) {
-                                    $SubMinerRevenueDual -= ($SubMinerRevenueDual * [double]$Miner.feeSSL)
-                                } elseif ([double]$Miner.Fee -gt 0) {
-                                    $SubMinerRevenueDual -= ($SubMinerRevenueDual * [double]$Miner.fee)
-                                }
-
-                                if ([double]$Pool.Fee -gt 0) {$SubMinerRevenue -= ($SubMinerRevenue * [double]$Pool.fee)} #PoolFee
-                                if ([double]$PoolDual.Fee -gt 0) {$SubMinerRevenueDual -= ($SubMinerRevenueDual * [double]$PoolDual.fee)}
-
-                                $StatsHistory = Get_Stats `
-                                    -Algorithm $Algorithms `
-                                    -MinerName $Minerfile.BaseName `
-                                    -GroupName $TypeGroup.GroupName `
-                                    -PowerLimit $PowerLimit `
-                                    -AlgoLabel $AlgoLabel
-                                $Stats = [pscustomobject]@{
-                                    BestTimes        = 0
-                                    BenchmarkedTimes = 0
-                                    LastTimeActive   = [TimeSpan]0
-                                    ActivatedTimes   = 0
-                                    ActiveTime       = [TimeSpan]0
-                                    FailedTimes      = 0
-                                }
-                                if ($StatsHistory -eq $null) {$StatsHistory = $stats}
-
-                                if ($SubMiners.count -eq 0 -or $SubMiners[0].StatsHistory.BestTimes -gt 0) {
-                                    #only add a SubMiner (distint from first if sometime first was best)
-                                    $SubMiners += [pscustomObject]@{
-                                        Id                     = $SubMiners.count
-                                        Best                   = $False
-                                        BestBySwitch           = ""
-                                        HashRate               = $HashRateValue
-                                        HashRateDual           = $HashRateValueDual
-                                        NeedBenchmark          = [bool]($HashRateValue -eq 0 -or ($AlgorithmDual -ne $null -and $HashRateValueDual -eq 0))
-                                        PowerAvg               = $PowerValue
-                                        PowerLimit             = [int]$PowerLimit
-                                        PowerLive              = 0
-                                        Profits                = (($SubMinerRevenue + $SubMinerRevenueDual) * $localBTCvalue) - ($ElectricityCostValue * ($PowerValue * 24) / 1000) #Profit is revenue less electricity cost
-                                        ProfitsLive            = 0
-                                        Revenue                = $SubMinerRevenue
-                                        RevenueDual            = $SubMinerRevenueDual
-                                        RevenueLive            = 0
-                                        RevenueLiveDual        = 0
-                                        SpeedLive              = 0
-                                        SpeedLiveDual          = 0
-                                        SpeedReads             = if ($Hrs -ne $null) {[array]$Hrs} else {@()}
-                                        Status                 = 'Idle'
-                                        Stats                  = $Stats
-                                        StatsHistory           = $StatsHistory
-                                        TimeSinceStartInterval = [TimeSpan]0
-                                    }
-                                }
+                            if ($enableDualSSL -and [double]$Miner.FeeSSL -gt 0) {
+                                $SubMinerRevenueDual -= ($SubMinerRevenueDual * [double]$Miner.feeSSL)
+                            } elseif ([double]$Miner.Fee -gt 0) {
+                                $SubMinerRevenueDual -= ($SubMinerRevenueDual * [double]$Miner.fee)
                             }
 
-                            $Miners += [pscustomobject] @{
-                                AlgoLabel           = $AlgoLabel
-                                Algorithm           = $AlgoName
-                                AlgorithmDual       = $AlgoNameDual
-                                Algorithms          = $Algorithms
-                                API                 = $Miner.API
-                                Arguments           = $Arguments
-                                BenchmarkArg        = $Miner.BenchmarkArg
-                                Coin                = $Pool.Info
-                                CoinDual            = $PoolDual.Info
-                                ConfigFileArguments = $ConfigFileArguments
-                                ExtractionPath      = ".\Bin\" + $Minerfile.basename + "\"
-                                GenerateConfigFile  = $(if (![string]::IsNullOrEmpty($Miner.GenerateConfigFile)) {
-                                        ".\Bin\" + $Minerfile.basename + "\" + $Miner.GenerateConfigFile `
-                                            -Replace [RegEx]::Escape($Miner.ExtractionPath), "" `
-                                            -Replace '#GROUPNAME#', $TypeGroup.GroupName
-                                    })
-                                GpuGroup            = $TypeGroup
-                                Host                = $Pool.Host
-                                Location            = $Pool.location
-                                MinerFee            = $(if ($enableSSL -and [double]$Miner.FeeSSL -gt 0) { [double]$Miner.feeSSL } elseif ([double]$Miner.Fee -gt 0) { [double]$Miner.Fee })
-                                Name                = $Minerfile.basename
-                                Path                = $(".\Bin\" + $Minerfile.basename + "\" + $Miner.Path -Replace [RegEx]::Escape($Miner.ExtractionPath), "")
-                                PoolAbbName         = $Pool.AbbName
-                                PoolAbbNameDual     = $PoolDual.AbbName
-                                PoolFee             = $(if ($Pool.Fee -ne $null) {[double]$Pool.fee})
-                                PoolName            = $Pool.PoolName
-                                PoolNameDual        = $PoolDual.PoolName
-                                PoolPrice           = $(if ($MiningMode -eq 'Automatic24h') {[double]$Pool.Price24h} else {[double]$Pool.Price})
-                                PoolPriceDual       = $(if ($MiningMode -eq 'Automatic24h') {[double]$PoolDual.Price24h} else {[double]$PoolDual.Price})
-                                PoolWorkers         = $Pool.PoolWorkers
-                                PoolWorkersDual     = $PoolDual.PoolWorkers
-                                Port                = $(if (($Types | Where-Object type -eq $TypeGroup.type).count -le 1 -and $DelayCloseMiners -eq 0) { $miner.ApiPort })
-                                PrelaunchCommand    = $Miner.PrelaunchCommand
-                                SubMiners           = $SubMiners
-                                SHA256              = $Miner.SHA256
-                                Symbol              = $Pool.Symbol
-                                SymbolDual          = $PoolDual.Symbol
-                                URI                 = $Miner.URI
-                                Username            = $PoolUser
-                                UsernameDual        = $PoolUserDual
-                                UsernameReal        = ($PoolUser -split '\.')[0]
-                                UsernameRealDual    = ($PoolUserDual -split '\.')[0]
-                                WalletMode          = $Pool.WalletMode
-                                WalletSymbol        = $Pool.WalletSymbol
-                                Workername          = $WorkerName2
-                                WorkernameDual      = $WorkerName3
+                            if ([double]$Pool.Fee -gt 0) {$SubMinerRevenue -= ($SubMinerRevenue * [double]$Pool.fee)} #PoolFee
+                            if ([double]$PoolDual.Fee -gt 0) {$SubMinerRevenueDual -= ($SubMinerRevenueDual * [double]$PoolDual.fee)}
+
+                            $StatsHistory = Get_Stats `
+                                -Algorithm $Algorithms `
+                                -MinerName $Minerfile.BaseName `
+                                -GroupName $TypeGroup.GroupName `
+                                -PowerLimit $PowerLimit `
+                                -AlgoLabel $AlgoLabel
+                            $Stats = [pscustomobject]@{
+                                BestTimes        = 0
+                                BenchmarkedTimes = 0
+                                LastTimeActive   = [TimeSpan]0
+                                ActivatedTimes   = 0
+                                ActiveTime       = [TimeSpan]0
+                                FailedTimes      = 0
                             }
-                        }    #dualmining
-                    }  #end foreach pool
-                } #  end if types
-            } # end Types loop
-        } #end foreach algo
+                            if ($StatsHistory -eq $null) {$StatsHistory = $stats}
+
+                            if ($SubMiners.count -eq 0 -or $SubMiners[0].StatsHistory.BestTimes -gt 0) {
+                                #only add a SubMiner (distint from first if sometime first was best)
+                                $SubMiners += [pscustomObject]@{
+                                    Id                     = $SubMiners.count
+                                    Best                   = $False
+                                    BestBySwitch           = ""
+                                    HashRate               = $HashRateValue
+                                    HashRateDual           = $HashRateValueDual
+                                    NeedBenchmark          = [bool]($HashRateValue -eq 0 -or ($AlgorithmDual -ne $null -and $HashRateValueDual -eq 0))
+                                    PowerAvg               = $PowerValue
+                                    PowerLimit             = [int]$PowerLimit
+                                    PowerLive              = 0
+                                    Profits                = (($SubMinerRevenue + $SubMinerRevenueDual) * $localBTCvalue) - ($ElectricityCostValue * ($PowerValue * 24) / 1000) #Profit is revenue less electricity cost
+                                    ProfitsLive            = 0
+                                    Revenue                = $SubMinerRevenue
+                                    RevenueDual            = $SubMinerRevenueDual
+                                    RevenueLive            = 0
+                                    RevenueLiveDual        = 0
+                                    SpeedLive              = 0
+                                    SpeedLiveDual          = 0
+                                    SpeedReads             = if ($Hrs -ne $null) {[array]$Hrs} else {@()}
+                                    Status                 = 'Idle'
+                                    Stats                  = $Stats
+                                    StatsHistory           = $StatsHistory
+                                    TimeSinceStartInterval = [TimeSpan]0
+                                }
+                            }
+                        }
+
+                        $Miners += [pscustomobject] @{
+                            AlgoLabel           = $AlgoLabel
+                            Algorithm           = $AlgoName
+                            AlgorithmDual       = $AlgoNameDual
+                            Algorithms          = $Algorithms
+                            API                 = $Miner.API
+                            Arguments           = $Arguments
+                            BenchmarkArg        = $Miner.BenchmarkArg
+                            Coin                = $Pool.Info
+                            CoinDual            = $PoolDual.Info
+                            ConfigFileArguments = $ConfigFileArguments
+                            ExtractionPath      = ".\Bin\" + $Minerfile.basename + "\"
+                            GenerateConfigFile  = $(if (![string]::IsNullOrEmpty($Miner.GenerateConfigFile)) {
+                                    ".\Bin\" + $Minerfile.basename + "\" + $Miner.GenerateConfigFile `
+                                        -Replace [RegEx]::Escape($Miner.ExtractionPath), "" `
+                                        -Replace '#GROUPNAME#', $TypeGroup.GroupName
+                                })
+                            GpuGroup            = $TypeGroup
+                            Host                = $Pool.Host
+                            Location            = $Pool.location
+                            MinerFee            = $(if ($enableSSL -and [double]$Miner.FeeSSL -gt 0) { [double]$Miner.feeSSL } elseif ([double]$Miner.Fee -gt 0) { [double]$Miner.Fee })
+                            Name                = $Minerfile.basename
+                            Path                = $(".\Bin\" + $Minerfile.basename + "\" + $Miner.Path -Replace [RegEx]::Escape($Miner.ExtractionPath), "")
+                            PoolAbbName         = $Pool.AbbName
+                            PoolAbbNameDual     = $PoolDual.AbbName
+                            PoolFee             = $(if ($Pool.Fee -ne $null) {[double]$Pool.fee})
+                            PoolName            = $Pool.PoolName
+                            PoolNameDual        = $PoolDual.PoolName
+                            PoolPrice           = $(if ($MiningMode -eq 'Automatic24h') {[double]$Pool.Price24h} else {[double]$Pool.Price})
+                            PoolPriceDual       = $(if ($MiningMode -eq 'Automatic24h') {[double]$PoolDual.Price24h} else {[double]$PoolDual.Price})
+                            PoolWorkers         = $Pool.PoolWorkers
+                            PoolWorkersDual     = $PoolDual.PoolWorkers
+                            Port                = $(if (($Types | Where-Object type -eq $TypeGroup.type).count -le 1 -and $DelayCloseMiners -eq 0) { $miner.ApiPort })
+                            PrelaunchCommand    = $Miner.PrelaunchCommand
+                            SubMiners           = $SubMiners
+                            SHA256              = $Miner.SHA256
+                            Symbol              = $Pool.Symbol
+                            SymbolDual          = $PoolDual.Symbol
+                            URI                 = $Miner.URI
+                            Username            = $PoolUser
+                            UsernameDual        = $PoolUserDual
+                            UsernameReal        = ($PoolUser -split '\.')[0]
+                            UsernameRealDual    = ($PoolUserDual -split '\.')[0]
+                            WalletMode          = $Pool.WalletMode
+                            WalletSymbol        = $Pool.WalletSymbol
+                            Workername          = $WorkerName2
+                            WorkernameDual      = $WorkerName3
+                        }
+                    }    #dualmining
+                }  #end foreach pool
+            } #end foreach algo
+        } #  end if types
     } #end foreach miner
 
 
@@ -709,7 +716,11 @@ while ($true) {
     ErrorsToLog $LogFile
     Writelog ("Pending benchmarks: " + [string](($ActiveMiners.SubMiners | Where-Object NeedBenchmark -eq $true).count) + ".........") $LogFile $true
 
-    if ($DetailedLog) {$ActiveMiners.SubMiners | ForEach-Object {Writelog ([string] $_.Idf + '-' + [string]$_.Id + ',' + $ActiveMiners[$_.idf].gpugroup.groupname + ',' + $ActiveMiners[$_.idf].IsValid + ', PL' + [string]$_.PowerLimit + ',' + $_.Status + ',' + $ActiveMiners[$_.idf].name + ',' + $ActiveMiners[$_.idf].algorithms + ',' + $ActiveMiners[$_.idf].Coin + ',' + [string]($ActiveMiners[$_.idf].process.id)) $LogFile $false}}
+    $msg = ""
+    if ($DetailedLog) {
+        $ActiveMiners.SubMiners | ForEach-Object {$msg += [string] $_.Idf + '-' + [string]$_.Id + ',' + $ActiveMiners[$_.idf].gpugroup.groupname + ',' + $ActiveMiners[$_.idf].IsValid + ', PL' + [string]$_.PowerLimit + ',' + $_.Status + ',' + $ActiveMiners[$_.idf].name + ',' + $ActiveMiners[$_.idf].algorithms + ',' + $ActiveMiners[$_.idf].Coin + ',' + [string]($ActiveMiners[$_.idf].process.id) + "`r`n"}
+        Writelog $msg $LogFile $false
+    }
 
     #For each type, select most profitable miner, not benchmarked has priority, only new miner is lauched if new profit is greater than old by percenttoswitch
     #This section changes SubMiner
@@ -964,7 +975,7 @@ while ($true) {
             if ($GpuActivityAverages.count -gt 20) {
                 $GpuActivityAverages = $GpuActivityAverages[($GpuActivityAverages.count - 20)..($GpuActivityAverages.count - 1)]
                 $GpuActivityAverage = ($GpuActivityAverages | Measure-Object -property average -maximum).maximum
-                writelog ("Last 20 reads maximum GPU activity is " + [string]$GpuActivityAverage + " for Gpugroup " + $ActiveMiners[$_.IdF].GpuGroup.GroupName)  $logfile $false
+                if ($DetailedLog) {writelog ("Last 20 reads maximum GPU activity is " + [string]$GpuActivityAverage + " for Gpugroup " + $ActiveMiners[$_.IdF].GpuGroup.GroupName)  $logfile $false}
             } else { $GpuActivityAverage = 100 } #only want watchdog works with at least 5 reads
 
 
@@ -997,18 +1008,21 @@ while ($true) {
         #display donation message
         if ($DonationInterval) {" THIS INTERVAL YOU ARE DONATING, YOU CAN INCREASE OR DECREASE DONATION ON CONFIG.TXT, THANK YOU FOR YOUR SUPPORT !!!!"}
 
-        #display current mining info
-        Print_Horizontal_line
 
-        if ($SwitchLoop = 1) {
 
-            writelog ("Running miners: " + ($ActiveMiners | Where-Object Status -eq 'Running' | Select-Object Id, @{Name = 'ProcessId'; Expression = {$_.Process.Id}}, GroupName, Name, PoolAbbName, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, Location, Port, Path, Arguments | ConvertTo-Json)) $logfile $false
+        #write speed
+        if ($DetailedLog) {writelog ($ActiveMiners | Where-Object Status -eq 'Running'| Select-Object id, process.Id, groupname, name, poolabbname, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, location, port, arguments |ConvertTo-Json) $logfile $false}
+
+
+        #get pool reported speed (1 or each 10 executions to not saturate pool)
+        if ($SwitchLoop -eq 0) {
 
             #To get pool speed
             $PoolsSpeed = @()
 
 
-            $ActiveMiners | Where-Object Status -eq 'Running' | Select-Object PoolName, UserNameReal, WalletSymbol, Coin, Workername -unique | ForEach-Object {
+            $Candidates = ($ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object Idf).Idf
+            $ActiveMiners | Where-Object {$candidates -contains $_.Id} |Select-Object PoolName, UserNameReal, WalletSymbol, coin, Workername -unique | ForEach-Object {
                 $Info = [PSCustomObject]@{
                     User       = $_.UserNameReal
                     PoolName   = $_.PoolName
@@ -1021,7 +1035,7 @@ while ($true) {
             }
 
             #Dual miners
-            $ActiveMiners | Where-Object Status -eq 'Running' | Where-Object PoolNameDual -ne $null | Select-Object PoolNameDual, UserNameRealDual, WalletSymbol, CoinDual, Workername -unique | ForEach-Object {
+            $ActiveMiners | Where-Object {$candidates -contains $_.Id -and $_.PoolNameDual -ne $null} |Select-Object PoolnameDual, UserNameRealDual, WalletSymbol, coinDual, Workername -unique | ForEach-Object {
                 $Info = [PSCustomObject]@{
                     User       = $_.UserNameRealDual
                     PoolName   = $_.PoolNameDual
@@ -1034,16 +1048,21 @@ while ($true) {
             }
 
 
-            $ActiveMiners | Where-Object Status -eq 'Running' | ForEach-Object {
+            foreach ($Candidate in $Candidates) {
 
-                $Me = $PoolsSpeed | Where-Object PoolName -eq $_.Poolname | Where-Object Workername -eq $_.Workername | Select-Object HashRate, PoolName, Workername -first 1
-                $_.PoolHashRate = $Me.HashRate
+                $Me = $PoolsSpeed | Where-Object {$_.PoolName -eq $ActiveMiners[$Candidate].Poolname -and $_.Workername -eq $ActiveMiners[$Candidate].Workername }|Select-Object HashRate, PoolName, Workername -first 1
 
-                $MeDual = $PoolsSpeed | Where-Object PoolName -eq $_.PoolNameDual | Where-Object Workername -eq $_.WorkernameDual | Select-Object HashRate, PoolName, Workername -first 1
-                $_.PoolHashRateDual = $MeDual.HashRate
+                $ActiveMiners[$Candidate].PoolHashrate = $Me.Hashrate
+
+                $MeDual = $PoolsSpeed | Where-Object {$_.PoolName -eq $ActiveMiners[$Candidate].PoolnameDual -and $_.Workername -eq $ActiveMiners[$Candidate].WorkernameDual} |Select-Object HashRate, PoolName, Workername -first 1
+
+                $ActiveMiners[$Candidate].PoolHashrateDual = $MeDual.Hashrate
             }
         }
 
+        #display current mining info
+
+        Print_Horizontal_line
 
 
         $ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Sort-Object {$ActiveMiners[$_.idf].GpuGroup.GroupName} | Format-Table -Wrap (
@@ -1398,5 +1417,7 @@ while ($true) {
 Writelog "Program end" $logfile
 
 $ActiveMiners | ForEach-Object { Kill_Process $_.Process}
+
+$LogFile.close()
 
 #Stop-Transcript
