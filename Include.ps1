@@ -1256,7 +1256,7 @@ function get_algo_unified_name ([string]$Algo) {
 
     if (![string]::IsNullOrEmpty($Algo)) {
         $Algos = Get-Content -Path ".\Includes\algorithms.json" | ConvertFrom-Json
-        if ($Algos.($Algo.Trim()) -ne $null) { $Algos.$Algo }
+        if ($Algos.($Algo.Trim()) -ne $null) { $Algos.($Algo.Trim()) }
         else { $Algo.Trim() }
     }
 }
@@ -1269,7 +1269,7 @@ function get_algo_unified_name ([string]$Algo) {
 function  get_coin_unified_name ([string]$Coin) {
 
     if (![string]::IsNullOrEmpty($Coin)) {
-        switch -wildcard  ($Coin.Trim()) {
+        switch -wildcard ($Coin.Trim()) {
             "Auroracoin-*" { "Auroracoin" }
             "Dgb-*" { "Digibyte" }
             "Digibyte-*" { "Digibyte" }
