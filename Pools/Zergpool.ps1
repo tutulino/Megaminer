@@ -77,7 +77,7 @@ if ($Querymode -eq "info"){
 
 if ($Querymode -eq "speed")    {
         
-                            
+      
     try {
         $http="http://api.zergpool.com:8080/api/walletEx?address="+$Info.user
         $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
@@ -92,7 +92,7 @@ if ($Querymode -eq "speed")    {
                                 PoolName =$name
                                 Version = $_.version
                                 Algorithm = get_algo_unified_name $_.Algo
-                                Workername =($_.password -split ",")[1]
+                                Workername =((($_.password -split ",")[2]) -split '=')[1]
                                 Diff     = $_.difficulty
                                 Rejected = $_.rejected
                                 Hashrate = $_.accepted
@@ -100,7 +100,7 @@ if ($Querymode -eq "speed")    {
                     }
             remove-variable Request                                                                                                        
             }
-
+      
 
 }                   
 

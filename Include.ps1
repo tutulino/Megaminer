@@ -91,13 +91,8 @@ function Get_ComputerStats {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
-function ErrorsTolog {
+function ErrorsTolog ($LogFile){
     
-    param(
-          [Parameter(Mandatory = $true)]
-          [string]$LogFile
-          )
-
     for ($i=0;$i -lt $error.count;$i++) {
         $Msg="###### ERROR ##### "+[string]($error[$i])+' '+$error[$i].ScriptStackTrace
         Writelog $msg $LogFile
@@ -541,25 +536,15 @@ Function Get_Mining_Types () {
 #************************************************************************************************************************************************************************************
 
 
-Function WriteLog {
+Function WriteLog ($Message,$LogFile,$SendToScreen) {
     
-    param(
-        [Parameter(Mandatory = $false)]
-        [string]$Message,
-        [Parameter(Mandatory = $true)]
-        [string]$LogFile,
-        [Parameter(Mandatory = $false)]
-        [boolean]$SendToScreen=$false
-    )
-  
+     if ($message -ne $null -and $message -ne "") {
 
-    if ($message -ne $null -and $message -ne "") {
-            [string](get-date)+"...... "+$Message | Add-Content  -Path $LogFile -Force
+            $M=[string](get-date)+"...... "+$Message
+            $LogFile.WriteLine($M)
+            
             if ($SendToScreen) { $Message | out-host}
         }
-
-    #if ($object -ne $null) {$object | convertto-json | Set-Content  -Path $LogFile}
-    
 }
 
 
@@ -846,7 +831,9 @@ function Get_Live_HashRate {
                     $wrpath=".\Wrapper_$Port.txt"
                     $HashRate = if (test-path -path $wrpath ) {
                             Get-Content  $wrpath
-                            $HashRate =  $HashRate -replace ',','.'
+                            $HashRate =  ($HashRate -split ',')[0]
+                            $HashRate =  ($HashRate -split '.')[0]
+
                             }
                         else {$hashrate=0}
                         }
@@ -1440,7 +1427,7 @@ function Get_Stats {
     if (test-path -path $pattern) {
             $Content=(Get-Content -path $pattern)
             try {$Content=$Content| ConvertFrom-Json} catch { #if error from convert from json delete file
-                    writelog "Corrupted file $Pattern, deleting"
+                    writelog ("Corrupted file $Pattern, deleting") $logfile $true
                     remove-item -path $pattern
                 } 
             }
@@ -1507,10 +1494,9 @@ function Start_Downloader {
                     Invoke-WebRequest $URI -OutFile $Path -UseBasicParsing -ErrorAction Stop
                 }
                 else {
-                    Clear-Host
                     $Message="Downloading....$($URI)"
-                    Write-Host -BackgroundColor green -ForegroundColor Black  $Message
-                    Writelog $Message $logfile
+                    #Write-Host -BackgroundColor green -ForegroundColor Black  $Message
+                    Writelog $Message $logfile $true
                     Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop
                 }
             }
