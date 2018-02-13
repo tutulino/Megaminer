@@ -2,14 +2,15 @@
 
 AHASHPOOL -- Anonymous, autoexchange to selected coin in config.txt
 ALTMINER -- Anonymous, no autoexchange, must set a wallet for each coin
-BLOCKSFACTORY -- registration required, one registration for all pools, no autoexchange
+BLAZEPOOL -- Anonymous, autoexchange to selected coin in config.txt
+BLOCKSFACTORY -- Registration required, one registration for all pools, no autoexchange
 FLYPOOL -- Anonymous, manual mode only
 HASHREFINERY -- Anonymous, autoexchange to selected coin in config.txt
 ITALYIIMP -- Anonymous, autoexchange to selected coin in config.txt
 MININGPOOLHUB -- registration required, autoexchange to selected coin on pool´s web.
 NANOPOOL -- Anonymous, no autoexchange, must set a wallet for each coin
 NICEHASH-- Anonymous, autoexchange to BTC
-SUPRNOVA -- registration required, one registration for all pools except bitcoin cash, no autoexchange
+SUPRNOVA -- Registration required, one registration for all pools except bitcoin cash, no autoexchange
 UNIMINING -- No registration, No autoexchange, need wallet for each coin on config.txt
 WHATTOMINE (virtual) - Based on statistics of whattomine, it use MPH and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to us
 YIIMP -- Anonymous, no autoexchange, must set a wallet for each coin

@@ -536,12 +536,15 @@ Older stats are not compatibles
 *Faster boot and interval change
 
 ---POOLS CHANGES:
+*Added blazepool pool
 *Added ravencoin pool to suprnova
-*Adapted zergpool to new api adress
+*Adapted zergpool to new api address
 
 ---MINERS CHANGES:
 *Added ccminer for x16r algo
+*Added Palgin HSR Neoscrypt fork by Just-a-miner. 
 *Updated claymore to 11 (added pascal, keccak and blake2s for dualmining)
+*Claymore dual for AMD moved to miners folder due to high profit
 
 
 ---BUG FIXES:
@@ -555,8 +558,9 @@ Older stats are not compatibles
 *Fixed: distinct gpu groups order between active miners and profits zones
 *Fixed: mining pool hub excavator error (now mining pool hub uses IP address )
 *Fixed: dual mining info in profits screen and active miners section (revenue and pool)
-*Fixed: Active miners profit not including pool and miner fee
+*Fixed: Active miners profit not including pool profit factor, pool fee and miner fee
 *Fixed: AMD cards not showing in current screen
+*Fixed: pool speed not reported in active miners section
 
 --RELEASE NOTES
 This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD,@@ALGORITHMS_CPU
