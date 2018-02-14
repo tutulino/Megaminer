@@ -1,0 +1,12 @@
+{
+    "Path": "lolMiner-mnx_Win64\\lolMiner-mnx.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/lolMiner-mnx_v011_Win64.zip",
+    "SHA256": "86ee695c995fa3027505a7df1f114c3c22f59bd7af16d5026277358bf07a9c85",
+    "Type": "NVIDIA",
+    "Arguments": "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --enable-nv-hotfix --device #DEVICES# --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "wrapper",
+    "APIPort": 13333,
+    "Algorithms": {
+        "Mars": ""
+    }
+}

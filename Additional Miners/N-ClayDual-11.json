@@ -8,9 +8,13 @@
     "APIPort": 3333,
     "Fee": 0.015,
     "Algorithms": {
-        "Ethash_Blake2s_20": "-dcoin blake2s -dcri 20",
-        "Ethash_Blake2s_30": "-dcoin blake2s -dcri 30",
         "Ethash_Blake2s_40": "-dcoin blake2s -dcri 40",
+        "Ethash_Blake2s_60": "-dcoin blake2s -dcri 60",
+        "Ethash_Blake2s_80": "-dcoin blake2s -dcri 80",
+        "Ethash_Blake2s_100": "-dcoin blake2s -dcri 100",
+        "Ethash_Blake2s_120": "-dcoin blake2s -dcri 120",
+        "Ethash_Blake2s_140": "-dcoin blake2s -dcri 140",
+        "Ethash_Blake2s_160": "-dcoin blake2s -dcri 160",
 
         "Ethash_Decred_40": "-dcoin dcr -dcri 40",
         "Ethash_Decred_60": "-dcoin dcr -dcri 60",
@@ -20,9 +24,13 @@
         "Ethash_Decred_140": "-dcoin dcr -dcri 140",
         "Ethash_Decred_160": "-dcoin dcr -dcri 160",
 
-        "Ethash_Keccak_20": "-dcoin keccak -dcri 20",
-        "Ethash_Keccak_30": "-dcoin keccak -dcri 30",
-        "Ethash_Keccak_40": "-dcoin keccak -dcri 40",
+        "Ethash_Keccak_40": "-dcoin Keccak -dcri 40",
+        "Ethash_Keccak_60": "-dcoin Keccak -dcri 60",
+        "Ethash_Keccak_80": "-dcoin Keccak -dcri 80",
+        "Ethash_Keccak_100": "-dcoin Keccak -dcri 100",
+        "Ethash_Keccak_120": "-dcoin Keccak -dcri 120",
+        "Ethash_Keccak_140": "-dcoin Keccak -dcri 140",
+        "Ethash_Keccak_160": "-dcoin Keccak -dcri 160",
 
         "Ethash_Lbry_40": "-dcoin lbc -dcri 40",
         "Ethash_Lbry_60": "-dcoin lbc -dcri 60",
