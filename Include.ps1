@@ -221,7 +221,7 @@ function get_devices_information ($Types) {
                     Id                 = $GpuId
                     Group              = $Group
                     Name               = $SMIresultSplit[0]
-                    Utilization        = if ($SMIresultSplit[1] -like "*Supported*") {$null} else {[int]($SMIresultSplit[1] -replace '%', '')}
+                    Utilization        = if ($SMIresultSplit[1] -like "*Supported*") {100} else {[int]($SMIresultSplit[1] -replace '%', '')} #If we dont have real Utilization, at least make the watchdog happy
                     Utilization_Memory = if ($SMIresultSplit[2] -like "*Supported*") {$null} else {[int]($SMIresultSplit[2] -replace '%', '')}
                     Temperature        = if ($SMIresultSplit[3] -like "*Supported*") {$null} else {[int]($SMIresultSplit[3] -replace '%', '')}
                     Power_Draw         = if ($SMIresultSplit[4] -like "*Supported*") {$null} else {[int]($SMIresultSplit[4] -replace 'W', '')}
@@ -266,7 +266,7 @@ function get_devices_information ($Types) {
                     Utilization         = [int]$AdlResultSplit[5]
                     Temperature         = [int]$AdlResultSplit[6] / 1000
                     Power_Limit_Percent = 100 + [int]$AdlResultSplit[7]
-                    Power_draw          = $AmdCardsTDP.$($AdlResultSplit[8].Trim()) * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100)
+                    Power_Draw          = $AmdCardsTDP.$($AdlResultSplit[8].Trim()) * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100)
                     Name                = $AdlResultSplit[8].Trim()
                     UDID                = $AdlResultSplit[9].Trim()
                 }
@@ -286,7 +286,8 @@ function get_devices_information ($Types) {
                     Id                  = $GpuId
                     Group               = $Group
                     FanSpeed            = [int]$AdlResultSplit[3]
-                    temperature         = [int]$AdlResultSplit[2]
+                    Temperature         = [int]$AdlResultSplit[2]
+                    Utilization         = 100 #If we dont have real Utilization, at least make the watchdog happy
                     Power_Limit_Percent = 100
                     Power_Draw          = $AmdCardsTDP.$($AdlResultSplit[1].Trim())
                     Name                = $AdlResultSplit[1].Trim()
