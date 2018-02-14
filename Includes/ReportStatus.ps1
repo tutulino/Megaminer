@@ -7,7 +7,10 @@ param(
 
 $Profit = 0
 $MinerReport = ConvertTo-Json @($ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | ForEach-Object {
-        $Profit += [decimal]$ActiveMiners[$_.IdF].RevenueLive + [decimal]$ActiveMiners[$_.IdF].RevenueLiveDual
+        $Profit += [decimal]$_.RevenueLive + [decimal]$_.RevenueLiveDual
+
+        $Type = $ActiveMiners[$_.IdF].GpuGroup.GroupName
+
         [pscustomobject]@{
             Name           = $ActiveMiners[$_.IdF].Name
             # Path           = Resolve-Path -Relative $_.Path
@@ -26,11 +29,11 @@ $MinerReport = ConvertTo-Json @($ActiveMiners.SubMiners | Where-Object Status -e
                 if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + (ConvertTo_Hash $_.HashrateDual) + '/s'}
             ) -replace ",", "."
             PID            = $ActiveMiners[$_.IdF].Process.Id
-            StatusMiner    = $_.Status
+            StatusMiner    = $(if ($_.NeedBenchmark) {"Benchmarking($([string](($ActiveMiners | Where-Object {$_.GpuGroup.GroupName -eq $Type}).count)))"} else {$_.Status})
             'BTC/day'      = [decimal]$_.RevenueLive + [decimal]$_.RevenueLiveDual
         }
     })
 try {
     Invoke-RestMethod -Uri $MinerStatusURL -Method Post -Body @{address = $MinerStatusKey; workername = $WorkerName; miners = $MinerReport; profit = $Profit} | Out-Null
 } catch {}
-# $MinerReport | Set-Content report.txt
+$MinerReport | Set-Content report.txt
