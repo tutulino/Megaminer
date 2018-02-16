@@ -729,8 +729,10 @@ function Get_Live_HashRate {
             "Dtsm" {
                  
                     $Request = Invoke_TcpRequest $server $port "empty" 5
-                    $Data = $Request | ConvertFrom-Json | Select-Object  -ExpandProperty result 
-                    $HashRate =  [Double](($Data.sol_ps) | Measure-Object -Sum).Sum
+                    if ($Request -ne "" -and $request -ne $null) {
+                        $Data = $Request | ConvertFrom-Json | Select-Object  -ExpandProperty result 
+                        $HashRate =  [Double](($Data.sol_ps) | Measure-Object -Sum).Sum 
+                        }
 
                     }
             "xgminer" {
