@@ -124,7 +124,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     } while ($Request -eq $null -and $retries -le 3)
                 
                 if ($retries -gt 3) {
-                                    WRITE-HOST 'ZPOOL API NOT RESPONDING...ABORTING'
+                                    WRITE-HOST 'BLAZEPOOL API NOT RESPONDING...ABORTING'
                                     EXIT
                                     }
             
@@ -157,7 +157,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             Host          = $_.name+".mine.blazepool.com"
                                             Port          = $coin.port
                                             User          = $CoinsWallets.get_item($Currency)
-                                            Pass          = "c=btc,#Workername#"
+                                            Pass          = "c=btc,Id=#Workername#"
                                             Location      = "US"
                                             SSL           = $false
                                             Symbol        = $null
