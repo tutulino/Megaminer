@@ -129,7 +129,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
 
 
-                  
+                $Currency= if ((get_config_variable "CURRENCY_ItalYiimp") -eq "") {get_config_variable "CURRENCY"} else {get_config_variable "CURRENCY_ItalYiimp"}                                                      
 
                 $Ita_Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | ForEach-Object {
                     

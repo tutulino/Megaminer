@@ -128,7 +128,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     EXIT
                                     }
             
-
+                $Currency= if ((get_config_variable "CURRENCY_ZPOOL") -eq "") {get_config_variable "CURRENCY"} else {get_config_variable "CURRENCY_ZPOOL"}        
                
                 $Request | Get-Member -MemberType properties| ForEach-Object {
                                 

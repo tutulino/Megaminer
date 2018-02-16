@@ -131,6 +131,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     }
 
 
+        $Currency= if ((get_config_variable "CURRENCY_ZERGPOOL") -eq "") {get_config_variable "CURRENCY"} else {get_config_variable "CURRENCY_ZERGPOOL"}                                    
+
         $Request | Get-Member -MemberType properties| ForEach-Object {
 
                 $coin=$Request | Select-Object -ExpandProperty $_.name
@@ -143,7 +145,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                     $Divisor = Get_Algo_Divisor $zerg_Algorithm
                     
-                    $Currency= get_config_variable "CURRENCY"
+          
                     
                     $Result+=[PSCustomObject]@{
                                 Algorithm     = $zerg_Algorithm

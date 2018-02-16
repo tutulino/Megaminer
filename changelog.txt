@@ -535,6 +535,7 @@ Older stats are not compatibles
 *Added minable algorithms selection in config.txt
 *Faster boot and interval change
 *Added Efficency in Local currency per Watt
+*Added option for specific autoexchange pool currency
 
 ---POOLS CHANGES:
 *Added blazepool pool

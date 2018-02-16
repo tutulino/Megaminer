@@ -60,9 +60,11 @@ if ($Querymode -eq "info"){
                                                         currency = $Request.currency
                                                         balance = $Request.balance
                                                     }
+
+                                remove-variable Request                                                                                        
                                     }
 
-                        remove-variable Request                                    
+                        
                         }
 
                    
@@ -120,12 +122,13 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
 
         if ($Request -ne $null) {
+
+                        $Currency= if ((get_config_variable "CURRENCY_HASHREFINERY") -eq "") {get_config_variable "CURRENCY"} else {get_config_variable "CURRENCY_HASHREFINERY"}                                    
+
                         $Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | ForEach-Object {
 
-                                        $Divisor = (Get_Algo_Divisor $_) / 1000
-                                    
-
-                                
+                                $Divisor = (Get_Algo_Divisor $_) / 1000
+                            
                                 $Result += [PSCustomObject]@{
                                                 Algorithm = get_algo_unified_name $_
                                                 Info = $null
