@@ -534,6 +534,7 @@ Older stats are not compatibles
 
 *Added minable algorithms selection in config.txt
 *Faster boot and interval change
+*Added Efficency in Local currency per Watt
 
 ---POOLS CHANGES:
 *Added blazepool pool
@@ -545,6 +546,7 @@ Older stats are not compatibles
 *Added Palgin HSR Neoscrypt fork by Just-a-miner. 
 *Updated claymore to 11 (added pascal, keccak and blake2s for dualmining)
 *Claymore dual for AMD moved to miners folder due to high profit
+*Updated excavator to 1.4.4a
 
 
 ---BUG FIXES:

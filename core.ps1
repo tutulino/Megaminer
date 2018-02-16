@@ -60,7 +60,7 @@ $ErrorActionPreference = "Continue"
 
 $config=get_config
 
-
+$Release="6.02"
 
 if ($Groupnames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($Groupnames -join "/")}
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
@@ -78,6 +78,8 @@ Get-ChildItem . -Recurse | Unblock-File
     if ($DefenderExclusions.value -notcontains (Convert-Path .)) {Start-Process powershell -Verb runAs -ArgumentList "Add-MpPreference -ExclusionPath '$(Convert-Path .)'"}
 
 
+
+
 #Start log file
     Clear_log
     $logname=".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
@@ -85,6 +87,8 @@ Get-ChildItem . -Recurse | Unblock-File
     Stop-Transcript
     $LogFile= [System.IO.StreamWriter]::new( $logname,$true )
     $LogFile.AutoFlush=$true
+
+    writelog ("Release $Release") $logfile $false
 
 
 
@@ -353,11 +357,6 @@ while ($true) {
         }
         
   
-
-      
-
-   
-
     
     #Load information about the Miner asociated to each Coin-Algo-Miner
 
@@ -948,7 +947,7 @@ while ($true) {
                     if ($_.SpeedLive -gt 0) {
 
                             if ($_.SpeedReads.count -le 10 -or $_.Speedlive -le ((($_.SpeedReads.speed |Measure-Object -average).average)*100)){ #for avoid miners peaks recording
-                                                if (($_.SpeedReads).count -eq 0) {$_.SpeedReads=@()}
+                                                if (($_.SpeedReads).count -eq 0 -or $_.SpeedReads -eq $null) {$_.SpeedReads=@()}
                                                 $_.SpeedReads += [PSCustomObject]@{
                                                                 Speed = $_.SpeedLive 
                                                                 SpeedDual=  $_.SpeedLiveDual
@@ -1012,7 +1011,7 @@ while ($true) {
             set_ConsolePosition 0 0
 
         #display header     
-        Print_Horizontal_line  "MegaMiner 6.0"  
+        Print_Horizontal_line  "MegaMiner $Release"  
         Print_Horizontal_line
         "  (E)nd Interval   (P)rofits    (C)urrent    (H)istory    (W)allets    (S)tats" | Out-host
       
@@ -1094,6 +1093,7 @@ while ($true) {
               @{Label = "Miner"; Expression = {$ActiveMiners[$_.IdF].Name}}, 
               @{Label = "Power"; Expression = {[string]$_.PowerLive+'W'};Align = 'right'}, 
               @{Label = "Efficiency"; Expression = {if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null -and $_.PowerLive -gt 0) {(ConvertTo_Hash  ($_.SpeedLive/$_.PowerLive))+'/W'} else {$null} }; Align = 'right'},     
+              @{Label = "Efficiency"; Expression = {if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null -and $_.PowerLive -gt 0) {($_.ProfitsLive/$_.PowerLive).tostring("n4")+" $LocalSymbol/W"} else {$null} }; Align = 'right'},     
               
               @{Label = "PoolSpeed"; Expression = {if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null) {(ConvertTo_Hash  ($ActiveMiners[$_.IdF].PoolHashrate))+'/s'} else {(ConvertTo_Hash  ($ActiveMiners[$_.IdF].PoolHashrate))+'/s|'+(ConvertTo_Hash ($ActiveMiners[$_.IdF].PoolHashrateDual))+'/s'} }; Align = 'right'},     
               @{Label = "Workers"; Expression = {if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null)  {$ActiveMiners[$_.IdF].PoolWorkers} else {[string]$ActiveMiners[$_.IdF].PoolWorkers+'|'+[string]$ActiveMiners[$_.IdF].PoolWorkersDual}}; Align = 'right'},
