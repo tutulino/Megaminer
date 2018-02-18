@@ -11,7 +11,7 @@ $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $false
 $AbbName = 'MY'
 $WalletMode = "NONE"
-$RewardType = "PPS"
+$RewardType = "PPLS"
 $Result = @()
 
 
@@ -32,7 +32,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
 
     $Pools += [pscustomobject]@{"coin" = "Aeon"; "algo" = "CryptoLight"; "symbol" = "AEON"; "server" = "mine.aeon-pool.com"; "port" = 5555; "fee" = 0.01; "User" = $CoinsWallets.get_item('AEON')}
-    $Pools += [pscustomobject]@{"coin" = "HPPcoin"; "algo" = "Lyra2h"; "symbol" = "HPP"; "server" = "pool.hppcoin.com"; "port" = 3008; "fee" = 0; "User" = "$Username.#Workername#"}
+    # $Pools += [pscustomobject]@{"coin" = "HPPcoin"; "algo" = "Lyra2h"; "symbol" = "HPP"; "server" = "pool.hppcoin.com"; "port" = 3008; "fee" = 0; "User" = "$Username.#Workername#"}
+    $Pools += [pscustomobject]@{"coin" = "HPPcoin"; "algo" = "Lyra2h"; "symbol" = "HPP"; "server" = "hpp-mine.idcray.com"; "port" = 10111; "fee" = 0.01; "User" = "$Username.#Workername#"}
 
     $Pools |ForEach-Object {
         $Result += [PSCustomObject]@{
