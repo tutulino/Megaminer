@@ -9,10 +9,15 @@
 -- if not defined, will use your computername
 -- @@WORKERNAME=worker
 
--- Preferred currency you want to receive. Only used for anonymous pools with auto exchange such as Zpool, HR, ...
--- You must set your wallet for this currency within the Wallets Section found in the Advanced Options section.
+--Autoexchange pools preferred currencies.
+--You can set a generic currency for all autoexchange pools @@CURRENCY=XXX or a specific currency for one pool @@CURRENCY_NAMEOFPOOL=BTC valid only for that pool
+--pools without autoexchange (yiimp, suprnova...) need a wallet of same coin you are mining
+--You must be sure selected pool support pay that coin or you can lose your money.
+--You must set wallet for this currencies on "Wallets Section"
 
 @@CURRENCY=BTC
+@@CURRENCY_NAMEOFPOOL=XXX
+
 
 -- Local currency shown on the profits screen (USD,EUR,GBP). Any supported coin symbol from CoinDesk
 
@@ -27,7 +32,7 @@
 
 @@USERNAME=ffwd
 
--- WALLETS for auto exchange pools. You only need set a wallet for your preferred currency (@@currency).
+-- For auto exchange pools. You only need set a wallet for your preferred currencies (@@currency).
 -- Other pools without an auto exchange, like Yiimp, will need a wallet defined for the same coin you are mining.
 -- You can add wallets using pattern  @@WALLET_XXX=YYYYY (where XXX=currency symbol; YYYYY=your wallet).
 -- For Nicehash if a @@WALLET_BTC_NICE=XXXXXXX is found it will be used, if not @@WALLET_BTC will be used.

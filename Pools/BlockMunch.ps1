@@ -109,6 +109,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "x11" {$Divisor *= 1000}
         }
 
+        $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
+
         if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $Pool_Algo
