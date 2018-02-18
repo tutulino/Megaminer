@@ -1,0 +1,12 @@
+{
+    "Path": "sgminer\\sgminer.exe",
+    "Uri": "https://github.com/GarlicoinOrg/sgminer-gm/releases/download/5.6.0-allium-1/x86_64-sgminer.zip",
+    "SHA256": "a4fdfd662dd3f7967545205b53a458a144683a437dc9fb23a635193894d43dc6",
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Algorithms": {
+        "Allium": "-k allium -I 15"
+    }
+}
