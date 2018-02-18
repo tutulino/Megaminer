@@ -860,8 +860,8 @@ while ($true) {
                     $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].BestBySwitch = "*"
                     Writelog ("$BestNowLogMsg continue mining due to @@percenttoswitch value") $LogFile $true
                 }
-                $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Stats.LastTimeActive = Get-Date
-                $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].StatsHistory.LastTimeActive = Get-Date
+                # $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Stats.LastTimeActive = Get-Date
+                # $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].StatsHistory.LastTimeActive = Get-Date
             }
         }
 
@@ -989,8 +989,8 @@ while ($true) {
                 $_.StatsHistory.FailedTimes++
                 writelog ("Detected miner error " + $ActiveMiners[$_.IdF].name + "/" + $ActiveMiners[$_.IdF].Algorithm + " (id " + $_.IdF + '-' + $_.Id + ") --> " + $ActiveMiners[$_.IdF].Path + " " + $ActiveMiners[$_.IdF].Arguments) $logfile $false
                 writelog ([string]$ActiveMiners[$_.IdF].Process + ',' + [string]$ActiveMiners[$_.IdF].Process.HasExited + ',' + $GpuActivityAverage + ',' + $TimeSinceStartInterval) $logfile $false
-            } else {
-                $_.Stats.LastTimeActive = Get-Date
+            # } else {
+            #     $_.Stats.LastTimeActive = Get-Date
             }
         } #End For each
 
