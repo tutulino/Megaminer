@@ -55,6 +55,9 @@ param(
 
 $ErrorActionPreference = "Continue"
 $config = get_config
+
+$Release = "6.02"
+
 if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($GroupNames -join "/")}
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
 
@@ -75,6 +78,8 @@ Start-Transcript $logname #for start log msg
 Stop-Transcript
 $LogFile = [System.IO.StreamWriter]::new( $logname, $true )
 $LogFile.AutoFlush = $true
+
+writelog ("Release $Release") $logfile $false
 
 #get mining types
 $Types = Get_Mining_Types -filter $GroupNames
@@ -558,6 +563,7 @@ while ($true) {
                             PoolNameDual        = $PoolDual.PoolName
                             PoolPrice           = $(if ($MiningMode -eq 'Automatic24h') {[double]$Pool.Price24h} else {[double]$Pool.Price})
                             PoolPriceDual       = $(if ($MiningMode -eq 'Automatic24h') {[double]$PoolDual.Price24h} else {[double]$PoolDual.Price})
+                            PoolRewardType      = $Pool.RewardType
                             PoolWorkers         = $Pool.PoolWorkers
                             PoolWorkersDual     = $PoolDual.PoolWorkers
                             Port                = $(if (($Types | Where-Object type -eq $TypeGroup.type).count -le 1 -and $DelayCloseMiners -eq 0) { $miner.ApiPort })
@@ -694,6 +700,7 @@ while ($true) {
                 PoolWorkers          = $Miner.PoolWorkers
                 PoolHashRate         = $null
                 PoolHashRateDual     = $null
+                PoolRewardType       = $Miner.PoolRewardType
                 Port                 = $Miner.Port
                 PrelaunchCommand     = $Miner.PrelaunchCommand
                 Process              = $null
@@ -877,6 +884,12 @@ while ($true) {
 
     ErrorsToLog $LogFile
 
+    $RunningSubminers = ($ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object Idf).Idf
+    foreach ($RunningSubMiner in $RunningSubMiners) {
+        $PItime = $config.("Interval_" + $ActiveMiners[$RunningSubMiner].PoolRewardType)
+        WriteLog ("Interval for pool " + [string]$ActiveMiners[$RunningSubMiner].PoolName + " is " + $PItime) $LogFile $False
+        if ([int]$PItime -lt $NextInterval) {$NextInterval = [int]$PItime}
+    }
 
     $FirstLoopExecution = $True
     $LoopStarttime = Get-Date
@@ -945,7 +958,7 @@ while ($true) {
 
 
                 $_.TimeSinceStartInterval = (Get-Date) - $_.Stats.LastTimeActive
-                $TimeSinceStartInterval = $_.TimeSinceStartInterval.TotalSeconds
+                $TimeSinceStartInterval = [int]$_.TimeSinceStartInterval.TotalSeconds
 
                 if ($_.SpeedLive -gt 0) {
                     if ($_.SpeedReads.count -le 10 -or $_.Speedlive -le ((($_.SpeedReads.speed | Measure-Object -average).average) * 100)) {
@@ -989,8 +1002,8 @@ while ($true) {
                 $_.StatsHistory.FailedTimes++
                 writelog ("Detected miner error " + $ActiveMiners[$_.IdF].name + "/" + $ActiveMiners[$_.IdF].Algorithm + " (id " + $_.IdF + '-' + $_.Id + ") --> " + $ActiveMiners[$_.IdF].Path + " " + $ActiveMiners[$_.IdF].Arguments) $logfile $false
                 writelog ([string]$ActiveMiners[$_.IdF].Process + ',' + [string]$ActiveMiners[$_.IdF].Process.HasExited + ',' + $GpuActivityAverage + ',' + $TimeSinceStartInterval) $logfile $false
-            # } else {
-            #     $_.Stats.LastTimeActive = Get-Date
+                # } else {
+                #     $_.Stats.LastTimeActive = Get-Date
             }
         } #End For each
 
@@ -998,7 +1011,7 @@ while ($true) {
 
         #display interval
         $TimeToNextInterval = New-TimeSpan (Get-Date) ($LoopStarttime.AddSeconds($NextInterval))
-        $TimeToNextIntervalSeconds = ($TimeToNextInterval.Hours * 3600) + ($TimeToNextInterval.Minutes * 60) + $TimeToNextInterval.Seconds
+        $TimeToNextIntervalSeconds = [int]$TimeToNextInterval.TotalSeconds
         if ($TimeToNextIntervalSeconds -lt 0) {$TimeToNextIntervalSeconds = 0}
 
         set_ConsolePosition ($Host.UI.RawUI.WindowSize.Width - 31) 2
@@ -1006,7 +1019,7 @@ while ($true) {
         set_ConsolePosition 0 0
 
         #display header
-        Print_Horizontal_line  "MegaMiner 6.0"
+        Print_Horizontal_line "MegaMiner $Release"
         Print_Horizontal_line
         "  (E)nd Interval   (P)rofits    (C)urrent    (H)istory    (W)allets    (S)tats" | Out-host
 
@@ -1088,6 +1101,7 @@ while ($true) {
             @{Label = "Miner"; Expression = {$ActiveMiners[$_.IdF].Name}},
             @{Label = "Power"; Expression = {[string]$_.PowerLive + 'W'}; Align = 'right'},
             # @{Label = "Efficiency"; Expression = { if ([string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual) -and $_.PowerLive -gt 0) { (ConvertTo_Hash  ($_.SpeedLive / $_.PowerLive)) + '/W' } else { $null } }; Align = 'right' },
+            @{Label = "$LocalCurrency/W"; Expression = {if ($_.PowerLive -gt 0) {($_.ProfitsLive / $_.PowerLive).tostring("n4")} else {$null} }; Align = 'right'},
             @{Label = "PoolSpeed"; Expression = {(ConvertTo_Hash ($ActiveMiners[$_.IdF].PoolHashRate)) + '/s' + $(
                         if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {('|' + (ConvertTo_Hash ($ActiveMiners[$_.IdF].PoolHashRateDual)) + '/s')}
                     )}; Align = 'right'
@@ -1197,6 +1211,7 @@ while ($true) {
                 },
                 @{Label = "PowerAvg"; Expression = {if ($_.SubMiner.NeedBenchmark) {"Benchmarking"} else {$_.SubMiner.PowerAvg.tostring("n0")}}; Align = 'right'},
                 # @{Label = "Efficiency"; Expression = {if ([string]::IsNullOrEmpty($_.AlgorithmDual)) {(ConvertTo_Hash  ($_.SubMiner.HashRate / $_.SubMiner.PowerAvg)) + '/W'} else {$null} }; Align = 'right'},
+                @{Label = "$LocalCurrency/W"; Expression = {if ($_.SubMiner.PowerAvg -gt 0) {($_.SubMiner.Profits / $_.SubMiner.PowerAvg).tostring("n4")} else {$null} }; Align = 'right'},
                 @{Label = "mBTC/Day"; Expression = {((($_.SubMiner.Revenue + $_.SubMiner.RevenueDual) * 1000).tostring("n5"))} ; Align = 'right'},
                 @{Label = $LocalCurrency + "/Day"; Expression = {((($_.SubMiner.Revenue + $_.SubMiner.RevenueDual) * [double]$localBTCvalue).tostring("n2"))} ; Align = 'right'},
                 @{Label = "Profit/Day"; Expression = {if ($_.SubMiner.NeedBenchmark) {"Benchmarking"} else {($_.SubMiner.Profits).tostring("n2") + " " + $LocalCurrency}}; Align = 'right'},
@@ -1210,6 +1225,8 @@ while ($true) {
             )  -GroupBy GroupName | Out-Host
             Remove-Variable ProfitMiners
             Remove-Variable ProfitMiners2
+
+            $repaintScreen = $false
         }
 
         if ($Screen -eq "Current") {
