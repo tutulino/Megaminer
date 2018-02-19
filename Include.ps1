@@ -1,4 +1,4 @@
-﻿
+
 
 Add-Type -Path .\OpenCL\*.cs
 
@@ -924,25 +924,69 @@ function ConvertTo_Hash {
 
 
 function Start_SubProcess {
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [String]$FilePath, 
         [Parameter(Mandatory = $false)]
         [String]$ArgumentList = "", 
         [Parameter(Mandatory = $false)]
-        [String]$WorkingDirectory = ""
-        
+        [String]$WorkingDirectory = "",
+        [ValidateRange(-2, 3)]
+        [Parameter(Mandatory = $false)]
+        [Int]$Priority = 0,
+        [Parameter(Mandatory = $false)]
+        [String]$MinerWindowStyle = "Minimized",
+        [Parameter(Mandatory = $false)]
+        [String]$UseAlternateMinerLauncher = $true
     )
 
-    $Job = Start-Job -ArgumentList $PID, $FilePath, $ArgumentList, $WorkingDirectory {
-        param($ControllerProcessID, $FilePath, $ArgumentList, $WorkingDirectory)
+    $PriorityNames = [PSCustomObject]@{-2 = "Idle"; -1 = "BelowNormal"; 0 = "Normal"; 1 = "AboveNormal"; 2 = "High"; 3 = "RealTime"}
+
+    if ($UseAlternateMinerLauncher) {
+
+        $ShowWindow = [PSCustomObject]@{"Normal" = "SW_SHOW"; "Maximized" = "SW_SHOWMAXIMIZE"; "Minimized" = "SW_SHOWMINNOACTIVE"; "Hidden" = "SW_HIDDEN"}
+
+        $Job = Start-Job `
+            -InitializationScript ([scriptblock]::Create("Set-Location('$(Get-Location)');. .\Includes\CreateProcess.ps1")) `
+            -ArgumentList $PID, $FilePath, $ArgumentList, $ShowWindow.$MinerWindowStyle, $PriorityNames.$Priority, $WorkingDirectory {
+            param($ControllerProcessID, $FilePath, $ArgumentList, $ShowWindow, $Priority, $WorkingDirectory)
+
+            . .\Includes\CreateProcess.ps1
+            $ControllerProcess = Get-Process -Id $ControllerProcessID
+            if ($ControllerProcess -eq $null) {return}
+
+            $Process = Invoke-CreateProcess `
+                -Binary $FilePath `
+                -Arguments $ArgumentList `
+                -CreationFlags CREATE_NEW_CONSOLE `
+                -ShowWindow $ShowWindow `
+                -StartF STARTF_USESHOWWINDOW `
+                -Priority $Priority `
+                -WorkingDirectory $WorkingDirectory
+            if ($Process -eq $null) {
+                [PSCustomObject]@{ProcessId = $null}
+                return
+            }
+
+            [PSCustomObject]@{ProcessId = $Process.Id; ProcessHandle = $Process.Handle}
+        
+            $ControllerProcess.Handle | Out-Null
+            $Process.Handle | Out-Null
+
+            do {if ($ControllerProcess.WaitForExit(1000)) {$Process.CloseMainWindow() | Out-Null}}
+            while ($Process.HasExited -eq $false)
+        }
+    } else {
+        $Job = Start-Job -ArgumentList $PID, $FilePath, $ArgumentList, $WorkingDirectory, $MinerWindowStyle {
+            param($ControllerProcessID, $FilePath, $ArgumentList, $WorkingDirectory, $MinerWindowStyle)
 
         $ControllerProcess = Get-Process -Id $ControllerProcessID
         if ($ControllerProcess -eq $null) {return}
 
         $ProcessParam = @{}
         $ProcessParam.Add("FilePath", $FilePath)
-        $ProcessParam.Add("WindowStyle", 'Minimized')
+            $ProcessParam.Add("WindowStyle", $MinerWindowStyle)
         if ($ArgumentList -ne "") {$ProcessParam.Add("ArgumentList", $ArgumentList)}
         if ($WorkingDirectory -ne "") {$ProcessParam.Add("WorkingDirectory", $WorkingDirectory)}
         $Process = Start-Process @ProcessParam -PassThru 
@@ -958,6 +1002,8 @@ function Start_SubProcess {
 
         do {if ($ControllerProcess.WaitForExit(1000)) {$Process.CloseMainWindow() | Out-Null}}
         while ($Process.HasExited -eq $false)
+
+        }
     }
 
     do {Start-Sleep 1; $JobOutput = Receive-Job $Job}
@@ -966,6 +1012,8 @@ function Start_SubProcess {
     $Process = Get-Process | Where-Object Id -EQ $JobOutput.ProcessId
     $Process.Handle | Out-Null
     $Process
+
+    if ($Process) {$Process.PriorityClass = $PriorityNames.$Priority}
 }
 
 
