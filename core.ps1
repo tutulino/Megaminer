@@ -752,11 +752,21 @@ while ($true) {
         }
 
         #look for best for next round
-        $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id -and $_.IsValid}
+        $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id -and $_.IsValid -and $_.Status -ne 'Cancelled'}
+
+        # First try to select a miner that needs benchmark with the highest pool price
         $BestNow = $Candidates.SubMiners |
-            Where-Object Status -ne 'Cancelled' |
-            Sort-Object -Descending {if ($_.NeedBenchmark) {1} else {0}}, Profits, {$Activeminers[$_.IdF].Algorithm}, {$Activeminers[$_.IdF].PoolPrice}, PowerLimit |
+            Where-Object NeedBenchmark |
+            Sort-Object -Descending {$Activeminers[$_.IdF].PoolPrice}, {$Activeminers[$_.IdF].PoolPriceDual} |
             Select-Object -First 1
+
+        # If no miners need benchmark, select a miner with the highest Profits, and making sure they are above zero, to not mine with loss
+        if ($BestNow -eq $null) {
+            $BestNow = $Candidates.SubMiners |
+                Where-Object Profits -gt 0 |
+                Sort-Object -Descending Profits, {$Activeminers[$_.IdF].Algorithm}, {$Activeminers[$_.IdF].PoolPrice}, PowerLimit |
+                Select-Object -First 1
+        }
         if ($BestNow -eq $null) {Writelog ("No detected any valid candidate for gpu group " + $Type.GroupName) $LogFile $true  ; break  }
         $BestNowLogMsg = $ActiveMiners[$BestNow.IdF].name + "/" + $ActiveMiners[$BestNow.IdF].Algorithms + '/' + $ActiveMiners[$BestNow.IdF].Coin + " with Power Limit " + [string]$BestNow.PowerLimit + " (id " + [string]$BestNow.IdF + "-" + [string]$BestNow.Id + ") for group " + $Type.GroupName
         $ProfitNow = $BestNow.Profits
