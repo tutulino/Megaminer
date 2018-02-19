@@ -498,6 +498,7 @@ while ($true) {
                                 BestTimes        = 0
                                 BenchmarkedTimes = 0
                                 LastTimeActive   = [TimeSpan]0
+                                LastTimeAlive    = [TimeSpan]0
                                 ActivatedTimes   = 0
                                 ActiveTime       = [TimeSpan]0
                                 FailedTimes      = 0
@@ -810,6 +811,7 @@ while ($true) {
 
                     if ($Bestnow.NeedBenchmark -or $DelayCloseMiners -eq 0 -or $BestLast.Status -eq 'PendingCancellation') {
                         #inmediate kill
+                        $ActiveMiners[$BestLast.IdF].Stats.LastTimeAlive = [timespan]0
                         Kill_Process $ActiveMiners[$BestLast.IdF].Process
                     } else {
                         #delayed kill
@@ -877,8 +879,6 @@ while ($true) {
                     $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].BestBySwitch = "*"
                     Writelog ("$BestNowLogMsg continue mining due to @@percenttoswitch value") $LogFile $true
                 }
-                # $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Stats.LastTimeActive = Get-Date
-                # $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].StatsHistory.LastTimeActive = Get-Date
             }
         }
 
@@ -947,10 +947,8 @@ while ($true) {
             $_.ProfitsLive = 0
             $_.RevenueLive = 0
             $_.RevenueLiveDual = 0
+
             $Miner_HashRates = $null
-
-
-            $_.Stats.ActiveTime += (Get-Date) - $_.Stats.LastTimeActive
             $Miner_HashRates = Get_Live_HashRate $ActiveMiners[$_.IdF].API $ActiveMiners[$_.IdF].Port
 
             if ($Miner_HashRates -ne $null) {
@@ -971,6 +969,9 @@ while ($true) {
                 $TimeSinceStartInterval = [int]$_.TimeSinceStartInterval.TotalSeconds
 
                 if ($_.SpeedLive -gt 0) {
+                    if ($_.Stats.LastTimeAlive -ne 0) { $_.Stats.ActiveTime += (Get-Date) - $_.Stats.LastTimeAlive }
+                    $_.Stats.LastTimeAlive = Get-Date
+
                     if ($_.SpeedReads.count -le 10 -or $_.Speedlive -le ((($_.SpeedReads.speed | Measure-Object -average).average) * 100)) {
                         #for avoid miners peaks recording
                         if (($_.SpeedReads).count -eq 0) {$_.SpeedReads = @()}
@@ -1006,14 +1007,13 @@ while ($true) {
 
 
             if ($ActiveMiners[$_.IdF].Process -eq $null -or $ActiveMiners[$_.IdF].Process.HasExited -or ($GpuActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100) ) {
+                $ActiveMiners[$_.IdF].Stats.LastTimeAlive = [timespan]0
                 $ExitLoop = $true
                 $_.Status = "PendingCancellation"
                 $_.Stats.FailedTimes++
                 $_.StatsHistory.FailedTimes++
                 writelog ("Detected miner error " + $ActiveMiners[$_.IdF].name + "/" + $ActiveMiners[$_.IdF].Algorithm + " (id " + $_.IdF + '-' + $_.Id + ") --> " + $ActiveMiners[$_.IdF].Path + " " + $ActiveMiners[$_.IdF].Arguments) $logfile $false
                 writelog ([string]$ActiveMiners[$_.IdF].Process + ',' + [string]$ActiveMiners[$_.IdF].Process.HasExited + ',' + $GpuActivityAverage + ',' + $TimeSinceStartInterval) $logfile $false
-                # } else {
-                #     $_.Stats.LastTimeActive = Get-Date
             }
         } #End For each
 

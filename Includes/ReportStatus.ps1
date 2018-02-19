@@ -15,7 +15,8 @@ $MinerReport = ConvertTo-Json @($ActiveMiners.SubMiners | Where-Object Status -e
             Name           = $ActiveMiners[$_.IdF].Name
             # Path           = Resolve-Path -Relative $_.Path
             Type           = $ActiveMiners[$_.IdF].GpuGroup.GroupName
-            Active         = "{0:N1} min" -f ($_.TimeSinceStartInterval.TotalMinutes)
+            # Active         = "{0:N1} min" -f ($_.TimeSinceStartInterval.TotalMinutes)
+            Active         = "{0:N1} min" -f ($_.Stats.ActiveTime.TotalMinutes)
             Algorithm      = $ActiveMiners[$_.IdF].Algorithm + $ActiveMiners[$_.IdF].AlgoLabel + $(
                 if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + $ActiveMiners[$_.IdF].AlgorithmDual}
             ) + $ActiveMiners[$_.IdF].BestBySwitch
