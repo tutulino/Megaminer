@@ -94,6 +94,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
 
 
+    $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
+
     $Request | Get-Member -MemberType Properties | ForEach-Object {
 
         $coin = $Request | Select-Object -ExpandProperty $_.name
@@ -108,8 +110,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "sha256" {$Divisor *= 1000}
             "x11" {$Divisor *= 1000}
         }
-
-        $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
 
         if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0) {
             $Result += [PSCustomObject]@{
