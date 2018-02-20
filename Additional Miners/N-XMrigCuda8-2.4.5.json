@@ -1,0 +1,13 @@
+{
+  "Path": "xmrig-nvidia.exe",
+  "Uri": "https://github.com/xmrig/xmrig-nvidia/releases/download/v2.4.5/xmrig-nvidia-2.4.5-cuda8-win64.zip",
+  "SHA256": "036faac7db3d50df63b375c5509bdd53cd070a3bad3ed3e64d8ed339cae65c87",
+  "Type": "NVIDIA",
+  "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --cuda-launch=80x30 --cuda-bfactor=10 --cuda-bsleep=26 --donate-level 1 #ALGORITHMPARAMETERS#",
+  "API": "XMRig",
+  "APIPort": 3335,
+  "Fee": 0.01,
+  "Algorithms": {
+    "cryptonight": "-a cryptonight"
+  }
+}
