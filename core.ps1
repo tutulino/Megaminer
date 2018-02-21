@@ -56,7 +56,7 @@ param(
 $ErrorActionPreference = "Continue"
 $config = get_config
 
-$Release = "6.02"
+$Release = "6.03b"
 
 if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($GroupNames -join "/")}
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
@@ -186,7 +186,7 @@ while ($true) {
     $Location = $config.Location
 
     if ([string]::IsNullOrWhiteSpace($PercentToSwitch)) {$PercentToSwitch2 = [int]($config.PercentToSwitch)} else {$PercentToSwitch2 = [int]$PercentToSwitch}
-    $DelayCloseMiners = $config.DelayCloseMiners
+    $DelayCloseMiners = [int]($config.DelayCloseMiners)
 
     $Types = Get_Mining_Types -filter $GroupNames
 
@@ -498,10 +498,10 @@ while ($true) {
                                 BestTimes        = 0
                                 BenchmarkedTimes = 0
                                 LastTimeActive   = [TimeSpan]0
-                                LastTimeAlive    = [TimeSpan]0
                                 ActivatedTimes   = 0
                                 ActiveTime       = [TimeSpan]0
                                 FailedTimes      = 0
+                                StatsTime        = [TimeSpan]0
                             }
                             if ($StatsHistory -eq $null) {$StatsHistory = $stats}
 
@@ -811,7 +811,7 @@ while ($true) {
 
                     if ($Bestnow.NeedBenchmark -or $DelayCloseMiners -eq 0 -or $BestLast.Status -eq 'PendingCancellation') {
                         #inmediate kill
-                        $ActiveMiners[$BestLast.IdF].Stats.LastTimeAlive = [timespan]0
+                        $ActiveMiners[$BestLast.IdF].Stats.StatsTime = [timespan]0
                         Kill_Process $ActiveMiners[$BestLast.IdF].Process
                     } else {
                         #delayed kill
@@ -969,8 +969,8 @@ while ($true) {
                 $TimeSinceStartInterval = [int]$_.TimeSinceStartInterval.TotalSeconds
 
                 if ($_.SpeedLive -gt 0) {
-                    if ($_.Stats.LastTimeAlive -ne 0) { $_.Stats.ActiveTime += (Get-Date) - $_.Stats.LastTimeAlive }
-                    $_.Stats.LastTimeAlive = Get-Date
+                    if ($_.Stats.StatsTime -ne 0) { $_.Stats.ActiveTime += (Get-Date) - $_.Stats.StatsTime }
+                    $_.Stats.StatsTime = Get-Date
 
                     if ($_.SpeedReads.count -le 10 -or $_.Speedlive -le ((($_.SpeedReads.speed | Measure-Object -average).average) * 100)) {
                         #for avoid miners peaks recording
@@ -1007,7 +1007,7 @@ while ($true) {
 
 
             if ($ActiveMiners[$_.IdF].Process -eq $null -or $ActiveMiners[$_.IdF].Process.HasExited -or ($GpuActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100) ) {
-                $ActiveMiners[$_.IdF].Stats.LastTimeAlive = [timespan]0
+                $ActiveMiners[$_.IdF].Stats.StatsTime = [timespan]0
                 $ExitLoop = $true
                 $_.Status = "PendingCancellation"
                 $_.Stats.FailedTimes++
@@ -1385,7 +1385,7 @@ while ($true) {
                 @{Label = "Miner"; Expression = {$ActiveMiners[$_.Idf].Name}},
                 @{Label = "PwLmt"; Expression = {if ($_.PowerLimit -gt 0) {$_.PowerLimit}}},
                 @{Label = "Launch"; Expression = {$_.stats.ActivatedTimes}},
-                @{Label = "Time"; Expression = {"{0:N1} min" -f ($_.Stats.ActiveTime.TotalMinutes)}},
+                @{Label = "Time"; Expression = {if ($_.stats.Activetime.TotalMinutes -le 60) {"{0:N1} min" -f ($_.Stats.ActiveTime.TotalMinutes)} else {"{0:N1} hours" -f ($_.Stats.ActiveTime.TotalHours)}}},
                 @{Label = "Best"; Expression = {$_.stats.Besttimes}},
                 @{Label = "Last"; Expression = {$_.stats.LastTimeActive}}
             ) | Out-Host
