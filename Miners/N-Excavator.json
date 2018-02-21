@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\NVIDIA-Excavator\\excavator\\Excavator.exe",
 "ExtractionPath" : ".\\Bin\\NVIDIA-Excavator\\",
-"Uri" : "https://github.com/nicehash/excavator/releases/download/v1.4.3a/excavator_v1.4.3a_NVIDIA_Win64.zip",
+"Uri" : "https://github.com/nicehash/excavator/releases/download/v1.4.4a/excavator_v1.4.4a_NVIDIA_Win64.zip",
 "Types" : ["NVIDIA"],
 "GenerateConfigFile" : ".\\Bin\\NVIDIA-Excavator\\excavator\\#GROUPNAME#.json",
 "PatternConfigFile": ".\\Patterns\\excavatorPattern.txt",
@@ -17,7 +17,7 @@
             {"blake2s":"blake2s"},
             {"cryptonight":"cryptonight"},
             {"pascal":"pascal"},
-            {"keccak":"keccak"} 
+            {"keccak":"keccak"}             
            
             ]
 }
