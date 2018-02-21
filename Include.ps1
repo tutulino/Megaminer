@@ -1551,6 +1551,7 @@ function get_coin_symbol ([string]$Coin) {
         "bitcoingold" { "BTG" }
         "bitcoin" { "BTC" }
         "dash" { "DASH" }
+        "decred" { "DCR" }
         "digibyte" { "DGB" }
         "electroneum" { "ETN" }
         "ethereumclassic" { "ETC" }
@@ -1567,6 +1568,8 @@ function get_coin_symbol ([string]$Coin) {
         "monero" { "XMR" }
         "musicoin" { "MUSIC" }
         "myriad" { "XMY" }
+        "pascal" { "PASC" }
+        "polytimos" { "POLY" }
         "sexcoin" { "SXC" }
         "siacoin" { "SC" }
         "startcoin" { "START" }

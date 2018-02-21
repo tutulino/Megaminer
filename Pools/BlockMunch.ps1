@@ -114,7 +114,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $Pool_Algo
-                Info                  = $null
+                Info                  = $Pool_Algo
                 Price                 = $coin.estimate_current / $Divisor
                 Price24h              = $coin.estimate_last24h / $Divisor
                 Protocol              = "stratum+tcp"
@@ -124,7 +124,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Pass                  = "c=$Currency,#Workername#"
                 Location              = $Location
                 SSL                   = $false
-                Symbol                = $null
+                Symbol                = get_coin_symbol -Coin $Pool_Algo
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode

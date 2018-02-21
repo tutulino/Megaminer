@@ -107,7 +107,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $Algo
-                Info                  = $coin
+                Info                  = $Algo
                 Price                 = [double]($_.paying / $Divisor)
                 Price24h              = [double]($_.paying / $Divisor)
                 Protocol              = "stratum+tcp"
@@ -119,7 +119,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Pass                  = "x"
                 Location              = $location.MMLocation
                 SSL                   = $enableSSL
-                Symbol                = $null
+                Symbol                = get_coin_symbol -Coin $Algo
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
