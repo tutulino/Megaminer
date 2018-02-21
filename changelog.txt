@@ -535,7 +535,8 @@ Older stats are not compatibles
 *Added minable algorithms selection in config.txt
 *Faster boot and interval change
 *Added Efficency in Local currency per Watt
-*Added option for specific autoexchange pool currency
+*Added option in config.txt for specific pool payment currency 
+*Changed btc revenue to mbtc
 
 ---POOLS CHANGES:
 *Added blazepool pool
@@ -548,6 +549,7 @@ Older stats are not compatibles
 *Updated claymore to 11 (added pascal, keccak and blake2s for dualmining)
 *Claymore dual for AMD moved to miners folder due to high profit
 *Updated excavator to 1.4.4a
+*Updated cpu miner to 3.8.2.1
 
 
 ---BUG FIXES:
@@ -555,7 +557,7 @@ Older stats are not compatibles
 *Fixed: Whattomine pool order variable not in config.txt
 *Fixed: Not supported message error for old NVIDIA cards
 *Fixed: Best miners filter in profits screen not returning to initial state
-*Fixed: lower sensitivity for watchdog
+*Fixed: Watchdog lower sensitivity 
 *Fixed: OverdriveN.exe requires Visual Studio debug dlls
 *Fixed: writelog prompt msg when corrupted stats file
 *Fixed: distinct gpu groups order between active miners and profits zones
@@ -564,6 +566,8 @@ Older stats are not compatibles
 *Fixed: Active miners profit not including pool profit factor, pool fee and miner fee
 *Fixed: AMD cards not showing in current screen
 *Fixed: pool speed not reported in active miners section
+*Fixed: dollar symbol showed as "36"
+*Fixed: Wrong Stats screen running time
 
 --RELEASE NOTES
 This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD,@@ALGORITHMS_CPU
