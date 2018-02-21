@@ -29,14 +29,14 @@ param(
 ##Parameters for testing, must be commented on real use
 
 
-#$MiningMode='Automatic'
+$MiningMode='Automatic'
 #$MiningMode='Manual'
 
 #$PoolsName=('ahashpool','miningpoolhub','hashrefinery')
 #$PoolsName='whattomine'
 #$PoolsName='zergpool'
 #$PoolsName='yiimp'
-#$PoolsName='ahashpool'
+$PoolsName='ahashpool'
 #$PoolsName=('hashrefinery','zpool')
 #$PoolsName='miningpoolhub'
 #$PoolsName='zpool'
@@ -60,7 +60,7 @@ $ErrorActionPreference = "Continue"
 
 $config=get_config
 
-$Release="6.02"
+$Release="6.03b"
 
 if ($Groupnames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($Groupnames -join "/")}
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
@@ -345,8 +345,8 @@ while ($true) {
         writelog "Coindesk api was responsive.........." $logfile $true
         switch ($LocalCurrency) {
             'EURO' {$LocalSymbol=[convert]::ToChar(8364) ; $localBTCvalue = [double]$CDKResponse.eur.rate}
-            'DOLLAR'     {$LocalSymbol=+[convert]::ToChar(36)  ; $localBTCvalue = [double]$CDKResponse.usd.rate}
-            'GBP'     {$LocalSymbol=[convert]::ToChar(163)  ; $localBTCvalue = [double]$CDKResponse.gbp.rate}
+            'DOLLAR' {$LocalSymbol=[convert]::ToChar(36)  ; $localBTCvalue = [double]$CDKResponse.usd.rate}
+            'GBP'    {$LocalSymbol=[convert]::ToChar(163)  ; $localBTCvalue = [double]$CDKResponse.gbp.rate}
             default {$LocalSymbol=" $" ; $localBTCvalue = [double]$CDKResponse.usd.rate}
         }
     } 
@@ -483,6 +483,7 @@ while ($true) {
                                                                         ActivatedTimes        = 0
                                                                         ActiveTime            = [TimeSpan]0
                                                                         FailedTimes           =0
+                                                                        StatsTime            = get-date
                                                                         }
                                                     if ($StatsHistory -eq $null) {$StatsHistory=$stats}
 
@@ -782,6 +783,7 @@ while ($true) {
                             $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].Status= "Running"
                             $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].Stats.LastTimeActive = get-date
                             $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].StatsHistory.LastTimeActive = get-date
+                            $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].StatsTime  = get-date
                             $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].TimeSinceStartInterval = [TimeSpan]0
                             $ActiveMiners[$BestLast.IdF].Subminers[$BestLast.Id].best=$false
                             Switch ($BestLast.Status) {
@@ -876,7 +878,7 @@ while ($true) {
     ErrorsToLog $LogFile
     $SwitchLoop = 0
     $GpuActivityAverages=@()
-
+   
     Clear-Host;$repaintScreen=$true
 
     while ($Host.UI.RawUI.KeyAvailable)  {$host.ui.RawUi.Flushinputbuffer()} #keyb buffer flush
@@ -922,7 +924,13 @@ while ($true) {
                 $_.RevenueLiveDual = 0
                 $Miner_HashRates = $null
                 
-                $_.Stats.ActiveTime += (get-date) - $_.Stats.LastTimeActive 
+                
+                $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].StatsTime
+                
+                $_.Stats.ActiveTime += (get-date) - $_.Stats.StatsTime
+                $_.Stats.StatsTime = get-date
+                
+                
                 $Miner_HashRates = Get_Live_HashRate $ActiveMiners[$_.IdF].API $ActiveMiners[$_.IdF].Port 
 
                 if ($Miner_HashRates -ne $null){
@@ -1085,7 +1093,7 @@ while ($true) {
               @{Label = "MMPowLmt"; Expression ={if ($_.PowerLimit -gt 0) {$_.PowerLimit}};align='right'}, 
 
               @{Label = "LocalSpeed"; Expression = {if  ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.SpeedLive))+'/s'} else {(ConvertTo_Hash  ($_.SpeedLive))+'/s|'+(ConvertTo_Hash ($_.SpeedLiveDual))+'/s'} }; Align = 'right'},     
-              @{Label = "Rev./Day"; Expression = {($_.RevenueLive.tostring("n5"))+'btc'}; Align = 'right'}, 
+              @{Label = "mbtc/Day"; Expression = {(($_.RevenueLive*1000).tostring("n5"))}; Align = 'right'}, 
               @{Label = "Rev./Day"; Expression = {((($_.RevenueLive + $_.RevenueLiveDual) *  $localBTCvalue ).tostring("n2"))+$LocalSymbol}; Align = 'right'}, 
               @{Label = "Profit/Day"; Expression = {(($_.ProfitsLive).tostring("n2"))+$LocalSymbol}; Align = 'right'}, 
               @{Label = "Algorithm"; Expression = {if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null) {$ActiveMiners[$_.IdF].Algorithm+$ActiveMiners[$_.IdF].AlgoLabel+$_.BestBySwitch} else  {$ActiveMiners[$_.IdF].Algorithm+$ActiveMiners[$_.IdF].AlgoLabel+ '|' + $ActiveMiners[$_.IdF].AlgorithmDual+$_.BestBySwitch}}},   
@@ -1195,7 +1203,7 @@ while ($true) {
                         @{Label = "StatsSpeed"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.Subminer.hashrate))+'/s'} else {(ConvertTo_Hash  ($_.Subminer.hashrate))+'/s|'+(ConvertTo_Hash ($_.Subminer.hashratedual))+'/s'}}; Align = 'right'}, 
                         @{Label = "PowerAvg"; Expression = {if ($_.Subminer.NeedBenchmark) {"Benchmarking"} else {$_.Subminer.PowerAvg.tostring("n0")}}; Align = 'right'}, 
                         @{Label = "Efficiency"; Expression = {if  ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($_.Subminer.hashrate/$_.Subminer.PowerAvg))+'/W'} else {$null} }; Align = 'right'},    
-                        @{Label = "Rev./Day"; Expression = {(($_.Subminer.Revenue+$_.Subminer.RevenueDual).tostring("n5"))+"btc" } ; Align = 'right'},
+                        @{Label = "mbtc/Day"; Expression = {((($_.Subminer.Revenue+$_.Subminer.RevenueDual)*1000).tostring("n5"))} ; Align = 'right'},
                         @{Label = "Rev./Day"; Expression = {((($_.Subminer.Revenue+$_.Subminer.RevenueDual) * [double]$localBTCvalue ).tostring("n2"))+$LocalSymbol } ; Align = 'right'},
                         @{Label = "Profit/Day"; Expression = {if ($_.Subminer.NeedBenchmark) {"Benchmarking"} else {($_.Subminer.Profits).tostring("n2")+$LocalSymbol}}; Align = 'right'}, 
                         @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:P2}" -f $_.PoolFee}}; Align = 'right'},
@@ -1383,6 +1391,10 @@ while ($true) {
 
                     set_ConsolePosition 0 $YToWriteData
 
+                    $ActiveMiners.subminers | Where-Object {$_.stats.ActivatedTimes -GT 0} | ForEach-Object {
+                        $AAA=($_.stats.Activetime.days*60*24)+($_.stats.Activetime.Hours *60)+$_.stats.Activetime.minutes
+                    }
+
                     #Display activated miners list
                     $ActiveMiners.subminers | Where-Object {$_.stats.ActivatedTimes -GT 0} | Sort-Object -Descending {$_.stats.ActivatedTimes} |  Format-Table -Wrap (
                         #@{Label = "Id"; Expression = {$_.Id}; Align = 'right'},   
@@ -1392,13 +1404,13 @@ while ($true) {
                         @{Label = "Miner"; Expression = {$ActiveMiners[$_.Idf].Name}}, 
                         @{Label = "PwLmt"; Expression = {if ($_.PowerLimit -gt 0) {$_.PowerLimit}}}, 
                         @{Label = "Launch"; Expression = {$_.stats.ActivatedTimes}},
-                        @{Label = "Time"; Expression = {[string][int](($_.stats.Activetime.days*60*24)+($_.stats.Activetime.Hours *60)+$_.stats.Activetime.minutes)+" min"}},
+                        @{Label = "Time"; Expression = {if ($_.stats.Activetime.TotalMinutes -le 60) {$_.stats.Activetime.TotalMinutes.tostring("n0")+' min'} else {$_.stats.Activetime.TotalHours.tostring("n1")+' hours'}}},
                         @{Label = "Best"; Expression = {$_.stats.Besttimes}},
                         @{Label = "Last"; Expression = {$_.stats.LastTimeActive}} 
                     ) | Out-Host
 
 
-                    $repaintScreen=$false
+                   # $repaintScreen=$false
                 }
                 
                 $FirstLoopExecution=$False
