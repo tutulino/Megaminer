@@ -1,0 +1,15 @@
+{
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/lolMiner-mnx_v021_Win64.zip",
+    "SHA256": "37d36babcf1f64d8274fa6e0ca20829e19a7a11b4470e7594195285aa92e428f",
+    "Type": "NVIDIA",
+    "Arguments": "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --device #DEVICES# --set-long-stats-interval 30 --enable-nv-hotfix --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "wrapper",
+    "APIPort": 13333,
+    "Algorithms": {
+        "Mars__1": "--set-work-batch 1",
+        "Mars__2": "--set-work-batch 2",
+        "Mars__4": "--set-work-batch 4",
+        "Mars__6": "--set-work-batch 6",
+        "Mars__8": "--set-work-batch 8"
+    }
+}
