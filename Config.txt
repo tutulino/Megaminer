@@ -28,7 +28,7 @@
 @@LOCATION=EUROPE
 
 -- Pool user name for non-anonymous pools such as SprNova, BlocksFactory, or MiningPoolHub
--- You can ingore this settig if you're not using these types of pools
+-- You can ignore this setting if you're not using these types of pools
 
 @@USERNAME=your_pool_username
 
@@ -73,7 +73,7 @@
 @@INTERVAL_PPS=300
 @@INTERVAL_PPLS=1800
 
--- Benchmarks interval time (less than 300 not recommended for GPU due to miners ramp time), if you want to use automatic gpu power limit configuration is recomended at least 600
+-- Benchmarks interval time (less than 300 not recommended for GPU due to miners ramp time), if you want to use automatic gpu power limit configuration is recommended at least 600
 
 @@BENCHMARKTIME=600
 
@@ -107,7 +107,7 @@
 -- If you activate this option miners ports will be calculated dynamic mode, some software like ethmonitoring will not work due to miner dynamic port assignation
 -- You can group your cards as you want. It's recommended to create a group for each card model in your rig, each group will be benchmarked and run separately (you can identify your GPU id's by launching GpuList.bat)
 -- Type must be NVIDIA or AMD, 
--- You can set Powerlimits (MM must run in administrator mode and UAC disabled or prompt appears) for each NVIDIA group, MM will benchmark all miners with maximum value, done this, when a miner is maximum profit candidate MM will benchmark other power limits of tahat miner to find best. (zero means MM will not change Power Limit) 
+-- You can set Powerlimits (MM must run in administrator mode and UAC disabled or prompt appears) for each NVIDIA group, MM will benchmark all miners with maximum value, done this, when a miner is maximum profit candidate MM will benchmark other power limits of that miner to find best. (zero means MM will not change Power Limit) 
 -- Example1: @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"}]
 -- Example2: @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"100,90,80"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
 
