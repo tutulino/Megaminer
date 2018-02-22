@@ -29,14 +29,14 @@ param(
 ##Parameters for testing, must be commented on real use
 
 
-$MiningMode='Automatic'
+#$MiningMode='Automatic'
 #$MiningMode='Manual'
 
 #$PoolsName=('ahashpool','miningpoolhub','hashrefinery')
 #$PoolsName='whattomine'
 #$PoolsName='zergpool'
 #$PoolsName='yiimp'
-$PoolsName='ahashpool'
+#$PoolsName='ahashpool'
 #$PoolsName=('hashrefinery','zpool')
 #$PoolsName='miningpoolhub'
 #$PoolsName='zpool'
