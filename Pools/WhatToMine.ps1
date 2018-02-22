@@ -57,29 +57,41 @@ if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
 }
 
 
-if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
+if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
 
     #Data from WTM
-    try {
-        $http = "https://whattomine.com/coins.json"
-        $WTMResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty coins
-    } catch { Write-Host $Name 'API NOT RESPONDING...' }
+    $WTMResponse2 = @()
 
-    $CustomCoins = (get_config_variable "WhatToMineCustomCoins")
-    if (![string]::IsNullOrWhiteSpace($CustomCoins)) {
-        WriteLog "Custom WTM Coins: $CustomCoins" $LogFile $True
-        foreach ($c in $CustomCoins.Split(',')) {
-            try {
-                $http = "http://whattomine.com/coins/$($c.Trim()).json"
-                $WTMCoinResponse = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-                if (![string]::IsNullOrEmpty($WTMCoinResponse)) {
-                    try { $WTMResponse | Add-Member $WTMCoinResponse.Name $WTMCoinResponse }
-                    catch { $WTMResponse | Add-Member $($WTMCoinResponse.Name + "-" + $WTMCoinResponse.Algorithm) $WTMCoinResponse }
-                    Remove-Variable WTMCoinResponse
+    #Add main page coins
+    try {$WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins} catch { WRITE-HOST 'WTM API NOT RESPONDING...ABORTING'; EXIT}
+    $WTMResponse.PSObject.properties.name | ForEach-Object {
 
-                }
-            } catch { Write-Host $Name 'COIN API NOT RESPONDING...' }
-            Start-Sleep -Seconds 1 # Prevent API Saturation
+        $res = $WTMResponse.($_)
+        $res | Add-Member name $_
+        $WTMResponse2 += $res
+    }
+
+    try {$WTMResponse = Invoke-WebRequest "https://whattomine.com/calculators.json" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins } catch { WRITE-HOST 'WTM API NOT RESPONDING...ABORTING'; EXIT}
+
+    #Add secondary page coins
+
+    $counter=0
+    $WTMResponse.PSObject.properties.name | ForEach-Object {
+
+        if ($WTMResponse.($_).status -eq "Active" -and $WTMResponse.($_).listed -eq $false -and $WTMResponse.($_).lagging -eq $false) {
+            $Id = $WTMResponse.($_).Id
+            $exists = $WTMResponse2 | Where-Object id -eq $Id
+            if ($exists.count -eq 0) {
+                $page = "https://whattomine.com/coins/" + $WTMResponse.($_).Id + ".json"
+                try {$WTMResponse2 += Invoke-WebRequest $page -UseBasicParsing -timeoutsec 2 | ConvertFrom-Json  } catch {}
+            }
+            $counter++
+            # WTM limits to 80 requests per minute. Sleep to prevent API saturation
+            if ($counter -gt 70) {
+                Write-Host "WTM must sleep sleep to prevent API saturation"
+                Start-Sleep -Seconds 60
+                $counter = 0
+            }
         }
     }
 
@@ -92,25 +104,25 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         #Filter by MinWorkers variable (must be here for not selecting now a pool and after that discarded on core.ps1 filter)
         $HPools = $HPools | Where-Object {$_.PoolWorkers -ge $MinWorkers -or $_.PoolWorkers -eq $null}
 
-        ForEach ($WtmCoinName in $WTMResponse.PSObject.Properties.Name) {
+        ForEach ($WtmCoinName in $WTMResponse2) {
 
-            $Algorithm = get_algo_unified_name ($WTMResponse.($WtmCoinName).Algorithm)
-            $Coin = get_coin_unified_name $WtmCoinName
+            $Algorithm = get_algo_unified_name $WtmCoinName.algorithm
+            $Coin = get_coin_unified_name $WtmCoinName.name
 
             #search if this coin was added before
             if (($Result | where-object { $_.Info -eq $Coin -and $_.Algorithm -eq $Algorithm}).count -eq 0) {
                 foreach ($HPool in $($HPools | where-object { $_.Info -eq $coin -and $_.Algorithm -eq $Algorithm})) {
                     #Search if each pool has coin correspondence in WTM
 
-                    $WTMFactor = get_WhatToMineFactor ($HPool.Algorithm)
+                    $WTMFactor = get_WhattomineFactor $Algorithm
 
                     if ($WTMFactor -ne $null) {
                         $Result += [PSCustomObject]@{
-                            Info                  = $HPool.Info
-                            Algorithm             = $HPool.Algorithm
-                            Price                 = [Double]($WTMResponse.($WtmCoinName).btc_revenue / $WTMFactor)
-                            Price24h              = [Double]($WTMResponse.($WtmCoinName).btc_revenue24 / $WTMFactor)
-                            Symbol                = $WTMResponse.($WtmCoinName).tag
+                            Info                  = $Coin
+                            Algorithm             = $Algorithm
+                            Price                 = [Double]($WtmCoinName.btc_revenue / $WTMFactor)
+                            Price24h              = [Double]($WtmCoinName.btc_revenue24 / $WTMFactor)
+                            symbol                = $WtmCoinName.tag
                             Host                  = $HPool.Host
                             HostSSL               = $HPool.HostSSL
                             Port                  = $HPool.Port
@@ -132,7 +144,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                         }
                     } else {
-                        Out-Host "Missing WTF Factor for $WtmCoinName"
+                        Write-Host "Missing WTF Factor for $WtmCoinName"
                     }
                 }
             }
@@ -142,5 +154,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     remove-variable HPools
 }
 
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $info.SharedFile
 remove-variable Result

@@ -538,10 +538,12 @@ Older stats are not compatibles
 *Added option in config.txt for specific pool payment currency
 *Changed btc revenue to mbtc
 
+
 ---POOLS CHANGES:
 *Added blazepool pool
 *Added ravencoin pool to suprnova
 *Adapted zergpool to new api address
+*Added all non main page active coins to Whattomine pool
 
 ---MINERS CHANGES:
 *Added ccminer for x16r algo
