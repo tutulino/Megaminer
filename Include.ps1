@@ -1533,6 +1533,7 @@ function get_WhattomineFactor ([string]$Algo) {
         "Sib" { 20100000 }
         "Skein" { 780000000 }
         "Skunk" { 54000000 }
+        "X11" { 15000000000 }
         "X17" { 100000 }
         "Xevan" { 4800000 }
         "Yescrypt" { 13080 }

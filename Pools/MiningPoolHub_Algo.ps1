@@ -77,7 +77,7 @@ if ($Querymode -eq "SPEED") {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
                 Diff       = $_.difficulty
-                Workername = $_.password.Split("\.")[1]
+                Workername = $_.username.Split("\.")[1]
                 Hashrate   = $_.hashrate
             }
         }
