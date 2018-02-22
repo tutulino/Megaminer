@@ -49,7 +49,7 @@ if ($Querymode -eq "speed") {
                 PoolName   = $name
                 Version    = $_.version
                 Algorithm  = get_algo_unified_name $_.Algo
-                Workername = ($_.password -split ",")[1]
+                Workername = $_.password.Split(",")[1].Split('=')[1]
                 Diff       = $_.difficulty
                 Rejected   = $_.rejected
                 Hashrate   = $_.accepted
@@ -121,7 +121,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Host                  = $MineUrl
                 Port                  = $coin.port
                 User                  = $CoinsWallets.get_item($Currency)
-                Pass                  = "c=$Currency,#Workername#"
+                Pass                  = "c=$Currency,ID=#Workername#"
                 Location              = $Location
                 SSL                   = $false
                 Symbol                = get_coin_symbol -Coin $Pool_Algo

@@ -65,7 +65,6 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     #Add main page coins
     try {$WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins} catch { WRITE-HOST 'WTM API NOT RESPONDING...ABORTING'; EXIT}
     $WTMResponse.PSObject.properties.name | ForEach-Object {
-
         $res = $WTMResponse.($_)
         $res | Add-Member name $_
         $WTMResponse2 += $res
@@ -75,16 +74,16 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
 
     #Add secondary page coins
 
-    $counter=0
+    $counter = 0
     $WTMResponse.PSObject.properties.name | ForEach-Object {
 
-        if ($WTMResponse.($_).status -eq "Active" -and $WTMResponse.($_).listed -eq $false -and $WTMResponse.($_).lagging -eq $false) {
-            $Id = $WTMResponse.($_).Id
-            $exists = $WTMResponse2 | Where-Object id -eq $Id
-            if ($exists.count -eq 0) {
-                $page = "https://whattomine.com/coins/" + $WTMResponse.($_).Id + ".json"
-                try {$WTMResponse2 += Invoke-WebRequest $page -UseBasicParsing -timeoutsec 2 | ConvertFrom-Json  } catch {}
-            }
+        if ($WTMResponse.($_).status -eq "Active" `
+                -and $WTMResponse.($_).listed -eq $false `
+                -and $WTMResponse.($_).lagging -eq $false `
+                -and $WTMResponse.($_).testing -eq $false `
+        ) {
+            $page = "https://whattomine.com/coins/" + $WTMResponse.($_).Id + ".json"
+            try {$WTMResponse2 += Invoke-WebRequest $page -UseBasicParsing -timeoutsec 2 | ConvertFrom-Json  } catch {}
             $counter++
             # WTM limits to 80 requests per minute. Sleep to prevent API saturation
             if ($counter -gt 70) {

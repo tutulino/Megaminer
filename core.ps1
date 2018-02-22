@@ -595,8 +595,6 @@ while ($true) {
                             URI                 = $Miner.URI
                             Username            = $PoolUser
                             UsernameDual        = $PoolUserDual
-                            UsernameReal        = ($PoolUser -split '\.')[0]
-                            UsernameRealDual    = ($PoolUserDual -split '\.')[0]
                             WalletMode          = $Pool.WalletMode
                             WalletSymbol        = $Pool.WalletSymbol
                             WorkerName          = $WorkerName2
@@ -732,8 +730,6 @@ while ($true) {
                 SymbolDual           = $Miner.SymbolDual
                 Username             = $Miner.Username
                 UsernameDual         = $Miner.UsernameDual
-                UserNameReal         = $Miner.UserNameReal
-                UserNameRealDual     = $Miner.UserNameRealDual
                 WalletMode           = $Miner.WalletMode
                 WalletSymbol         = $Miner.WalletSymbol
                 WorkerName           = $Miner.WorkerName
@@ -949,12 +945,10 @@ while ($true) {
     #---------------------------------------------------------------------------
 
     #loop to update info and check if miner is running, exit loop is forced inside
-    While (1 -eq 1) {
+    While ($true) {
 
-
-
-        if ($SwitchLoop -gt 10) {$SwitchLoop = 0} #reduces 10-1 ratio of execution
         $SwitchLoop++
+        if ($SwitchLoop -gt 10) {$SwitchLoop = 0} #reduces 10-1 ratio of execution
 
         $ExitLoop = $false
 
@@ -1078,9 +1072,9 @@ while ($true) {
 
 
             $Candidates = ($ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object Idf).Idf
-            $ActiveMiners | Where-Object {$candidates -contains $_.Id} | Select-Object PoolName, UserNameReal, WalletSymbol, Coin, WorkerName -unique | ForEach-Object {
+            $ActiveMiners | Where-Object {$candidates -contains $_.Id} | Select-Object PoolName, UserName, WalletSymbol, Coin, WorkerName -unique | ForEach-Object {
                 $Info = [PSCustomObject]@{
-                    User       = $_.UserNameReal
+                    User       = $_.UserName
                     PoolName   = $_.PoolName
                     ApiKey     = $config.("APIKEY_" + $_.PoolName)
                     Symbol     = $_.WalletSymbol
@@ -1091,9 +1085,9 @@ while ($true) {
             }
 
             #Dual miners
-            $ActiveMiners | Where-Object {$candidates -contains $_.Id -and $_.PoolNameDual -ne $null} | Select-Object PoolNameDual, UserNameRealDual, WalletSymbol, CoinDual, WorkerName -unique | ForEach-Object {
+            $ActiveMiners | Where-Object {$candidates -contains $_.Id -and $_.PoolNameDual -ne $null} | Select-Object PoolNameDual, UserNameDual, WalletSymbol, CoinDual, WorkerName -unique | ForEach-Object {
                 $Info = [PSCustomObject]@{
-                    User       = $_.UserNameRealDual
+                    User       = $_.UserNameDual
                     PoolName   = $_.PoolNameDual
                     ApiKey     = $config.("APIKEY_" + $_.PoolNameDual)
                     Symbol     = $_.WalletSymbol

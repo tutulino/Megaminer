@@ -49,7 +49,7 @@ if ($Querymode -eq "speed") {
                 PoolName   = $name
                 Version    = $_.version
                 Algorithm  = get_algo_unified_name $_.Algo
-                Workername = ($_.password -split ",")[2]
+                Workername = $_.password.Split(",")[2].Split('=')[1]
                 Diff       = $_.difficulty
                 Rejected   = $_.rejected
                 Hashrate   = $_.accepted
