@@ -1,5 +1,5 @@
 {
-"Path" : ".\\Bin\\CPU-Jaydee\\cpuminer-opt-3.8.2.1-windows\\cpuminer-sse2.exe",
+"Path" : ".\\Bin\\CPU-Jaydee\\cpuminer-opt-3.8.2.1-windows\\cpuminer-avx2.exe",
 "ExtractionPath" : ".\\Bin\\CPU-Jaydee\\",
 "Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1734002/cpuminer-opt-3.8.2.1-windows.zip",
 "Types" : ["CPU"],
