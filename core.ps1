@@ -326,6 +326,19 @@ while ($true) {
         writelog ("No pools with workers greater than minimum config, filter is discarded.....") $logfile $true
     }
     Remove-Variable PoolsFiltered
+
+    ### Check if pools are alive
+    $PoolsFiltered = @()
+    foreach ($Pool in $Pools) {
+        if (Query_TCPPort -Server $Pool.Host -Port $Pool.Port -Timeout 100) {
+            $PoolsFiltered += $Pool
+        } else {
+            WriteLog "$($Pool.PoolName): $($Pool.Host):$($Pool.Port) is not responding!" $LogFile $true
+        }
+    }
+    $Pools = $PoolsFiltered
+    Remove-Variable PoolsFiltered
+
     #Call api to local currency conversion
     try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
