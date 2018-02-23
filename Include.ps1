@@ -1051,18 +1051,15 @@ function Get_Pools {
             if ($Pool.User -ne $null) {
 
                 #must be in algo filter list or no list
-                if ($AlgoFilterList -ne $null) {$Algofilter = compare-object $AlgoFilterList $Pool.Algorithm -IncludeEqual -ExcludeDifferent}
-                if (($AlgoFilterList.count -eq 0) -or ($Algofilter -ne $null)) {
+                if ($AlgoFilterList -ne $null) {$Algofilter = Compare-Object $AlgoFilterList $Pool.Algorithm -IncludeEqual -ExcludeDifferent}
+                if ($AlgoFilterList.count -eq 0 -or $Algofilter -ne $null) {
 
                     #must be in coin filter list or no list
-                    if ($CoinFilterList -ne $null) {$Coinfilter = compare-object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
-                    if (($CoinFilterList.count -eq 0) -or ($Coinfilter -ne $null)) {
-                        if ($pool.location -eq $Location) {$Pool.LocationPriority = 1}
-                        if (($pool.location -eq 'EU') -and ($location -eq 'US')) {$Pool.LocationPriority = 2}
-                        if (($pool.location -eq 'EUROPE') -and ($location -eq 'US')) {$Pool.LocationPriority = 2}
-                        if ($pool.location -eq 'US' -and $location -eq 'EUROPE') {$Pool.LocationPriority = 2}
-                        if ($pool.location -eq 'US' -and $location -eq 'EU') {$Pool.LocationPriority = 2}
-                        if ($Pool.Info -eq $null) {$Pool.info = ''}
+                    if ($CoinFilterList -ne $null) {$Coinfilter = Compare-Object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
+                    if ($CoinFilterList.count -eq 0 -or $Coinfilter -ne $null) {
+                        if ($Pool.Location -eq $Location) {$Pool.LocationPriority = 1}
+                        elseif ($Pool.Location -in @('EU', 'EUROPE') -and $Location -eq 'US') {$Pool.LocationPriority = 2}
+                        elseif ($Pool.Location -eq 'US' -and $Location -in @('EU', 'EUROPE')) {$Pool.LocationPriority = 2}
                         $AllPools2 += $Pool
                     }
                 }
