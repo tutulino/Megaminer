@@ -537,6 +537,7 @@ Older stats are not compatibles
 *Added Efficency in Local currency per Watt
 *Added option in config.txt for specific pool payment currency
 *Changed btc revenue to mbtc
+*Faster interval change
 
 
 ---POOLS CHANGES:
@@ -570,6 +571,7 @@ Older stats are not compatibles
 *Fixed: pool speed not reported in active miners section
 *Fixed: dollar symbol showed as "36"
 *Fixed: Wrong Stats screen running time
+*Fixed: op_addition error
 
 --RELEASE NOTES
 This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD,@@ALGORITHMS_CPU
