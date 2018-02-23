@@ -60,7 +60,7 @@ $ErrorActionPreference = "Continue"
 
 $config=get_config
 
-$Release="6.03b"
+$Release="6.04b"
 
 if ($Groupnames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($Groupnames -join "/")}
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
@@ -78,8 +78,6 @@ Get-ChildItem . -Recurse | Unblock-File
     if ($DefenderExclusions.value -notcontains (Convert-Path .)) {Start-Process powershell -Verb runAs -ArgumentList "Add-MpPreference -ExclusionPath '$(Convert-Path .)'"}
 
 
-
-
 #Start log file
     Clear_log
     $logname=".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
@@ -91,7 +89,6 @@ Get-ChildItem . -Recurse | Unblock-File
     writelog ("Release $Release") $logfile $false
 
 
-
 #get mining types    
     $Types=Get_Mining_Types -filter $Groupnames
     
@@ -99,9 +96,6 @@ Get-ChildItem . -Recurse | Unblock-File
     Writelog ( $Types |ConvertTo-Json) $logfile $false    
 
  
-    
-
-
 $ActiveMiners = @()
 $Activeminers=@()
 $ShowBestMinersOnly=$true
@@ -114,14 +108,12 @@ if (($config.DEBUGLOG) -eq "ENABLED"){$DetailedLog=$True} else {$DetailedLog=$fa
 $Screen = $config.STARTSCREEN
   
 
-
 #---Paraneters checking
 
 if ($MiningMode -ne 'Automatic' -and $MiningMode -ne 'Manual' -and $MiningMode -ne 'Automatic24h'){
     "Parameter MiningMode not valid, valid options: Manual, Automatic, Automatic24h" |Out-host
     EXIT
    }
-
 
    
 $PoolsChecking=Get_Pools -Querymode "info" -PoolsFilterList $PoolsName -CoinFilterList $CoinsName -Location $location -AlgoFilterList $Algorithm   
@@ -138,7 +130,6 @@ $PoolsErrors |ForEach-Object {
     "Selected MiningMode is not valid for pool "+$_.name |Out-host
     EXIT
 }
-
 
 
 if ($MiningMode -eq 'Manual' -and ($Coinsname | Measure-Object).count -gt 1){
@@ -454,9 +445,30 @@ while ($true) {
                                         $Subminers=@()
                                         Foreach ($PowerLimit in ($TypeGroup.PowerLimits)) { #always exists as least a power limit 0 
 
-                   #writelog ("$MinerFile $AlgoName "+$TypeGroup.Groupname+" "+$Pool.Info+" $PowerLimit") $logfile $true                                                                                              
+                   #writelog ("$MinerFile $AlgoName "+$TypeGroup.Groupname+" "+$Pool.Info+" $PowerLimit") $logfile $true      
 
-                                                    $Hrs = Get_Hashrates -algorithm $Algorithms -minername $Minerfile.basename  -GroupName $TypeGroup.GroupName  -PowerLimit $PowerLimit -AlgoLabel  $AlgoLabel | Where-Object {$_.TimeSinceStartInterval -gt ($_.BenchmarkintervalTime * 0.66)}
+
+                                                    #look in Activeminers collection if we found that miner to conserve some properties and not read files
+
+                                                    $FoundMiner = $ActiveMiners | Where-Object {
+                                                        $_.Name -eq $Minerfile.basename -and 
+                                                        $_.Coin -eq $Pool.Info -and 
+                                                        $_.Algorithm -eq $AlgoName -and  
+                                                        $_.CoinDual -eq $PoolDual.Info -and 
+                                                        $_.AlgorithmDual -eq $AlgoNameDual -and 
+                                                        $_.PoolAbbName -eq $Pool.AbbName -and 
+                                                        $_.PoolAbbNameDual -eq $PoolDual.AbbName -and 
+                                                        $_.GpuGroup.Id -eq $TypeGroup.Id -and 
+                                                        $_.AlgoLabel -eq $AlgoLabel }
+
+                                                    $FoundSubminer=  $FoundMiner.subminers | Where-Object { $_.powerlimit -eq $PowerLimit}
+
+                                                   if ($FoundSubminer -eq $null) {
+                                                        $Hrs = Get_Hashrates -algorithm $Algorithms -minername $Minerfile.basename  -GroupName $TypeGroup.GroupName  -PowerLimit $PowerLimit -AlgoLabel  $AlgoLabel | Where-Object {$_.TimeSinceStartInterval -gt ($_.BenchmarkintervalTime * 0.66)}
+                                                        }
+                                                    else 
+                                                        {$Hrs=$FoundSubminer.SpeedReads}
+
                                                     $PowerValue=[double]($Hrs | measure-object -property Power -average).average
                                                     $HashrateValue=[double]($Hrs | measure-object -property Speed -average).average
                                                     $HashrateValueDual=[double]($Hrs | measure-object -property SpeedDual -average).average
@@ -474,8 +486,14 @@ while ($true) {
                                                             } 
                                                     if ([double]$Pool.Fee -gt 0) {$SubMinerRevenue-=($SubMinerRevenue*[double]$Pool.fee)} #PoolFee
                                                     if ([double]$PoolDual.Fee -gt 0) {$SubMinerRevenueDual-=($MinerRevenueDual*[double]$PoolDual.fee)}      
-                                                                
-                                                    $StatsHistory=Get_Stats -algorithm $Algorithms -minername $Minerfile.basename  -GroupName $TypeGroup.GroupName  -PowerLimit $PowerLimit -AlgoLabel  $AlgoLabel
+
+                                                    if ($FoundSubminer -eq $null) {
+                                                        $StatsHistory=Get_Stats -algorithm $Algorithms -minername $Minerfile.basename  -GroupName $TypeGroup.GroupName  -PowerLimit $PowerLimit -AlgoLabel  $AlgoLabel
+                                                        }
+                                                    else {
+                                                        $StatsHistory=$FoundSubminer.StatsHistory
+                                                         }
+
                                                     $Stats=[pscustomobject]@{
                                                                         BestTimes             = 0
                                                                         BenchmarkedTimes      = 0
@@ -485,6 +503,7 @@ while ($true) {
                                                                         FailedTimes           =0
                                                                         StatsTime            = get-date
                                                                         }
+
                                                     if ($StatsHistory -eq $null) {$StatsHistory=$stats}
 
                                                     if ($Subminers.count -eq 0 -or $Subminers[0].StatsHistory.BestTimes -gt 0) { #only add a subminer (distint from first if sometime first was best)
@@ -603,7 +622,7 @@ while ($true) {
                                 $_.CoinDual -eq $ActiveMiner.CoinDual -and 
                                 $_.AlgorithmDual -eq $ActiveMiner.AlgorithmDual -and 
                                 $_.PoolAbbName -eq $ActiveMiner.PoolAbbName -and 
-                                $_.Location -eq $ActiveMiner.Location -and 
+                                $_.PoolAbbNameDual -eq $ActiveMiner.PoolAbbNameDual -and 
                                 $_.GpuGroup.Id -eq $ActiveMiner.GpuGroup.Id -and 
                                 $_.AlgoLabel -eq $ActiveMiner.AlgoLabel }
                             
@@ -657,7 +676,7 @@ while ($true) {
                             $_.CoinDual -eq $Miner.CoinDual -and 
                             $_.AlgorithmDual -eq $Miner.AlgorithmDual -and
                             $_.PoolAbbName -eq $Miner.PoolAbbName -and
-                            $_.Location -eq $Miner.Location -and
+                            $_.PoolAbbNameDual -eq $Miner.PoolAbbNameDual -and 
                             $_.GpuGroup.Id -eq $Miner.GpuGroup.Id -and
                             $_.AlgoLabel -eq $Miner.AlgoLabel}
 
@@ -955,7 +974,8 @@ while ($true) {
                     if ($_.SpeedLive -gt 0) {
 
                             if ($_.SpeedReads.count -le 10 -or $_.Speedlive -le ((($_.SpeedReads.speed |Measure-Object -average).average)*100)){ #for avoid miners peaks recording
-                                                if (($_.SpeedReads).count -eq 0 -or $_.SpeedReads -eq $null) {$_.SpeedReads=@()}
+                                                if (($_.SpeedReads).count -eq 0  -or $_.SpeedReads -eq $null -or $_.SpeedReads -eq "") {$_.SpeedReads = @()}
+                                                try{ #this command fails sometimes, why?
                                                 $_.SpeedReads += [PSCustomObject]@{
                                                                 Speed = $_.SpeedLive 
                                                                 SpeedDual=  $_.SpeedLiveDual
@@ -966,6 +986,7 @@ while ($true) {
                                                                 TimeSinceStartInterval = $TimeSinceStartInterval
                                                                 BenchmarkintervalTime = $BenchmarkintervalTime
                                                                }
+                                                            } catch{}
                                                 
                                                 }
 
