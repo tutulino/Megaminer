@@ -97,7 +97,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "Raven"; "algo" = "X16r"; "symbol" = "RVN"; "server" = "rvn.suprnova.cc"; "port" = 6666; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "ROIcoin"; "algo" = "HOdl"; "symbol" = "ROI"; "server" = "roi.suprnova.cc"; "port" = 4699; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "SibCoin"; "algo" = "Sib"; "symbol" = "SIB"; "server" = "sib.suprnova.cc"; "port" = 3458; "location" = "US"};
-    $Pools += [pscustomobject]@{"coin" = "SmartCash"; "algo" = "Keccak"; "symbol" = "SMART"; "server" = "smart.suprnova.cc"; "port" = 4192; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Straks"; "algo" = "Lyra2RE2"; "symbol" = "STAK"; "server" = "stak.suprnova.cc"; "port" = 7706; "location" = "US"; "portSSL" = 7710; "SSL" = $true};
     $Pools += [pscustomobject]@{"coin" = "UBIQ"; "algo" = "Ethash"; "symbol" = "UBQ"; "server" = "ubiq.suprnova.cc"; "port" = 3030; "location" = "US"; "WalletSymbol" = "UBIQ"};
     $Pools += [pscustomobject]@{"coin" = "Verge"; "algo" = "Lyra2RE2"; "symbol" = "XVG"; "server" = "xvg-lyra.suprnova.cc"; "port" = 2595; "location" = "US"; "WalletSymbol" = "XVG-LYRA"};
@@ -108,28 +107,25 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "ZCash"; "algo" = "Equihash"; "symbol" = "ZEC"; "server" = "zec-eu.suprnova.cc"; "port" = 2142; "location" = "Europe"; "portSSL" = 2242; "serverSSL" = "zec.suprnova.cc"; "SSL" = $true};
     $Pools += [pscustomobject]@{"coin" = "ZCash"; "algo" = "Equihash"; "symbol" = "ZEC"; "server" = "zec-us.suprnova.cc"; "port" = 2142; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "ZClassic"; "algo" = "Equihash"; "symbol" = "ZCL"; "server" = "zcl.suprnova.cc"; "port" = 4042; "location" = "US"; "portSSL" = 4142; "SSL" = $true};
-    $Pools += [pscustomobject]@{"coin" = "Zcoin"; "algo" = "Lyra2Z"; "symbol" = "XZC"; "server" = "xzc-apac.suprnova.cc"; "port" = 1569; "location" = "Asia"};
     $Pools += [pscustomobject]@{"coin" = "Zcoin"; "algo" = "Lyra2Z"; "symbol" = "XZC"; "server" = "xzc.suprnova.cc"; "port" = 1569; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "ZENCash"; "algo" = "Equihash"; "symbol" = "ZEN"; "server" = "zen.suprnova.cc"; "port" = 3618; "location" = "US"; "portSSL" = 3621; "SSL" = $true};
     $Pools += [pscustomobject]@{"coin" = "Zero"; "algo" = "Zero"; "symbol" = "ZER"; "server" = "zero.suprnova.cc"; "port" = 6568; "location" = "US"; "WalletSymbol" = "ZERO"};
 
-    $Pools |ForEach-Object {
-
-        $enableSSL = ($_.SSL -eq $true)
+    $Pools | ForEach-Object {
 
         $Result += [PSCustomObject]@{
             Algorithm             = $_.Algo
             Info                  = $_.Coin
             Protocol              = "stratum+tcp"
-            ProtocolSSL           = if ($enableSSL) {"stratum+tls"} else {$null}
+            ProtocolSSL           = $(if ([bool]$_.SSL) {"stratum+tls"})
             Host                  = $_.Server
-            HostSSL               = if ($enableSSL -and $_.serverSSL -ne $null) {$_.serverSSL} else {$_.Server}
+            HostSSL               = if ([bool]$_.SSL -and $_.serverSSL -ne $null) {$_.serverSSL} else {$_.server}
             Port                  = $_.Port
-            PortSSL               = if ($enableSSL) {$_.PortSSL} else {$null}
+            PortSSL               = $(if ([bool]$_.SSL) {$_.PortSSL})
             User                  = "$Username.#Workername#"
             Pass                  = "x"
             Location              = $_.Location
-            SSL                   = $enableSSL
+            SSL                   = [bool]$_.SSL
             Symbol                = $_.symbol
             AbbName               = $AbbName
             ActiveOnManualMode    = $ActiveOnManualMode
@@ -145,5 +141,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     Remove-Variable Pools
 }
 
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $info.SharedFile
 Remove-Variable Result

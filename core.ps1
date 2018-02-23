@@ -381,9 +381,9 @@ while ($true) {
                         $PoolUser = $Pool.User -replace '#WorkerName#', $WorkerName2
 
                         $Arguments = $Miner.Arguments `
-                            -replace '#PORT#', $(if ($enableSSL -and $Pool.PortSSL -ne $null) {$Pool.PortSSL} else {$Pool.Port}) `
-                            -replace '#SERVER#', $(if ($enableSSL -and $Pool.HostSSL -ne $null) {$Pool.HostSSL} else {$Pool.Host}) `
-                            -replace '#PROTOCOL#', $(if ($enableSSL -and $Pool.ProtocolSSL -ne $null) {$Pool.ProtocolSSL} else {$Pool.Protocol}) `
+                            -replace '#PORT#', $(if ($enableSSL) {$Pool.PortSSL} else {$Pool.Port}) `
+                            -replace '#SERVER#', $(if ($enableSSL) {$Pool.HostSSL} else {$Pool.Host}) `
+                            -replace '#PROTOCOL#', $(if ($enableSSL) {$Pool.ProtocolSSL} else {$Pool.Protocol}) `
                             -replace '#LOGIN#', $Pool.User `
                             -replace '#PASSWORD#', $Pool.Pass `
                             -replace "#GpuPlatform#", $TypeGroup.GpuPlatform  `
@@ -399,9 +399,9 @@ while ($true) {
                         if (![string]::IsNullOrEmpty($Miner.PatternConfigFile)) {
                             $ConfigFileArguments = replace_foreach_gpu (Get-Content $Miner.PatternConfigFile -raw) $TypeGroup.Gpus
                             $ConfigFileArguments = $ConfigFileArguments `
-                                -replace '#PORT#', $(if ($enableSSL -and $Pool.PortSSL -ne $null) {$Pool.PortSSL} else {$Pool.Port}) `
-                                -replace '#SERVER#', $(if ($enableSSL -and $Pool.HostSSL -ne $null) {$Pool.HostSSL} else {$Pool.Host}) `
-                                -replace '#PROTOCOL#', $(if ($enableSSL -and $Pool.ProtocolSSL -ne $null) {$Pool.ProtocolSSL} else {$Pool.Protocol}) `
+                                -replace '#PORT#', $(if ($enableSSL) {$Pool.PortSSL} else {$Pool.Port}) `
+                                -replace '#SERVER#', $(if ($enableSSL) {$Pool.HostSSL} else {$Pool.Host}) `
+                                -replace '#PROTOCOL#', $(if ($enableSSL) {$Pool.ProtocolSSL} else {$Pool.Protocol}) `
                                 -replace '#LOGIN#', $Pool.User `
                                 -replace '#PASSWORD#', $Pool.Pass `
                                 -replace "#GpuPlatform#", $TypeGroup.GpuPlatform `
@@ -447,18 +447,18 @@ while ($true) {
                             $PoolUserDual = $PoolDual.User -replace '#WorkerName#', $WorkerName3
 
                             $Arguments = $Arguments `
-                                -replace '#PORTDUAL#', $(if ($enableDualSSL -and $PoolDual.PortSSL -ne $null) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
-                                -replace '#SERVERDUAL#', $(if ($enableDualSSL -and $PoolDual.HostSSL -ne $null) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
-                                -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL -and $PoolDual.ProtocolSSL -ne $null) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
+                                -replace '#PORTDUAL#', $(if ($enableDualSSL) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
+                                -replace '#SERVERDUAL#', $(if ($enableDualSSL) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
+                                -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
                                 -replace '#LOGINDUAL#', $PoolDual.User `
                                 -replace '#PASSWORDDUAL#', $PoolDual.Pass `
                                 -replace '#ALGORITHMDUAL#', $AlgonameDual `
                                 -replace '#WorkerName#', $WorkerName3
                             if (![string]::IsNullOrEmpty($Miner.PatternConfigFile)) {
                                 $ConfigFileArguments = $ConfigFileArguments `
-                                    -replace '#PORTDUAL#', $(if ($enableDualSSL -and $PoolDual.PortSSL -ne $null) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
-                                    -replace '#SERVERDUAL#', $(if ($enableDualSSL -and $PoolDual.HostSSL -ne $null) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
-                                    -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL -and $PoolDual.ProtocolSSL -ne $null) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
+                                    -replace '#PORTDUAL#', $(if ($enableDualSSL) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
+                                    -replace '#SERVERDUAL#', $(if ($enableDualSSL) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
+                                    -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
                                     -replace '#LOGINDUAL#', $PoolDual.User `
                                     -replace '#PASSWORDDUAL#', $PoolDual.Pass `
                                     -replace '#ALGORITHMDUAL#', $AlgoNameDual `
