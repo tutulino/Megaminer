@@ -1014,7 +1014,7 @@ while ($true) {
 
                     if ($_.SpeedReads.count -le 10 -or $_.Speedlive -le ((($_.SpeedReads.speed | Measure-Object -average).average) * 100)) {
                         #for avoid miners peaks recording
-                        if (($_.SpeedReads).count -eq 0 -or [string]::IsNullOrEmpty($_.SpeedReads)) {$_.SpeedReads = @()}
+                        if (($_.SpeedReads).count -eq 0 -or $_.SpeedReads -eq $null -or $_.SpeedReads -eq "") {$_.SpeedReads = @()}
                         try {
                             #this command fails sometimes, why?
 
