@@ -2,37 +2,42 @@ This Megaminer fork is aimed at AMD + CPU usage without interfering with normal 
 
 AMD miners tuned for RX480/580 with low memory timings
 
-Recommended drivers are Radeon Blockchain beta from August 23
+Recommended drivers for AMD are latest Adrenalin edition or Radeon Blockchain beta from August 23 for specific cases
+	- MkxMiner ASM mode works only with Blockchain drivers
+	- CastXMR gives higher hashrate with Blockshain drivers
+	- AMD monitoring with OverdriveN is unsupported on Blockchain driver and adli is used in that case with less info
 
 New features from tutulino are merged manually after a review to ensure stability.
 
-NVidia miners are copied as is from tutulino's branch unless there fixes needed.
+NVidia miners are untested.
 
 
 ## Changes from tutulino's branch
 
 * Support SSL Mining on supported pools (MiningPoolHub, NiceHash, some coins on Suprnova)
 * Additional miners
-	- AMD OptiminerZcash
-	- AMD OptiminerZero
-	- AMD MkxMiner
-	- AMD XMRig
-	- AMD XMR-Stak
-	- AMD XmrMiner
-	- AMD Phoenix
-	- AMD SgminerC11
-	- AMD SgminerKeccakC
-	- CPU NHeqminer
-	- CPU XMR-Stak
-	- NVidia XMR-Stak
+	- EthMiner (AMD, NVidia)
+	- lolMiner-Mnx (AMD, NVidia)
+	- MkxMiner (AMD)
+	- NHeqminer (CPU)
+	- NsCudaMiner (NVidia)
+	- OptiminerZcash (AMD)
+	- OptiminerZero (AMD, NVidia)
+	- Phoenix (AMD, NVidia)
+	- SgminerAllium (AMD)
+	- SgminerC11 (AMD)
+	- SgminerKeccakC (AMD)
+	- XMR-Stak (AMD, NVidia, CPU)
+	- XMRig (AMD, NVidia, CPU)
+	- XmrMiner (AMD)
 * Miner optimizations for CPU and AMD
 * Low process priority for cpu miners to prevent responsiveness issue
-* Use C# assembly to prevent miners from steal focus
+* Use C# assembly to prevent miners from stealing focus
 * Poll mining api to display projected profits for Manual mining
 * Support reporting mining stats to multipoolminer.io/monitor
 * Allow mining specific Algo instead of coin in Manual mode
 * Profit display in mBTC instead of BTC with too many zeroes
-* Support profitability info for Custom coins from WhatToMine pool
+* Support profitability info for additional coins from WhatToMine pool (added by tutulino now)
 * Power usage aproximation for AMD and CPU
 	- You will need to add TDP values for your hardware in _cpu-tdp.json_ or _amd-cards-tdp.json_ if they are not there
 * Support any fiat currency which is supported by CoinDesk for profit display
@@ -41,18 +46,18 @@ NVidia miners are copied as is from tutulino's branch unless there fixes needed.
 * Filter out non-paying algos on NiceHash
 * Allow decimal values in hashrate from algos with very low hashrate (i.e. EquihashZero)
 * Faster wallet display
+* Support SHA256 validation for miner downloads
 * Fix algo divisors on YIIMP type pools
 * Additional pools
-	- Mining Dutch
-	- DemoCats
-	- FairPool
-	- BlockMunch
-	- Suprnova (up to date algos)
 	- AntMinePool
 	- Bilbotel.fr
-	- Zergpool
+	- BlockMunch
+	- FairPool
+	- Mining Dutch
 	- Protopool
-* More small fixes, code optimizations and formatting changes
+	- Suprnova (up to date algos)
+	- Zergpool
+* Various small fixes, code optimizations and formatting changes
 
 ### Donations are welcome
 - BTC - 3FzmW9JMhgmRwipKkNnphxG73VPQMsYsN6
@@ -94,28 +99,28 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 1. Edit CONFIG.TXT file before mining
 
 2. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt, you can use this parameters on your batch
-    - PoolsName = separated comma string of pools to run 
+    - PoolsName = separated comma string of pools to run
 	- MiningMode = Mode to check profit, note not all pools suport all modes (Automatic/Automatic24h/Manual). If manual mode is selected one coin must be passed on Coinsname parameter
 	- Algorithm = separated comma string of algorithms to run (optional)
     - CoinsName = separated comma string of Coins to run (optional)
     - Groupnames = Groups of gpu/cpu to run (based on your defined groups in config.txt @@Gpugroups section) (optional)
 	- PercentToSwitch = Overrides config.txt config, percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit in specified percent (optional)
- 
+
 
 3. Firt time, software will be donwloaded from miners github repositories
 	- As usual, some miners are detected as virus by your Antivirus, to avoid this you must set your instalation directory as excluded. For Windows Defender MM path is excluded automatic
 
 4. Your system will be benchmarked (long process)
- 
+
 5. Make profit
 	- Except Nicehash (where you sell your power to indicated price), pools always overstimated profit, you must understand profit column as a way to get best algoritmh. Your real profit will be lower.
 
 6. Tuning (optional)
-	- you can edit miners folders content to delete miners or to assign/unassign algos to miners. 
+	- you can edit miners folders content to delete miners or to assign/unassign algos to miners.
 	- you can edit pools folders content to delete pools
 	- for advanced users, you can create miners or pools if are based on existing one.
 
- 
+
 
 ---- UPGRADE PROCEDURE ------------------------------------
 
@@ -130,7 +135,7 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -One file config to start mining
 
--Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. 
+-Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use.
 
 -Can mine on any of this pools (or all at same time): Ahashpool, Nanopool, YIIMP, Nicehash, Zpool, Unimining, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
 
@@ -155,7 +160,7 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 -GPU Info (AMD/Nvidia) (Power, fan, temperatures, eficency...)
 
 -Pools Wallets actual and evolution info
- 
+
 -Option to autochange based on 24h statistics (on supported pools)
 
 -Option for asociate command to launch before run to each miner (nvidia inspector for example to set overclock)
