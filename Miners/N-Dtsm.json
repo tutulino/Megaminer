@@ -1,10 +1,10 @@
 {
   
-  "Path": ".\\Bin\\NVIDIA-DTSM\\zm_0.5.8_win\\zm.exe",
+  "Path": ".\\Bin\\NVIDIA-DTSM\\zm_0.6_win\\zm.exe",
   "ExtractionPath": ".\\Bin\\NVIDIA-DTSM\\",
-  "Uri": "https://github.com/tutulino/Software/releases/download/0/zm_0.5.8_win.zip",
+  "Uri": "https://github.com/tutulino/Software/releases/download/0/zm_0.6_win.zip",
   "Types": ["NVIDIA"],
-  "Arguments":  "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --dev #DEVICESETHMODE# --telemetry=127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
+  "Arguments":  "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --color --dev #DEVICESETHMODE# --telemetry=127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
   "API":  "DTSM",
   "Dualmining":false,
   "Fee":"0.02",
