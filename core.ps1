@@ -55,6 +55,7 @@ param(
 
 
 
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 
 $ErrorActionPreference = "Continue"
 
@@ -365,16 +366,17 @@ while ($true) {
 
                 foreach ($Algo in $Miner.Algorithms)
                         {
-                            #$HashrateValue= 0
-                            #$HashrateValueDual=0
-                            #$Hrs=$null
-
                             ##Algoname contains real name for dual and no dual miners
-                            $AlgoName =  (($Algo.PSObject.Properties.Name -split ("_"))[0]).toupper().trimend()
-                            $AlgoNameDual = (($Algo.PSObject.Properties.Name -split ("_"))[1])
-                            if ($AlgoNameDual -ne $null) {$AlgoNameDual=$AlgoNameDual.toupper()}
-                            $AlgoLabel = ($Algo.PSObject.Properties.Name -split ("_"))[2]
-                            if ($AlgoNameDual -eq $null) {$Algorithms=$AlgoName} else {$Algorithms=$AlgoName+"_"+$AlgoNameDual}
+                            $AlgoTmp=($Algo.PSObject.Properties.Name -split "\|")[0]
+                            $AlgoLabel = ($Algo.PSObject.Properties.Name -split ("\|"))[1]
+                            $AlgoName =  (($AlgoTmp -split ("_"))[0]).toupper().trimend()
+                            $AlgoNameDual = (($AlgoTmp -split ("_"))[1])
+                            
+                            if ($AlgoNameDual -ne $null) {
+                                $AlgoNameDual=$AlgoNameDual.toupper()
+                                $Algorithms=$AlgoName+"_"+$AlgoNameDual
+                                }
+                            else {$Algorithms=$AlgoName}
 
                             if ($Typegroup.Algorithms -notcontains $Algorithms) {continue} #check config has this algo as minable
                           
@@ -600,7 +602,7 @@ while ($true) {
      
     #Launch download of miners    
     $Miners | where-object {$_.URI -ne $null -and $_.ExtractionPath -ne $null -and $_.Path -ne $null -and $_.URI -ne "" -and $_.ExtractionPath -ne "" -and $_.Path -ne ""} | Select-Object URI, ExtractionPath,Path -Unique | ForEach-Object {
-                Start_Downloader -URI $_.URI  -ExtractionPath $_.ExtractionPath -Path $_.Path
+                if (-not (Test-Path $_.Path)) { Start_Downloader -URI $_.URI  -ExtractionPath $_.ExtractionPath -Path $_.Path}
             }
     
     ErrorsToLog $LogFile

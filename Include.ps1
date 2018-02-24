@@ -285,7 +285,7 @@ function get_gpu_information ($Types) {
                     
                             $GpuGroup=($Types  | where-object type -eq 'AMD' |where-object GpusArray -contains $GpuId ).groupname
 
-                            
+                            try{
                             $cards +=[pscustomObject]@{
                                     Type               = 'AMD'
                                     GpuId              = $GpuId 
@@ -308,7 +308,8 @@ function get_gpu_information ($Types) {
                                     Name               = $AdlResultSplit[8]
                                     UDID               = $AdlResultSplit[9]
                                     }
-
+                            }
+                            catch{}
                             $GpuId++
                           }               
     
@@ -993,6 +994,7 @@ function Expand_WebRequest {
 
 
     Invoke-WebRequest $Uri -OutFile $FileName -UseBasicParsing
+ 
     
     $Command='x "'+$FilePath+'" -o"'+$DestinationFolder+'" -y -spe'
     Start-Process "7z" $Command -Wait
@@ -1487,40 +1489,19 @@ function Start_Downloader {
      )
 
 
-        if (-not (Test-Path $Path)) {
-            try {
+    try {
+        $Message="Downloading....$URI"
+        #Write-Host -BackgroundColor green -ForegroundColor Black  $Message
+        Writelog $Message $logfile $true
+        Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop
+    }
+    catch {
+        $Message="Cannot download $($URI)"
+        Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
+        Writelog $Message $logfile
+    }
 
 
-                if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
-                    New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
-                    Invoke-WebRequest $URI -OutFile $Path -UseBasicParsing -ErrorAction Stop
-                }
-                else {
-                    $Message="Downloading....$($URI)"
-                    #Write-Host -BackgroundColor green -ForegroundColor Black  $Message
-                    Writelog $Message $logfile $true
-                    Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop
-                }
-            }
-            catch {
-                
-                $Message="Cannot download $($Path) distributed at $($URI). "
-                Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
-                Writelog $Message $logfile
-
-                
-                if ($Path_Old) {
-                    if (Test-Path (Split-Path $Path_New)) {(Split-Path $Path_New) | Remove-Item -Recurse -Force}
-                    (Split-Path $Path_Old) | Copy-Item -Destination (Split-Path $Path_New) -Recurse -Force
-                }
-                else {
-                    $Message="Cannot find $($Path) distributed at $($URI). "
-                    Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
-                    Writelog $Message $logfile
-                    }
-            }
-        }
-    
 
     
 }
