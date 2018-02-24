@@ -700,7 +700,13 @@ function Get_Live_HashRate {
                 $Request = Invoke_TcpRequest $server $port "summary" 5
                 if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request -split ";" | ConvertFrom-StringData
-                    $HashRate = if ([Double]$Data.KHS -ne 0 -or [Double]$Data.ACC -ne 0) {[Double]$Data.KHS * 1000}
+                    $HashRate = if ([Double]$Data.KHS -ne 0) {[Double]$Data.KHS * 1000}
+                    elseif ([Double]$Data.'H/s' -gt 0) {[Double]$Data.'H/s' * [math]::Pow(1000, 0)}
+                    elseif ([Double]$Data.'KH/s' -gt 0) {[Double]$Data.'KH/s' * [math]::Pow(1000, 1)}
+                    elseif ([Double]$Data.'MH/s' -gt 0) {[Double]$Data.'MH/s' * [math]::Pow(1000, 2)}
+                    elseif ([Double]$Data.'GH/s' -gt 0) {[Double]$Data.'GH/s' * [math]::Pow(1000, 3)}
+                    elseif ([Double]$Data.'TH/s' -gt 0) {[Double]$Data.'TH/s' * [math]::Pow(1000, 4)}
+                    elseif ([Double]$Data.'PH/s' -gt 0) {[Double]$Data.'PH/s' * [math]::Pow(1000, 5)}
                 }
             }
 

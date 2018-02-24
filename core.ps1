@@ -329,6 +329,7 @@ while ($true) {
 
     ### Check if pools are alive
     $PoolsFiltered = @()
+    writelog ("Checking pools availability...") $logfile $true
     foreach ($Pool in $Pools) {
         if (Query_TCPPort -Server $Pool.Host -Port $Pool.Port -Timeout 100) {
             $PoolsFiltered += $Pool
