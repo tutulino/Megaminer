@@ -1,7 +1,7 @@
 ﻿{
-    "Path": "cpuminer-opt-3.8.2.1-windows\\cpuminer-aes-sse42.exe",
-    "Uri": "https://github.com/JayDDee/cpuminer-opt/files/1734002/cpuminer-opt-3.8.2.1-windows.zip",
-    "SHA256": "6016d3119cd61b3deab1e5628a55b3f643ac49920f23a5f3ba5428839dd5540a",
+    "Path": "cpuminer-opt-3.8.3.1-windows\\cpuminer-avx2.exe",
+    "Uri": "https://github.com/JayDDee/cpuminer-opt/files/1753108/cpuminer-opt-3.8.3.1-windows.zip",
+    "SHA256": "37e261f00ee8c3c27604644074d972d83a9dbee8a5f530df95e717ae0454f92e",
     "Type": "CPU",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# #ALGORITHMPARAMETERS# -q",
     "BenchmarkArg": "--benchmark",
