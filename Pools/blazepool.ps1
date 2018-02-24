@@ -78,7 +78,7 @@ if ($Querymode -eq "speed")    {
         
                             
     try {
-        $http="http://api.blazepool.com/walletEx?address="+$Info.user
+        $http="http://api.blazepool.com/wallet/"+$Info.user
         $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
     }
     catch {}
