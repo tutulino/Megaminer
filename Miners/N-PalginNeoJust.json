@@ -1,0 +1,19 @@
+{
+    "Path" : ".\\Bin\\NVIDIA-PalginNeoJust\\hsrminer_neoscrypt_fork.exe",
+    "ExtractionPath" : ".\\Bin\\NVIDIA-PalginNeoJust\\",
+    "Uri" : "https://github.com/justaminer/hsrm-fork/raw/master/hsrminer_neoscrypt_fork.zip",
+    "Types" : ["NVIDIA"],
+    "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#  -d #DEVICES# --api-bind #APIPORT# -r 10 #ALGORITHMPARAMETERS# ",
+    "API" : "Palgin",
+    "Wrap" : false,
+    "APIPort": 4004,
+    "Fee": 0,
+    "Dualmining":false,
+    "PrelaunchCommand":"",
+    "Algorithms": [
+                    {"neoscrypt":""}
+                  ]
+    
+
+    }
+    
