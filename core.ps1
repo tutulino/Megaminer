@@ -61,7 +61,7 @@ $ErrorActionPreference = "Continue"
 
 $config=get_config
 
-$Release="6.04b"
+$Release="6.0"
 
 if ($Groupnames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($Groupnames -join "/")}
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
