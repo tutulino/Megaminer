@@ -13,34 +13,34 @@
 "Algorithms": [
       
 
-          {"Ethash_pascal_5":" -dcoin pasc -dcri 5"},
-          {"Ethash_pascal_7":" -dcoin pasc -dcri 7"},
-          {"Ethash_pascal_9":" -dcoin pasc -dcri 9"},
-          {"Ethash_pascal_11":" -dcoin pasc -dcri 11"},
-          {"Ethash_pascal_15":" -dcoin pasc -dcri 15"},
-          {"Ethash_pascal_20":" -dcoin pasc -dcri 20"},
-          {"Ethash_pascal_25":" -dcoin pasc -dcri 25"},
-          {"Ethash_pascal_35":" -dcoin pasc -dcri 35"},
+          {"Ethash_pascal|5":" -dcoin pasc -dcri 5"},
+          {"Ethash_pascal|7":" -dcoin pasc -dcri 7"},
+          {"Ethash_pascal|9":" -dcoin pasc -dcri 9"},
+          {"Ethash_pascal|11":" -dcoin pasc -dcri 11"},
+          {"Ethash_pascal|15":" -dcoin pasc -dcri 15"},
+          {"Ethash_pascal|20":" -dcoin pasc -dcri 20"},
+          {"Ethash_pascal|25":" -dcoin pasc -dcri 25"},
+          {"Ethash_pascal|35":" -dcoin pasc -dcri 35"},
 
 
-          {"Ethash_Blake2s_5":" -dcoin blake2s -dcri 5"},
-          {"Ethash_Blake2s_7":" -dcoin blake2s -dcri 7"},
-          {"Ethash_Blake2s_9":" -dcoin blake2s -dcri 9"},
-          {"Ethash_Blake2s_11":" -dcoin blake2s -dcri 11"},
-          {"Ethash_Blake2s_15":" -dcoin blake2s -dcri 15"},
-          {"Ethash_Blake2s_20":" -dcoin blake2s -dcri 20"},
-          {"Ethash_Blake2s_25":" -dcoin blake2s -dcri 25"},
-          {"Ethash_Blake2s_35":" -dcoin blake2s -dcri 35"},
+          {"Ethash_Blake2s|5":" -dcoin blake2s -dcri 5"},
+          {"Ethash_Blake2s|7":" -dcoin blake2s -dcri 7"},
+          {"Ethash_Blake2s|9":" -dcoin blake2s -dcri 9"},
+          {"Ethash_Blake2s|11":" -dcoin blake2s -dcri 11"},
+          {"Ethash_Blake2s|15":" -dcoin blake2s -dcri 15"},
+          {"Ethash_Blake2s|20":" -dcoin blake2s -dcri 20"},
+          {"Ethash_Blake2s|25":" -dcoin blake2s -dcri 25"},
+          {"Ethash_Blake2s|35":" -dcoin blake2s -dcri 35"},
 
          
-          {"Ethash_keccak_5":" -dcoin keccak -dcri 5"},
-          {"Ethash_keccak_7":" -dcoin keccak -dcri 7"},
-          {"Ethash_keccak_9":" -dcoin keccak -dcri 9"},
-          {"Ethash_keccak_11":" -dcoin keccak -dcri 11"},
-          {"Ethash_keccak_15":" -dcoin keccak -dcri 15"},
-          {"Ethash_keccak_20":" -dcoin keccak -dcri 20"},
-          {"Ethash_keccak_25":" -dcoin keccak -dcri 25"},
-          {"Ethash_keccak_35":" -dcoin keccak -dcri 35"}
+          {"Ethash_keccak|5":" -dcoin keccak -dcri 5"},
+          {"Ethash_keccak|7":" -dcoin keccak -dcri 7"},
+          {"Ethash_keccak|9":" -dcoin keccak -dcri 9"},
+          {"Ethash_keccak|11":" -dcoin keccak -dcri 11"},
+          {"Ethash_keccak|15":" -dcoin keccak -dcri 15"},
+          {"Ethash_keccak|20":" -dcoin keccak -dcri 20"},
+          {"Ethash_keccak|25":" -dcoin keccak -dcri 25"},
+          {"Ethash_keccak|35":" -dcoin keccak -dcri 35"}
 
  
               ]

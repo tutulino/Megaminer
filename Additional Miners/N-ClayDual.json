@@ -13,29 +13,29 @@
 "PrelaunchCommand":"",
 "Algorithms": [
 
-                {"Ethash_Blake2s_40":" -dcoin blake2s -dcri 40"},
-                {"Ethash_Blake2s_60":" -dcoin blake2s -dcri 60"},
-                {"Ethash_Blake2s_80":" -dcoin blake2s -dcri 80"},
-                {"Ethash_Blake2s_100":" -dcoin blake2s -dcri 100"},
-                {"Ethash_Blake2s_120":" -dcoin blake2s -dcri 120"},
-                {"Ethash_Blake2s_140":" -dcoin blake2s -dcri 140"},
-                {"Ethash_Blake2s_160":" -dcoin blake2s -dcri 160"},
+                {"Ethash_Blake2s|40":" -dcoin blake2s -dcri 40"},
+                {"Ethash_Blake2s|60":" -dcoin blake2s -dcri 60"},
+                {"Ethash_Blake2s|80":" -dcoin blake2s -dcri 80"},
+                {"Ethash_Blake2s|100":" -dcoin blake2s -dcri 100"},
+                {"Ethash_Blake2s|120":" -dcoin blake2s -dcri 120"},
+                {"Ethash_Blake2s|140":" -dcoin blake2s -dcri 140"},
+                {"Ethash_Blake2s|160":" -dcoin blake2s -dcri 160"},
 
-                {"Ethash_Keccak_40":" -dcoin Keccak -dcri 40"},
-                {"Ethash_Keccak_60":" -dcoin Keccak -dcri 60"},
-                {"Ethash_Keccak_80":" -dcoin Keccak -dcri 80"},
-                {"Ethash_Keccak_100":" -dcoin Keccak -dcri 100"},
-                {"Ethash_Keccak_120":" -dcoin Keccak -dcri 120"},
-                {"Ethash_Keccak_140":" -dcoin Keccak -dcri 140"},
-                {"Ethash_Keccak_160":" -dcoin Keccak -dcri 160"},
+                {"Ethash_Keccak|40":" -dcoin Keccak -dcri 40"},
+                {"Ethash_Keccak|60":" -dcoin Keccak -dcri 60"},
+                {"Ethash_Keccak|80":" -dcoin Keccak -dcri 80"},
+                {"Ethash_Keccak|100":" -dcoin Keccak -dcri 100"},
+                {"Ethash_Keccak|120":" -dcoin Keccak -dcri 120"},
+                {"Ethash_Keccak|140":" -dcoin Keccak -dcri 140"},
+                {"Ethash_Keccak|160":" -dcoin Keccak -dcri 160"},
 
-                {"Ethash_Pascal_40":" -dcoin pasc -dcri 40"},
-                {"Ethash_Pascal_60":" -dcoin pasc -dcri 60"},
-                {"Ethash_Pascal_80":" -dcoin pasc -dcri 80"},
-                {"Ethash_Pascal_100":" -dcoin pasc -dcri 100"},
-                {"Ethash_Pascal_120":" -dcoin pasc -dcri 120"},
-                {"Ethash_Pascal_140":" -dcoin pasc -dcri 140"},
-                {"Ethash_Pascal_160":" -dcoin pasc -dcri 160"}
+                {"Ethash_Pascal|40":" -dcoin pasc -dcri 40"},
+                {"Ethash_Pascal|60":" -dcoin pasc -dcri 60"},
+                {"Ethash_Pascal|80":" -dcoin pasc -dcri 80"},
+                {"Ethash_Pascal|100":" -dcoin pasc -dcri 100"},
+                {"Ethash_Pascal|120":" -dcoin pasc -dcri 120"},
+                {"Ethash_Pascal|140":" -dcoin pasc -dcri 140"},
+                {"Ethash_Pascal|160":" -dcoin pasc -dcri 160"}
                 
               ]
 
