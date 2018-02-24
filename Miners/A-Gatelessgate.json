@@ -10,7 +10,7 @@
 "Dualmining":false,
 "Algorithms": [
             
-            {"neoscrypt":"-k neoscrypt --gpu-threads 1 --worksize 256 --intensity 13"},
+          
             {"cryptonight":"-k cryptonight --gpu-threads 1 --worksize 4 --rawintensity 720"}
             
 
