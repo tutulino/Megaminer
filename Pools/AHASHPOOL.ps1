@@ -132,6 +132,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     }
 
 
+
+        $Currency= if ((get_config_variable "CURRENCY_AHASHPOOL") -eq "") {get_config_variable "CURRENCY"} else {get_config_variable "CURRENCY_AHASHPOOL"}      
+
         $Request | Get-Member -MemberType properties| ForEach-Object {
 
                 $coin=$Request | Select-Object -ExpandProperty $_.name
@@ -142,7 +145,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                     $Divisor = (Get_Algo_Divisor $Aha_Algorithm) / 1000
 
-                    $Currency= get_config_variable "CURRENCY"
                 
                     $Result+=[PSCustomObject]@{
                                 Algorithm     = $Aha_Algorithm

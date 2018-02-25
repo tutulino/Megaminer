@@ -146,7 +146,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                     "keccak"{$Divisor *= 1000}
                                     }
 
-                                    $Currency= get_config_variable "CURRENCY"
+                
                                     
                                     $Result+=[PSCustomObject]@{
                                             Algorithm     = $Zpool_Algo
