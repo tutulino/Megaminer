@@ -9,6 +9,6 @@
     "Fee": 0.01,
     "Algorithms": {
         "Ethash": "",
-        "Ethash__asm": "-asm 2"
+        "Ethash|asm": "-asm 2"
     }
 }

@@ -970,7 +970,6 @@ function Expand_WebRequest {
 
 
     if (Test-Path $FileName) {Remove-Item $FileName}
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Invoke-WebRequest $Uri -OutFile $FileName -UseBasicParsing
 
     if (Test-Path $FileName) {
@@ -1436,53 +1435,21 @@ function Start_Downloader {
         [String]$SHA256
     )
 
-
-    if (-not (Test-Path $Path)) {
-        try {
-            if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
-                New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
-                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-                Invoke-WebRequest $URI -OutFile $Path -UseBasicParsing -ErrorAction Stop
-                if (![string]::IsNullOrEmpty($SHA256)) {
-                    if ((Get-FileHash -Path $Path -Algorithm SHA256).Hash -ne $SHA256) {
-                        "File hash doesn't match. Skipping miner." | Write-Host
-                        Remove-Item $Path
-                        Return
-                    }
-                }
-            } else {
-                Clear-Host
-                $Message = "Downloading....$($URI)"
-                Write-Host -BackgroundColor Green -ForegroundColor Black $Message
-                Writelog $Message $logfile
-                Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop -SHA256 $SHA256
-            }
-        } catch {
-
-            $Message = "Cannot download $($Path) distributed at $($URI). "
-            Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
-            Writelog $Message $logfile
-
-
-            if ($Path_Old) {
-                if (Test-Path (Split-Path $Path_New)) {(Split-Path $Path_New) | Remove-Item -Recurse -Force}
-                (Split-Path $Path_Old) | Copy-Item -Destination (Split-Path $Path_New) -Recurse -Force
-            } else {
-                $Message = "Cannot find $($Path) distributed at $($URI). "
-                Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
-                Writelog $Message $logfile
-            }
-        }
+    try {
+        $Message = "Downloading....$URI"
+        # Write-Host -BackgroundColor green -ForegroundColor Black  $Message
+        Writelog $Message $logfile $true
+        Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop -SHA256 $SHA256
+    } catch {
+        $Message = "Cannot download $($URI)"
+        Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
+        Writelog $Message $logfile
     }
 }
 
-
-
-
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
-
 
 function Clear_Log {
 

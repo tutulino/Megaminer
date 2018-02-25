@@ -6,8 +6,8 @@
     "Arguments": "-a #APIPORT# -l #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
     "API": "nicehashequihash",
     "Algorithms": {
-        "Equihash__2": "-t 2",
-        "Equihash__3": "-t 3",
-        "Equihash__4": "-t 4"
+        "Equihash|2": "-t 2",
+        "Equihash|3": "-t 3",
+        "Equihash|4": "-t 4"
     }
 }

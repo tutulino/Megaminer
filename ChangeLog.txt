@@ -527,7 +527,7 @@ Older stats are not compatibles
 
 
 ------------------------------------------------
-6.0b2
+6.0
 
 
 --FEATURES CHANGES:
@@ -553,7 +553,8 @@ Older stats are not compatibles
 *Claymore dual for AMD moved to miners folder due to high profit
 *Updated excavator to 1.4.4a
 *Updated cpu miner to 3.8.2.1
-
+*Added Claymore Neoscrypt miner 1.0
+*Updated dtsm to 0.6
 
 ---BUG FIXES:
 
@@ -571,7 +572,9 @@ Older stats are not compatibles
 *Fixed: pool speed not reported in active miners section
 *Fixed: dollar symbol showed as "36"
 *Fixed: Wrong Stats screen running time
-*Fixed: op_addition error
+*Fixed: op_addiction error
+*Fixed: download files errors
+*Fixed: ADL error message in log file
 
 --RELEASE NOTES
 This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD,@@ALGORITHMS_CPU

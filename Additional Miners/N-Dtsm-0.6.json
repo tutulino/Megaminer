@@ -2,7 +2,7 @@
     "Path": "zm_0.6_win\\zm.exe",
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/zm_0.6_win.zip",
     "Type": "NVIDIA",
-    "Arguments": "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --dev #DEVICESETHMODE# --telemetry=127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
+    "Arguments": "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --color --dev #DEVICESETHMODE# --telemetry=127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
     "API": "DTSM",
     "Fee": 0.02,
     "Algorithms": {

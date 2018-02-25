@@ -62,7 +62,7 @@ if ($Querymode -eq "speed") {
 
 if ($Querymode -eq "wallet") {
     try {
-        $http = $ApiUrl + "/wallet?address=" + $Info.user
+        $http = $ApiUrl + "/wallet/" + $Info.user
         $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
     } catch {}
 

@@ -8,6 +8,6 @@
     "APIPort": 4028,
     "Algorithms": {
         "Xevan": "-k xevan -I 15",
-        "Xevan__mod": "-k xevan-mod -I 20"
+        "Xevan|mod": "-k xevan-mod -I 20"
     }
 }

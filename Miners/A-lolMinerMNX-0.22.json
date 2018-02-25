@@ -7,11 +7,11 @@
     "API": "wrapper",
     "APIPort": 13333,
     "Algorithms": {
-        "Mars__2": "--set-work-batch 2",
-        "Mars__4": "--set-work-batch 4",
-        "Mars__6": "--set-work-batch 6",
-        "Mars__8": "--set-work-batch 8",
-        "Mars__10": "--set-work-batch 10",
-        "Mars__12": "--set-work-batch 12"
+        "Mars|2": "--set-work-batch 2",
+        "Mars|4": "--set-work-batch 4",
+        "Mars|6": "--set-work-batch 6",
+        "Mars|8": "--set-work-batch 8",
+        "Mars|10": "--set-work-batch 10",
+        "Mars|12": "--set-work-batch 12"
     }
 }

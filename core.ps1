@@ -52,11 +52,12 @@ param(
 #$GroupNames=('rx580')
 
 
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
 
 $ErrorActionPreference = "Continue"
 $config = get_config
 
-$Release = "6.04b"
+$Release = "6.0"
 
 if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"}
 else {$Host.UI.RawUI.WindowTitle = "MM-" + ($GroupNames -join "/")}
@@ -242,7 +243,7 @@ while ($true) {
         $NextInterval = ($ConfigDonateTime - $ElapsedDonatedTime) * 60
 
         $Algorithm = $null
-        $PoolsName = "NiceHash"
+        $PoolsName = "DonationPool"
         $CoinsName = $null
         $MiningMode = "Automatic"
 
@@ -342,7 +343,6 @@ while ($true) {
 
     #Call api to local currency conversion
     try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $CDKResponse = Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 |
             ConvertFrom-Json |
             Select-Object -ExpandProperty BPI
@@ -369,12 +369,13 @@ while ($true) {
 
             foreach ($Algo in $Miner.Algorithms.PSObject.Properties) {
 
-                ##Algoname contains real name for dual and no dual miners
-                $AlgoName = get_algo_unified_name (($Algo.Name -split ("_"))[0])
-                $AlgoNameDual = get_algo_unified_name (($Algo.Name -split ("_"))[1])
-                $AlgoLabel = ($Algo.Name -split ("_"))[2]
+                ##AlgoName contains real name for dual and no dual miners
+                $AlgoTmp = ($Algo.Name -split "\|")[0]
+                $AlgoLabel = ($Algo.Name -split ("\|"))[1]
+                $AlgoName = get_algo_unified_name (($AlgoTmp -split ("_"))[0])
+                $AlgoNameDual = get_algo_unified_name (($AlgoTmp -split ("_"))[1])
                 $Algorithms = $AlgoName
-                if (![string]::IsNullOrEmpty($AlgoNameDual)) {$Algorithms += "_" + $AlgoNameDual}
+                if (![string]::IsNullOrEmpty($AlgoNameDual)) {$Algorithms += "_$AlgoNameDual"}
 
                 if ($Typegroup.Algorithms -notcontains $Algorithms -and ![string]::IsNullOrEmpty($Typegroup.Algorithms)) {continue} #check config has this algo as minable
 
@@ -401,7 +402,7 @@ while ($true) {
                             -replace '#LOGIN#', $Pool.User `
                             -replace '#PASSWORD#', $Pool.Pass `
                             -replace "#GpuPlatform#", $TypeGroup.GpuPlatform  `
-                            -replace '#ALGORITHM#', $Algoname `
+                            -replace '#ALGORITHM#', $AlgoName `
                             -replace '#ALGORITHMPARAMETERS#', $Algo.Value `
                             -replace '#WorkerName#', $WorkerName2 `
                             -replace '#DEVICES#', $TypeGroup.Gpus `
@@ -419,7 +420,7 @@ while ($true) {
                                 -replace '#LOGIN#', $Pool.User `
                                 -replace '#PASSWORD#', $Pool.Pass `
                                 -replace "#GpuPlatform#", $TypeGroup.GpuPlatform `
-                                -replace '#ALGORITHM#', $Algoname `
+                                -replace '#ALGORITHM#', $AlgoName `
                                 -replace '#ALGORITHMPARAMETERS#', $Algo.Value `
                                 -replace '#WorkerName#', $WorkerName2 `
                                 -replace '#DEVICES#', $TypeGroup.Gpus `
@@ -466,7 +467,7 @@ while ($true) {
                                 -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
                                 -replace '#LOGINDUAL#', $PoolDual.User `
                                 -replace '#PASSWORDDUAL#', $PoolDual.Pass `
-                                -replace '#ALGORITHMDUAL#', $AlgonameDual `
+                                -replace '#ALGORITHMDUAL#', $AlgoNameDual `
                                 -replace '#WorkerName#', $WorkerName3
                             if (![string]::IsNullOrEmpty($Miner.PatternConfigFile)) {
                                 $ConfigFileArguments = $ConfigFileArguments `
@@ -654,7 +655,7 @@ while ($true) {
             ![string]::IsNullOrEmpty($_.Path)} |
         Select-Object URI, ExtractionPath, Path, SHA256 -Unique |
         ForEach-Object {
-        Start_Downloader -URI $_.URI -ExtractionPath $_.ExtractionPath -Path $_.Path -SHA256 $_.SHA256
+        if (-not (Test-Path $_.Path)) {Start_Downloader -URI $_.URI -ExtractionPath $_.ExtractionPath -Path $_.Path -SHA256 $_.SHA256}
     }
 
     ErrorsToLog $LogFile

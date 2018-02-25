@@ -8,7 +8,7 @@
     "APIPort": 3333,
     "Fee": 0.02,
     "Algorithms": {
-        "NeoScrypt": "",
-        "NeoScrypt__2": "-a 2"
+        "NeoScrypt|a1": "-a 1",
+        "NeoScrypt|a2": "-a 2"
     }
 }
