@@ -17,7 +17,8 @@
             {"blake2s":"blake2s"},
             {"cryptonight":"cryptonight"},
             {"pascal":"pascal"},
-            {"keccak":"keccak"}             
+            {"keccak":"keccak"},
+            {"neoscrypt":"neoscrypt"}             
            
             ]
 }
