@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.NeoScrypt.AMD.GPU.Miner.v1.0.zip",
     "SHA256": "96afa7f2bf13cadda96a83e820e81084b8bb414bd78f81514bb61c64469e0be8",
     "Type": "AMD",
-    "Arguments": "-pool #PROTOCOL#://#SERVER#:#PORT# -wal #LOGIN# -psw #PASSWORD# -wd 1 -r -1 -di #DEVICESCLAYMODE# -mport -#APIPORT# #ALGORITHMPARAMETERS#",
+    "Arguments": "-pool #PROTOCOL#://#SERVER#:#PORT# -wal #LOGIN# -psw #PASSWORD# -wd 1 -r -1 -logsmaxsize 10 -di #DEVICESCLAYMODE# -mport -#APIPORT# #ALGORITHMPARAMETERS#",
     "API": "Claymore",
     "APIPort": 3333,
     "Fee": 0.02,
