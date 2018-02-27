@@ -491,7 +491,7 @@ Function WriteLog ($Message, $LogFile, $SendToScreen) {
         $M = [string](get-date) + "...... " + $Message
         $LogFile.WriteLine($M)
 
-        if ($SendToScreen) { $Message | out-host}
+        if ($SendToScreen) { $Message | Write-Host -ForegroundColor Green }
     }
 }
 
