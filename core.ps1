@@ -248,7 +248,6 @@ while ($true) {
         else {[string]$DonationPastTime + "_" + [string]$ElapsedDonatedTime | Set-Content -Path 'Donation.ctr'}
 
         WriteLog ("Next interval you will be donating for $NextInterval seconds, thanks for your support") $LogFile $true
-        pause
     } else {
         #NOT donation interval
         $DonationInterval = $false
