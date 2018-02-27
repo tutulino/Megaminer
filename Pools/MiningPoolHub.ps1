@@ -126,7 +126,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Locations | ForEach-Object {
             $Location = $_
 
-            $enableSSL = ($MiningPoolHub_Algorithm -in @('Cryptonight', 'Equihash'))
+            $enableSSL = ($MiningPoolHub_Algorithm -in @('Cryptonight', 'Equihash', 'Ethash'))
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $MiningPoolHub_Algorithm
