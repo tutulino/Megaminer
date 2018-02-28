@@ -1134,10 +1134,10 @@ function Get_Best_Hashrate_Algo {
 
     $Besthashrate = 0
 
-    Get-ChildItem ($PSScriptRoot + "\Stats") | Where-Object pschildname -like $Pattern | ForEach-Object {
+    Get-ChildItem ($PSScriptRoot + "\Stats") -Filter $Pattern | ForEach-Object {
         $Content = ($_ | Get-Content | ConvertFrom-Json )
         $Hrs = 0
-        if ($Content -ne $null) {$Hrs = $($Content | Where-Object TimeRunning -gt 100 | Measure-Object -property Speed -average).Average}
+        if ($Content -ne $null) {$Hrs = $($Content | Where-Object TimeSinceStartInterval -gt 60 | Measure-Object -property Speed -average).Average}
 
         if ($Hrs -gt $Besthashrate) {
             $Besthashrate = $Hrs
