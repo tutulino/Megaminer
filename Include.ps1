@@ -1279,7 +1279,7 @@ function set_WindowSize ([int]$Width,[int]$Height) {
 
 function get_algo_unified_name ([string]$Algo) {
 
-    $Result=$Algo
+
     switch ($Algo){
             "sib" {$Result="x11gost"}
             "Blake (14r)" {$Result="Blake14r"} 
@@ -1289,11 +1289,14 @@ function get_algo_unified_name ([string]$Algo) {
             "Lyra2REv2" {$Result="lyra2v2"}
             "sia" {$Result="Blake2b"}
             "myr-gr" {$Result="Myriad-Groestl"}
+            "Myr-Groestl" {$Result="Myriad-Groestl"}
             "myriadgroestl" {$Result="Myriad-Groestl"}
             "daggerhashimoto" {$Result="Ethash"}
             "dagger" {$Result="Ethash"}
             "hashimoto" {$Result="Ethash"}
             "skunkhash" {$Result="skunk"}
+            "Phi1612" {$Result="phi"}
+            default {$Result=$Algo}
             }        
      $Result       
 
@@ -1306,7 +1309,7 @@ function get_algo_unified_name ([string]$Algo) {
                     
 function  get_coin_unified_name ([string]$Coin) {
 
-    $Result = $Coin
+    
     switch –wildcard  ($Coin){
             "Myriadcoin-*" {$Result="Myriad"}
             "Myriad-*" {$Result="Myriad"}
@@ -1314,6 +1317,10 @@ function  get_coin_unified_name ([string]$Coin) {
             "Digibyte-*" {$Result="Digibyte"}
             "Verge-*" {$Result="Verge"}
             "EthereumClassic" {$Result="Ethereum-Classic"}
+            "BitcoinGold" {$Result="Bitcoin-Gold"}
+            
+            default {$Result=$coin}
+
             }      
           
      $Result       
@@ -1489,22 +1496,53 @@ function Start_Downloader {
      )
 
 
-    try {
-        $Message="Downloading....$URI"
-        #Write-Host -BackgroundColor green -ForegroundColor Black  $Message
-        Writelog $Message $logfile $true
-        Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop
-    }
-    catch {
-        $Message="Cannot download $($URI)"
-        Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
-        Writelog $Message $logfile
-    }
 
 
+
+     if (-not (Test-Path $Path)) {
+        try {
+    
+    
+            if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
+                New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
+                Invoke-WebRequest $URI -OutFile $Path -UseBasicParsing -ErrorAction Stop
+            }
+            else {
+                Clear-Host
+                $Message="Downloading....$($URI)"
+                Write-Host -BackgroundColor green -ForegroundColor Black  $Message
+                Writelog $Message $logfile
+                Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop
+            }
+        }
+        catch {
+            
+            $Message="Cannot download $URI"
+            Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
+            Writelog $Message $logfile
+    
+            
+            if ($Path_Old) {
+                if (Test-Path (Split-Path $Path_New)) {(Split-Path $Path_New) | Remove-Item -Recurse -Force}
+                (Split-Path $Path_Old) | Copy-Item -Destination (Split-Path $Path_New) -Recurse -Force
+            }
+            else {
+                $Message="Cannot find $($Path) distributed at $($URI). "
+                Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
+                Writelog $Message $logfile
+                }
+        }
+    }
 
     
 }
+
+
+
+
+
+
+
 
 
 
@@ -1545,33 +1583,3 @@ function clear_log{
 #************************************************************************************************************************************************************************************
 
 
-
-function get_WhattomineFactor ([string]$Algo) {
-    
-   #WTM json is for 3xAMD 480 hashrate must adjust, 
-   # to check result with WTM set WTM on "Difficulty for revenue" to "current diff" and "and sort by "current profit" set your algo hashrate from profits screen, WTM "Rev. BTC" and MM BTC/Day must be the same
-            
-            switch ($Algo)
-                        {
-                                "Ethash"{$WTMFactor=84000000}
-                                "Groestl"{$WTMFactor=63900000}
-                                "Myriad-Groestl"{$WTMFactor=79380000}
-                                "X11Gost"{$WTMFactor=20100000}
-                                "Cryptonight"{$WTMFactor=2190}
-                                "equihash"{$WTMFactor=870}
-                                "lyra2v2"{$WTMFactor=14700000}
-                                "Neoscrypt"{$WTMFactor=1950000}
-                                "Lbry"{$WTMFactor=315000000}
-                                "Blake2b"{$WTMFactor=3450000000} 
-                                "Blake14r"{$WTMFactor=5910000000}
-                                "Pascal"{$WTMFactor=2100000000}
-                                "skunk"{$WTMFactor=54000000}
-                                "nist5"{$WTMFactor=57000000}
-                        }
-
-
-              
-         $WTMFactor       
-    
-    }
-    

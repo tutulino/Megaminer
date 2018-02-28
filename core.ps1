@@ -212,12 +212,12 @@ while ($true) {
     if ($FirstTotalExecution) {$ProfitsScreenLimit=$InitialProfitsScreenLimit}
                          
 
-    $Currency= $config.CURRENCY
+    #$Currency= $config.CURRENCY
     $BenchmarkintervalTime=[int]($config.BENCHMARKTIME )
     $LocalCurrency= $config.LOCALCURRENCY
     if ($LocalCurrency.length -eq 0) { #for old config.txt compatibility
         switch ($location) {
-            'Europe' {$LocalCurrency="EURO"}
+            'EU    ' {$LocalCurrency="EURO"}
             'US'     {$LocalCurrency="DOLLAR"}
             'ASIA'   {$LocalCurrency="DOLLAR"}
             'GB'     {$LocalCurrency="GBP"}
@@ -629,9 +629,7 @@ while ($true) {
                                 $_.AlgoLabel -eq $ActiveMiner.AlgoLabel }
                             
 
-
-                   
-                    if (($Miner | Measure-Object).count -gt 1) {Clear-Host; Writelog ("DUPLICATED ALGO "+$MINER.ALGORITHM+" ON "+$MINER.NAME) $LogFile $true ;EXIT}                 
+                    if (($Miner | Measure-Object).count -gt 1) {Clear-Host; Writelog ("DUPLICATED MINER "+$MINER.ALGORITHMS+" ON "+$MINER.NAME) $LogFile $true ;EXIT}                 
                     
                     if ($Miner) { # we found that miner
                             $ActiveMiner.Arguments= $miner.Arguments
@@ -1447,7 +1445,7 @@ while ($true) {
                     'C' {$Screen='CURRENT'}
                     'H' {$Screen='HISTORY'}
                     'S' {$Screen='STATS'}
-                    'E' {$ExitLoop=$true}
+                    'E' {$ExitLoop=$true ; writelog "Forced end of interval by E key" $logfile $false}
                     'W' {$Screen='WALLETS'}
                     'U' {if ($Screen -eq "WALLETS") {$WalletsUpdate=$null}}
                     'T' {if ($Screen -eq "PROFITS") {if ($ProfitsScreenLimit -eq $InitialProfitsScreenLimit) {$ProfitsScreenLimit=1000} else {$ProfitsScreenLimit=$InitialProfitsScreenLimit}}}
@@ -1464,8 +1462,9 @@ while ($true) {
                                         $_.Status='PendingCancellation'
                                         writelog ("No speed detected while benchmark "+$ActiveMiners[$_.IdF].name+"/"+$ActiveMiners[$_.IdF].Algorithm+" (id "+$ActiveMiners[$_.IdF].Id+")") $logfile $false
                                         }
-                                    }
-                                 break
+                                      }
+                            $ExitLoop=$true
+                            writelog "Interval ends by time -- $NextInterval"  $logfile $false
                             } 
 
                 if ($ExitLoop) {break} #forced exit

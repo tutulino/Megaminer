@@ -23,9 +23,9 @@
 
 @@LOCALCURRENCY=EURO
 
--- Location of your rig: EUROPE/US/ASIA (by default "US" will be used for pools that don't require or support this setting)
+-- Location of your rig: EU/US/ASIA (by default "US" will be used for pools that don't require or support this setting)
 
-@@LOCATION=EUROPE
+@@LOCATION=EU
 
 -- Pool user name for non-anonymous pools such as SprNova, BlocksFactory, or MiningPoolHub
 -- You can ignore this setting if you're not using these types of pools
