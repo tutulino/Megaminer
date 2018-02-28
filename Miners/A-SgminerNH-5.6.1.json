@@ -17,7 +17,7 @@
         "Keccak": "-k maxcoin -g 2 -I 10",
         "Lbry": "-k lbry -I 20 -g 2",
         "Lyra2RE": "-k lyra2re -I d",
-        "Lyra2RE2": "-k lyra2rev2 -g 2 -w 64 -I 16",
+        "Lyra2v2": "-k lyra2rev2 -g 2 -w 64 -I 16",
         "MyriadGroestl": "-k myriadcoin-groestl -g 2 -w 64 -I 16",
         "Nist5": "-k nist5 -g 2 -w 256 -I 20",
         "Pascal": "-k pascal -g 1 -w 64 -I 21",

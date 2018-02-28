@@ -136,9 +136,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = if ($enableSSL) {"stratum+tls"} else {$null}
                 Host                  = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
-                HostSSL               = $(if ($enableSSL) {$MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1})
+                HostSSL               = $(if ($enableSSL) {$MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1} else {$null})
                 Port                  = $MiningPoolHub_Port
-                PortSSL               = $(if ($enableSSL) {$MiningPoolHub_Port})
+                PortSSL               = $(if ($enableSSL) {$MiningPoolHub_Port} else {$null})
                 User                  = "$UserName.#WorkerName#"
                 Pass                  = "x"
                 Location              = $Location

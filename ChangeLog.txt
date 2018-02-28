@@ -473,7 +473,7 @@ NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YOU MUST BENCHMARK A
 ------------------------------------------------
 6.0b1
 
---FEATURES CHANGES:
+---FEATURES CHANGES:
 
 *NVIDIA Automatic Gpu Power limit, you can define any power limit values (90%, 80%, etc) for each winner miner/algo MM checks what of that power limit point is more profitable at each interval based in power cost, hashrate and reward. (REQUIRES MM RUN AS ADMIN)
 *Added pool�s profit  correction factor config option (recommended if powerlimit feature is used)
@@ -530,7 +530,7 @@ Older stats are not compatibles
 6.0
 
 
---FEATURES CHANGES:
+---FEATURES CHANGES:
 
 *Added minable algorithms selection in config.txt
 *Faster boot and interval change
@@ -578,6 +578,33 @@ Older stats are not compatibles
 
 --RELEASE NOTES
 This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD,@@ALGORITHMS_CPU
+
+
+
+------------------------------------------------
+6.1
+
+
+---FEATURES CHANGES:
+
+
+---POOLS CHANGES:
+
+* Enhaced Whattomine pool (less api call, more acurate data)
+
+
+---MINERS CHANGES:
+
+
+
+---BUG FIXES:
+
+*Fixed: blazepool not showing workername
+*Fixed: some miners not downloading
+
+
+--RELEASE NOTES
+This release changes config.txt variable @@LOCATION (EUROPE--> EU)
 
 
 

@@ -23,9 +23,9 @@
 
 @@LOCALCURRENCY=USD
 
--- Location of your rig: EUROPE/US/ASIA (by default "US" will be used for pools that don't require or support this setting)
+-- Location of your rig: EU/US/ASIA (by default "US" will be used for pools that don't require or support this setting)
 
-@@LOCATION=EUROPE
+@@LOCATION=EU
 
 -- Pool user name for non-anonymous pools such as SprNova, BlocksFactory, or MiningPoolHub
 -- You can ignore this setting if you're not using these types of pools
@@ -149,8 +149,8 @@
 --Algorithms, define what algorithms can be mined for MM, for an Algo can be mined must exists: 1. A pool, 2. A miner, 3. This config.
 --If used, algorithm parameter from core.ps1 override this config. If Empty - All algos enabled
 
-@@Algorithms_NVIDIA=Bitcore,Blake,Blakecoin,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,Groestl,HMQ1725,HSR,JHA,KeccakC,Lyra2RE2,Lyra2h,MyriadGroestl,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
-@@Algorithms_AMD=Bitcore,Blake,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2RE2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
+@@Algorithms_NVIDIA=Bitcore,Blake,Blakecoin,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,Groestl,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,MyriadGroestl,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
+@@Algorithms_AMD=Bitcore,Blake,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
 @@Algorithms_CPU=CryptoNight,CryptoLight,HOdl,Lyra2h,Lyra2z,Lyra2z330,M7M,Verium,X16r,Yescrypt,YescryptR8,YescryptR16
 
 -- Miner windows styles: Normal,Maximized,Minimized

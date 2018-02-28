@@ -17,7 +17,7 @@
         "JHA": "-a jha",
         "Keccak": "-a keccak",
         "Lbry": "-a lbry",
-        "Lyra2RE2": "-a lyra2v2",
+        "Lyra2v2": "-a lyra2v2",
         "Lyra2z": "-a lyra2z",
         "MyriadGroestl": "-a myr-gr",
         "NeoScrypt": "-a neoscrypt",

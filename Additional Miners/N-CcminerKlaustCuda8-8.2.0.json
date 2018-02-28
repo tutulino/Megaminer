@@ -11,7 +11,7 @@
         "Fresh": "-a fresh",
         "Groestl": "-a groestl",
         "Keccak": "-a keccak -m 2",
-        "Lyra2RE2": "-a lyra2v2",
+        "Lyra2v2": "-a lyra2v2",
         "MyriadGroestl": "-a myr-gr",
         "Neoscrypt": "-a neoscrypt",
         "Nist5": "-a nist5",

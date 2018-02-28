@@ -22,7 +22,6 @@ $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
 $WalletMode = "MIXED"
 $RewardType = "PPS"
-$UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
 
@@ -42,116 +41,155 @@ if ($Querymode -eq "info") {
 
 if (($Querymode -eq "speed") ) {
     if ($PoolRealName -ne $null) {
-        $Info.poolname = $PoolRealName
-        $result = Get_Pools -Querymode "speed" -PoolsFilterList $Info.poolname -Info $Info
+        $Info.PoolName = $PoolRealName
+        $Result = Get_Pools -Querymode "speed" -PoolsFilterList $Info.PoolName -Info $Info
     }
 }
 
 
 if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
     if ($PoolRealName -ne $null) {
-        $Info.poolname = $PoolRealName
-        $result = Get_Pools -Querymode $info.WalletMode -PoolsFilterList $Info.PoolName -Info $Info |
-            select-object Pool, currency, balance
+        $Info.PoolName = $PoolRealName
+        $Result = Get_Pools -Querymode $info.WalletMode -PoolsFilterList $Info.PoolName -Info $Info | select-object Pool, currency, balance
     }
 }
 
 
 if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
 
-    #Data from WTM
-    $WTMResponse2 = @()
+    #Look for pools
+    $ConfigOrder = (get_config_variable "WHATTOMINEPOOLORDER") -split ','
+    $HPools = foreach ($PoolToSearch in $ConfigOrder) {
+        $HPoolsTmp = Get_Pools -Querymode "core" -PoolsFilterList $PoolToSearch -location $Info.Location
+        #Filter by minworkes variable (must be here for not selecting now a pool and after that discarded on core.ps1 filter)
+        $HPoolsTmp | Where-Object {$_.Poolworkers -ge (get_config_variable "MINWORKERS") -or $_.Poolworkers -eq $null}
+    }
+
+    #Common Data from WTM
 
     #Add main page coins
-    try {$WTMResponse = Invoke-WebRequest "https://whattomine.com/coins.json" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins} catch { WRITE-HOST 'WTM API NOT RESPONDING...ABORTING'; EXIT}
-    $WTMResponse.PSObject.properties.name | ForEach-Object {
-        $res = $WTMResponse.($_)
-        $res | Add-Member name $_
-        $WTMResponse2 += $res
+    try {
+        $http = 'https://whattomine.com/coins.json'
+        $WTMResponse = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins
+    } catch {
+        WRITE-HOST 'WTM API NOT RESPONDING...ABORTING'
+        EXIT
     }
-
-    try {$WTMResponse = Invoke-WebRequest "https://whattomine.com/calculators.json" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins } catch { WRITE-HOST 'WTM API NOT RESPONDING...ABORTING'; EXIT}
+    $WTMCoins = $WTMResponse.PSObject.Properties.Name | ForEach-Object {
+        #convert response to collection
+        $res = $WTMResponse.($_)
+        $res | Add-Member name (get_coin_unified_name $_)
+        $res.Algorithm = get_algo_unified_name ($res.Algorithm)
+        $res
+    }
+    Remove-Variable WTMResponse
 
     #Add secondary page coins
-
-    $counter = 0
-    $WTMResponse.PSObject.properties.name | ForEach-Object {
-
-        if ($WTMResponse.($_).status -eq "Active" `
-                -and $WTMResponse.($_).listed -eq $false `
-                -and $WTMResponse.($_).lagging -eq $false `
-                -and $WTMResponse.($_).testing -eq $false `
-        ) {
-            $page = "https://whattomine.com/coins/" + $WTMResponse.($_).Id + ".json"
-            try {$WTMResponse2 += Invoke-WebRequest $page -UseBasicParsing -timeoutsec 2 | ConvertFrom-Json  } catch {}
-            $counter++
-            # WTM limits to 80 requests per minute. Sleep to prevent API saturation
-            if ($counter -gt 70) {
-                Write-Host "WTM must sleep sleep to prevent API saturation"
-                Start-Sleep -Seconds 60
-                $counter = 0
-            }
-        }
+    try {
+        $WTMResponse = Invoke-WebRequest 'https://whattomine.com/calculators.json' -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins
+    } catch {}
+    $WTMSecondaryCoins = $WTMResponse.PSObject.Properties.Name | ForEach-Object {
+        #convert response to collection
+        $res = $WTMResponse.($_)
+        $res | Add-Member name (get_coin_unified_name $_)
+        $res.Algorithm = get_algo_unified_name ($res.Algorithm)
+        if ($res.Status -eq "Active") {$res}
     }
+    Remove-Variable WTMResponse
 
-    #search on pools where to mine coins, order is determined by config.txt @@WhatToMinePoolOrder variable
-    $ConfigOrder = (get_config_variable "WhatToMinePoolOrder") -split ','
-    $MinWorkers = [int](get_config_variable "MinWorkers")
-    foreach ($PoolToSearch in $ConfigOrder) {
 
-        $HPools = Get_Pools -Querymode "core" -PoolsFilterList $PoolToSearch -location $Info.Location
-        #Filter by MinWorkers variable (must be here for not selecting now a pool and after that discarded on core.ps1 filter)
-        $HPools = $HPools | Where-Object {$_.PoolWorkers -ge $MinWorkers -or $_.PoolWorkers -eq $null}
+    #join pools and coins
+    ForEach ($HPool in $HPools) {
 
-        ForEach ($WtmCoinName in $WTMResponse2) {
+        $HPool.Algorithm = get_algo_unified_name $HPool.Algorithm
+        $HPool.Info = get_coin_unified_name $HPool.Info
 
-            $Algorithm = get_algo_unified_name $WtmCoinName.algorithm
-            $Coin = get_coin_unified_name $WtmCoinName.name
+        #we must add units for each algo, this value must be filled if we want a coin to be selected
+        $WTMFactor = switch ($HPool.Algorithm) {
+            "Bitcore" { 30000000 }
+            "Blake2s" { 100000 }
+            "CryptoLight" { 6600 }
+            "CryptoNight" { 2190 }
+            "Decred" { 4200000000 }
+            "Equihash" { 870 }
+            "Ethash" { 79500000 }
+            "Groestl" { 54000000 }
+            "Keccak" { 900000000 }
+            "KeccakC" { 240000000 }
+            "Lbry" { 285000000 }
+            "Lyra2v2" { 14700000 }
+            "Lyra2z" { 420000 }
+            "MyriadGroestl" { 79380000 }
+            "NeoScrypt" { 1950000 }
+            "Nist5" { 19000000 }
+            "Pascal" { 2070000000 }
+            "Sia" { 2970000000 }
+            "Sib" { 20100000 }
+            "Skein" { 780000000 }
+            "Skunk" { 54000000 }
+            "X17" { 100000 }
+            "Xevan" { 4800000 }
+            "Yescrypt" { 13080 }
+            "Zero" { 18 }
+            default {$null}
+        }
 
-            #search if this coin was added before
-            if (($Result | where-object { $_.Info -eq $Coin -and $_.Algorithm -eq $Algorithm}).count -eq 0) {
-                foreach ($HPool in $($HPools | where-object { $_.Info -eq $coin -and $_.Algorithm -eq $Algorithm})) {
-                    #Search if each pool has coin correspondence in WTM
+        if (($Result | Where-Object { $_.Info -eq $HPool.Info -and $_.Algorithm -eq $HPool.Algorithm}).count -eq 0 -and $WTMFactor -ne $null) {
+            #look that this coin is not included in result
 
-                    $WTMFactor = get_WhattomineFactor $Algorithm
+            #look for this coin in main page coins
+            $WtmCoin = $WTMCoins | Where-Object {
+                $_.Name -eq $HPool.Info -and
+                $_.Algorithm -eq $HPool.Algorithm
+            }
 
-                    if ($WTMFactor -ne $null) {
-                        $Result += [PSCustomObject]@{
-                            Info                  = $Coin
-                            Algorithm             = $Algorithm
-                            Price                 = [Double]($WtmCoinName.btc_revenue / $WTMFactor)
-                            Price24h              = [Double]($WtmCoinName.btc_revenue24 / $WTMFactor)
-                            symbol                = $WtmCoinName.tag
-                            Host                  = $HPool.Host
-                            HostSSL               = $HPool.HostSSL
-                            Port                  = $HPool.Port
-                            PortSSL               = $HPool.PortSSL
-                            Location              = $HPool.Location
-                            SSL                   = $HPool.SSL
-                            Fee                   = $HPool.Fee
-                            User                  = $HPool.User
-                            Pass                  = $HPool.Pass
-                            Protocol              = $HPool.Protocol
-                            ProtocolSSL           = $HPool.ProtocolSSL
-                            AbbName               = "W-" + $HPool.AbbName
-                            WalletMode            = $HPool.WalletMode
-                            EthStMode             = $HPool.EthStMode
-                            WalletSymbol          = $HPool.WalletSymbol
-                            PoolName              = $HPool.PoolName
-                            RewardType            = $HPool.RewardType
-                            ActiveOnManualMode    = $ActiveOnManualMode
-                            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                        }
-                    } else {
-                        Write-Host "Missing WTF Factor for $WtmCoinName"
-                    }
+            if ($WtmCoin -eq $null) {
+                #look in secondary coins page
+                $WtmSecCoin = $WTMSecondaryCoins | Where-Object {
+                    $_.Name -eq $HPool.Info -and
+                    $_.Algorithm -eq $HPool.Algorithm
+                }
+                if ($WtmSecCoin -ne $null) {
+                    $page = 'https://whattomine.com/coins/' + $WtmSecCoin.Id + '.json'
+                    try {
+                        $WTMResponse = Invoke-WebRequest $page -UseBasicParsing -timeoutsec 5
+                        $WtmCoin = $WTMResponse | ConvertFrom-Json
+                    } catch {}
+                    Remove-Variable WTMResponse
                 }
             }
-        } #end foreach coin
-    }  #end for each PoolToSearch
-    remove-variable WTMResponse
-    remove-variable HPools
+            if ($WtmCoin -ne $null) {
+                $Result += [PSCustomObject]@{
+                    Info                  = $HPool.Info
+                    Algorithm             = $HPool.Algorithm
+                    Price                 = ([decimal]$WtmCoin.btc_revenue / $WTMFactor)
+                    Price24h              = ([decimal]$WtmCoin.btc_revenue24 / $WTMFactor)
+                    Symbol                = $WtmCoin.Tag
+                    Host                  = $HPool.Host
+                    HostSSL               = $HPool.HostSSL
+                    Port                  = $HPool.Port
+                    PortSSL               = $HPool.PortSSL
+                    Location              = $HPool.Location
+                    SSL                   = $HPool.SSL
+                    Fee                   = $HPool.Fee
+                    User                  = $HPool.User
+                    Pass                  = $HPool.Pass
+                    Protocol              = $HPool.Protocol
+                    ProtocolSSL           = $HPool.ProtocolSSL
+                    AbbName               = "W-" + $HPool.AbbName
+                    WalletMode            = $HPool.WalletMode
+                    EthStMode             = $HPool.EthStMode
+                    WalletSymbol          = $HPool.WalletSymbol
+                    PoolName              = $HPool.PoolName
+                    RewardType            = $HPool.RewardType
+                    ActiveOnManualMode    = $ActiveOnManualMode
+                    ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                }
+            }
+        }
+    } #end foreach pool
+    Remove-Variable HPools
 }
 
 $Result | ConvertTo-Json | Set-Content $info.SharedFile
-remove-variable Result
+Remove-Variable Result

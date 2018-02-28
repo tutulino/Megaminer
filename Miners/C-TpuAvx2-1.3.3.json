@@ -29,7 +29,7 @@
         "KeccakC": "-a keccakc",
         "Luffa": "-a luffa",
         "Lyra2RE": "-a lyra2re",
-        "Lyra2RE2": "-a lyra2rev2",
+        "Lyra2v2": "-a lyra2rev2",
         "MyriadGroestl": "-a myr-gr",
         "Nist5": "-a nist5",
         "Pentablake": "-a pentablake",

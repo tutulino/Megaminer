@@ -10,7 +10,7 @@
         "HSR": "-a hsr",
         "Keccak": "-a keccak -m 2",
         "Lbry": "-a lbry",
-        "Lyra2RE2": "-a lyra2v2",
+        "Lyra2v2": "-a lyra2v2",
         "Nist5": "-a nist5",
         "Sib": "-a sib",
         "Veltor": "-a veltor"

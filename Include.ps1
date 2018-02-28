@@ -211,8 +211,9 @@ function get_devices_information ($Types) {
     if ($NVPlatform -ne $null) {
         $GpuId = 0
         Invoke-Expression ".\bin\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader" | ForEach-Object {
-            if ($_ -NotLike "*nvml.dll*") {
-                $SMIresultSplit = $_ -split (",")
+            $SMIresultSplit = $_ -split (",")
+            if ($SMIresultSplit.count -gt 10) {
+                #less is error or no NVIDIA gpu present
 
                 $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object GpusArray -contains $GpuId).groupname
 
@@ -746,7 +747,7 @@ function Get_Live_HashRate {
                         "* - ETH" {$Multiplier = 1000} #Ethash
                         "* - NS" {$Multiplier = 1000} #NeoScrypt
                         Default {$Multiplier = 1}
-            }
+                    }
                     $HashRate = [double]$Data.result[2].Split(";")[0] * $Multiplier
                     $HashRate_Dual = [double]$Data.result[4].Split(";")[0] * $Multiplier
                 }
@@ -1312,7 +1313,7 @@ function Get_Hashrates {
         $Content = (Get-Content -path $pattern)
         try {$Content = $Content| ConvertFrom-Json} catch {
             #if error from convert from json delete file
-            writelog ("Corrupted file $Pattern, deleting") $logfile $true
+            writelog ("Corrupted file $Pattern, deleting") $LogFile $true
             remove-item -path $pattern
         }
     }
@@ -1377,7 +1378,7 @@ function Get_Stats {
         $Content = (Get-Content -path $pattern)
         try {$Content = $Content | ConvertFrom-Json} catch {
             #if error from convert from json delete file
-            writelog ("Corrupted file $Pattern, deleting") $logfile $true
+            writelog ("Corrupted file $Pattern, deleting") $LogFile $true
             Remove-Item -path $pattern
         }
     }
@@ -1430,15 +1431,34 @@ function Start_Downloader {
         [String]$SHA256
     )
 
-    try {
-        $Message = "Downloading....$URI"
-        # Write-Host -BackgroundColor green -ForegroundColor Black  $Message
-        Writelog $Message $logfile $true
-        Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop -SHA256 $SHA256
-    } catch {
-        $Message = "Cannot download $($URI)"
-        Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
-        Writelog $Message $logfile
+    if (-not (Test-Path $Path)) {
+        try {
+
+
+            if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
+                New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
+                Invoke-WebRequest $URI -OutFile $Path -UseBasicParsing -ErrorAction Stop
+            } else {
+                Clear-Host
+                $Message = "Downloading....$($URI)"
+                Write-Host -BackgroundColor green -ForegroundColor Black  $Message
+                Writelog $Message $LogFile
+                Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop
+            }
+        } catch {
+            $Message = "Cannot download $URI"
+            Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
+            WriteLog $Message $LogFile
+
+            if ($Path_Old) {
+                if (Test-Path (Split-Path $Path_New)) {(Split-Path $Path_New) | Remove-Item -Recurse -Force}
+                (Split-Path $Path_Old) | Copy-Item -Destination (Split-Path $Path_New) -Recurse -Force
+            } else {
+                $Message = "Cannot find $($Path) distributed at $($URI). "
+                Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
+                Writelog $Message $LogFile
+            }
+        }
     }
 }
 
@@ -1469,43 +1489,6 @@ function Clear_Log {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
-
-
-
-function get_WhattomineFactor ([string]$Algo) {
-
-    #WTM json is for 3xAMD 480 hashrate must adjust,
-    # to check result with WTM set WTM on "Difficulty for revenue" to "current diff" and "and sort by "current profit" set your algo hashrate from profits screen, WTM "Rev. BTC" and MM BTC/Day must be the same
-
-    switch (get_algo_unified_name $Algo) {
-        "Bitcore" { 30000000 }
-        "Blake2s" { 100000 }
-        "CryptoLight" { 6600 }
-        "CryptoNight" { 2190 }
-        "Decred" { 4200000000 }
-        "Equihash" { 870 }
-        "Ethash" { 79500000 }
-        "Groestl" { 54000000 }
-        "Keccak" { 900000000 }
-        "KeccakC" { 240000000 }
-        "Lbry" { 285000000 }
-        "Lyra2RE2" { 14700000 }
-        "Lyra2z" { 420000 }
-        "MyriadGroestl" { 79380000 }
-        "NeoScrypt" { 1950000 }
-        "Pascal" { 2070000000 }
-        "Sia" { 2970000000 }
-        "Sib" { 20100000 }
-        "Skein" { 780000000 }
-        "Skunk" { 54000000 }
-        "X11" { 15000000000 }
-        "X17" { 100000 }
-        "Xevan" { 4800000 }
-        "Yescrypt" { 13080 }
-        "Zero" { 18 }
-    }
-}
-
 
 
 function get_coin_symbol ([string]$Coin) {

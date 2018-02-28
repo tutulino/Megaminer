@@ -113,9 +113,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = if ($enableSSL) {"stratum+tls"} else {$null}
                 Host                  = $_.name + "." + $location.NhLocation + ".nicehash.com"
-                HostSSL               = $(if ($enableSSL) {$_.name + "." + $location.NhLocation + ".nicehash.com"})
+                HostSSL               = $(if ($enableSSL) {$_.name + "." + $location.NhLocation + ".nicehash.com"} else {$null})
                 Port                  = $_.port
-                PortSSL               = $(if ($enableSSL) {$_.port + 30000})
+                PortSSL               = $(if ($enableSSL) {$_.port + 30000} else {$null})
                 User                  = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')}) + '.' + "#Workername#"
                 Pass                  = "x"
                 Location              = $location.MMLocation

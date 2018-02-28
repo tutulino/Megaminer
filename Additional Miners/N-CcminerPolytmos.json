@@ -9,7 +9,7 @@
         "Blakecoin": "-a blakecoin",
         "Keccak": "-a keccak -m 2",
         "Lbry": "-a lbry",
-        "Lyra2RE2": "-a lyra2v2",
+        "Lyra2v2": "-a lyra2v2",
         "MyriadGroestl": "-a myr-gr",
         "Nist5": "-a nist5",
         "Polytimos": "-a poly",

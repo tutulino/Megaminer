@@ -694,7 +694,7 @@ while ($true) {
             $_.GpuGroup.Id -eq $ActiveMiner.GpuGroup.Id -and
             $_.AlgoLabel -eq $ActiveMiner.AlgoLabel }
 
-        if (($Miner | Measure-Object).Count -gt 1) {Clear-Host; WriteLog ("DUPLICATED ALGO " + $Miner.ALGORITHM + " ON " + $Miner.Name) $LogFile $true ; EXIT}
+        if (($Miner | Measure-Object).Count -gt 1) {Clear-Host; WriteLog ("DUPLICATED MINER " + $Miner.ALGORITHM + " ON " + $Miner.Name) $LogFile $true ; EXIT}
 
         if ($Miner) {
             # we found that miner
@@ -1473,7 +1473,7 @@ while ($true) {
             'C' {$Screen = 'CURRENT'}
             'H' {$Screen = 'HISTORY'}
             'S' {$Screen = 'STATS'}
-            'E' {$ExitLoop = $true}
+            'E' {$ExitLoop = $true; WriteLog "Forced end of interval by E key" $LogFile $false}
             'W' {$Screen = 'WALLETS'}
             'U' {if ($Screen -eq "WALLETS") {$WalletsUpdate = $null}}
             'T' {if ($Screen -eq "PROFITS") {if ($ProfitsScreenLimit -eq $InitialProfitsScreenLimit) {$ProfitsScreenLimit = 1000} else {$ProfitsScreenLimit = $InitialProfitsScreenLimit}}}
@@ -1492,7 +1492,8 @@ while ($true) {
                     WriteLog ("No speed detected while benchmark " + $ActiveMiners[$_.IdF].Name + "/" + $ActiveMiners[$_.IdF].Algorithm + " (id " + $ActiveMiners[$_.IdF].Id + ")") $LogFile $false
                 }
             }
-            break
+            $ExitLoop = $true
+            WriteLog "Interval ends by time -- $NextInterval"  $LogFile $false
         }
 
         if ($ExitLoop) {break} #forced exit

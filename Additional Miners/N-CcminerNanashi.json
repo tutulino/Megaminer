@@ -6,6 +6,6 @@
     "API": "Ccminer",
     "Algorithms": {
         "Lyra2z": "-a lyra2z",
-        "Lyra2RE2": "-a lyra2v2"
+        "Lyra2v2": "-a lyra2v2"
     }
 }
