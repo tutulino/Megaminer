@@ -742,18 +742,14 @@ function Get_Live_HashRate {
                 $Request = Invoke_TcpRequest -Server $Server -Port $Port -Request $Message -Timeout 5
                 if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [double]$Data.result[2].Split(";")[0] * 1000
-                    $HashRate_Dual = [double]$Data.result[4].Split(";")[0] * 1000
-                }
+                    $Miner = $Data.result[0]
+                    switch -wildcard ($Miner) {
+                        "* - ETH" {$Multiplier = 1000} #Ethash
+                        "* - NS" {$Multiplier = 1000} #NeoScrypt
+                        Default {$Multiplier = 1}
             }
-
-            "ClaymoreV2" {
-                $Message = '{"id":0,"jsonrpc":"2.0","method":"miner_getstat1"}'
-                $Request = Invoke_TcpRequest -Server $Server -Port $Port -Request $Message -Timeout 5
-                if (![string]::IsNullOrEmpty($Request)) {
-                    $Data = $Request | ConvertFrom-Json
-                    $HashRate = [double]$Data.result[2].Split(";")[0]
-                    $HashRate_Dual = [double]$Data.result[4].Split(";")[0]
+                    $HashRate = [double]$Data.result[2].Split(";")[0] * $Multiplier
+                    $HashRate_Dual = [double]$Data.result[4].Split(";")[0] * $Multiplier
                 }
             }
 

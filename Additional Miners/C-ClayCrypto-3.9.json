@@ -4,7 +4,7 @@
     "SHA256": "c8008cc0997a9541f25c28738ac478373a878a5b2458be7c1f67591f477e3262",
     "Type": "CPU",
     "Arguments": "-mport -#APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -allpools 1 #ALGORITHMPARAMETERS#",
-    "API": "ClaymoreV2",
+    "API": "Claymore",
     "APIPort": 4444,
     "Fee": 0.025,
     "FeeSSL": 0.02,
