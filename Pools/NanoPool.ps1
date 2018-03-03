@@ -84,7 +84,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
 
         $Locations = @()
-        $Locations += [PSCustomObject]@{Location = "EUROPE"; server = $_.Symbol + "-eu1.nanopool.org"}
+        $Locations += [PSCustomObject]@{Location = "EU"; server = $_.Symbol + "-eu1.nanopool.org"}
         $Locations += [PSCustomObject]@{Location = "US"; server = $_.Symbol + "-us-east1.nanopool.org"}
         $Locations += [PSCustomObject]@{Location = "ASIA"; server = $_.Symbol + "-asia1.nanopool.org"}
 

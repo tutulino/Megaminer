@@ -45,7 +45,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Port                  = $_.Port
             User                  = $_.User
             Pass                  = if ([string]::IsNullOrEmpty($_.Pass)) {"x"} else {$_.Pass}
-            Location              = "Europe"
+            Location              = "EU"
             SSL                   = $false
             Symbol                = $_.symbol
             AbbName               = $AbbName

@@ -107,7 +107,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Exit
     }
 
-    $Locations = "Europe", "US", "Asia"
+    $Locations = "EU", "US", "Asia"
 
     $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0} | ForEach-Object {
 

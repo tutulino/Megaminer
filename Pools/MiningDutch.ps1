@@ -74,7 +74,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Port                  = $_.Port
             User                  = "$Username.$WorkerName"
             Pass                  = "x"
-            Location              = "Europe"
+            Location              = "EU"
             SSL                   = $false
             Symbol                = $_.Symbol
             AbbName               = $AbbName

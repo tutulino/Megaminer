@@ -1003,7 +1003,7 @@ function Get_Pools {
         #[array]$CoinFilterList = ('GroestlCoin','Feathercoin','zclassic'),
         [Parameter(Mandatory = $false)]
         [string]$Location = $null,
-        #[string]$Location='EUROPE'
+        #[string]$Location='EU'
         [Parameter(Mandatory = $false)]
         [array]$AlgoFilterList,
         [Parameter(Mandatory = $false)]
@@ -1011,7 +1011,7 @@ function Get_Pools {
     )
     #in detail mode returns a line for each pool/algo/coin combination, in info mode returns a line for pool
 
-    if ($location -eq 'GB') {$location = 'EUROPE'}
+    if ($location -eq 'GB') {$location = 'EU'}
 
     $PoolsFolderContent = Get-ChildItem ($PSScriptRoot + '\pools') | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare-Object $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0}
 
@@ -1311,7 +1311,7 @@ function Get_Hashrates {
 
     if (test-path -path $pattern) {
         $Content = (Get-Content -path $pattern)
-        try {$Content = $Content| ConvertFrom-Json} catch {
+        try {$Content = $Content | ConvertFrom-Json} catch {
             #if error from convert from json delete file
             writelog ("Corrupted file $Pattern, deleting") $LogFile $true
             remove-item -path $pattern

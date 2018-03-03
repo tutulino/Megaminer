@@ -209,6 +209,7 @@ while ($true) {
         #for old config.txt compatibility
         switch ($location) {
             'Europe' {$LocalCurrency = "EUR"}
+            'EU' {$LocalCurrency = "EUR"}
             'US' {$LocalCurrency = "USD"}
             'ASIA' {$LocalCurrency = "USD"}
             'GB' {$LocalCurrency = "GBP"}

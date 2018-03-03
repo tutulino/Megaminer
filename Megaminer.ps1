@@ -29,6 +29,7 @@ if ($LocalCurrency.length -eq 0) {
     #for old config.txt compatibility
     switch ($location) {
         'Europe' {$LocalCurrency = "EUR"}
+        'EU' {$LocalCurrency = "EUR"}
         'US' {$LocalCurrency = "USD"}
         'ASIA' {$LocalCurrency = "USD"}
         'GB' {$LocalCurrency = "GBP"}
