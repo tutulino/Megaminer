@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/PhoenixMiner_2.6.zip",
     "SHA256": "edf6a48549aadfa3c4ed907086925d41dd81e0f5a02bc21ae26be3de93557311",
     "Type": "AMD",
-    "Arguments": "-pool #SERVER#:#PORT# -wal #LOGIN# -pass #PASSWORD# -esm #ETHSTMODE# -wd 1 -r -1 -di #DEVICESCLAYMODE# -cdmport #APIPORT# -cdm 1 -amd #ALGORITHMPARAMETERS#",
+    "Arguments": "-pool #SERVER#:#PORT# -wal #LOGIN# -pass #PASSWORD# -esm #ETHSTMODE# -mi 12 -wd 1 -r -1 -di #DEVICESCLAYMODE# -cdmport #APIPORT# -cdm 1 -amd #ALGORITHMPARAMETERS#",
     "API": "Claymore",
     "APIPort": 3333,
     "Fee": 0.0065,
