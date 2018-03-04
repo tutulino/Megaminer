@@ -297,68 +297,68 @@ while ($true) {
 
     #Load information about the Pools, only must read parameter passed files (not all as mph do), level is Pool-Algo-Coin
     do {
-        $Pools = Get_Pools `
+        $AllPools = Get_Pools `
             -Querymode "core" `
             -PoolsFilterList $PoolsName `
             -CoinFilterList $CoinsName `
             -Location $Location `
             -AlgoFilterList $Algorithm
-        if ($Pools.Count -eq 0) {
+        if ($AllPools.Count -eq 0) {
             $Msg = "NO POOLS!...retry in 10 sec --- REMEMBER, IF YOUR ARE MINING ON ANONYMOUS WITHOUT AUTOEXCHANGE POOLS LIKE YIIMP, NANOPOOL, ETC. YOU MUST SET WALLET FOR AT LEAST ONE POOL COIN IN CONFIG.TXT"
             WriteLog $msg $LogFile $true
 
             Start-Sleep 10
         }
-    } while ($Pools.Count -eq 0)
+    } while ($AllPools.Count -eq 0)
 
-    $Pools | Select-Object name -unique | ForEach-Object {WriteLog ("Pool " + $_.Name + " was responsive...") $LogFile $true}
+    $AllPools | Select-Object name -unique | ForEach-Object {WriteLog ("Pool " + $_.Name + " was responsive...") $LogFile $true}
 
-    WriteLog ("Detected " + [string]$Pools.Count + " pools...") $LogFile $true
+    WriteLog ("Detected " + [string]$AllPools.Count + " pools...") $LogFile $true
 
     #Filter by minworkers variable (only if there is any pool greater than minimum)
-    $PoolsFiltered = ($Pools | Where-Object {$_.PoolWorkers -ge $Config.MinWorkers -or $_.PoolWorkers -eq $null})
-    if ($PoolsFiltered.Count -ge 1) {
-        $Pools = $PoolsFiltered
+    $Pools = ($AllPools | Where-Object {$_.PoolWorkers -ge $Config.MinWorkers -or $_.PoolWorkers -eq $null})
+    if ($Pools.Count -ge 1) {
         WriteLog ([string]$Pools.Count + " pools left after min workers filter...") $LogFile $true
     } else {
+        $Pools = $AllPools
         WriteLog ("No pools with workers greater than minimum config, filter is discarded...") $LogFile $true
     }
-    Remove-Variable PoolsFiltered
 
-    ### Select highest paying pool for each algo and check if pool is alive.
-    # WriteLog ("Select top pool for each algo and check availability...") $LogFile $true
-    # $PoolsFiltered = $Pools | Group-Object -Property Algorithm | ForEach-Object {
-    #  $PoolAdded = $false
-    #  $_.Group | Sort-Object -Property `
-    #  @{Expression = {$_.Price * (1 - $_.Fee)}; Descending = $true},
-    #  @{Expression = "LocationPriority"; Ascending = $true} | ForEach-Object {
-    #   if (!$PoolAdded) {
-    #    if (Query_TCPPort -Server $_.Host -Port $_.Port -Timeout 100) {
-    #     $PoolAdded = $true
-    #     $_
-    #    } else {
-    #     WriteLog "$($_.PoolName): $($_.Host):$($_.Port) is not responding!" $LogFile $true
-    #    }
-    #   }
-    #  }
-    # }
-    # $Pools = $PoolsFiltered
-    # WriteLog ([string]$Pools.Count + " pools left") $LogFile $true
-    # Remove-Variable PoolsFiltered
-
-    ### Check if pools are alive
-    WriteLog ("Checking pools availability...") $LogFile $true
-    $PoolsFiltered = foreach ($Pool in $Pools) {
-        if (Query_TCPPort -Server $Pool.Host -Port $Pool.Port -Timeout 100) {
-            $Pool
-        } else {
-            WriteLog "$($Pool.PoolName): $($Pool.Host):$($Pool.Port) is not responding!" $LogFile $true
+    ## Select highest paying pool for each algo and check if pool is alive.
+    WriteLog ("Select top pool for each algo in config and check availability...") $LogFile $true
+    $PoolsFiltered = $Pools | Group-Object -Property Algorithm | ForEach-Object {
+        $NeedPool = $false
+        foreach ($TypeGroup in $Types) {
+            ## Is pool algorithm defined in config?
+            if ([string]::IsNullOrEmpty($TypeGroup.Algorithms)) {$NeedPool = $true}
+            else {
+                foreach ($algo in $TypeGroup.Algorithms) {
+                    if (
+                        $algo -eq $_.Name -or
+                        $algo -like "$($_.Name)_*" -or
+                        $algo -like "*_$($_.Name)")
+                    {$NeedPool = $true}
+                }
+            }
+        }
+        ## Order by price (profitability), factoring pool fees
+        $_.Group | Sort-Object -Property `
+        @{Expression = {$_.Price * (1 - $_.Fee)}; Descending = $true},
+        @{Expression = "LocationPriority"; Ascending = $true} | ForEach-Object {
+            if ($NeedPool) {
+                ## test tcp connection to pool
+                if (Query_TCPPort -Server $_.Host -Port $_.Port -Timeout 100) {
+                    $NeedPool = $false
+                    $_
+                } else {
+                    WriteLog "$($_.PoolName): $($_.Host):$($_.Port) is not responding!" $LogFile $true
+                }
+            }
         }
     }
     $Pools = $PoolsFiltered
-    # WriteLog ([string]$Pools.Count + " pools left") $LogFile $true
+    WriteLog ([string]$Pools.Count + " pools left") $LogFile $true
     Remove-Variable PoolsFiltered
-
 
     #Call api to local currency conversion
     try {
@@ -1324,7 +1324,7 @@ while ($true) {
 
                 $WalletsToCheck = @()
 
-                $Pools | Where-Object WalletMode -eq 'WALLET' | Select-Object PoolName, User, WalletMode, WalletSymbol -unique | ForEach-Object {
+                $AllPools | Where-Object WalletMode -eq 'WALLET' | Select-Object PoolName, User, WalletMode, WalletSymbol -unique | ForEach-Object {
                     $WalletsToCheck += [PSCustomObject]@{
                         PoolName   = $_.PoolName
                         WalletMode = $_.WalletMode
@@ -1336,7 +1336,7 @@ while ($true) {
                     }
                 }
 
-                $Pools | Where-Object WalletMode -eq 'APIKEY' | Select-Object PoolName, Algorithm, WalletMode, WalletSymbol -unique | ForEach-Object {
+                $AllPools | Where-Object WalletMode -eq 'APIKEY' | Select-Object PoolName, Algorithm, WalletMode, WalletSymbol -unique | ForEach-Object {
                     $ApiKey = $Config.("APIKEY_" + $_.PoolName)
 
                     if ($Apikey -ne "") {
