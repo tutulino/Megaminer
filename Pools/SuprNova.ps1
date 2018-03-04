@@ -118,7 +118,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Algorithm             = $_.Algo
             Info                  = $_.Coin
             Protocol              = "stratum+tcp"
-            ProtocolSSL           = $(if ([bool]$_.SSL) {"stratum+tls"} else {$null})
+            ProtocolSSL           = $(if ([bool]$_.SSL) {if ($_.Algo -eq "Lyra2v2") {"stratum+tls"} else {"ssl"}} else {$null})
             Host                  = $_.Server
             HostSSL               = $(if ([bool]$_.SSL) {if (!$_.serverSSL) {$_.serverSSL} else {$_.server}} else {$null})
             Port                  = $_.Port

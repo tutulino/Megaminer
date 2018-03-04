@@ -134,7 +134,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Price                 = $MiningPoolHub_Price
                 Price24h              = $null #MPH not send this on api
                 Protocol              = "stratum+tcp"
-                ProtocolSSL           = if ($enableSSL) {"stratum+tls"} else {$null}
+                ProtocolSSL           = if ($enableSSL) {"ssl"} else {$null}
                 Host                  = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
                 HostSSL               = $(if ($enableSSL) {$MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1})
                 Port                  = $MiningPoolHub_Port

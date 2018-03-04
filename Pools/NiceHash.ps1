@@ -111,7 +111,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Price                 = [double]($_.paying / $Divisor)
                 Price24h              = [double]($_.paying / $Divisor)
                 Protocol              = "stratum+tcp"
-                ProtocolSSL           = if ($enableSSL) {"stratum+tls"} else {$null}
+                ProtocolSSL           = if ($enableSSL) {"ssl"} else {$null}
                 Host                  = $_.name + "." + $location.NhLocation + ".nicehash.com"
                 HostSSL               = $(if ($enableSSL) {$_.name + "." + $location.NhLocation + ".nicehash.com"} else {$null})
                 Port                  = $_.port
