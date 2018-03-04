@@ -16,7 +16,6 @@
         "Neoscrypt": "-a neoscrypt",
         "Nist5": "-a nist5",
         "SHA256t": "-a s3",
-        "Sib": "-a sib",
         "Skein": "-a skein",
         "WhirlpoolX": "-a whirlpoolx",
         "Whirlpool": "-a whirl",
