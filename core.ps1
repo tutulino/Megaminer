@@ -330,14 +330,10 @@ while ($true) {
         $NeedPool = $false
         foreach ($TypeGroup in $Types) {
             ## Is pool algorithm defined in config?
-            if ([string]::IsNullOrEmpty($TypeGroup.Algorithms)) {$NeedPool = $true}
+            if ([string]::IsNullOrEmpty($TypeGroup.Algorithms) -or $_.Name -in $TypeGroup.Algorithms) {$NeedPool = $true}
             else {
                 foreach ($algo in $TypeGroup.Algorithms) {
-                    if (
-                        $algo -eq $_.Name -or
-                        $algo -like "$($_.Name)_*" -or
-                        $algo -like "*_$($_.Name)")
-                    {$NeedPool = $true}
+                    if ($algo -like "$($_.Name)_*" -or $algo -like "*_$($_.Name)") {$NeedPool = $true}
                 }
             }
         }
@@ -349,7 +345,7 @@ while ($true) {
                 ## test tcp connection to pool
                 if (Query_TCPPort -Server $_.Host -Port $_.Port -Timeout 100) {
                     $NeedPool = $false
-                    $_
+                    $_  ## return result
                 } else {
                     WriteLog "$($_.PoolName): $($_.Host):$($_.Port) is not responding!" $LogFile $true
                 }
