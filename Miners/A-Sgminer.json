@@ -19,7 +19,9 @@
                 {"blake2s":"-k sia"},
                 {"darkcoin-mod":"-k darkcoin-mod --gpu-threads 2 --worksize 128 --intensity d"},
                 {"x11gost":"-k sibcoin-mod --gpu-threads 2 --worksize 64 --intensity 16"},
-                {"lyra2v2":"-k lyra2rev2 --gpu-threads 2 --worksize 128 --intensity d"}
+                {"lyra2v2":"-k lyra2rev2 --gpu-threads 2 --worksize 128 --intensity d"},
+                {"yescript":"-k yescript"}
+
               ]
 
 }

@@ -597,7 +597,7 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 
 
 ---MINERS CHANGES:
-
+* Added yescript support
 
 
 ---BUG FIXES:
