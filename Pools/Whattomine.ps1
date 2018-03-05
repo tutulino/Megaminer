@@ -186,7 +186,8 @@ if ($Querymode -eq "core"  -or $Querymode -eq "Menu"){
                                 if ($WtmSecCoin -ne $null) {
                                         $page="https://whattomine.com/coins/"+$WtmSecCoin.Id+'.json?utf8=✓&hr=1&p=0&fee=0.0&cost=0.1&hcost=0.0&commit=Calculate'
                                         try {$WTMResponse3 += Invoke-WebRequest $page -UseBasicParsing -timeoutsec 4 
-                                             $WtmCoin=$WTMResponse3 | ConvertFrom-Json  
+                                                $WtmCoin=$WTMResponse3 | ConvertFrom-Json  
+                                                $WtmCoin | add-member btc_revenue24 $WtmCoin.btc_revenue
                                             } 
                                         catch {}
                                         

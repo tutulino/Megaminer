@@ -127,6 +127,7 @@
 @@POOLPROFITFACTOR_MININGPOOLHUB=0.8
 @@POOLPROFITFACTOR_ZPOOL=0.7
 @@POOLPROFITFACTOR_ZERGPOOL=0.5
+@@POOLPROFITFACTOR_BLAZEPOOL=0.7
 
 
 --Enabled or disable detailed log
@@ -159,4 +160,16 @@
 @@ALGORITHMS_CPU=bitcore,blakecoin,cryptonight,hmq1725,jha,keccak,keccakc,lyra2v2,lyra2z,m7m,neoscrypt,nist5,phi,polytimos,timetravel,tribus,veltor
 
  
+--[optional]Port for megaminer api (http:\\localhost:port), set zero to disable api.
+
+@@APIPORT=0
+
+
+--[optional]Farm Monitor adresses (separated comma ip:apiport or lanname:apiport). This field indicates what rigs do you want monitorize in Farm Monitor,only needs to be filled in your monitoring machine
+--To run monitoring, fill this field and run start.bat
+
+--@@FARMRIGS=192.168.2.100:9999,192.168.2.200:9999,localhost:9999
+
+
+
 

@@ -586,6 +586,9 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 
 
 ---FEATURES CHANGES:
+*Rest Api available
+*Farm monitoring (fill config.txt fields and run start.bat)
+*Added menu option to quit (close all windows)
 
 
 ---POOLS CHANGES:
@@ -605,6 +608,5 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 
 --RELEASE NOTES
 This release changes config.txt variable @@LOCATION (EUROPE--> EU)
-
-
+This release add config.txt variables @@APIPORT, @@FARMRIGS
 

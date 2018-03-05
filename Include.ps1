@@ -216,7 +216,7 @@ function Kill_Process($Process) {
             { Writelog ("Process "+[string]$Process.Id+" not exists now") $LogFile $false    }
         
         if ((get-process |Where-Object id -eq $Process.Id) -ne $null) {
-            Stop-Process $Process.Id -force -wa SilentlyContinue -ea SilentlyContinue 
+            Stop-Process $Process.Id -force -wa SilentlyContinue -ea SilentlyContinue
             Writelog ("Killed Process"+[string]$Process.Id) $LogFile $false           
             }
         
@@ -300,9 +300,9 @@ function get_gpu_information ($Types) {
                                     power_limit_percent= 100+[int]$AdlResultSplit[7]
                                     Power_draw         = switch ($AdlResultSplit[8]){
                                                                     "Radeon RX 580 Series"  {[int](135 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
-                                                                    "Radeon RX 480 Series"  {[int](135 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
+                                                                    "Radeon (TM) RX 480 graphics"  {[int](135 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
                                                                     "Radeon RX 570 Series"  {[int](120 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
-                                                                    "Radeon RX 470 Series"  {[int](120 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
+                                                                    "Radeon (TM) RX 470 graphics"  {[int](120 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
                                                                     "Radeon Vega 56 Series" {[int](210 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
                                                                     "Radeon Vega 64 Series" {[int](230 * ((100+[double]$AdlResultSplit[7])/100) * ([double]$AdlResultSplit[5]/100))} 
                                                                     }
@@ -1543,17 +1543,12 @@ function Start_Downloader {
 
 
 
-
-
-
-
-
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
 
-function clear_log{
+function clear_files{
 
     $Now = Get-Date
     $Days = "3"
@@ -1572,7 +1567,14 @@ function clear_log{
 
     $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse 
     $Files |ForEach-Object {Remove-Item $_.fullname}
+
     
+    $TargetFolder = "."
+    $Extension = "*.tmp"
+
+    $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse 
+    $Files |ForEach-Object {Remove-Item $_.fullname}
+
  
     
 
@@ -1583,4 +1585,4 @@ function clear_log{
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
-
+ 
