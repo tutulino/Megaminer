@@ -497,39 +497,39 @@ while ($true) {
                         }
 
 
-                        #SubMiner are variations of miner that not need to relaunch
-                        #Creates a "SubMiner" object for each PL
+                        ## SubMiner are variations of miner that not need to relaunch
+                        ## Creates a "SubMiner" object for each PL
                         $SubMiners = @()
                         foreach ($PowerLimit in ($TypeGroup.PowerLimits)) {
-                            #always exists as least a power limit 0
+                            ## always exists as least a power limit 0
 
                             #WriteLog ("$MinerFile $AlgoName "+$TypeGroup.GroupName+" "+$Pool.Info+" $PowerLimit") $LogFile $true
 
-                            #look in ActiveMiners collection if we found that miner to conserve some properties and not read files
-                            # $FoundMiner = $ActiveMiners | Where-Object {
-                            #     $_.Name -eq $MinerFile.BaseName -and
-                            #     $_.Coin -eq $Pool.Info -and
-                            #     $_.Algorithm -eq $AlgoName -and
-                            #     $_.CoinDual -eq $PoolDual.Info -and
-                            #     $_.AlgorithmDual -eq $AlgoNameDual -and
-                            #     $_.PoolAbbName -eq $Pool.AbbName -and
-                            #     $_.PoolAbbNameDual -eq $PoolDual.AbbName -and
-                            #     $_.GpuGroup.Id -eq $TypeGroup.Id -and
-                            #     $_.AlgoLabel -eq $AlgoLabel }
+                            ## look in ActiveMiners collection if we found that miner to conserve some properties and not read files
+                            $FoundMiner = $ActiveMiners | Where-Object {
+                                $_.Name -eq $MinerFile.BaseName -and
+                                $_.Coin -eq $Pool.Info -and
+                                $_.Algorithm -eq $AlgoName -and
+                                $_.CoinDual -eq $PoolDual.Info -and
+                                $_.AlgorithmDual -eq $AlgoNameDual -and
+                                $_.PoolAbbName -eq $Pool.AbbName -and
+                                $_.PoolAbbNameDual -eq $PoolDual.AbbName -and
+                                $_.GpuGroup.Id -eq $TypeGroup.Id -and
+                                $_.AlgoLabel -eq $AlgoLabel }
 
-                            # $FoundSubMiner = $FoundMiner.SubMiners | Where-Object { $_.PowerLimit -eq $PowerLimit}
+                            $FoundSubMiner = $FoundMiner.SubMiners | Where-Object { $_.PowerLimit -eq $PowerLimit}
 
-                            # if ($FoundSubMiner -eq $null) {
-                            $Hrs = Get_HashRates `
-                                -Algorithm $Algorithms `
-                                -MinerName $MinerFile.BaseName `
-                                -GroupName $TypeGroup.GroupName `
-                                -PowerLimit $PowerLimit `
-                                -AlgoLabel $AlgoLabel |
-                                Where-Object {$_.TimeSinceStartInterval -gt ($_.BenchmarkIntervalTime * 0.66)}
-                            # } else {
-                            #     $Hrs = $FoundSubMiner.SpeedReads
-                            # }
+                            if ($FoundSubMiner -eq $null) {
+                                $Hrs = Get_HashRates `
+                                    -Algorithm $Algorithms `
+                                    -MinerName $MinerFile.BaseName `
+                                    -GroupName $TypeGroup.GroupName `
+                                    -PowerLimit $PowerLimit `
+                                    -AlgoLabel $AlgoLabel |
+                                    Where-Object {$_.TimeSinceStartInterval -gt ($_.BenchmarkIntervalTime * 0.66)}
+                            } else {
+                                $Hrs = $FoundSubMiner.SpeedReads
+                            }
 
                             $PowerValue = [double]($Hrs | Measure-Object -property Power -average).average
                             $HashRateValue = [double]($Hrs | Measure-Object -property Speed -average).average
@@ -541,30 +541,30 @@ while ($true) {
 
                             #apply fee to revenues
                             if ($enableSSL -and [double]$Miner.FeeSSL -gt 0) {
-                                $SubMinerRevenue -= ($SubMinerRevenue * [double]$Miner.FeeSSL)
+                                $SubMinerRevenue *= (1 - [double]$Miner.FeeSSL)
                             } elseif ([double]$Miner.Fee -gt 0) {
-                                $SubMinerRevenue -= ($SubMinerRevenue * [double]$Miner.Fee)
+                                $SubMinerRevenue *= (1 - [double]$Miner.Fee)
                             }
 
                             if ($enableDualSSL -and [double]$Miner.FeeSSL -gt 0) {
-                                $SubMinerRevenueDual -= ($SubMinerRevenueDual * [double]$Miner.FeeSSL)
+                                $SubMinerRevenueDual *= (1 - [double]$Miner.FeeSSL)
                             } elseif ([double]$Miner.Fee -gt 0) {
-                                $SubMinerRevenueDual -= ($SubMinerRevenueDual * [double]$Miner.Fee)
+                                $SubMinerRevenueDual *= (1 - [double]$Miner.Fee)
                             }
 
-                            if ([double]$Pool.Fee -gt 0) {$SubMinerRevenue -= ($SubMinerRevenue * [double]$Pool.Fee)} #PoolFee
-                            if ([double]$PoolDual.Fee -gt 0) {$SubMinerRevenueDual -= ($SubMinerRevenueDual * [double]$PoolDual.Fee)}
+                            $SubMinerRevenue *= (1 - [double]$Pool.Fee) #PoolFee
+                            $SubMinerRevenueDual *= (1 - [double]$PoolDual.Fee)
 
-                            # if ($FoundSubMiner -eq $null) {
-                            $StatsHistory = Get_Stats `
-                                -Algorithm $Algorithms `
-                                -MinerName $MinerFile.BaseName `
-                                -GroupName $TypeGroup.GroupName `
-                                -PowerLimit $PowerLimit `
-                                -AlgoLabel $AlgoLabel
-                            # } else {
-                            #     $StatsHistory = $FoundSubMiner.StatsHistory
-                            # }
+                            if ($FoundSubMiner -eq $null) {
+                                $StatsHistory = Get_Stats `
+                                    -Algorithm $Algorithms `
+                                    -MinerName $MinerFile.BaseName `
+                                    -GroupName $TypeGroup.GroupName `
+                                    -PowerLimit $PowerLimit `
+                                    -AlgoLabel $AlgoLabel
+                            } else {
+                                $StatsHistory = $FoundSubMiner.StatsHistory
+                            }
                             $Stats = [PSCustomObject]@{
                                 BestTimes        = 0
                                 BenchmarkedTimes = 0
@@ -661,10 +661,10 @@ while ($true) {
 
     #Launch download of miners
     $Miners |
-        Where-Object { `
-            ![string]::IsNullOrEmpty($_.URI) -and `
-            ![string]::IsNullOrEmpty($_.ExtractionPath) -and `
-            ![string]::IsNullOrEmpty($_.Path)} |
+        Where-Object {
+        ![string]::IsNullOrEmpty($_.URI) -and
+        ![string]::IsNullOrEmpty($_.ExtractionPath) -and
+        ![string]::IsNullOrEmpty($_.Path)} |
         Select-Object URI, ExtractionPath, Path, SHA256 -Unique |
         ForEach-Object {
         if (!(Test-Path $_.Path)) {Start_Downloader -URI $_.URI -ExtractionPath $_.ExtractionPath -Path $_.Path -SHA256 $_.SHA256}
@@ -681,7 +681,8 @@ while ($true) {
     foreach ($ActiveMiner in ($ActiveMiners | Sort-Object [int]id)) {
 
         #Search existing miners to update data
-        $Miner = $Miners | Where-Object {$_.Name -eq $ActiveMiner.Name -and
+        $Miner = $Miners | Where-Object {
+            $_.Name -eq $ActiveMiner.Name -and
             $_.Coin -eq $ActiveMiner.Coin -and
             $_.Algorithm -eq $ActiveMiner.Algorithm -and
             $_.CoinDual -eq $ActiveMiner.CoinDual -and
@@ -727,7 +728,8 @@ while ($true) {
     ##Add new miners to list
     foreach ($Miner in $Miners) {
 
-        $ActiveMiner = $ActiveMiners | Where-Object {$_.Name -eq $Miner.Name -and
+        $ActiveMiner = $ActiveMiners | Where-Object {
+            $_.Name -eq $Miner.Name -and
             $_.Coin -eq $Miner.Coin -and
             $_.Algorithm -eq $Miner.Algorithm -and
             $_.CoinDual -eq $Miner.CoinDual -and
@@ -835,21 +837,14 @@ while ($true) {
         }
 
         #look for best for next round
-        $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id -and $_.IsValid -and $_.Status -ne 'Cancelled'}
+        $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id -and $_.IsValid}
 
-        # First try to select a miner that needs benchmark with the highest pool price
+        ## Select top miner that need Benchmark, or if running in Manual mode, or highest Profit above zero.
         $BestNow = $Candidates.SubMiners |
-            Where-Object NeedBenchmark |
-            Sort-Object -Descending {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual} |
+            Where-Object Status -ne 'Cancelled' |
+            ForEach-Object {if ($_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt 0) {$_}} |
+            Sort-Object -Descending NeedBenchmark, Profits, {$ActiveMiners[$_.IdF].Algorithm}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
-
-        # If no miners need benchmark, select a miner with the highest Profits, and making sure they are above zero, to not mine with loss
-        if ($BestNow -eq $null) {
-            $BestNow = $Candidates.SubMiners |
-                Where-Object Profits -gt 0 |
-                Sort-Object -Descending Profits |
-                Select-Object -First 1
-        }
 
         if ($BestNow -eq $null) {WriteLog ("No detected any valid candidate for gpu group " + $Type.GroupName) $LogFile $true ; break }
 
@@ -858,7 +853,7 @@ while ($true) {
             "$($ActiveMiners[$BestNow.IdF].Algorithms)/" +
             "$($ActiveMiners[$BestNow.IdF].Coin) " +
             "with Power Limit $($BestNow.PowerLimit) " +
-            "(id $($BestNow.IdF)-($BestNow.Id))"
+            "(id $($BestNow.IdF)-$($BestNow.Id))"
             "for group $($Type.GroupName)")
         $ProfitNow = $BestNow.Profits
 
@@ -870,10 +865,17 @@ while ($true) {
 
         WriteLog ("$BestNowLogMsg is the best combination for gpu group, last was id $($BestLast.IdF)-$($BestLast.Id)") $LogFile $true
 
-        if ($BestLast.IdF -ne $BestNow.IdF -or $BestLast.Id -ne $BestNow.Id -or $BestLast.Status -in @("PendingCancellation", "Cancelled")) {
+        if (
+            $BestLast.IdF -ne $BestNow.IdF -or
+            $BestLast.Id -ne $BestNow.Id -or
+            $BestLast.Status -in @("PendingCancellation", "Cancelled")
+        ) {
             #something changes or some miner error
 
-            if ($BestLast.IdF -eq $BestNow.IdF -and $BestLast.Id -ne $BestNow.Id) {
+            if (
+                $BestLast.IdF -eq $BestNow.IdF -and
+                $BestLast.Id -ne $BestNow.Id
+            ) {
                 #Must launch other SubMiner
                 if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type = 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].GpuGroup.gpus}
                 if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type = 'AMD' -and $BestNow.PowerLimit -gt 0) {}
@@ -892,7 +894,13 @@ while ($true) {
 
                 WriteLog ("$BestNowLogMsg - Marked as running, changed Power Limit from $($BestLast.PowerLimit)") $LogFile $true
 
-            } elseif ($ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))) -or $BestNow.NeedBenchmark -or $BestLast.Status -in @("PendingCancellation", "Cancelled") -or $BestLast -eq $null -or $DonationInterval) {
+            } elseif (
+                $ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))) -or
+                $BestNow.NeedBenchmark -or
+                $BestLast.Status -in @("Running", "PendingCancellation", "Cancelled") -or
+                $BestLast -eq $null -or
+                $DonationInterval
+            ) {
                 #Must launch other miner and stop actual
 
                 #Stop old

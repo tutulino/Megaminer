@@ -1278,6 +1278,7 @@ function  get_coin_unified_name ([string]$Coin) {
             "Verge-*" { "Verge" }
             "Bitcoin-Gold" { "BitcoinGold" }
             "Bitcoin-Cash" { "BitcoinCash" }
+            "Bitcoin-Private" { "BitcoinPrivate" }
             Default { $Coin.Trim() }
         }
     }
@@ -1433,8 +1434,6 @@ function Start_Downloader {
 
     if (-not (Test-Path $Path)) {
         try {
-
-
             if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
                 New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
                 Invoke-WebRequest $URI -OutFile $Path -UseBasicParsing -ErrorAction Stop
