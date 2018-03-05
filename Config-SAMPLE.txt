@@ -118,8 +118,9 @@
 @@PoolProfitFactor_MiningPoolHub=0.8
 @@PoolProfitFactor_ZPool=0.7
 @@PoolProfitFactor_ZergPool=0.5
+@@PoolProfitFactor_BlazePool=0.7
 
---Enabled or disable detailed log
+--Enabled or Disabled detailed log
 
 @@DebugLog=DISABLED
 
@@ -152,6 +153,15 @@
 @@Algorithms_NVIDIA=Bitcore,Blake,Blakecoin,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,Groestl,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,MyriadGroestl,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
 @@Algorithms_AMD=Bitcore,Blake,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
 @@Algorithms_CPU=CryptoNight,CryptoLight,HOdl,Lyra2h,Lyra2z,Lyra2z330,M7M,Verium,X16r,Yescrypt,YescryptR8,YescryptR16
+
+--[optional]Port for megaminer api (http:\\localhost:port), set zero to disable api.
+
+@@APIPORT=0
+
+--[optional]Farm Monitor adresses (separated comma ip:apiport or lanname:apiport). This field indicates what rigs do you want monitorize in Farm Monitor,only needs to be filled in your monitoring machine
+--To run monitoring, fill this field and run start.bat
+
+--@@FARMRIGS=192.168.2.100:9999,192.168.2.200:9999,localhost:9999
 
 -- Miner windows styles: Normal,Maximized,Minimized
 @@MinerWindowStyle=Minimized

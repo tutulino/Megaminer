@@ -6,11 +6,6 @@ setx GPU_MAX_ALLOC_PERCENT 100
 setx GPU_SINGLE_ALLOC_PERCENT 100
 
 cd /d %~dp0
-del /q Wrapper_*.txt
-
-:LOOP
 
 powershell -version 5.0 -noexit -executionpolicy bypass -command ^
     "&.\Core.ps1 -MiningMode Automatic24h -PoolsName Zpool,WhatToMine,NiceHash
-
-GOTO LOOP

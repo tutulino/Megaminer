@@ -1465,7 +1465,7 @@ function Start_Downloader {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
-function Clear_Log {
+function Clear_Files{
 
     $Now = Get-Date
     $Days = "3"
@@ -1481,7 +1481,13 @@ function Clear_Log {
     $Extension = "wrapper_*.txt"
 
     $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse
-    $Files |ForEach-Object {Remove-Item $_.fullname}
+    $Files | ForEach-Object {Remove-Item $_.fullname}
+
+    $TargetFolder = "."
+    $Extension = "*.tmp"
+
+    $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse
+    $Files | ForEach-Object {Remove-Item $_.fullname}
 }
 
 

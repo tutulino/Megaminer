@@ -119,7 +119,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             "Lbry" { 285000000 }
             "Lyra2v2" { 14700000 }
             "Lyra2z" { 420000 }
-            "MyriadGroestl" { 79380000 }
+            "MyriadGroestl" { 3300000000 }
             "NeoScrypt" { 1950000 }
             "Nist5" { 19000000 }
             "Pascal" { 2070000000 }
@@ -154,6 +154,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
                     try {
                         $WTMResponse = Invoke-WebRequest $page -UseBasicParsing -timeoutsec 5
                         $WtmCoin = $WTMResponse | ConvertFrom-Json
+                        $WtmCoin | Add-Member btc_revenue24 $WtmCoin.btc_revenue
                     } catch {}
                     Remove-Variable WTMResponse
                 }

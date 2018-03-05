@@ -47,6 +47,7 @@ param(
 
 # $GroupNames=('rx580')
 
+$currentDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 if ([Net.ServicePointManager]::SecurityProtocol -notmatch [Net.SecurityProtocolType]::Tls12) {
     [Net.ServicePointManager]::SecurityProtocol += [Net.SecurityProtocolType]::Tls12
@@ -55,7 +56,7 @@ if ([Net.ServicePointManager]::SecurityProtocol -notmatch [Net.SecurityProtocolT
 $ErrorActionPreference = "Continue"
 $Config = get_config
 
-$Release = "6.0"
+$Release = "6.1"
 
 if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"}
 else {$Host.UI.RawUI.WindowTitle = "MM-" + ($GroupNames -join "/")}
@@ -74,7 +75,7 @@ if ($DefenderExclusions.Value -notcontains (Convert-Path .)) {
 }
 
 #Start log file
-Clear_log
+Clear_Files
 $logname = ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
 Start-Transcript $logname #for start log msg
 Stop-Transcript
@@ -149,7 +150,7 @@ $ParamMiningModeBCK = $MiningMode
 
 
 
-set_WindowSize 185 60
+try {set_WindowSize 185 60} catch {}
 
 $IntervalStartAt = (Get-Date) #first initialization, must be outside loop
 
@@ -168,7 +169,25 @@ $Msg += " //PercentToSwitch: " + $PercentToSwitch
 WriteLog $msg $LogFile $false
 
 
+#Enable api
 
+if ($config.ApiPort -gt 0) {
+
+    WriteLog ("Starting API in port " + [string]$config.ApiPort) $LogFile $false
+
+    $ApiSharedFile = $currentDir + "\ApiShared" + [string](Get-Random -minimum 0 -maximum 99999999) + ".tmp"
+    $command = "-WindowStyle minimized  -noexit -executionpolicy bypass -file $currentDir\Includes\ApiListener.ps1 -port " + [string]$config.ApiPort + " -SharedFile $ApiSharedFile "
+    $APIprocess = Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -PassThru -WindowStyle Minimized
+
+    #open firewall port
+    $command = 'New-NetFirewallRule -DisplayName "Megaminer" -Direction Inbound -Action Allow -Protocol TCP -LocalPort ' + [string]$config.ApiPort
+    Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -WindowStyle Minimized
+
+    $command = 'New-NetFirewallRule -DisplayName "Megaminer" -Direction Outbound -Action Allow -Protocol TCP -LocalPort ' + [string]$config.ApiPort
+    Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -WindowStyle Minimized
+}
+
+$Quit = $false
 
 #-----------------------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------
@@ -181,7 +200,7 @@ WriteLog $msg $LogFile $false
 #-----------------------------------------------------------------------------------------------------------------------
 
 
-while ($true) {
+while ($Quit -eq $false) {
 
     $Config = get_config
     Clear-Host; $RepaintScreen = $true
@@ -198,7 +217,8 @@ while ($true) {
     $Types = Get_Mining_Types -filter $GroupNames
 
     $NumberTypesGroups = ($Types | Measure-Object).Count
-    if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [int](45 / $NumberTypesGroups) - 5 } #screen adjust to number of groups
+    #if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [int](45 / $NumberTypesGroups) - 5 } #screen adjust to number of groups
+    if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [Math]::Floor(25 / $NumberTypesGroups)} #screen adjust to number of groups
     if ($FirstTotalExecution) {$ProfitsScreenLimit = $InitialProfitsScreenLimit}
 
 
@@ -262,6 +282,7 @@ while ($true) {
             -AlgoFilterList $Algorithm | ForEach-Object {
             $PItime = $Config.("INTERVAL_" + $_.RewardType)
             if ([int]$PItime -gt $NextInterval) {$NextInterval = [int]$PItime}
+            WriteLog ("Next interval will be $NextInterval") $LogFile $True
         }
 
         $Algorithm = $ParamAlgorithmBCK
@@ -270,7 +291,10 @@ while ($true) {
         $MiningMode = $ParamMiningModeBCK
         $UserName = $Config.UserName
         $WorkerName = $Config.WorkerName
-        if ([string]::IsNullOrWhiteSpace($WorkerName)) {$WorkerName = $env:COMPUTERNAME}
+        if ([string]::IsNullOrWhiteSpace($WorkerName)) {
+            $WorkerName = $env:COMPUTERNAME
+            $config | Add-Member 'WorkerName' $WorkerName
+        }
         $CoinsWallets = @{}
         ((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*', '').Trim() |
             ForEach-Object {$CoinsWallets.add(($_ -split "=")[0], ($_ -split "=")[1])}
@@ -679,7 +703,6 @@ while ($true) {
 
     #Update the active miners list which is alive for all execution time
     foreach ($ActiveMiner in ($ActiveMiners | Sort-Object [int]id)) {
-
         #Search existing miners to update data
         $Miner = $Miners | Where-Object {
             $_.Name -eq $ActiveMiner.Name -and
@@ -692,7 +715,10 @@ while ($true) {
             $_.GpuGroup.Id -eq $ActiveMiner.GpuGroup.Id -and
             $_.AlgoLabel -eq $ActiveMiner.AlgoLabel }
 
-        if (($Miner | Measure-Object).Count -gt 1) {Clear-Host; WriteLog ("DUPLICATED MINER " + $Miner.ALGORITHM + " ON " + $Miner.Name) $LogFile $true ; EXIT}
+        if (($Miner | Measure-Object).count -gt 1) {
+            Clear-Host; WriteLog ("DUPLICATED MINER " + $Miner.Algorithms + " in " + $Miner.Name) $LogFile $true
+            EXIT
+        }
 
         if ($Miner) {
             # we found that miner
@@ -1129,7 +1155,7 @@ while ($true) {
         #display header
         Print_Horizontal_line "MegaMiner $Release"
         Print_Horizontal_line
-        " (E)nd Interval (P)rofits (C)urrent (H)istory (W)allets (S)tats" | Out-host
+        "  (E)nd Interval  (P)rofits  (C)urrent  (H)istory  (W)allets  (S)tats  (Q)uit" | Out-host
 
         #display donation message
         if ($DonationInterval) {" THIS INTERVAL YOU ARE DONATING, YOU CAN INCREASE OR DECREASE DONATION ON CONFIG.TXT, THANK YOU FOR YOUR SUPPORT !!!!"}
@@ -1187,34 +1213,59 @@ while ($true) {
 
         Print_Horizontal_line
 
-        $ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Sort-Object {$ActiveMiners[$_.IdF].GpuGroup.GroupName} | Format-Table -Wrap (
-            # @{Label = "Id"; Expression = {$_.IdF}; Align = 'right'},
-            @{Label = "Group"; Expression = {$ActiveMiners[$_.IdF].GpuGroup.GroupName}},
-            # @{Label = "PowLmt"; Expression = {if ($_.PowerLimit -gt 0) {$_.PowerLimit}}; align = 'right'},
-            @{Label = "LocalSpeed"; Expression = { "$(ConvertTo_Hash $_.SpeedLive)/s" + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {"|$(ConvertTo_Hash $_.SpeedLiveDual)/s"})}; Align = 'right'},
-            @{Label = "mBTC/Day"; Expression = {((($_.RevenueLive + $_.RevenueLiveDual) * 1000).tostring("n5"))}; Align = 'right'},
-            @{Label = "$LocalCurrency/Day"; Expression = {((($_.RevenueLive + $_.RevenueLiveDual) * $localBTCvalue ).tostring("n2"))}; Align = 'right'},
-            @{Label = "Profit/Day"; Expression = {(($_.ProfitsLive).tostring("n2")) + " $LocalCurrency"}; Align = 'right'},
-            @{Label = "Algorithm"; Expression = { $ActiveMiners[$_.IdF].Algorithm + $ActiveMiners[$_.IdF].AlgoLabel + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) { "|$($ActiveMiners[$_.IdF].AlgorithmDual)" }) + $_.BestBySwitch}},
-            @{Label = "Coin"; Expression = {$ActiveMiners[$_.IdF].Symbol + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {"|$($ActiveMiners[$_.IdF].SymbolDual)"})}},
-            @{Label = "Miner"; Expression = {$ActiveMiners[$_.IdF].Name}},
-            @{Label = "Watt"; Expression = {"$($_.PowerLive)"}; Align = 'right'},
-            # @{Label = "Efficiency"; Expression = { if ([string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual) -and $_.PowerLive -gt 0) { (ConvertTo_Hash ($_.SpeedLive / $_.PowerLive)) + '/W' } else { $null } }; Align = 'right' },
-            @{Label = "$LocalCurrency/W"; Expression = {if ($_.PowerLive -gt 0) {($_.ProfitsLive / $_.PowerLive).tostring("n4")} else {$null} }; Align = 'right'},
-            @{Label = "PoolSpeed"; Expression = {"$(ConvertTo_Hash $ActiveMiners[$_.IdF].PoolHashRate)/s" + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {("|$(ConvertTo_Hash $ActiveMiners[$_.IdF].PoolHashRateDual)/s")})}; Align = 'right'},
-            @{Label = "Workers"; Expression = {$ActiveMiners[$_.IdF].PoolWorkers + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {"|$($ActiveMiners[$_.IdF].PoolWorkersDual)"})}; Align = 'right'},
-            @{Label = "Loc."; Expression = {$ActiveMiners[$_.IdF].Location}},
-            @{Label = "Pool"; Expression = { $ActiveMiners[$_.IdF].PoolAbbName + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {"|$($ActiveMiners[$_.IdF].PoolAbbNameDual)"})}}
+        $ScreenOut = @()
 
-            # @{Label = "PoolPrice"; Expression = {$ActiveMiners[$_.IdF].PoolPrice}}
+        $ActiveMiners.Subminers | Where-Object Status -eq 'Running'| Sort-Object {$ActiveMiners[$_.idf].GpuGroup.GroupName}  | Foreach-object {
+            $ScreenOut += [PSCustomObject]@{
+                GroupName   = $ActiveMiners[$_.IdF].GpuGroup.GroupName
+                MMPowLmt    = if ($_.PowerLimit -gt 0) {$_.PowerLimit} else {""}
+                LocalSpeed  = "$(ConvertTo_Hash $_.SpeedLive)/s" + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {"|$(ConvertTo_Hash $_.SpeedLiveDual)/s"})
+                mbtc_Day    = ((($_.RevenueLive + $_.RevenueLiveDual) * 1000).tostring("n5"))
+                Rev_Day     = ((($_.RevenueLive + $_.RevenueLiveDual) * $localBTCvalue ).tostring("n2"))
+                Profit_Day  = (($_.ProfitsLive).tostring("n2"))
+                Algorithm   = $ActiveMiners[$_.IdF].Algorithm + $ActiveMiners[$_.IdF].AlgoLabel + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) { "|$($ActiveMiners[$_.IdF].AlgorithmDual)" }) + $_.BestBySwitch
+                Coin        = $ActiveMiners[$_.IdF].Symbol + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {"|$($ActiveMiners[$_.IdF].SymbolDual)"})
+                Miner       = $ActiveMiners[$_.IdF].Name
+                Power       = [string]$_.PowerLive + 'W'
+                EfficiencyH = if ([string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual) -and $_.PowerLive -gt 0) {(ConvertTo_Hash ($_.SpeedLive / $_.PowerLive))} else {$null}
+                EfficiencyW = if ($_.PowerLive -gt 0) {($_.ProfitsLive / $_.PowerLive).tostring("n4")} else {$null}
+                PoolSpeed   = "$(ConvertTo_Hash $ActiveMiners[$_.IdF].PoolHashRate)/s" + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {("|$(ConvertTo_Hash $ActiveMiners[$_.IdF].PoolHashRateDual)/s")})
+                Pool        = $ActiveMiners[$_.IdF].PoolAbbName + $(if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {"|$($ActiveMiners[$_.IdF].PoolAbbNameDual)"})
+            }
+        }
 
-            # @{Label = "BmkT"; Expression = {$_.BenchmarkedTimes}},
-            # @{Label = "FailT"; Expression = {$_.FailedTimes}},
-            # @{Label = "Nbmk"; Expression = {$_.NeedBenchmark}},
+        $ScreenOut | Format-Table (
+            @{Label = "GroupName"; Expression = {$_.GroupName}},
+            @{Label = "MMPowLmt"; Expression = {$_.MMPowLmt} ; Align = 'right'},
+            @{Label = "LocalSpeed"; Expression = {$_.LocalSpeed} ; Align = 'right'},
+            @{Label = "mBTC/Day"; Expression = {$_.mbtc_Day} ; Align = 'right'},
+            @{Label = "$LocalCurrency/Day"; Expression = {$_.Rev_Day} ; Align = 'right'},
+            @{Label = "Profit/Day"; Expression = {$_.Profit_Day} ; Align = 'right'},
+            @{Label = "Algorithm"; Expression = {$_.Algorithm}},
+            @{Label = "Coin"; Expression = {$_.Coin}},
+            @{Label = "Miner"; Expression = {$_.Miner}},
+            @{Label = "Power"; Expression = {$_.Power} ; Align = 'right'},
+            @{Label = "Hash/W"; Expression = {$_.EfficiencyH} ; Align = 'right'},
+            @{Label = "$LocalCurrency/W"; Expression = {$_.EfficiencyW}  ; Align = 'right'},
+            @{Label = "PoolSpeed"; Expression = {$_.PoolSpeed}},
+            @{Label = "Pool"; Expression = {$_.Pool}}
+        ) | out-host
 
-            # @{Label = "Port"; Expression = {$ActiveMiners[$_.IdF].Port}}
-
-        ) | Out-Host
+        if ($config.ApiPort -gt 0) {
+            #generate api response
+            $ApiResponse = [PSCustomObject]@{}
+            $ApiResponse | Add-Member ActiveMiners $ScreenOut
+            $ApiResponse | Add-Member Config $config
+            $ApiResponse | Add-Member Params ([PSCustomObject]@{})
+            $ApiResponse.Params | Add-Member Algorithms $Algorithm
+            $ApiResponse.Params | Add-Member Pools $PoolsName
+            $ApiResponse.Params | Add-Member Coins $CoinsName
+            $ApiResponse.Params | Add-Member MiningMode $MiningMode
+            $ApiResponse.Params | Add-Member Groupnames $Groupnames
+            $ApiResponse | Add-Member Release $Release
+            $ApiResponse | Add-Member RefreshDate ((Get-Date).tostring("o"))
+            $ApiResponse | ConvertTo-Json | Set-Content -path $ApiSharedFile
+        }
 
         # Report stats
         if ($MinerStatusURL -and $MinerStatusKey) { & .\Includes\ReportStatus.ps1 -MinerStatusKey $MinerStatusKey -WorkerName $WorkerName -ActiveMiners $ActiveMiners -MinerStatusURL $MinerStatusURL }
@@ -1467,7 +1518,6 @@ while ($true) {
                 @{Label = "ActiveTime"; Expression = {if ($_.Stats.ActiveTime.TotalMinutes -le 60) {"{0:N1} min" -f ($_.Stats.ActiveTime.TotalMinutes)} else {"{0:N1} hours" -f ($_.Stats.ActiveTime.TotalHours)}}},
                 @{Label = "LastTimeActive"; Expression = {$($_.Stats.LastTimeActive).tostring("dd/MM/yy H:mm")}}
             ) | Out-Host
-            $RepaintScreen = $false
         }
 
 
@@ -1476,7 +1526,7 @@ while ($true) {
 
         #Loop for reading key and wait
 
-        $KeyPressed = Timed_ReadKb 3 ('P', 'C', 'H', 'E', 'W', 'U', 'T', 'B', 'S', 'X')
+        $KeyPressed = Timed_ReadKb 3 ('P', 'C', 'H', 'E', 'W', 'U', 'T', 'B', 'S', 'X', 'Q')
 
 
 
@@ -1490,7 +1540,8 @@ while ($true) {
             'U' {if ($Screen -eq "WALLETS") {$WalletsUpdate = $null}}
             'T' {if ($Screen -eq "PROFITS") {if ($ProfitsScreenLimit -eq $InitialProfitsScreenLimit) {$ProfitsScreenLimit = 1000} else {$ProfitsScreenLimit = $InitialProfitsScreenLimit}}}
             'B' {if ($Screen -eq "PROFITS") {$ShowBestMinersOnly = !$ShowBestMinersOnly}}
-            'X' {set_WindowSize 185 60}
+            'X' {try {set_WindowSize 185 60  } catch {}}
+            'Q' {$Quit = $true; $ExitLoop = $true}
         }
 
         if ($KeyPressed) {Clear-host; $RepaintScreen = $true}
@@ -1533,8 +1584,11 @@ while ($true) {
 
 WriteLog "Program end" $LogFile
 
-$ActiveMiners | ForEach-Object { Kill_Process $_.Process}
+Clear_Files
+$ActiveMiners | ForEach-Object { try {Kill_Process $_.Process} catch {}}
+
+try {Invoke-WebRequest ("http://localhost:" + [string]$config.ApiPort + "?command=exit") -timeoutsec 1 -UseDefaultCredentials} catch {}
+Kill_Process $APIprocess
 
 $LogFile.close()
-
-#Stop-Transcript
+Stop-Process -Id $PID
