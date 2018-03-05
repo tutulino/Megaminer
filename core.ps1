@@ -1176,6 +1176,7 @@ while ($Quit -eq $false) {
         
 
         #generate api response
+        if ($config.ApiPort -gt 0)  {
             $ApiResponse=[pscustomobject]@{}
             $ApiResponse | add-member ActiveMiners $ScreenOut
             $ApiResponse | add-member Config $config
@@ -1188,7 +1189,7 @@ while ($Quit -eq $false) {
             $ApiResponse | add-member Release $Release
             $ApiResponse | add-member RefreshDate ((get-date).tostring("o"))
             $ApiResponse | convertto-json | Set-Content -path $ApiSharedFile
-        
+        }
 
         $XToWrite=[ref]0
         $YToWrite=[ref]0      
