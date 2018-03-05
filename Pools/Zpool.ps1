@@ -104,17 +104,18 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Divisor = 1000000
 
         switch ($Pool_Algo) {
-            "blake2s" {$Divisor *= 1000}
-            "blakecoin" {$Divisor *= 1000}
-            "decred" {$Divisor *= 1000}
-            "equihash" {$Divisor /= 1000}
-            "keccak" {$Divisor *= 1000}
-            "quark" {$Divisor *= 1000}
-            "qubit" {$Divisor *= 1000}
-            "scrypt" {$Divisor *= 1000}
-            "sha256" {$Divisor *= 1000000000}
-            "x11" {$Divisor *= 1000}
-            "yescrypt" {$Divisor /= 1000}
+            "Blake2s" {$Divisor *= 1000}
+            "Blakecoin" {$Divisor *= 1000}
+            "Decred" {$Divisor *= 1000}
+            "Equihash" {$Divisor /= 1000}
+            "Keccak" {$Divisor *= 1000}
+            "KeccakC" {$Divisor *= 1000}
+            "Quark" {$Divisor *= 1000}
+            "Qubit" {$Divisor *= 1000}
+            "Scrypt" {$Divisor *= 1000}
+            "SHA256" {$Divisor *= 1000000000}
+            "X11" {$Divisor *= 1000}
+            "Yescrypt" {$Divisor /= 1000}
         }
 
         if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0) {
