@@ -101,6 +101,10 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -Delayed miners closing, while new miner is starting, old one continue mining
 
+-Api rest for other software integration
+
+-Farm monitor, you can monitorize all your rigs from one lan machine
+
 ----- DISCLAIMER ---- ------------------------------------------
 
 Tested on nvidia pascal 10X0 and AMD RX580
