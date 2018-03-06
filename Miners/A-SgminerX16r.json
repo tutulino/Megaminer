@@ -1,0 +1,12 @@
+{
+    "Path": "sgminer-x16r\\sgminer.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/sgminer-x16r.zip",
+    "SHA256": "5995425a840083a0ea1775c607b58af7853c949c819b8a7f4eff4bf14a92c990",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Type": "AMD",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Algorithms": {
+        "X16r": "-k x16r -I 20"
+    }
+}
