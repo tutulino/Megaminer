@@ -1,0 +1,15 @@
+{
+"Path" : ".\\Bin\\NA-Phoenix\\PhoenixMiner_2.7c\\Phoenixminer.exe",
+"ExtractionPath" : ".\\Bin\\NA-Phoenix\\",
+"Uri" : "https://github.com/tutulino/Software/releases/download/0/PhoenixMiner_2.7c.zip",
+"Types" : ["AMD"],
+"Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -wd 1  -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
+"API" : "Phoenix",
+"Fee" : "0.0065",
+"APIPort" : 23334,
+"PrelaunchCommand":"",
+"Algorithms": [
+                {"Ethash":""}
+              ]
+
+}
