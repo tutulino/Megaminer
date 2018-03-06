@@ -1,4 +1,4 @@
-﻿param(
+param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
@@ -14,16 +14,17 @@ $ActiveOnAutomatic24hMode = $true
 $AbbName = 'ZERG'
 $WalletMode = 'WALLET'
 $ApiUrl = 'http://api.zergpool.com:8080/api'
-$MineUrl = 'mine.zergpool.com'
-$Location = 'EU'
 $RewardType = "PPS"
 $UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
+$StratumServers = @()
+$StratumServers += [PSCustomObject]@{Location = 'US'; MineUrl = 'mine.zergpool.com'}
+$StratumServers += [PSCustomObject]@{Location = 'EU'; MineUrl = 'europe.mine.zergpool.com'}
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "Autoexchange to config.txt wallet, no registration required"
+        Disclaimer               = "Autoexchange to @@currency coin specified in config.txt, no registration required"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
@@ -49,7 +50,7 @@ if ($Querymode -eq "speed") {
                 PoolName   = $name
                 Version    = $_.version
                 Algorithm  = get_algo_unified_name $_.Algo
-                Workername = $_.password.Split(",")[2].Split('=')[1]
+                Workername = $_.password.Split(",")[1].Split('=')[1]
                 Diff       = $_.difficulty
                 Rejected   = $_.rejected
                 Hashrate   = $_.accepted
@@ -74,7 +75,6 @@ if ($Querymode -eq "wallet") {
         }
         remove-variable Request
     }
-    Start-Sleep -Seconds 1 # Prevent API Saturation
 }
 
 
@@ -82,7 +82,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $retries = 1
     do {
         try {
-            $http = $ApiUrl + "/currencies"
+            $http = $ApiUrl + "/status"
             $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
         } catch {start-sleep 2}
         $retries++
@@ -93,75 +93,65 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
-    $retries = 1
-    do {
-        try {
-            $http = $ApiUrl + "/status"
-            $Request2 = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-        } catch {start-sleep 2}
-        $retries++
-        if ([string]::IsNullOrEmpty($Request2)) {start-sleep 3}
-    } while ($Request2 -eq $null -and $retries -le 3)
-    if ($retries -gt 3) {
-        Write-Host $Name 'API NOT RESPONDING...ABORTING'
-    }
+
 
     $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
 
     $Request | Get-Member -MemberType Properties | ForEach-Object {
 
         $coin = $Request | Select-Object -ExpandProperty $_.name
-        $Pool_Algo = get_algo_unified_name $coin.algo
-
-        $Pool_coin = get_coin_unified_name $coin.name
-        $Pool_symbol = $_.name
+        $Pool_Algo = get_algo_unified_name $coin.name
 
         $Divisor = 1000000
 
         switch ($Pool_Algo) {
-            "blake2s" {$Divisor *= 1000}
-            "blakecoin" {$Divisor *= 1000}
-            "equihash" {$Divisor /= 1000}
-            "scrypt" {$Divisor *= 1000}
-            "sha256" {$Divisor *= 1000}
-            "sha256t" {$Divisor *= 1000}
-            "decred" {$Divisor *= 1000}
-            "keccak" {$Divisor *= 1000}
-            "keccakc" {$Divisor *= 1000}
-            "blakevanilla" {$Divisor *= 1000}
-            "x11" {$Divisor *= 1000}
-            "qubit" {$Divisor *= 1000}
-            "yescrypt" {$Divisor /= 1000}
+            "Blake2s" {$Divisor *= 1000}
+            "Blakecoin" {$Divisor *= 1000}
+            "BlakeVanilla" {$Divisor *= 1000}
+            "Decred" {$Divisor *= 1000}
+            "Equihash" {$Divisor /= 1000}
+            "Keccak" {$Divisor *= 1000}
+            "KeccakC" {$Divisor *= 1000}
+            "Quark" {$Divisor *= 1000}
+            "Qubit" {$Divisor *= 1000}
+            "Scrypt" {$Divisor *= 1000}
+            "SHA256" {$Divisor *= 1000}
+            "SHA256t" {$Divisor *= 1000}
+            "X11" {$Divisor *= 1000}
+            "Yescrypt" {$Divisor /= 1000}
+            "YescryptR16" {$Divisor /= 1000}
         }
 
-        $Result += [PSCustomObject]@{
-            Algorithm             = $Pool_Algo
-            Info                  = $Pool_coin
-            Price                 = $coin.estimate / $Divisor
-            Price24h              = $coin.'24h_btc' / $Divisor
-            Protocol              = "stratum+tcp"
-            Host                  = $MineUrl
-            Port                  = $coin.port
-            User                  = $CoinsWallets.get_item($Currency)
-            Pass                  = "c=$Currency,mc=$Pool_Symbol,ID=#WorkerName#"
-            Location              = $Location
-            SSL                   = $false
-            Symbol                = $Pool_Symbol
-            AbbName               = $AbbName
-            ActiveOnManualMode    = $ActiveOnManualMode
-            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolWorkers           = $coin.Workers
-            PoolHashRate          = $coin.hashrate
-            Blocks_24h            = $coin.'24h_blocks'
-            WalletMode            = $WalletMode
-            Walletsymbol          = $Currency
-            PoolName              = $Name
-            Fee                   = $Request2.($coin.algo).Fees / 100
-            RewardType            = $RewardType
+        if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0) {
+            foreach ($stratum in $StratumServers) {
+                $Result += [PSCustomObject]@{
+                    Algorithm             = $Pool_Algo
+                    Info                  = $Pool_Algo
+                    Price                 = $coin.estimate_current / $Divisor
+                    Price24h              = $coin.estimate_last24h / $Divisor
+                    Protocol              = "stratum+tcp"
+                    Host                  = $stratum.MineUrl
+                    Port                  = $coin.port
+                    User                  = $CoinsWallets.get_item($Currency)
+                    Pass                  = "c=$Currency,ID=#WorkerName#"
+                    Location              = $stratum.Location
+                    SSL                   = $false
+                    Symbol                = get_coin_symbol -Coin $Pool_Algo
+                    AbbName               = $AbbName
+                    ActiveOnManualMode    = $ActiveOnManualMode
+                    ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                    PoolWorkers           = $coin.Workers
+                    PoolHashRate          = $coin.hashrate
+                    WalletMode            = $WalletMode
+                    WalletSymbol          = $Currency
+                    PoolName              = $Name
+                    Fee                   = $coin.Fees / 100
+                    RewardType            = $RewardType
+                }
+            }
         }
     }
     remove-variable Request
-    remove-variable Request2
 }
 
 
