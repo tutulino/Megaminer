@@ -145,11 +145,11 @@
 @@MINWORKERS=20
 
 -- This variable defines order for Whattomine based stats virtual pool, for each coin MM find in WTM it will search what real pool has this coin available, first found (in specified order) is selected.
--- Only this pools are compatible (they works at coin level): Yiimp, Suprnova, MiningPoolHub, ZergPool 
+-- Only this pools are compatible (they works at coin level): Yiimp, Suprnova, MiningPoolHub 
 -- WTM profit is based on instant coin change rate, is recommended use pools with autoexchange on like MiningPoolHub and ZergPool
 
 
-@@WHATTOMINEPOOLORDER=MiningPoolHub,ZergPool
+@@WHATTOMINEPOOLORDER=MiningPoolHub
 
 
 --Algorithms, define what algorithms can be mined for MM, for an Algo can be mined must exists: 1. A pool, 2. A miner, 3. This config.

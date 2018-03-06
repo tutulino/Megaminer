@@ -114,9 +114,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $retries=1
                 do {
                         try {
-                            $Request = Invoke-WebRequest "http://api.zergpool.com:8080/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 10  | ConvertFrom-Json 
-                            start-sleep 5
-                            $Request2 = Invoke-WebRequest "http://api.zergpool.com:8080/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 10 | ConvertFrom-Json  
+                            $Request = Invoke-WebRequest "http://api.zergpool.com:8080/api/status"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 10 | ConvertFrom-Json  
                             
 
                         }
@@ -138,28 +136,27 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                 $coin=$Request | Select-Object -ExpandProperty $_.name
                 
 
-                    $zerg_Algorithm = get_algo_unified_name $coin.algo
-                    $zerg_coin =   get_coin_unified_name $coin.name
-                    $zerg_Symbol = $_.name
+                    $zerg_Algorithm = get_algo_unified_name $coin.name
             
 
                     $Divisor = Get_Algo_Divisor $zerg_Algorithm
                     
-          
+            $locations=[array]("US","EU")
+            foreach ($location in $locations)     {
                     
                     $Result+=[PSCustomObject]@{
                                 Algorithm     = $zerg_Algorithm
-                                Info          = $zerg_coin
+                                Info          = $zerg_Algorithm
                                 Price         = [Double]$coin.estimate / $Divisor
                                 Price24h      = [Double]$coin.estimate_last24h  / $Divisor
                                 Protocol      = "stratum+tcp"
-                                Host          = "mine.zergpool.com"
+                                Host          = if ($location -eq 'EU') {"europe.mine.zergpool.com"} else {"mine.zergpool.com"}
                                 Port          = $coin.port
                                 User          = $CoinsWallets.get_item($Currency)
                                 Pass          = "c=$Currency,mc=$zerg_symbol,ID=#WorkerName#"
-                                Location      = 'US'
+                                Location      = $location
                                 SSL           = $false
-                                Symbol        = $zerg_Symbol
+                                Symbol        = $null
                                 AbbName       = $AbbName
                                 ActiveOnManualMode    = $ActiveOnManualMode
                                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
@@ -169,10 +166,10 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 WalletMode    = $WalletMode
                                 Walletsymbol = $Currency
                                 PoolName = $Name
-                                Fee = ($Request2.($coin.algo).Fees)/100
+                                Fee = ($request.($coin.algo).Fees)/100
                                 RewardType=$RewardType
                                 }
-                        
+                            }
                 
                 }
 
