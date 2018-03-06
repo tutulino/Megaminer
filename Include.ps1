@@ -701,12 +701,12 @@ function Get_Live_HashRate {
                 $Request = Invoke_TcpRequest $server $port "summary" 5
                 if (![string]::IsNullOrEmpty($Request)) {
                     $Data = $Request -split ";" | ConvertFrom-StringData
-                    $HashRate = if ([double]$Data.'HS' -gt 0) {[double]$Data.'HS'}
-                    elseif ([double]$Data.'KHS' -gt 0) {[double]$Data.'KHS' * [math]::Pow(1000, 1)}
-                    elseif ([double]$Data.'MHS' -gt 0) {[double]$Data.'MHS' * [math]::Pow(1000, 2)}
-                    elseif ([double]$Data.'GHS' -gt 0) {[double]$Data.'GHS' * [math]::Pow(1000, 3)}
-                    elseif ([double]$Data.'THS' -gt 0) {[double]$Data.'THS' * [math]::Pow(1000, 4)}
-                    elseif ([double]$Data.'PHS' -gt 0) {[double]$Data.'PHS' * [math]::Pow(1000, 5)}
+                    $HashRate = if ([double]$Data.HS -gt 0) {[double]$Data.HS}
+                    elseif ([double]$Data.KHS -gt 0) {[double]$Data.KHS * [math]::Pow(1000, 1)}
+                    elseif ([double]$Data.MHS -gt 0) {[double]$Data.MHS * [math]::Pow(1000, 2)}
+                    elseif ([double]$Data.GHS -gt 0) {[double]$Data.GHS * [math]::Pow(1000, 3)}
+                    elseif ([double]$Data.THS -gt 0) {[double]$Data.THS * [math]::Pow(1000, 4)}
+                    elseif ([double]$Data.PHS -gt 0) {[double]$Data.PHS * [math]::Pow(1000, 5)}
                 }
             }
 
@@ -804,6 +804,16 @@ function Get_Live_HashRate {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [Double]($Data.solution_rate.Total."60s" | Measure-Object -Sum).sum
                     if ($HashRate -eq 0) { $HashRate = [Double]($Data.solution_rate.Total."5s" | Measure-Object -Sum).sum }
+                }
+            }
+
+            "Xrig" {
+                $Request = Invoke_httpRequest $Server $Port "" 5
+                if (![string]::IsNullOrEmpty($Request)) {
+                    $Data = $Request | ConvertFrom-Json
+                    if ([Double]$Data.hashrate_15m -gt 0) {$HashRate = [Double]$Data.hashrate_15m}
+                    elseif ([Double]$Data.hashrate_60s -gt 0) {$HashRate = [Double]$Data.hashrate_60s}
+                    elseif ([Double]$Data.hashrate_10s -gt 0) {$HashRate = [Double]$Data.hashrate_10s}
                 }
             }
         } #end switch
@@ -1465,7 +1475,7 @@ function Start_Downloader {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
-function Clear_Files{
+function Clear_Files {
 
     $Now = Get-Date
     $Days = "3"
