@@ -18,7 +18,6 @@
 @@CURRENCY=BTC
 @@CURRENCY_NAMEOFPOOL=XXX
 
-
 -- Local currency shown on the profits screen (USD,EUR,GBP). Any supported coin symbol from CoinDesk
 
 @@LOCALCURRENCY=USD
@@ -69,7 +68,7 @@
 -- This interval recalculates and selects the most profitable algorithm
 
 @@Interval_PPS=300
-@@Interval_PPLS=1200
+@@Interval_PPLS=1800
 
 -- Benchmarks interval time (less than 300 not recommended for GPU due to miners ramp time), if you want to use automatic gpu power limit configuration is recommended at least 600
 
@@ -96,7 +95,6 @@
 @@APIKEY_MINING_POOL_HUB=xxx
 @@APIKEY_SUPRNOVA=xxx
 
-
 -- [OPTIONAL] GPU Groups/PowerLimits
 -- if you don't set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
 -- If you activate this option miners ports will be calculated dynamic mode, some software like ethmonitoring will not work due to miner dynamic port assignation
@@ -107,7 +105,6 @@
 -- Example2: @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"100,90,80"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
 
 --@@GPUGroups=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"110,100,90,80"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
-
 
 --[OPTIONAL]  Pools profit correction factors
 --Usually pools revenue is overestimated, this factor allows manual correction (Profit= ReportedPoolProfit * @@POOLPROFITFACTOR)
@@ -133,14 +130,10 @@
 @@MinWorkers=10
 
 -- This variable defines order for Whattomine based stats virtual pool, for each coin MM find in WTM it will search what real pool has this coin available, first found (in specified order) is selected.
--- Only this pools are compatible (they works at coin level): Yiimp, Suprnova, MiningPoolHub, ZergPool
--- WTM profit is based on instant coin change rate, is recommended use pools with autoexchange on like MiningPoolHub and ZergPool
+-- Only these pools are compatible (they works at coin level): Yiimp, Suprnova, MiningPoolHub, FairPool
+-- WTM profit is based on instant coin change rate, is recommended use pools with autoexchange , like MiningPoolHub
 
 @@WhatToMinePoolOrder=MyPools,MiningPoolHub,Suprnova,FairPool
-
--- Coin IDs from http://whattomine.com/calculators, separated by ",". 192 - Aeon, 210 - Zero, 213 - ETN, 177 - PASL
--- @@WhatToMineCustomCoins=192
-
 
 -- Reporting mining status to https://multipoolminer.io/monitor/
 -- get ApiKey from the site or BTC wallet address will be used as key
@@ -150,8 +143,8 @@
 --Algorithms, define what algorithms can be mined for MM, for an Algo can be mined must exists: 1. A pool, 2. A miner, 3. This config.
 --If used, algorithm parameter from core.ps1 override this config. If Empty - All algos enabled
 
-@@Algorithms_NVIDIA=Bitcore,Blake,Blakecoin,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,Groestl,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,MyriadGroestl,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
-@@Algorithms_AMD=Bitcore,Blake,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
+@@Algorithms_NVIDIA=Bitcore,Blake,Blakecoin,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
+@@Algorithms_AMD=Bitcore,Blake,Blakecoin,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
 @@Algorithms_CPU=CryptoNight,CryptoLight,HOdl,Lyra2h,Lyra2z,Lyra2z330,M7M,Verium,X16r,Yescrypt,YescryptR8,YescryptR16
 
 --[optional]Port for megaminer api (http:\\localhost:port), set zero to disable api.

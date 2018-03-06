@@ -594,10 +594,13 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 ---POOLS CHANGES:
 
 * Enhaced Whattomine pool (less api call, more acurate data)
+* Added location europe for Zergpool
+* Zergpool lost coin level mining, now algo level mining due to some coins disabled autoexchange
 
 
 ---MINERS CHANGES:
-
+* Added yescript support
+* Added PhoenixMiner for AMD and NVIDIA
 
 
 ---BUG FIXES:

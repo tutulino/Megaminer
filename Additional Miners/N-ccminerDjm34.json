@@ -5,6 +5,7 @@
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",
     "Algorithms": {
-        "Lyra2z": "-a lyra2z"
+        "Lyra2z": "-a lyra2z",
+        "Yescript": "-a yescript"
     }
 }
