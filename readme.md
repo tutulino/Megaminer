@@ -20,11 +20,15 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 
 ---- INSTRUCTIONS ----------------------------------------------
 
-0. Download source code from latest Release from github (you dont need executable file)
+0. Download and decompress source code from latest Release from github (you dont need executable file)
 
-1. Edit CONFIG.TXT file before mining
+1. Install Microsoft Visual C++ 2015 Redistributable https://www.microsoft.com/en-us/download/details.aspx?id=52685
 
-2. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt, you can use this parameters on your batch
+2. For AMD rigs, beta blockchain drivers are not recommended (gpus will not show in current screen and activity based watchdog will be disabled)
+
+3. Edit CONFIG.TXT file before mining
+
+4. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt, you can use this parameters on your batch
     - PoolsName = separated comma string of pools to run 
 	- MiningMode = Mode to check profit, note not all pools suport all modes (Automatic/Automatic24h/Manual). If manual mode is selected one coin must be passed on Coinsname parameter
 	- Algorithm = separated comma string of algorithms to run (optional)
@@ -33,20 +37,20 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 	- PercentToSwitch = Overrides config.txt config, percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit in specified percent (optional)
  
 
-3. Firt time, software will be donwloaded from miners github repositories
+5. Firt time, software will be donwloaded from miners github repositories
 	- As usual, some miners are detected as virus by your Antivirus, to avoid this you must set your instalation directory as excluded. For Windows Defender MM path is excluded automatic
 
-4. Your system will be benchmarked (long process)
+6. Your system will be benchmarked (long process)
  
-5. Make profit
+7. Make profit
 	- Except Nicehash (where you sell your power to indicated price), pools always overstimated profit, you must understand profit column as a way to get best algoritmh. Your real profit will be lower.
 
-6. Tuning (optional)
+9. Tuning (optional)
 	- you can edit miners folders content to delete miners or to assign/unassign algos to miners. 
 	- you can edit pools folders content to delete pools
 	- for advanced users, you can create miners or pools if are based on existing one.
 
- 
+
 
 ---- UPGRADE PROCEDURE ------------------------------------
 
