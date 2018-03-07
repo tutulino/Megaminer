@@ -589,6 +589,7 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 *Rest Api available
 *Farm monitoring (fill config.txt fields and run start.bat)
 *Added menu option to quit (close all windows)
+*Activity based watchdog disabled if no gpu detected (https://github.com/tutulino/Megaminer/issues/351)
 
 
 ---POOLS CHANGES:

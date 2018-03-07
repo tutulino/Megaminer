@@ -93,13 +93,6 @@ Get-ChildItem . -Recurse | Unblock-File
     writelog ("Release $Release") $logfile $false
 
 
-#get mining types    
-    $Types=Get_Mining_Types -filter $Groupnames
-    
-    writelog ( get_gpu_information $Types |ConvertTo-Json) $logfile $false
-    Writelog ( $Types |ConvertTo-Json) $logfile $false    
-
- 
 $ActiveMiners = @()
 $Activeminers=@()
 $ShowBestMinersOnly=$true
@@ -180,6 +173,21 @@ $Msg+=" //PercentToSwitch: "+$PercentToSwitch
 
 WriteLog $msg $LogFile $False
 
+
+
+#get mining types    
+    $Types=Get_Mining_Types -filter $Groupnames
+        
+    writelog ( get_gpu_information $Types |ConvertTo-Json) $logfile $false
+    Writelog ( $Types |ConvertTo-Json) $logfile $false    
+
+
+    $NumberTypesGroups=($Types | Measure-Object).count
+    if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit=[Math]::Floor( 25 /$NumberTypesGroups)} #screen adjust to number of groups
+    $ProfitsScreenLimit=$InitialProfitsScreenLimit
+
+    Check_GpuGroups_Config $types
+
  
 #Enable api
 
@@ -206,6 +214,9 @@ if ($config.ApiPort -gt 0) {
 
     $Quit=$false        
 
+
+    
+
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
@@ -230,11 +241,7 @@ while ($Quit -eq $false) {
     if ($PercentToSwitch -eq "") {$PercentToSwitch2 = [int]($config.PERCENTTOSWITCH)} else {$PercentToSwitch2=[int]$PercentToSwitch}
     $DelayCloseMiners=$config.DELAYCLOSEMINERS
     
-    $Types=Get_Mining_Types -filter $Groupnames
-    
-    $NumberTypesGroups=($Types | Measure-Object).count
-    if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit=[Math]::Floor( 25 /$NumberTypesGroups)} #screen adjust to number of groups
-    if ($FirstTotalExecution) {$ProfitsScreenLimit=$InitialProfitsScreenLimit}
+   
                          
 
     #$Currency= $config.CURRENCY
@@ -1031,19 +1038,26 @@ while ($Quit -eq $false) {
                     }          
 
                     #WATCHDOG
+                    $groupcards=@()
+                    $groupcards+=$Cards | Where-Object gpugroup -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName
 
-                    $GpuActivityAverages += [pscustomobject]@{Average= ($Cards | Where-Object gpugroup -eq ($ActiveMiners[$_.IdF].GpuGroup.GroupName) | Measure-Object -property utilization_gpu -average).average}
+                    $GpuActivityAverages += [pscustomobject]@{
+                                    gpugroup = $ActiveMiners[$_.IdF].GpuGroup.GroupName
+                                    Average = ($groupcards | Measure-Object -property utilization_gpu -average).average 
+                                    NumberOfGpus =  $groupcards.count
+                                }
 
                     if ($GpuActivityAverages.count -gt 20) {
                                 $GpuActivityAverages = $GpuActivityAverages[($GpuActivityAverages.count-20)..($GpuActivityAverages.count-1)]
-                                $GpuActivityAverage = ($GpuActivityAverages | Measure-Object -property average -maximum).maximum
+                                $GpuActivityAverage = ($GpuActivityAverages | Where-Object gpugroup -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName | Measure-Object -property average -maximum).maximum
+                                $GpuActivityGpuCount = ($GpuActivityAverages | Where-Object gpugroup -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName | Measure-Object -property NumberOfGpus -maximum).maximum
                                 if ($DetailedLog) {writelog ("Last 20 reads maximum GPU activity is "+[string]$GpuActivityAverage+" for Gpugroup "+$ActiveMiners[$_.IdF].GpuGroup.GroupName)  $logfile $false}
                                 }
                     else 
-                        {$GpuActivityAverage = 100} #only want watchdog works with at least 5 reads
+                        {$GpuActivityAverage = 100} #only want watchdog works with at least 20 reads
                     
-
-                    if ($ActiveMiners[$_.IdF].Process -eq $null -or $ActiveMiners[$_.IdF].Process.HasExited -or ($GpuActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100) ) {
+                    
+                    if ($ActiveMiners[$_.IdF].Process -eq $null -or $ActiveMiners[$_.IdF].Process.HasExited -or ($GpuActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100 -and $GpuActivityGpuCount -gt 0) ) {
                             $ExitLoop = $true
                             $_.Status = "PendingCancellation"
                             $_.Stats.FailedTimes++
@@ -1052,6 +1066,9 @@ while ($Quit -eq $false) {
                             writelog ([string]$ActiveMiners[$_.IdF].Process+','+[string]$ActiveMiners[$_.IdF].Process.HasExited+','+$GpuActivityAverage+','+$TimeSinceStartInterval) $logfile $false
                         }
                     
+
+
+
           } #End For each
        
 
@@ -1539,12 +1556,11 @@ while ($Quit -eq $false) {
 
 
 
-    Writelog "Program end" $logfile
-    clear_files
-    $ActiveMiners | ForEach-Object { Kill_Process $_.Process}
-
-    try{Invoke-WebRequest ("http://localhost:"+[string]$config.ApiPort+"?command=exit") -timeoutsec 1 -UseDefaultCredentials} catch {}
-    
+    Writelog "Exiting MM...." $logfile $true
     $LogFile.close() 
-    stop-process -Id $PID
+    clear_files
+    $ActiveMiners | ForEach-Object {stop-process -Id $_.Process.Id}
+    try{Invoke-WebRequest ("http://localhost:"+[string]$config.ApiPort+"?command=exit") -timeoutsec 1 -UseDefaultCredentials} catch {}
+
+
 
