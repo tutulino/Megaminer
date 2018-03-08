@@ -139,7 +139,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     $zerg_Algorithm = get_algo_unified_name $coin.name
             
 
-                    $Divisor = Get_Algo_Divisor $zerg_Algorithm
+                    $Divisor = (Get_Algo_Divisor $zerg_Algorithm) 
+
+                    switch ($zerg_Algorithm) {
+                          "keccak" {$Divisor=$Divisor * 1000} 
+
+                    }
                     
             $locations=[array]("US","EU")
             foreach ($location in $locations)     {
@@ -147,8 +152,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     $Result+=[PSCustomObject]@{
                                 Algorithm     = $zerg_Algorithm
                                 Info          = $zerg_Algorithm
-                                Price         = [Double]$coin.estimate / $Divisor
-                                Price24h      = [Double]$coin.estimate_last24h  / $Divisor
+                                Price         = [Double]$coin.estimate_current / $Divisor * 1000
+                                Price24h      = [Double]$coin.estimate_last24h  / $Divisor * 1000
                                 Protocol      = "stratum+tcp"
                                 Host          = if ($location -eq 'EU') {"europe.mine.zergpool.com"} else {"mine.zergpool.com"}
                                 Port          = $coin.port
