@@ -254,11 +254,12 @@ else {  #FARM MONITORING
                              }    
                     else {   
                         "" | out-host
-                        "NOT RESPONDING...." | out-host}
+                        write-warning "NOT RESPONDING...."
                         "" | out-host
+                        }
                      }
 
-           start-sleep 20
+           start-sleep 15
 
 
      }
