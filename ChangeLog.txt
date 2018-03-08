@@ -2,29 +2,29 @@
 *Initial version
 ----------------------------------------------
 1.3
-**Fixed no relaunch on sprnova fail
+**Fixed no relaunch on Suprnova fail
 ----------------------------------------------
 1.4
 *removed ngsminer
 *Upgrade to Claymore 9.8
-*Added to spnova: ZCOIN (XZC), ZCLASSIC (ZCL), BITCOIN CASH, BITCOIN CASH (login not unified with other sprnova pool, requires registration again)
-*Added new pool BlocksFactory, suported coins: DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
+*Added to Suprnova: ZCOIN (XZC), ZCLASSIC (ZCL), BITCOIN CASH, BITCOIN CASH (login not unified with other Suprnova pool, requires registration again)
+*Added new pool BlocksFactory, supported coins: DIGIBYTE-SKEIN (DGB), FEATHERCOIN (FTC), PHOENIXCOIN (PXC), ORBITCOIN (ORB), GUNCOIN (GUN)
 *Added option in config.txt to donate AARONSACE as creator of 90% source code.
 
 ----------------------------------------------
 1.5
-*Added to spnova: Komodo(KMD), monero (XMR), CHAINCOIN (CHC), ETHEREUM+DECRED (ETH+DCR), ETHEREUM+LIBRARY (ETH+LBRY)
-*Removed from spnova: Bitcoin Cash (BCC), reason not viable mine with GPU
-*Fixed equihash not working on Miningpoolhub
+*Added to Suprnova: Komodo(KMD), monero (XMR), CHAINCOIN (CHC), ETHEREUM+DECRED (ETH+DCR), ETHEREUM+LIBRARY (ETH+LBRY)
+*Removed from Suprnova: Bitcoin Cash (BCC), reason not viable mine with GPU
+*Fixed equihash not working on MiningPoolHub
 
 ----------------------------------------------
 1.6
 *Fixed Interval from config.txt has no effect on runtime.
-*Changed core from Batch to Powershell (open new posibilities)
+*Changed core from Batch to Powershell (open new possibilities)
 *Now you can add coins, pools and algo editing json files
 *Unified all start batches without lost no user action boot (see examples.bat)
 *Added to Suprnova: Bitcore(BTX)
-*Added basic info from Whattomine, Bittrex and Cryptopia as help for manual coin selection on Suprnova.
+*Added basic info from WhatToMine, Bittrex and Cryptopia as help for manual coin selection on Suprnova.
 *Changed from ccminerskunk to ccminerAlexis for skein algo. Ccminerskunk not working.
 
 ----------------------------------------------
@@ -33,24 +33,24 @@
 *upgrade screen instructions of use for each pool
 *Added to Suprnova: SPREADCOIN (SPR)
 *Added Yiimp pool (requires individual wallet for each coin in config.txt): DENARIUS (DNR), DECRED (DCR), SIGNATUM (SIGT), BITCORE (BTX), VERGE (VRG), SIBCOIN (SIB), *VERTCOIN(VRC)
-*Software donwload for first execution is now independent of selected pool
+*Software download for first execution is now independent of selected pool
 
 *THIS VERSION REQUIRES NEW CONFIG.TXT FILE, YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
 
 ----------------------------------------------
 2.0
-*Included Miners for AMD platform, I haven�t AMD card, not tested. ��� AMD TESTERS NEEDED !!!
+*Included Miners for AMD platform, I haven't AMD card, not tested. !!! AMD TESTERS NEEDED !!!
 *Automatic dual mining between pools (ex. Eth on MPH and lbry on Zpool), choosing more profitable pool for each coin
-*Yiimp now support automatic profit based coin change, this pool has autoexchange off, you must set individual coins wallet on config.txt to mine
+*Yiimp now support automatic profit based coin change, this pool has auto-exchange off, you must set individual coins wallet on config.txt to mine
 *Manual mining now choose best benchmarked software for each algo.
 *New Miners files format, no more ".ps1" files only ".json" files. Easier to configure.
-*Changed default interval to 200 seconds for acurate benchmarks
+*Changed default interval to 200 seconds for accurate benchmarks
 *Automatic profit files deletion on start
-*Pools Multiselection allowed on menus and autoexecution batchs
-*Added API integration with Yiimp and suprnova for manual mining (optional on config.txt)
+*Pools multi-selection allowed on menus and auto-execution batches
+*Added API integration with Yiimp and Suprnova for manual mining (optional on config.txt)
 *Donation (optional) now applies on manual pools too
 *Removed duplicities between config files (deleted coins.json and algorithms.json)
-*Removed Whattomine info
+*Removed WhatToMine info
 *Removed CCMINER-Skunk
 *Added CCMINER-SkunkKrnlx
 *Fixed: MPH always choose US Location.
@@ -64,14 +64,14 @@ THIS VERSION CHANGE ALL CONFIG FILES STRUCTURES (CONFIG,POOLS, MINERS, etc)
 
 ----------------------------------------------
 2.0.3
-*Fixed: Sometimes incorrect location choosed
+*Fixed: Sometimes incorrect location chosen
 
 ----------------------------------------------
 2.1
-*Added info from Whattomine (profit) in manual mode menus, only for Whattomine available coins....
+*Added info from WhatToMine (profit) in manual mode menus, only for WhatToMine available coins....
 *Added Digibyte-groestl (DGB) to Suprnova
-*Best menu load speed in manual mode with api info enabled
-*Now miners with cero hashrate are shown on screen (it allows see bad benchmarks)
+*Best menu load speed in manual mode with API info enabled
+*Now miners with zero hash rate are shown on screen (it allows see bad benchmarks)
 *Mayor changes on sgminer miner file
 *Added stat option on password for allow statistics to Zpool,Yiimp and HR
 *All ccminer has now 10sec error retry time (30sec before)
@@ -80,29 +80,29 @@ THIS VERSION CHANGE ALL CONFIG FILES STRUCTURES (CONFIG,POOLS, MINERS, etc)
 *Fixed: Deleted tribus algo from ccminer tpruvot miner file
 *Fixed: Zpool API is returning bad data (too high profit) for X11 coin Hiro, this makes always select X11 algo
 *Fixed: X17 Algo (Verge)  not working
-*Fixed: decred on manual mode not working on Suprnova
+*Fixed: Decred on manual mode not working on Suprnova
 *Fixed: Algorithm filter (parameter or via algorithm.txt) not working
 
 
 ------------------------------------------------
 3.0
-*New "Virtual" Pool Whattomine, based in whattomine statistics, it uses MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. See supported coins on readme.md file
-*Now if miner screen is closed (manually or error) MM don�t need to wait interval defined time, in less than 15 sec it will detect error and continue execution
+*New "Virtual" Pool WhatToMine, based in WhatToMine statistics, it uses MPH, Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. See supported coins on readme.md file
+*Now if miner screen is closed (manually or error) MM don't need to wait interval defined time, in less than 15 sec it will detect error and continue execution
 *Benchmark auto-interval, MM automatic set interval to 200 seconds for benchmarks, other executions are based on config.txt defined interval
 *Added info on main screen of time left to next interval and local currency conversion, removed BTC/GH/day
-*New ccminer tpruvot 2.2 (added algos in which it is fastest)--> recomended delete al tpruvot files on stat folder if you are copying from old version
+*New ccminer tpruvot 2.2 (added algos in which it is fastest)--> recommended delete all tpruvot files on stat folder if you are copying from old version
 *Removed ccminerpalginskunk, new tpruvot is faster on skunk algo
 *Removed ccminerdjm, yescript no profitable
 *All ccminer has now 4 retry times on fail
-*Now hashrate shown 95% of maximum speed miner has reached anytime (benchmarking or running)
-*Zpool will not show coin mined info, reason: not real info, pool choose a coin for each algo and not always is same as your hashrate more profitable
+*Now hash rate shown 95% of maximum speed miner has reached anytime (benchmarking or running)
+*Zpool will not show coin mined info, reason: not real info, pool choose a coin for each algo and not always is same as your hash rate more profitable
 *Removed sgminer-skein
 *Deleted skein algo for sgminer
 *Changed X13 algo from ccminer-2.2 to faster ccminer-alexis
 *Removed unused source code
-*Main screen autoresize
-*Due to technical problems removed dual mining from manual for suprnova (you can get same on new pool WTM filtering by parameter algorithm on core launch)
-*Added to sprnova manual: SIBCOIN (SIB), UBIQ (UBQ), EXPANSE (EXP)
+*Main screen auto-resize
+*Due to technical problems removed dual mining from manual for Suprnova (you can get same on new pool WTM filtering by parameter algorithm on core launch)
+*Added to Suprnova manual: SIBCOIN (SIB), UBIQ (UBQ), EXPANSE (EXP)
 *Now is possible mine on manual mode on MPH
 *Fixed: HashRefinery not working on 2.1 release
 
@@ -113,22 +113,22 @@ RECOMENDED CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 
 ------------------------------------------------
 3.1
-*Added New Pool Nicehash for manual and auto mode
+*Added New Pool NiceHash for manual and auto mode
 *Added GatelessGate for AMD (thxs to Imaminer)
 *Removed some duplicated algos
 *Moved HMQ1725 from ccminer tpruvot to ccminer 2.2 (slower but a lot of reject less)
 *Fixed: Dual mining problems
 *Fixed: screen resize error
-*Fixed: benchmark not ending for AMD plattform
+*Fixed: benchmark not ending for AMD platform
 
 
 ------------------------------------------------
 3.2
 *Added EthMiner for AMD
 *Added Sgminer for Skein for AMD
-*Added 3 retries to yiimp api connection to minimize errors.
+*Added 3 retries to yiimp API connection to minimize errors.
 
-*Fixed: lyra2RE not working at Nicehash
+*Fixed: lyra2RE not working at NiceHash
 *Fixed: file wrapper error
 *Fixed: (I hope) MM open new miner not closing old one
 
@@ -142,15 +142,15 @@ RECOMENDED CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 *Added Pools Wallets info
 *Automatic detection of miner open but no mining speed
 *ccminer Klaust upgrade to 8.12, new assigned algos: Myriad-groestl, keccak
-*Now hashrate speed only is recorded on bechmark, this can avoid extremely high hashrates
+*Now hash rate speed only is recorded on benchmark, this can avoid extremely high hash rates
 *No miners included in release, all miners all downloaded
-*Configurable bechmark time on config.txt
+*Configurable benchmark time on config.txt
 *Configurable start screen on config.txt
 *Fixed: Zpool high profit for Quark,Qubit, x11
-*Fixed: Pools not restoring normal situation after api fail
+*Fixed: Pools not restoring normal situation after API fail
 *Fixed: Claymore120 miner error due to Blake2s algo
-*Fixed: reduced memory consum
-*Fixed: Nicehash workername not shown
+*Fixed: reduced memory consume
+*Fixed: NiceHash worker name not shown
 
 
 
@@ -166,8 +166,8 @@ OBLIGATORY CLEAN INSTALATION AND RUNNING BENCHMARKS AGAIN
 *Changed .Bat and .txt files codification to ANSI
 *Log folder automatic clean
 *Restricted dual mining with high dcri to NVIDIA, created new profiles with low dcri for AMD
-*Due to api fails, Yiimp is disabled for Whattomine virtual Pool
-*Now Whattomine virtual pool shows wallets info
+*Due to API fails, Yiimp is disabled for WhatToMine virtual Pool
+*Now WhatToMine virtual pool shows wallets info
 *Fixed: gatelessgate for AMD not working
 *Fixed: Ethminer for AMD not working
 *Fixed: memory usage extremely high
@@ -184,17 +184,17 @@ THIS VERSION CHANGE ALL POOL AND MINER FILES
 *Added start parameters to batch files for AMD
 *Added dcri 140,160 for NVIDIA
 *Added sgminer Xevan for AMD
-*Added BITSEND (BSD) to suprnova pool
-*Added GPU Platform variable in config.txt due to incorrect automatic detection (only AMD sgminer/prospector neeeds this variable at moment)
+*Added BITSEND (BSD) to Suprnova pool
+*Added GPU Platform variable in config.txt due to incorrect automatic detection (only AMD sgminer/prospector needs this variable at moment)
 *Added Option in profits screen to show only best miner for each algo/coin (default: active)
 *Upgrade ccminer tpruvot to 2.2.1 (cuda9) Require a nvidia driver 384.xx or more recent
 *Upgrade claymore dual to 10.0
 *Tweaked gatelessgate algorithms parameters
-*Due to api fails/bans, Yiimp lost api integration: no automatic mode (except on Whattomine virtual Pool) and no more wallets info
+*Due to API fails/bans, Yiimp lost API integration: no automatic mode (except on WhatToMine virtual Pool) and no more wallets info
 *Removed X11 Algo, Asics territory
-*Fixed: Dual Minning Benchmarks always shows best main algo benchmark (independent of second Algo)
+*Fixed: Dual Mining Benchmarks always shows best main algo benchmark (independent of second Algo)
 *Fixed: memory usage extremely high on profit screen -- Tested for 2 days, be careful
-*Fixed: Whattomine virtual pool not using location variable
+*Fixed: WhatToMine virtual pool not using location variable
 *Fixed: Suprnova Hush pool not working due to new pool address
 *Fixed: profit not well calculated for dual mining
 *Fixed: failed times error when miner is not mining for various intervals
@@ -220,7 +220,7 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 
 *Fixed: memory usage extremely high on profit screen
 *Fixed: claymore ZEC speed x1000
-*Fixed: suprnova zen port
+*Fixed: Suprnova zen port
 *Fixed: claymore duplicated opened windows
 
 
@@ -229,7 +229,7 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Added option to miners file to launch a command before run (for example nvidiainspector, afterburner, etc)
 *Added Sgminer for Tribus and Veltor algos on AMD
 *Added X11gost to Sgminer for AMD
-*Added Skunk Algo to Whattomine virtual pool
+*Added Skunk Algo to WhatToMine virtual pool
 *Added Location to "Profits" and "Active Miner" sections
 *Added new pool Flypool (only manual mode Zcash mining)
 *Added PHI and HSR algos to Nvidia
@@ -240,15 +240,15 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Updated ccminer Klaust to 8.14b cuda9
 
 *Fixed: GB location not choosing EUROPE pools always
-*Fixed: WTM virtual pool not getting same result as WTM web due to default hashrates changes on WTM Web
+*Fixed: WTM virtual pool not getting same result as WTM web due to default hash rates changes on WTM Web
 *Fixed: Skein profit calculation error
 
 ------------------------------------------------
 4.5
 
 *Added DTSM equihash miner
-*Added AHASHPOOL Pool (No registration, Autoexchange)
-*Added UNIMINING Pool (No registration, No autoexchange, need wallet for each coin on config.txt)
+*Added AHASHPOOL Pool (No registration, Auto-exchange)
+*Added UNIMINING Pool (No registration, No auto-exchange, need wallet for each coin on config.txt)
 *Added to Suprnova: ELECTRONEUM (ETN),SMARTCASH (SMART),BITCOINZ (BTCZ),BITCOIN GOLD (BCG)
 
 *Fixed: Some pools-algo combination are ignored on multiple pool executions
@@ -266,7 +266,7 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Added ccminer Spmod #6 for lbry
 *Added ItalYiimp Pool
 
-*Fixed: suprnova wallet error msg at start
+*Fixed: Suprnova wallet error message at start
 
 
 ------------------------------------------------
@@ -285,7 +285,7 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 
 
 
-*Fixed: sometimes benchmark for dualmining is saved with second algo zero value
+*Fixed: sometimes benchmark for dual-mining is saved with second algo zero value
 *Fixed: claymore Cryptonote not working due to wrong parameters
 *Fixed: incorrect live profit shown on Automatic24h mode
 *Fixed: ahashpool Automatic24h mode not working
@@ -297,24 +297,24 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Upgrade ccminer-tpruvot to 2.2.3
 *Excluded Blake2b for MPH due to different stratum protocol
 *Removed X13,X15,qubit algos: ASICS territory now.
-*Added option for set a exclusive nicehash wallet on config.txt
+*Added option for set a exclusive NiceHash wallet on config.txt
 *Added option for set local currency on config.txt (if not specified location is used)
 
 
 ------------------------------------------------
 5.0 beta 1
 
-*GPUs grouping on config.txt, now you can group your GPUs, each group will be bechmarked and will run independent. This is ideal for mixed model/brand rigs.
+*GPUs grouping on config.txt, now you can group your GPUs, each group will be benchmarked and will run independent. This is ideal for mixed model/brand rigs.
 	- If you want to use your old config.txt you must remove GPUPLATFORM and TYPES parameters and add GPUGROUPS from new config file
 
-*Added parameter Groupnames to command line to allow mining on some gpu only
+*Added parameter Groupnames to command line to allow mining on some GPU only
 
 *Merged Claymore dual miner files (one for each platform)
 
 
-*Removed prospector miner �someone is using?
-*Removed excavator miner �someone is using?
-*Removed pool API asistance on manual selection due to long waits.
+*Removed prospector miner someone is using?
+*Removed excavator miner someone is using?
+*Removed pool API assistance on manual selection due to long waits.
 
 
 *THIS VERSION REQUIRES NEW CONFIG.TXT FILE, YOU MUST DOWNLOAD AND CONFIGURE AGAIN!!!
@@ -329,19 +329,19 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Added Pool Nanopool
 *Added CastXMR for Vega --> not tested, help needed
 *Added Claymore Cryptonote 9.7 (some people has problems with 10.2)
-*Removed Pool Nicehash until it works again
+*Removed Pool NiceHash until it works again
 *Yiimp Automatic mode come back (API seems responsive now)
-*Added more gpu info on current screen (Clocks, Pstate)
+*Added more GPU info on current screen (Clocks, Pstate)
 *Enhaced ethash algo pools compatibility
-*Automatic Profit screen layout based on number of gpu groups
+*Automatic Profit screen layout based on number of GPU groups
 *Removed dual mining with Pascal (Pasc), reason: dead coin
 *Added Start time in wallets screen
 *Added Mining mode in profits screen
 *Added best algo/miner combinations for NVIDIA Maxwell
 
 
-*Fixed: dualmining not working
-*Fixed: error while benchmark not getting automatic cancelation
+*Fixed: dual-mining not working
+*Fixed: error while benchmark not getting automatic cancellation
 *Fixed: other small reported bugs
 *Fixed: incorrect platform id shown on GPUlist.bat
 
@@ -353,8 +353,8 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 ------------------------------------------------
 5.0 beta 3
 
-* Added automatic detection of gpu platform  --> For upgrade from 5.X you must delete this atribute from @@GPUGROUPS groups
-* Added more algos for cpumining
+* Added automatic detection of GPU platform  --> For upgrade from 5.X you must delete this attribute from @@GPUGROUPS groups
+* Added more algos for CPU mining
 * Upgraded Claymore ETH to 10.2
 
 *Fixed: MPH and Suprnova not showing coin name/symbol on wallet screen
@@ -381,9 +381,9 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 
 *Fixed: nsgminer not receiving rigth devices parameter
 *Fixed: ewbf/dtsm not receiving rigth devices parameter
-*Fixed: claymore miners not receiving rigth devices parameters
-*Fixed: dualmining not working on Whattomine virtual Pool
-*Fixed: wallets not showing on Whattomine virtual Pool
+*Fixed: claymore miners not receiving right devices parameters
+*Fixed: dual-mining not working on WhatToMine virtual Pool
+*Fixed: wallets not showing on WhatToMine virtual Pool
 *Fixed: duplicated wallets on wallet screen
 *Fixed: low difficulty share error for kecckak algo
 *Fixed: Unimining pool 24h mode not showing profit
@@ -394,18 +394,18 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 5.0
 
 
-*Better miners "closer" mechanism (safer and more agrresive)
-*Enhanced dynamic api port assignation, now is possible to run more than one instance of MM without ports conflicts.
+*Better miners "closer" mechanism (safer and more aggressive)
+*Enhanced dynamic API port assignation, now is possible to run more than one instance of MM without ports conflicts.
 *Added Excavator for NVIDIA
 *Added Ccminer Nanashi
 *Added XMrig msvc for CPU
 *Updated ccminer klaust to 8.16
 *Updated claymore crypto to 11.0
-*Added AMD gpu info on current screen (experimental)
+*Added AMD GPU info on current screen (experimental)
 
 *Fixed: pool not recovering from fail when multiple pools running
 *Fixed: xmrcast not selecting devices
-*Fixed: new zpool api profit units for keccak
+*Fixed: new zpool API profit units for keccak
 *Fixed: automatic log folder deletion not working
 *Fixed: ccminer polytmos not allowing more than one instance
 
@@ -414,18 +414,18 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 5.1
 
 
-*Added new config.txt parameter @@PERCENTTOSWITCH for indicates MM new miner/algo only will be launched if new profit is greater than actual profit in specified percent, also defined PERCENTTOSWITCH parameter to override config.txt value (for example for not PPLS pools like Nicehash)
+*Added new config.txt parameter @@PERCENTTOSWITCH for indicates MM new miner/algo only will be launched if new profit is greater than actual profit in specified percent, also defined PERCENTTOSWITCH parameter to override config.txt value (for example for not PPLS pools like NiceHash)
 *Now miners are closed N seconds after new miners are opened, this minimize time machine is inactive for switching. Time is configured on config.txt @@TIMETOSWITCH variable
 *Included Bminer for Nvidia equihash
 *Added confirmation prompt to ResetBechmark batch
 *Excavator moved to additional miners folder due to instability
-*Reactivated Nicehash pool
+*Reactivated NiceHash pool
 *Upgraded compatibility for more than one instance of MM running
 
 
-*Fixed: incorrect workername for dualmining
+*Fixed: incorrect worker name for dual-mining
 *Fixed: divisor for yiimp keccakc
-*Fixed: new Italyiimp api profit units for keccak
+*Fixed: new Italyiimp API profit units for keccak
 *Fixed: profit screen showing repeated algos for coin level pools like MPH
 *Fixed: error "Cannot add a member with the name "Name" because a member with that name already exists"
 
@@ -440,13 +440,13 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 5.2
 
 
-*More acurated benchmark system, now benchmarks are also updated while mining
+*More accurate benchmark system, now benchmarks are also updated while mining
 *Power cost now affects profit (real for NVIDIA, estimated model based for AMD)
-*Added Power, revenues, efficiency and pool detected hashrate, to active miners section, note: this speed is usually based on las 5 minutes shares and is pools refresh speed dependant.
-*Redesigned and more informatives log files
+*Added Power, revenues, efficiency and pool detected hash rate, to active miners section, note: this speed is usually based on las 5 minutes shares and is pools refresh speed dependant.
+*Redesigned and more informative log files
 *Added screen info while interval is starting
 
-*Added power limit percent and Gpu Group in current screen
+*Added power limit percent and GPU Group in current screen
 *New stats screen (old screens are reorganize)
 *Changed default miner intensities and config options to ensure default options stability
 *Removed delay close miner option from code due to unstable executions
@@ -456,13 +456,13 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Updated Claymore Dual to 10.4
 *Updated Nsgminer to 0.9.4
 *Updated ccminer klaust to 8.18
-*Updated cpu miner xmrig to 2.4.4
-*Updated cpu miner jaydee to 3.7.9
+*Updated CPU miner xmrig to 2.4.4
+*Updated CPU miner jaydee to 3.7.9
 *New sgminer phi fork
 *Added Altminer Pool
 
-*Fixed: some wallets from sprnova and mining pool hub not shown on wallets screen
-*Fixed: Nicehash wrong fee when using nicehash specific wallet
+*Fixed: some wallets from Suprnova and mining pool hub not shown on wallets screen
+*Fixed: NiceHash wrong fee when using NiceHash specific wallet
 *Fixed: donation time not used for donation if next interval is for benchmark
 
 NOTE: YOU MUST ADD THIS VARIABLE TO CONFIG.TXT OR CONFIGURE FROM NEW RELEASE WHERE IT IS INCLUDED : @@ELECTRICITYCOST
@@ -475,9 +475,9 @@ NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YOU MUST BENCHMARK A
 
 ---FEATURES CHANGES:
 
-*NVIDIA Automatic Gpu Power limit, you can define any power limit values (90%, 80%, etc) for each winner miner/algo MM checks what of that power limit point is more profitable at each interval based in power cost, hashrate and reward. (REQUIRES MM RUN AS ADMIN)
-*Added pool�s profit  correction factor config option (recommended if powerlimit feature is used)
-*New gpu activity based watchdog, if gpu group activity goes down miner is considered dead and it will be killed.
+*NVIDIA Automatic GPU Power limit, you can define any power limit values (90%, 80%, etc) for each winner miner/algo MM checks what of that power limit point is more profitable at each interval based in power cost, hash rate and reward. (REQUIRES MM RUN AS ADMIN)
+*Added pool profit correction factor config option (recommended if power limit feature is used)
+*New GPU activity based watchdog, if GPU group activity goes down miner is considered dead and it will be killed.
 *Added Different config interval time based on pool reward type (PPLS/PPS)
 *Changed @@electricitycost config variable to local currency instead of BTC
 *Changed some pool filenames (check your old .bat files)
@@ -491,15 +491,15 @@ NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YOU MUST BENCHMARK A
 
 ---POOLS CHANGES:
 *Added ZergPool
-*Removed altminer.net due to pool api restrictions
-*Moved config for Whattomine virtual pool (pools selected/pools order) to config file and optimized working
+*Removed altminer.net due to pool API restrictions
+*Moved config for WhatToMine virtual pool (pools selected/pools order) to config file and optimized working
 
 ---MINERS CHANGES:
 *Added Palgin Neoscrypt miner (via API) to additional miners folders - THIS MINER ONLY WORKS IF NO MORE THAN ONE NVIDIA TYPE GPUGROUP
 *Added Palgin Neoscrypt miner (via wrapper) to additional miners folders - THIS MINER NEEDS A MINIMUM OF 600s-900s BENCHMARK TIME TO WORK, IF YOU ONLY HAVE ONE NVIDIA GPU GROUP USE API VERSION
 *Updated excavator to 1.4.3a and moved to miners folders, stability problems solved
 *Updated xmrcast to 0.81
-*Updated cpu miner jaydee to 3.7.10
+*Updated CPU miner jaydee to 3.7.10
 *Updated Claymore Dual to 10.5
 *Updated ccminer klausT to 8.19
 *Updated bminer to 5.3.0
@@ -511,12 +511,12 @@ NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YOU MUST BENCHMARK A
 ---BUG FIXES:
 *Fixed: Ccminer tpruvot lyra2v2 referencing lyra2z
 *Fixed: Stats screen time value bad calculation
-*Fixed: Nvidia smi values not showing for some gpu models
+*Fixed: Nvidia smi values not showing for some GPU models
 *Fixed: Claymore Crypto fee error
 *Fixed: Sgminer Phi password protected
 *Fixed: All Jaydee CPU miners pointing SSE2
 *Fixed: Wallet coins are not shown for Mining pool hub
-*Fixed: Ccminer Alexis miner download url
+*Fixed: Ccminer Alexis miner download URL
 *Fixed: Current screen for AMD cards
 
 
@@ -532,9 +532,9 @@ Older stats are not compatibles
 
 ---FEATURES CHANGES:
 
-*Added minable algorithms selection in config.txt
+*Added mineable algorithms selection in config.txt
 *Faster boot and interval change
-*Added Efficency in Local currency per Watt
+*Added Efficiency in Local currency per Watt
 *Added option in config.txt for specific pool payment currency
 *Changed btc revenue to mbtc
 *Faster interval change
@@ -542,29 +542,29 @@ Older stats are not compatibles
 
 ---POOLS CHANGES:
 *Added blazepool pool
-*Added ravencoin pool to suprnova
-*Adapted zergpool to new api address
-*Added all non main page active coins to Whattomine pool
+*Added ravencoin pool to Suprnova
+*Adapted zergpool to new API address
+*Added all non main page active coins to WhatToMine pool
 
 ---MINERS CHANGES:
 *Added ccminer for x16r algo
 *Added Palgin HSR Neoscrypt fork by Just-a-miner.
-*Updated claymore to 11 (added pascal, keccak and blake2s for dualmining)
+*Updated claymore to 11 (added pascal, keccak and blake2s for dual-mining)
 *Claymore dual for AMD moved to miners folder due to high profit
 *Updated excavator to 1.4.4a
-*Updated cpu miner to 3.8.2.1
+*Updated CPU miner to 3.8.2.1
 *Added Claymore Neoscrypt miner 1.0
 *Updated dtsm to 0.6
 
 ---BUG FIXES:
 
-*Fixed: Whattomine pool order variable not in config.txt
+*Fixed: WhatToMine pool order variable not in config.txt
 *Fixed: Not supported message error for old NVIDIA cards
 *Fixed: Best miners filter in profits screen not returning to initial state
 *Fixed: Watchdog lower sensitivity
 *Fixed: OverdriveN.exe requires Visual Studio debug dlls
-*Fixed: writelog prompt msg when corrupted stats file
-*Fixed: distinct gpu groups order between active miners and profits zones
+*Fixed: writelog prompt message when corrupted stats file
+*Fixed: distinct GPU groups order between active miners and profits zones
 *Fixed: mining pool hub excavator error (now mining pool hub uses IP address )
 *Fixed: dual mining info in profits screen and active miners section (revenue and pool)
 *Fixed: Active miners profit not including pool profit factor, pool fee and miner fee
@@ -586,16 +586,17 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 
 
 ---FEATURES CHANGES:
-*Rest Api available
+*Rest API available
 *Farm monitoring (fill config.txt fields and run start.bat)
 *Added menu option to quit (close all windows)
+*Activity based watchdog disabled if no GPU detected (https://github.com/tutulino/Megaminer/issues/351)
 
 
 ---POOLS CHANGES:
 
-* Enhaced Whattomine pool (less api call, more acurate data)
-* Added location europe for Zergpool
-* Zergpool lost coin level mining, now algo level mining due to some coins disabled autoexchange
+* Enhanced WhatToMine pool (less API call, more accurate data)
+* Added location Europe for Zergpool
+* Zergpool lost coin level mining, now algo level mining due to some coins disabled auto-exchange
 
 
 ---MINERS CHANGES:
@@ -605,7 +606,7 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 
 ---BUG FIXES:
 
-*Fixed: blazepool not showing workername
+*Fixed: blazepool not showing worker name
 *Fixed: some miners not downloading
 
 

@@ -31,14 +31,14 @@ NVidia miners are untested.
 	- XMRig (AMD, NVidia, CPU)
 	- XmrMiner (AMD)
 * Miner optimizations for CPU and AMD
-* Low process priority for cpu miners to prevent responsiveness issue
+* Low process priority for CPU miners to prevent responsiveness issue
 * Use C# assembly to prevent miners from stealing focus
 * Poll mining api to display projected profits for Manual mining
 * Support reporting mining stats to multipoolminer.io/monitor
 * Allow mining specific Algo instead of coin in Manual mode
 * Profit display in mBTC instead of BTC with too many zeroes
 * Support profitability info for additional coins from WhatToMine pool (added by tutulino now)
-* Power usage aproximation for AMD and CPU
+* Power usage approximation for AMD and CPU
 	- You will need to add TDP values for your hardware in _cpu-tdp.json_ or _amd-cards-tdp.json_ if they are not there
 * Support any fiat currency which is supported by CoinDesk for profit display
 * Allow dual mining any Ethash coin instead of ETH/ETC only
@@ -94,28 +94,32 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 
 ---- INSTRUCTIONS ----------------------------------------------
 
-0. Download source code from latest Release from github (you dont need executable file)
+0. Download and decompress source code from latest Release from github (you dont need executable file)
 
-1. Edit CONFIG.TXT file before mining
+1. Install Microsoft Visual C++ 2015 Redistributable https://www.microsoft.com/en-us/download/details.aspx?id=52685
 
-2. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt, you can use this parameters on your batch
+2. For AMD rigs, beta blockchain drivers are not recommended (gpus will not show in current screen and activity based watchdog will be disabled)
+
+3. Edit CONFIG.TXT file before mining
+
+4. Exec start.bat for manual selection or edit AutoStartExample.bat for automatic boot without user prompt, you can use this parameters on your batch
     - PoolsName = separated comma string of pools to run
-	- MiningMode = Mode to check profit, note not all pools suport all modes (Automatic/Automatic24h/Manual). If manual mode is selected one coin must be passed on Coinsname parameter
+	- MiningMode = Mode to check profit, note not all pools support all modes (Automatic/Automatic24h/Manual). If manual mode is selected one coin must be passed on Coinsname parameter
 	- Algorithm = separated comma string of algorithms to run (optional)
     - CoinsName = separated comma string of Coins to run (optional)
     - Groupnames = Groups of gpu/cpu to run (based on your defined groups in config.txt @@Gpugroups section) (optional)
 	- PercentToSwitch = Overrides config.txt config, percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit in specified percent (optional)
 
 
-3. Firt time, software will be donwloaded from miners github repositories
-	- As usual, some miners are detected as virus by your Antivirus, to avoid this you must set your instalation directory as excluded. For Windows Defender MM path is excluded automatic
+5. First time, software will be downloaded from miners github repositories
+	- As usual, some miners are detected as virus by your Antivirus, to avoid this you must set your installation directory as excluded. For Windows Defender MM path is excluded automatic
 
-4. Your system will be benchmarked (long process)
+6. Your system will be benchmarked (long process)
 
-5. Make profit
-	- Except Nicehash (where you sell your power to indicated price), pools always overstimated profit, you must understand profit column as a way to get best algoritmh. Your real profit will be lower.
+7. Make profit
+	- Except Nicehash (where you sell your power to indicated price), pools always overestimated profit, you must understand profit column as a way to get best algorithm. Your real profit will be lower.
 
-6. Tuning (optional)
+9. Tuning (optional)
 	- you can edit miners folders content to delete miners or to assign/unassign algos to miners.
 	- you can edit pools folders content to delete pools
 	- for advanced users, you can create miners or pools if are based on existing one.
@@ -125,19 +129,19 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 ---- UPGRADE PROCEDURE ------------------------------------
 
 Safest way is download new software and copy from old version "stats" folders and "config.txt" file.
-If new verson has no miners update you can copy "bin" folder
-If there is a new miner version is recomended delete miner_algo_hashrate.txt files on miners folder to force benchmark again.
+If new version has no miners update you can copy "bin" folder
+If there is a new miner version is recommended delete miner_algo_hashrate.txt files on miners folder to force benchmark again.
 
 
 -------NEW FEATURES OVER BASE SOFTWARE -----------
 
--Menus sytem to choose coin/algo/pool and start mining
+-Menus system to choose coin/algo/pool and start mining
 
 -One file config to start mining
 
 -Can mine on "Virtual" Pool Whattomine, based on statistics of whattomine, it use MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use.
 
--Can mine on any of this pools (or all at same time): Ahashpool, Nanopool, YIIMP, Nicehash, Zpool, Unimining, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between diferent pools (ex. Eth on MPH and lbry on Zpool)
+-Can mine on any of this pools (or all at same time): Ahashpool, Nanopool, YIIMP, Nicehash, Zpool, Unimining, Whattomine (virtual) HashRefinery, MPH with auto coin change based on pool profit for each algorithm with dual mining between different pools (ex. Eth on MPH and lbry on Zpool)
 
 -Can mine on Suprnova,Nicehash, MPH, Flypool or BlocksFactory pool without autochange or profit calculation, manual coin selection
 
@@ -155,15 +159,15 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -Local currency info on main screen
 
--Lastest version of miners available
+-Latest version of miners available
 
--GPU Info (AMD/Nvidia) (Power, fan, temperatures, eficency...)
+-GPU Info (AMD/Nvidia) (Power, fan, temperatures, efficiency...)
 
 -Pools Wallets actual and evolution info
 
 -Option to autochange based on 24h statistics (on supported pools)
 
--Option for asociate command to launch before run to each miner (nvidia inspector for example to set overclock)
+-Option for associate command to launch before run to each miner (nvidia inspector for example to set overclock)
 
 -Miners and Pools fees are included in profit calculation
 
@@ -177,7 +181,7 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -Api rest for other software integration
 
--Farm monitor, you can monitorize all your rigs from one lan machine
+-Farm monitor, you can monitor all your rigs from one lan machine
 
 ----- DISCLAIMER ---- ------------------------------------------
 
@@ -187,7 +191,7 @@ Only for Windows
 
 Core for auto change pools is forked from AaronSace MultipoolMiner, you can read info at https://github.com/aaronsace/MultiPoolMiner
 
-Profit calculations are estimates based on info provided by Pools/Whattomine for your bechmarked hashrate extrapolated to 24h. No real profit warranty except nicehash, where you are selling your power at indicated price.
+Profit calculations are estimates based on info provided by Pools/Whattomine for your benchmarked hashrate extrapolated to 24h. No real profit warranty except nicehash, where you are selling your power at indicated price.
 
 Pools or Whattomine statistics are based on past (luck, difficulty, exchange-rate, pool hashrte, network hashrate, etc), it can be not very accurate, usually expected profit is near 50% pool indicates.
 

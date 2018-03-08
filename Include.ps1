@@ -466,6 +466,7 @@ Function Get_Mining_Types () {
             $_ | Add-Member GpusNsgMode ("-d " + $_.gpus -replace ',', ' -d ')
             $_ | Add-Member GpuPlatform (Get_Gpu_Platform $_.Type)
             $_ | Add-Member GpusArray ($_.gpus -split ",")
+            $_ | Add-Member GpuCount ($_.gpus -split ",").count
             $Pl = @()
             ($_.PowerLimits -split ',') | ForEach-Object {$Pl += [int]$_}
             $_.PowerLimits = $Pl | Sort-Object -Descending
@@ -1544,5 +1545,22 @@ function get_coin_symbol ([string]$Coin) {
         "zcoin" { "XZC" }
         "zencash" { "ZEN" }
         Default { $Coin }
+    }
+}
+
+function Check_GpuGroups_Config ($types) {
+    $Cards = get_devices_information $types
+    $types | ForEach-Object {
+        $detectedcards = @()
+        $detectedcards += $Cards | Where-Object group -eq $_.GroupName
+        if ($detectedcards.count -eq 0) {
+            WriteLog ("No gpus for group " + $type.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect @@gpugroups config") $LogFile $false
+            write-warning ("No gpus for group " + $type.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect @@gpugroups config")
+            start-sleep 10
+        } elseif ($detectedcards.count -ne $_.gpucount) {
+            WriteLog ("Mismatching gpus for group " + $type.GroupName + " was detected, check @@gpugroups config and gpulist.bat") $LogFile $false
+            write-warning ("Mismatching gpus for group " + $type.GroupName + " was detected, check @@gpugroups config and gpulist.bat")
+            start-sleep 10
+        }
     }
 }

@@ -84,10 +84,6 @@ $LogFile.AutoFlush = $true
 
 WriteLog ("Release $Release") $LogFile $false
 
-#get mining types
-$Types = Get_Mining_Types -filter $GroupNames
-WriteLog ( get_devices_information $Types | ConvertTo-Json) $LogFile $false
-WriteLog ( $Types |ConvertTo-Json) $LogFile $false
 
 $ActiveMiners = @()
 
@@ -169,8 +165,19 @@ $Msg += " //PercentToSwitch: " + $PercentToSwitch
 WriteLog $msg $LogFile $false
 
 
-#Enable api
+#get mining types
+$Types = Get_Mining_Types -filter $Groupnames
 
+WriteLog ( get_devices_information $Types | ConvertTo-Json) $LogFile $false
+WriteLog ( $Types | ConvertTo-Json) $LogFile $false
+
+$NumberTypesGroups = ($Types | Measure-Object).count
+if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [Math]::Floor( 25 / $NumberTypesGroups)} #screen adjust to number of groups
+$ProfitsScreenLimit = $InitialProfitsScreenLimit
+
+Check_GpuGroups_Config $types
+
+#Enable api
 if ($config.ApiPort -gt 0) {
 
     WriteLog ("Starting API in port " + [string]$config.ApiPort) $LogFile $false
@@ -213,14 +220,6 @@ while ($Quit -eq $false) {
     if ([string]::IsNullOrWhiteSpace($PercentToSwitch)) {$PercentToSwitch2 = [int]($Config.PercentToSwitch)}
     else {$PercentToSwitch2 = [int]$PercentToSwitch}
     $DelayCloseMiners = $Config.DelayCloseMiners
-
-    $Types = Get_Mining_Types -filter $GroupNames
-
-    $NumberTypesGroups = ($Types | Measure-Object).Count
-    #if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [int](45 / $NumberTypesGroups) - 5 } #screen adjust to number of groups
-    if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [Math]::Floor(25 / $NumberTypesGroups)} #screen adjust to number of groups
-    if ($FirstTotalExecution) {$ProfitsScreenLimit = $InitialProfitsScreenLimit}
-
 
     $Currency = $Config.Currency
     $BenchmarkIntervalTime = [int]($Config.BenchmarkTime)
@@ -1120,17 +1119,25 @@ while ($Quit -eq $false) {
             }
 
             #WATCHDOG
+            $groupcards = @()
+            $groupcards += $Devices | Where-Object gpugroup -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName
 
-            $GpuActivityAverages += [PSCustomObject]@{Average = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].GpuGroup.GroupName) | Measure-Object -property utilization -average).average}
+            $GpuActivityAverages += [pscustomobject]@{
+                gpugroup     = $ActiveMiners[$_.IdF].GpuGroup.GroupName
+                Average      = ($groupcards | Measure-Object -property utilization -average).average
+                NumberOfGpus = $groupcards.count
+            }
+
 
             if ($GpuActivityAverages.Count -gt 20) {
                 $GpuActivityAverages = $GpuActivityAverages[($GpuActivityAverages.Count - 20)..($GpuActivityAverages.Count - 1)]
-                $GpuActivityAverage = ($GpuActivityAverages | Measure-Object -property average -maximum).maximum
+                $GpuActivityAverage = ($GpuActivityAverages | Where-Object gpugroup -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName | Measure-Object -property average -maximum).maximum
+                $GpuActivityGpuCount = ($GpuActivityAverages | Where-Object gpugroup -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName | Measure-Object -property NumberOfGpus -maximum).maximum
                 if ($DetailedLog) {WriteLog ("Last 20 reads maximum GPU activity is " + [string]$GpuActivityAverage + " for Gpugroup " + $ActiveMiners[$_.IdF].GpuGroup.GroupName) $LogFile $false}
-            } else { $GpuActivityAverage = 100 } #only want watchdog works with at least 5 reads
+            } else { $GpuActivityAverage = 100 } #only want watchdog works with at least 20 reads
 
 
-            if ($ActiveMiners[$_.IdF].Process -eq $null -or $ActiveMiners[$_.IdF].Process.HasExited -or ($GpuActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100) ) {
+            if ($ActiveMiners[$_.IdF].Process -eq $null -or $ActiveMiners[$_.IdF].Process.HasExited -or ($GpuActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100 -and $GpuActivityGpuCount -gt 0) ) {
                 $ActiveMiners[$_.IdF].Stats.StatsTime = [timespan]0
                 $ExitLoop = $true
                 $_.Status = "PendingCancellation"
@@ -1582,13 +1589,8 @@ while ($Quit -eq $false) {
 
 
 
-WriteLog "Program end" $LogFile
-
-Clear_Files
-$ActiveMiners | ForEach-Object { try {Kill_Process $_.Process} catch {}}
-
-try {Invoke-WebRequest ("http://localhost:" + [string]$config.ApiPort + "?command=exit") -timeoutsec 1 -UseDefaultCredentials} catch {}
-Kill_Process $APIprocess
-
+WriteLog "Exiting MM...." $LogFile $true
 $LogFile.close()
-Stop-Process -Id $PID
+Clear_Files
+$ActiveMiners | ForEach-Object {stop-process -Id $_.Process.Id}
+try {Invoke-WebRequest ("http://localhost:" + [string]$config.ApiPort + "?command=exit") -timeoutsec 1 -UseDefaultCredentials} catch {}
