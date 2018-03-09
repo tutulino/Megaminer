@@ -548,11 +548,16 @@ while ($Quit -eq $false) {
                                     -MinerName $MinerFile.BaseName `
                                     -GroupName $TypeGroup.GroupName `
                                     -PowerLimit $PowerLimit `
-                                    -AlgoLabel $AlgoLabel |
-                                    Where-Object {$_.TimeSinceStartInterval -gt ($_.BenchmarkIntervalTime * 0.66)}
+                                    -AlgoLabel $AlgoLabel
                             } else {
                                 $Hrs = $FoundSubMiner.SpeedReads
                             }
+
+                            # Remove 10 percent of lowest and highest rate samples which may skew the average
+                            $Hrs = $Hrs | Sort-Object Speed, SpeedDual
+                            $p10Index = [math]::Ceiling(10 / 100 * $Hrs.Count)
+                            $p90Index = [math]::Ceiling(90 / 100 * $Hrs.Count)
+                            $Hrs = $Hrs[$p10Index..$p90Index]
 
                             $PowerValue = [double]($Hrs | Measure-Object -property Power -average).average
                             $HashRateValue = [double]($Hrs | Measure-Object -property Speed -average).average
