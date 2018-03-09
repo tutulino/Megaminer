@@ -1595,5 +1595,7 @@ while ($Quit -eq $false) {
 WriteLog "Exiting MM...." $LogFile $true
 $LogFile.close()
 Clear_Files
-$ActiveMiners | ForEach-Object {stop-process -Id $_.Process.Id}
+$ActiveMiners | Where-Object Process -ne $null | ForEach-Object {try {Kill_Process $_.Process} catch {}}
 try {Invoke-WebRequest ("http://localhost:" + [string]$config.ApiPort + "?command=exit") -timeoutsec 1 -UseDefaultCredentials} catch {}
+
+Stop-Process -Id $PID

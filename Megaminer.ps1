@@ -278,7 +278,6 @@ if ($MiningMode -ne "FARM MONITORING") {
 
     $Host.UI.RawUI.WindowTitle = "MM Farm Monitor"
 
-
     while ($true) {
 
         $Requests = @()
@@ -295,7 +294,7 @@ if ($MiningMode -ne "FARM MONITORING") {
             $Request | Add-Member Server $_
             $Requests += $Request
         }
-        try {set_WindowSize 185 60} catch {}
+        try {set_WindowSize 160 60} catch {}
         Clear-Host
 
         Print_Horizontal_line ("MEGAMINER FARM MONITOR (" + (get-date).tostring("g") + ")")
@@ -327,15 +326,10 @@ if ($MiningMode -ne "FARM MONITORING") {
                 ) | Out-Host
             } else {
                 "" | Out-Host
-                "NOT RESPONDING...." | Out-Host
+                Write-Warning "NOT RESPONDING...."
             }
             "" | Out-Host
         }
-
-        start-sleep 20
-
-
+        start-sleep 15
     }
-
-
 }
