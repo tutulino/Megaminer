@@ -194,7 +194,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 PoolWorkers           = $Coin.workers
                 PoolHashRate          = $Coin.hashrate
                 WalletMode            = $WalletMode
-                Walletsymbol          = $Pool_Symbol
+                Walletsymbol          = $(if ($Coin.noautotrade -eq 1) {$Pool_Symbol} else {$Currency})
                 PoolName              = $Name
                 Fee                   = $Request.($Coin.algo).fees / 100
                 RewardType            = $RewardType

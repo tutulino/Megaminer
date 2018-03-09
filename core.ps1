@@ -1393,7 +1393,7 @@ while ($Quit -eq $false) {
                     $WalletsToCheck += [PSCustomObject]@{
                         PoolName   = $_.PoolName
                         WalletMode = $_.WalletMode
-                        User       = ($_.User -split '\.')[0] #to allow payment id after wallet
+                        User       = $_.User
                         Coin       = $null
                         Algorithm  = $null
                         Host       = $null
