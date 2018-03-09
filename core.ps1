@@ -146,7 +146,7 @@ $ParamMiningModeBCK = $MiningMode
 
 
 
-try {set_WindowSize 185 60} catch {}
+try {set_WindowSize 160 50} catch {}
 
 $IntervalStartAt = (Get-Date) #first initialization, must be outside loop
 
@@ -163,19 +163,6 @@ $Msg += " //GroupNames: " + [String]($GroupNames -join ",")
 $Msg += " //PercentToSwitch: " + $PercentToSwitch
 
 WriteLog $msg $LogFile $false
-
-
-#get mining types
-$Types = Get_Mining_Types -filter $Groupnames
-
-WriteLog ( get_devices_information $Types | ConvertTo-Json) $LogFile $false
-WriteLog ( $Types | ConvertTo-Json) $LogFile $false
-
-$NumberTypesGroups = ($Types | Measure-Object).count
-if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [Math]::Floor( 25 / $NumberTypesGroups)} #screen adjust to number of groups
-$ProfitsScreenLimit = $InitialProfitsScreenLimit
-
-Check_GpuGroups_Config $types
 
 #Enable api
 if ($config.ApiPort -gt 0) {
@@ -211,6 +198,17 @@ while ($Quit -eq $false) {
 
     $Config = get_config
     Clear-Host; $RepaintScreen = $true
+
+    #get mining types
+    $Types = Get_Mining_Types -filter $Groupnames
+
+    WriteLog ( get_devices_information $Types | ConvertTo-Json) $LogFile $false
+    WriteLog ( $Types | ConvertTo-Json) $LogFile $false
+    if ($FirstTotalExecution) {Check_GpuGroups_Config $types}
+
+    $NumberTypesGroups = ($Types | Measure-Object).count
+    if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [Math]::Floor(30 / $NumberTypesGroups) - 5} #screen adjust to number of groups
+    if ($FirstTotalExecution) {$ProfitsScreenLimit = $InitialProfitsScreenLimit}
 
     WriteLog "New interval starting..." $LogFile $true
     WriteLog ( Get_ComputerStats | ConvertTo-Json) $LogFile $false
@@ -260,7 +258,7 @@ while ($Quit -eq $false) {
         $NextInterval = ($ConfigDonateTime - $ElapsedDonatedTime) * 60
 
         $Algorithm = $null
-        $PoolsName = "NiceHash"
+        $PoolsName = "DonationPool"
         $CoinsName = $null
         $MiningMode = "Automatic"
 
@@ -1382,7 +1380,7 @@ while ($Quit -eq $false) {
 
         #############################################################
 
-        if ($Screen -eq "Wallets" -or $FirstTotalExecution -eq $true) {
+        if ($Screen -eq "Wallets" -or $FirstTotalExecution) {
 
             if ($WalletsUpdate -eq $null) {
                 #wallets only refresh for manual request
@@ -1442,7 +1440,7 @@ while ($Quit -eq $false) {
                 }
 
 
-                if ($FirstTotalExecution -eq $true) {$WalletStatusAtStart = $WalletStatus}
+                if ($FirstTotalExecution) {$WalletStatusAtStart = $WalletStatus}
 
                 $WalletStatus | Add-Member BalanceAtStart [double]$null
                 $WalletStatus | ForEach-Object {
@@ -1552,7 +1550,7 @@ while ($Quit -eq $false) {
             'U' {if ($Screen -eq "WALLETS") {$WalletsUpdate = $null}}
             'T' {if ($Screen -eq "PROFITS") {if ($ProfitsScreenLimit -eq $InitialProfitsScreenLimit) {$ProfitsScreenLimit = 1000} else {$ProfitsScreenLimit = $InitialProfitsScreenLimit}}}
             'B' {if ($Screen -eq "PROFITS") {$ShowBestMinersOnly = !$ShowBestMinersOnly}}
-            'X' {try {set_WindowSize 185 60  } catch {}}
+            'X' {try {set_WindowSize 160 50} catch {}}
             'Q' {$Quit = $true; $ExitLoop = $true}
         }
 
