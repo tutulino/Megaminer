@@ -50,7 +50,7 @@ if ($Querymode -eq "speed") {
                 PoolName   = $name
                 Version    = $_.version
                 Algorithm  = get_algo_unified_name $_.Algo
-                Workername = $_.password.Split(",")[1].Split('=')[1]
+                Workername = (($_.password -split 'ID=')[1] -split ',')[0]
                 Diff       = $_.difficulty
                 Rejected   = $_.rejected
                 Hashrate   = $_.accepted
@@ -79,17 +79,12 @@ if ($Querymode -eq "wallet") {
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-    $retries = 1
-    do {
-        try {
-            $http = $ApiUrl + "/status"
-            $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-        } catch {start-sleep 2}
-        $retries++
-        if ([string]::IsNullOrEmpty($Request)) {start-sleep 3}
-    } while ($Request -eq $null -and $retries -le 3)
-
-    if ($retries -gt 3) {
+    try {
+        $Request = Invoke-WebRequest $($ApiUrl + "/status") -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+        Start-Sleep -Seconds 1
+        $RequestCurrencies = Invoke-WebRequest $($ApiUrl + "/currencies") -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+        Start-Sleep -Seconds 1
+    } catch {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
@@ -97,17 +92,20 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
 
-    $Request | Get-Member -MemberType Properties | ForEach-Object {
-
-        $coin = $Request | Select-Object -ExpandProperty $_.name
-        $Pool_Algo = get_algo_unified_name $coin.name
+    ### Option 1 - Mine in particular algorithm
+    $Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
+        $Request.$_.actual_last24h -gt 0 -and
+        $Request.$_.hashrate -gt 0 -and
+        $Request.$_.workers -gt 0
+    } | ForEach-Object {
+        $Coin = $Request.$_
+        $Pool_Algo = get_algo_unified_name $Coin.name
 
         $Divisor = 1000000
 
         switch ($Pool_Algo) {
             "Blake2s" {$Divisor *= 1000}
             "Blakecoin" {$Divisor *= 1000}
-            "BlakeVanilla" {$Divisor *= 1000}
             "Decred" {$Divisor *= 1000}
             "Equihash" {$Divisor /= 1000}
             "Keccak" {$Divisor *= 1000}
@@ -116,45 +114,97 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "Quark" {$Divisor *= 1000}
             "Qubit" {$Divisor *= 1000}
             "Scrypt" {$Divisor *= 1000}
-            "SHA256" {$Divisor *= 1000}
-            "SHA256t" {$Divisor *= 1000}
             "X11" {$Divisor *= 1000}
-            "Yescrypt" {$Divisor /= 1000}
-            "YescryptR16" {$Divisor /= 1000}
         }
 
-        if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0) {
-            foreach ($stratum in $StratumServers) {
-                $Result += [PSCustomObject]@{
-                    Algorithm             = $Pool_Algo
-                    Info                  = $Pool_Algo
-                    Price                 = $coin.estimate_current / $Divisor
-                    Price24h              = $coin.estimate_last24h / $Divisor
-                    Protocol              = "stratum+tcp"
-                    Host                  = $stratum.MineUrl
-                    Port                  = $coin.port
-                    User                  = $CoinsWallets.get_item($Currency)
-                    Pass                  = "c=$Currency,ID=#WorkerName#"
-                    Location              = $stratum.Location
-                    SSL                   = $false
-                    Symbol                = get_coin_symbol -Coin $Pool_Algo
-                    AbbName               = $AbbName
-                    ActiveOnManualMode    = $ActiveOnManualMode
-                    ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                    PoolWorkers           = $coin.Workers
-                    PoolHashRate          = $coin.hashrate
-                    WalletMode            = $WalletMode
-                    WalletSymbol          = $Currency
-                    PoolName              = $Name
-                    Fee                   = $coin.Fees / 100
-                    RewardType            = $RewardType
-                }
+        foreach ($stratum in $StratumServers) {
+            $Result += [PSCustomObject]@{
+                Algorithm             = $Pool_Algo
+                Info                  = $Pool_Algo
+                Price                 = $Coin.estimate_current / $Divisor
+                Price24h              = $Coin.estimate_last24h / $Divisor
+                Protocol              = "stratum+tcp"
+                Host                  = $stratum.MineUrl
+                Port                  = $Coin.port
+                User                  = $CoinsWallets.get_item($Currency)
+                Pass                  = "c=$Currency,ID=#WorkerName#"
+                Location              = $stratum.Location
+                SSL                   = $false
+                Symbol                = get_coin_symbol -Coin $Pool_Algo
+                AbbName               = $AbbName
+                ActiveOnManualMode    = $ActiveOnManualMode
+                ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                PoolWorkers           = $Coin.workers
+                PoolHashRate          = $Coin.hashrate
+                WalletMode            = $WalletMode
+                WalletSymbol          = $Currency
+                PoolName              = $Name
+                Fee                   = $Coin.fees / 100
+                RewardType            = $RewardType
             }
         }
     }
-    remove-variable Request
+
+    ### Option 2 - Mine particular coin
+    ### Option 3 - Mine particular coin with auto exchange to wallet address
+    $RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
+        $RequestCurrencies.$_.'24h_blocks' -gt 0 -and
+        $RequestCurrencies.$_.hashrate -gt 0 -and
+        $RequestCurrencies.$_.workers -gt 0
+    } | ForEach-Object {
+
+        $Coin = $RequestCurrencies.$_
+        $Pool_Algo = get_algo_unified_name $Coin.algo
+        $Pool_Coin = get_coin_unified_name $Coin.name
+        $Pool_Symbol = $_
+
+        $Divisor = 1000000000
+
+        switch ($Pool_Algo) {
+            "Blake2s" {$Divisor *= 1000}
+            "Blakecoin" {$Divisor *= 1000}
+            "Decred" {$Divisor *= 1000}
+            "Equihash" {$Divisor /= 1000}
+            "Keccak" {$Divisor *= 1000}
+            "KeccakC" {$Divisor *= 1000}
+            "PHI" {$Divisor *= 1000}
+            "Quark" {$Divisor *= 1000}
+            "Qubit" {$Divisor *= 1000}
+            "Scrypt" {$Divisor *= 1000}
+            "X11" {$Divisor *= 1000}
+        }
+
+        foreach ($stratum in $StratumServers) {
+            $Result += [PSCustomObject]@{
+                Algorithm             = $Pool_Algo
+                Info                  = $Pool_Coin
+                Price                 = $Coin.estimate / $Divisor
+                Price24h              = $Coin.'24h_btc' / $Divisor
+                Protocol              = "stratum+tcp"
+                Host                  = $stratum.MineUrl
+                Port                  = $Coin.port
+                User                  = $(if ($Coin.noautotrade -eq 1) {$CoinsWallets.get_item($Pool_Symbol)} else {$CoinsWallets.get_item($Currency)})
+                Pass                  = $(if ($Coin.noautotrade -eq 1) {"c=$Pool_Symbol"} else {"c=$Currency"}) + ",mc=$Pool_Symbol,ID=#WorkerName#"
+                Location              = $stratum.Location
+                SSL                   = $false
+                Symbol                = $Pool_Symbol
+                AbbName               = $AbbName
+                ActiveOnManualMode    = $ActiveOnManualMode
+                ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+                PoolWorkers           = $Coin.workers
+                PoolHashRate          = $Coin.hashrate
+                WalletMode            = $WalletMode
+                Walletsymbol          = $Pool_Symbol
+                PoolName              = $Name
+                Fee                   = $Request.($Coin.algo).fees / 100
+                RewardType            = $RewardType
+            }
+        }
+    }
+    Remove-Variable Request
+    Remove-Variable RequestCurrencies
 }
 
 
 $Result |ConvertTo-Json | Set-Content $info.SharedFile
-remove-variable Result
+Remove-Variable Result

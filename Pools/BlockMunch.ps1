@@ -37,33 +37,31 @@ if ($Querymode -eq "info") {
 
 if ($Querymode -eq "speed") {
     try {
-        $http = $ApiUrl + "/walletEx?address=" + $Info.user
-        $Request = Invoke-WebRequest -UserAgent $UserAgent $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+        $Request = Invoke-WebRequest $($ApiUrl + "/walletEx?address=" + $Info.user) -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
     } catch {}
 
     $Result = @()
 
     if (![string]::IsNullOrEmpty($Request)) {
-        $Request.Miners |ForEach-Object {
+        $Request.Miners | ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
                 Version    = $_.version
                 Algorithm  = get_algo_unified_name $_.Algo
-                Workername = $_.password.Split(",")[1].Split('=')[1]
+                Workername = (($_.password -split 'ID=')[1] -split ',')[0]
                 Diff       = $_.difficulty
                 Rejected   = $_.rejected
                 Hashrate   = $_.accepted
             }
         }
-        remove-variable Request
+        Remove-Variable Request
     }
 }
 
 
 if ($Querymode -eq "wallet") {
     try {
-        $http = $ApiUrl + "/wallet?address=" + $Info.user
-        $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+        $Request = Invoke-WebRequest $($ApiUrl + "/wallet?address=" + $Info.user) -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
     } catch {}
 
     if (![string]::IsNullOrEmpty($Request)) {
@@ -72,23 +70,15 @@ if ($Querymode -eq "wallet") {
             currency = $Request.currency
             balance  = $Request.balance
         }
-        remove-variable Request
+        Remove-Variable Request
     }
 }
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-    $retries = 1
-    do {
-        try {
-            $http = $ApiUrl + "/status"
-            $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-        } catch {start-sleep 2}
-        $retries++
-        if ([string]::IsNullOrEmpty($Request)) {start-sleep 3}
-    } while ($Request -eq $null -and $retries -le 3)
-
-    if ($retries -gt 3) {
+    try {
+        $Request = Invoke-WebRequest $($ApiUrl + "/status") -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+    } catch {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
@@ -96,10 +86,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
 
-    $Request | Get-Member -MemberType Properties | ForEach-Object {
+    $Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
+        $Request.$_.actual_last24h -gt 0 -and
+        $Request.$_.hashrate -gt 0 -and
+        $Request.$_.workers -gt 0
+    } | ForEach-Object {
 
-        $coin = $Request | Select-Object -ExpandProperty $_.name
-        $Pool_Algo = get_algo_unified_name $coin.name
+        $Coin = $Request.$_
+        $Pool_Algo = get_algo_unified_name $Coin.name
 
         $Divisor = 1000000
 
@@ -115,36 +109,34 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "X11" {$Divisor *= 1000}
         }
 
-        if ($coin.actual_last24h -gt 0 -and $coin.hashrate -gt 0 -and $coin.Workers -gt 0) {
-            $Result += [PSCustomObject]@{
-                Algorithm             = $Pool_Algo
-                Info                  = $Pool_Algo
-                Price                 = $coin.estimate_current / $Divisor
-                Price24h              = $coin.estimate_last24h / $Divisor
-                Protocol              = "stratum+tcp"
-                Host                  = $MineUrl
-                Port                  = $coin.port
-                User                  = $CoinsWallets.get_item($Currency)
-                Pass                  = "c=$Currency,ID=#Workername#"
-                Location              = $Location
-                SSL                   = $false
-                Symbol                = get_coin_symbol -Coin $Pool_Algo
-                AbbName               = $AbbName
-                ActiveOnManualMode    = $ActiveOnManualMode
-                ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                PoolWorkers           = $coin.Workers
-                PoolHashRate          = $coin.hashrate
-                WalletMode            = $WalletMode
-                WalletSymbol          = $Currency
-                PoolName              = $Name
-                Fee                   = $coin.Fees / 100
-                RewardType            = $RewardType
-            }
+        $Result += [PSCustomObject]@{
+            Algorithm             = $Pool_Algo
+            Info                  = $Pool_Algo
+            Price                 = $Coin.estimate_current / $Divisor
+            Price24h              = $Coin.estimate_last24h / $Divisor
+            Protocol              = "stratum+tcp"
+            Host                  = $MineUrl
+            Port                  = $Coin.port
+            User                  = $CoinsWallets.get_item($Currency)
+            Pass                  = "c=$Currency,ID=#Workername#"
+            Location              = $Location
+            SSL                   = $false
+            Symbol                = get_coin_symbol -Coin $Pool_Algo
+            AbbName               = $AbbName
+            ActiveOnManualMode    = $ActiveOnManualMode
+            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+            PoolWorkers           = $Coin.workers
+            PoolHashRate          = $Coin.hashrate
+            WalletMode            = $WalletMode
+            WalletSymbol          = $Currency
+            PoolName              = $Name
+            Fee                   = $Coin.fees / 100
+            RewardType            = $RewardType
         }
     }
-    remove-variable Request
+    Remove-Variable Request
 }
 
 
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
-remove-variable Result
+$Result | ConvertTo-Json | Set-Content $info.SharedFile
+Remove-Variable Result

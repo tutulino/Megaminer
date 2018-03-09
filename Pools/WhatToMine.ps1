@@ -106,27 +106,29 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
 
         #we must add units for each algo, this value must be filled if we want a coin to be selected
         $WTMFactor = switch ($HPool.Algorithm) {
-            "Bitcore" { 30000000 }
-            "Blake2s" { 100000 }
-            "CryptoLight" { 6600 }
+            #main page
+            "Ethash" { 84000000 }
+            "Groestl" { 63900000 }
+            "Sib" { 20100000 }
             "CryptoNight" { 2190 }
-            "Decred" { 4200000000 }
             "Equihash" { 870 }
-            "Ethash" { 79500000 }
-            "Groestl" { 54000000 }
+            "Lyra2v2" { 14700000 }
+            "NeoScrypt" { 2460000 }
+            "Lbry" { 315000000 }
+            "Decred" { 5910000000 }
+            "Pascal" { 2100000000 }
+            "Skunk" { 54000000 }
+            "Nist5" { 57000000 }
+
+            #others
+            "Bitcore" { 30000000 }
+            "Blake2s" { 7500000000 }
+            "CryptoLight" { 6600 }
             "Keccak" { 900000000 }
             "KeccakC" { 240000000 }
-            "Lbry" { 285000000 }
-            "Lyra2v2" { 14700000 }
             "Lyra2z" { 420000 }
             "MyriadGroestl" { 3300000000 }
-            "NeoScrypt" { 1950000 }
-            "Nist5" { 19000000 }
-            "Pascal" { 2070000000 }
-            "Sia" { 2970000000 }
-            "Sib" { 20100000 }
-            "Skein" { 780000000 }
-            "Skunk" { 54000000 }
+            "Skein" { 1700000000 }
             "X17" { 100000 }
             "Xevan" { 4800000 }
             "Yescrypt" { 13080 }

@@ -1,6 +1,6 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
-    [String]$Querymode = $null ,
+    [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
     [pscustomobject]$Info
 )
@@ -49,13 +49,13 @@ if ($Querymode -eq "speed") {
                 PoolName   = $name
                 Version    = $_.version
                 Algorithm  = get_algo_unified_name $_.Algo
-                Workername = $_.password.Split(",")[1].Split('=')[1]
+                Workername = (($_.password -split 'ID=')[1] -split ',')[0]
                 Diff       = $_.difficulty
                 Rejected   = $_.rejected
                 Hashrate   = $_.accepted
             }
         }
-        remove-variable Request
+        Remove-Variable Request
     }
 }
 
@@ -72,46 +72,32 @@ if ($Querymode -eq "wallet") {
             currency = $Request.currency
             balance  = $Request.balance
         }
-        remove-variable Request
+        Remove-Variable Request
     }
+    Start-Sleep -Seconds 1 # Prevent API Saturation
 }
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-    $retries = 1
-    do {
-        try {
-            $http = $ApiUrl + "/currencies"
-            $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-        } catch {start-sleep 2}
-        $retries++
-        if ([string]::IsNullOrEmpty($Request)) {start-sleep 3}
-    } while ($Request -eq $null -and $retries -le 3)
-
-    if ($retries -gt 3) {
+    try {
+        $Request = Invoke-WebRequest $($ApiUrl + "/status") -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+        $RequestCurrencies = Invoke-WebRequest $($ApiUrl + "/currencies") -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
+    } catch {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
-    $retries = 1
-    do {
-        try {
-            $http = $ApiUrl + "/status"
-            $Request2 = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-        } catch {start-sleep 2}
-        $retries++
-        if ([string]::IsNullOrEmpty($Request2)) {start-sleep 3}
-    } while ($Request2 -eq $null -and $retries -le 3)
-    if ($retries -gt 3) {
-        Write-Host $Name 'API NOT RESPONDING...ABORTING'
-    }
 
-    $Request | Get-Member -MemberType Properties | ForEach-Object {
+    $RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
+        $RequestCurrencies.$_.'24h_blocks' -gt 0 -and
+        $RequestCurrencies.$_.hashrate -gt 0 -and
+        $RequestCurrencies.$_.workers -gt 0
+    } | ForEach-Object {
 
-        $coin = $Request | Select-Object -ExpandProperty $_.name
-        $Pool_Algo = get_algo_unified_name $coin.algo
 
-        $Pool_coin = get_coin_unified_name $coin.name
-        $Pool_symbol = $_.name
+        $Coin = $RequestCurrencies.$_
+        $Pool_Algo = get_algo_unified_name $Coin.algo
+        $Pool_Coin = get_coin_unified_name $Coin.name
+        $Pool_Symbol = $_
 
         $Divisor = 1000000
 
@@ -121,36 +107,37 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "sha256" {$Divisor *= 1000}
         }
 
+        if ($Pool_Symbol -eq 'XVG' -and $Pool_Algo -eq 'Blake2s') {$Server = "xvg.eu1.unimining.net"} else {$Server = $MineUrl}
+
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
-            Info                  = $Pool_coin
-            Price                 = $coin.estimate / $Divisor
-            Price24h              = $coin.'24h_btc' / $Divisor
+            Info                  = $Pool_Coin
+            Price                 = $Coin.estimate / $Divisor
+            Price24h              = $Coin.'24h_btc' / $Divisor
             Protocol              = "stratum+tcp"
-            Host                  = $MineUrl
-            Port                  = $coin.port
-            User                  = $CoinsWallets.get_item($Pool_symbol)
-            Pass                  = "c=$Pool_symbol,ID=#WorkerName#"
+            Host                  = $Server
+            Port                  = $Coin.port
+            User                  = $CoinsWallets.get_item($Pool_Symbol)
+            Pass                  = "c=$Pool_Symbol,ID=#WorkerName#"
             Location              = $Location
             SSL                   = $false
             Symbol                = $Pool_Symbol
             AbbName               = $AbbName
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolWorkers           = $coin.Workers
-            PoolHashRate          = $coin.hashrate
-            Blocks_24h            = $coin.'24h_blocks'
+            PoolWorkers           = $Coin.workers
+            PoolHashRate          = $Coin.hashrate
             WalletMode            = $WalletMode
-            WalletSymbol          = $Pool_Symbol
+            Walletsymbol          = $Pool_Symbol
             PoolName              = $Name
-            Fee                   = $Request2.($coin.algo).Fees / 100
+            Fee                   = $Request.($Coin.algo).fees / 100
             RewardType            = $RewardType
         }
     }
-    remove-variable Request
-    remove-variable Request2
+    Remove-Variable Request
+    Remove-Variable RequestCurrencies
 }
 
 
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
-remove-variable Result
+$Result | ConvertTo-Json | Set-Content $info.SharedFile
+Remove-Variable Result

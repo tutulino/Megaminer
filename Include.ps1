@@ -1060,7 +1060,7 @@ function Get_Pools {
     if ($Querymode -eq "core" -or $Querymode -eq "menu" ) {
         foreach ($Pool in $AllPools) {
             #must have wallet
-            if ($Pool.User -ne $null) {
+            if (![string]::IsNullOrEmpty($Pool.User)) {
 
                 #must be in algo filter list or no list
                 if ($AlgoFilterList -ne $null) {$Algofilter = Compare-Object $AlgoFilterList $Pool.Algorithm -IncludeEqual -ExcludeDifferent}
@@ -1070,8 +1070,8 @@ function Get_Pools {
                     if ($CoinFilterList -ne $null) {$Coinfilter = Compare-Object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
                     if ($CoinFilterList.count -eq 0 -or $Coinfilter -ne $null) {
                         if ($Pool.Location -eq $Location) {$Pool.LocationPriority = 1}
-                        elseif ($Pool.Location -in @('EU', 'EUROPE') -and $Location -eq 'US') {$Pool.LocationPriority = 2}
-                        elseif ($Pool.Location -eq 'US' -and $Location -in @('EU', 'EUROPE')) {$Pool.LocationPriority = 2}
+                        elseif ($Pool.Location -eq 'EU' -and $Location -eq 'US') {$Pool.LocationPriority = 2}
+                        elseif ($Pool.Location -eq 'US' -and $Location -eq 'EU') {$Pool.LocationPriority = 2}
                         $AllPools2 += $Pool
                     }
                 }
