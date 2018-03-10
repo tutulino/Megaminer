@@ -1,5 +1,7 @@
 REM --This is an example of how launch Megaminer without prompt for automatic coin selection pools
 
+cd %~dp0
+
 setx GPU_FORCE_64BIT_PTR 1
 setx GPU_MAX_HEAP_SIZE 100
 setx GPU_USE_SYNC_OBJECTS 1
