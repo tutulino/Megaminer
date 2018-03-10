@@ -1,13 +1,13 @@
 {
-  "Path": "xmrig-nvidia.exe",
-  "Uri": "https://github.com/xmrig/xmrig-nvidia/releases/download/v2.4.5/xmrig-nvidia-2.4.5-cuda9-win64.zip",
-  "SHA256": "bf78fab83b2a64f56fe7ac4cfaacc8ce3d879f98fe6f47d8b2abbe3728c433f1",
-  "Type": "NVIDIA",
-  "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --nicehash --donate-level 1 --cuda-devices=#DEVICES# --cuda-launch=80x30 --cuda-bfactor=10 --cuda-bsleep=26 #ALGORITHMPARAMETERS#",
-  "API": "XMRig",
-  "APIPort": 3335,
-  "Fee": 0.01,
-  "Algorithms": {
-    "cryptonight": "-a cryptonight"
-  }
+    "Path": "xmrig-nvidia.exe",
+    "Uri": "https://github.com/xmrig/xmrig-nvidia/releases/download/v2.4.5/xmrig-nvidia-2.4.5-cuda9-win64.zip",
+    "SHA256": "bf78fab83b2a64f56fe7ac4cfaacc8ce3d879f98fe6f47d8b2abbe3728c433f1",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --nicehash --donate-level 1 --cuda-devices=#DEVICES# --cuda-launch=80x30 --cuda-bfactor=10 --cuda-bsleep=26 #ALGORITHMPARAMETERS#",
+    "API": "XMRig",
+    "APIPort": 3335,
+    "Fee": 0.01,
+    "Algorithms": {
+        "CryptoNight": "-a cryptonight"
+    }
 }
