@@ -100,7 +100,7 @@
 -- If you activate this option miners ports will be calculated dynamic mode, some software like ethmonitoring will not work due to miner dynamic port assignation
 -- You can group your cards as you want. It's recommended to create a group for each card model in your rig, each group will be benchmarked and run separately (you can identify your GPU id's by launching GpuList.bat)
 -- Type must be NVIDIA or AMD,
--- You can set Powerlimits (MM must run in administrator mode and UAC disabled or prompt appears) for each NVIDIA group, MM will benchmark all miners with maximum value, done this, when a miner is maximum profit candidate MM will benchmark other power limits of that miner to find best. (zero means MM will not change Power Limit)
+-- You can set Powerlimits (MM must run from administrator account and UAC disabled or prompt appears) for each NVIDIA group, MM will benchmark all miners with maximum value, done this, when a miner is maximum profit candidate MM will benchmark other power limits of that miner to find best. (zero means MM will not change Power Limit)
 -- Example1: @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"}]
 -- Example2: @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"100,90,80"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
 
@@ -147,14 +147,32 @@
 @@Algorithms_AMD=Bitcore,Blake,Blakecoin,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
 @@Algorithms_CPU=CryptoNight,CryptoLight,HOdl,Lyra2h,Lyra2z,Lyra2z330,M7M,Verium,X16r,Yescrypt,YescryptR8,YescryptR16
 
+-- Miner windows styles: Normal,Maximized,Minimized
+@@MinerWindowStyle=Minimized
+
+
 --[optional]Port for megaminer api (http:\\localhost:port), set zero to disable api.
 
 @@APIPORT=0
 
---[optional]Farm Monitor adresses (separated comma ip:apiport or lanname:apiport). This field indicates what rigs do you want monitorize in Farm Monitor,only needs to be filled in your monitoring machine
---To run monitoring, fill this field and run start.bat
+-- **********************************************************************************************************
+-- ********************   				FARM MONITOR OPTIONS                             ********************
+-- ********************(only need to set to use this app to monitor all your rigs)       ********************
+-- ********************           (To run monitoring run start.bat / option 3)           ********************
+-- **********************************************************************************************************
 
---@@FARMRIGS=192.168.2.100:9999,192.168.2.200:9999,localhost:9999
+--Farm Monitor adresses, indicates what rigs do you want monitor in Farm Monitor,only needs to be filled in your monitoring machine
 
--- Miner windows styles: Normal,Maximized,Minimized
-@@MinerWindowStyle=Minimized
+@@FARMRIGS=[{"IpOrLanName":"moneymachine", "ApiPort":"9999","Notifications":"true"},{"IpOrLanName":"filemon", "ApiPort":"9999","Notifications":"true"},{"IpOrLanName":"localhost", "ApiPort":"9999","Notifications":"true"}]
+
+
+--Refresh interval in seconds
+
+@@REFRESHINTERVAL=15
+
+
+--[optionals]Notification Mail and SMTPServer config: password will be asked and encrypted locally first time you run. GMAIL smtp will not work if you have activated two pass verification
+
+@@NOTIFICATIONMAIL=zzzzzzzzzzzzz@yyy.com
+
+@@SMTPSERVER={"url":"smtp-mail.outlook.com","port":587,"user":"xxxxxxxx.outlook.com","password":"yyyyyyyy","ssl":true}
