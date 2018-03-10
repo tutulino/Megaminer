@@ -165,7 +165,15 @@
 @@APIPORT=0
 
 
---[optional]Farm Monitor adresses (separated comma ip:apiport or lanname:apiport). This field indicates what rigs do you want monitorize in Farm Monitor,only needs to be filled in your monitoring machine
+-- **********************************************************************************************************
+-- ********************                                                                  ********************
+-- ********************   				FARM MONITOR OPTIONS                             ********************
+-- ********************                                                                  ********************
+-- **********************************************************************************************************
+
+
+
+--[optional]Farm Monitor addresses (separated comma ip:apiport or lanname:apiport). This field indicates what rigs do you want monitorize in Farm Monitor,only needs to be filled in your monitoring machine
 --To run monitoring, fill this field and run start.bat
 
 --@@FARMRIGS=192.168.2.100:9999,192.168.2.200:9999,localhost:9999
