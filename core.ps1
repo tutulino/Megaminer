@@ -269,18 +269,6 @@ while ($Quit -eq $false) {
     } else {
         #NOT donation interval
         $DonationInterval = $false
-        #get interval time based on pool kind (pps/ppls)
-        $NextInterval = 0
-        Get_Pools `
-            -Querymode "Info" `
-            -PoolsFilterList $PoolsName `
-            -CoinFilterList $CoinsName `
-            -Location $Location `
-            -AlgoFilterList $Algorithm | ForEach-Object {
-            $PItime = $Config.("INTERVAL_" + $_.RewardType)
-            if ([int]$PItime -gt $NextInterval) {$NextInterval = [int]$PItime}
-            WriteLog ("Next interval will be $NextInterval") $LogFile $True
-        }
 
         $Algorithm = $ParamAlgorithmBCK
         $PoolsName = $ParamPoolsNameBCK
@@ -657,6 +645,7 @@ while ($Quit -eq $false) {
                             PoolNameDual        = $PoolDual.PoolName
                             PoolPrice           = $(if ($MiningMode -eq 'Automatic24h') {[double]$Pool.Price24h} else {[double]$Pool.Price})
                             PoolPriceDual       = $(if ($MiningMode -eq 'Automatic24h') {[double]$PoolDual.Price24h} else {[double]$PoolDual.Price})
+                            PoolRewardType      = $Pool.RewardType
                             PoolWorkers         = $Pool.PoolWorkers
                             PoolWorkersDual     = $PoolDual.PoolWorkers
                             Port                = $(if (($Types | Where-Object type -eq $TypeGroup.type).Count -le 1 -and $DelayCloseMiners -eq 0) { $Miner.ApiPort })
@@ -800,6 +789,7 @@ while ($Quit -eq $false) {
                 PoolWorkers         = $Miner.PoolWorkers
                 PoolHashRate        = $null
                 PoolHashRateDual    = $null
+                PoolRewardType      = $Miner.PoolRewardType
                 Port                = $Miner.Port
                 PrelaunchCommand    = $Miner.PrelaunchCommand
                 Process             = $null
@@ -888,7 +878,7 @@ while ($Quit -eq $false) {
             $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].BestBySwitch = ""
             $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.BestTimes++
             $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.BestTimes++
-        } else { $NextInterval = $BenchmarkIntervalTime }
+        }
 
         WriteLog ("$BestNowLogMsg is the best combination for gpu group, last was id $($BestLast.IdF)-$($BestLast.Id)") $LogFile $true
 
@@ -1019,7 +1009,16 @@ while ($Quit -eq $false) {
             -Value $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory
     }
 
-    ErrorsToLog $LogFile
+    if ($DonationInterval) { $NextInterval = $ConfigDonateTime }
+    elseif (($ActiveMiners.SubMiners | Where-Object NeedBenchmark).Count -gt 0) { $NextInterval = $BenchmarkIntervalTime }
+    else {
+        $NextInterval = $ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object -ExpandProperty IdF | ForEach-Object {
+            $PoolInterval = $Config.("INTERVAL_" + $ActiveMiners[$_].PoolRewardType)
+            WriteLog ("Interval for pool " + [string]$ActiveMiners[$_].PoolName + " is " + $PoolInterval) $LogFile $False
+            $PoolInterval  # Return value
+        } | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum
+    }
+    WriteLog ("Next interval: " + $NextInterval) $LogFile $true
 
     $FirstLoopExecution = $true
     $LoopStartTime = Get-Date
