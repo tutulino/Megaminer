@@ -539,10 +539,22 @@ while ($Quit -eq $false) {
                             }
 
                             # Remove 10 percent of lowest and highest rate samples which may skew the average
-                            $Hrs = $Hrs | Sort-Object Speed, SpeedDual
+                            if ($Hrs.Count -gt 10) {
+                                if ([string]::IsNullOrEmpty($_.AlgorithmDual)) {
+                                    $Hrs = $Hrs | Sort-Object Speed
                             $p10Index = [math]::Ceiling(10 / 100 * $Hrs.Count)
                             $p90Index = [math]::Ceiling(90 / 100 * $Hrs.Count)
                             $Hrs = $Hrs[$p10Index..$p90Index]
+                                } else {
+                                    $Hrs = $Hrs | Sort-Object Speed
+                                    $p5Index = [math]::Ceiling(5 / 100 * $Hrs.Count)
+                                    $p95Index = [math]::Ceiling(95 / 100 * $Hrs.Count)
+                                    $Hrs = $Hrs[$p5Index..$p95Index] | Sort-Object SpeedDual
+                                    $p5Index = [math]::Ceiling(5 / 100 * $Hrs.Count)
+                                    $p95Index = [math]::Ceiling(95 / 100 * $Hrs.Count)
+                                    $Hrs = $Hrs[$p5Index..$p95Index]
+                                }
+                            }
 
                             $PowerValue = [double]($Hrs | Measure-Object -property Power -average).average
                             $HashRateValue = [double]($Hrs | Measure-Object -property Speed -average).average
