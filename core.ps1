@@ -969,14 +969,14 @@ while ($Quit -eq $false) {
                 if ($ActiveMiners[$BestNow.IdF].Port -eq $null) { $ActiveMiners[$BestNow.IdF].Port = get_next_free_port (Get-Random -minimum 2000 -maximum 48000)}
                 $ActiveMiners[$BestNow.IdF].Arguments = $ActiveMiners[$BestNow.IdF].Arguments -replace '#APIPORT#', $ActiveMiners[$BestNow.IdF].Port
                 $ActiveMiners[$BestNow.IdF].ConfigFileArguments = $ActiveMiners[$BestNow.IdF].ConfigFileArguments -replace '#APIPORT#', $ActiveMiners[$BestNow.IdF].Port
-                if (![string]::IsNullOrEmpty($ActiveMiners[$BestNow.IdF].GenerateConfigFile)) {$ActiveMiners[$BestNow.IdF].ConfigFileArguments | Set-Content ($ActiveMiners[$BestNow.IdF].GenerateConfigFile)}
-                if (![string]::IsNullOrEmpty($ActiveMiners[$BestNow.IdF].PrelaunchCommand)) {Start-Process -FilePath $ActiveMiners[$BestNow.IdF].PrelaunchCommand}            #run prelaunch command
+                if ($ActiveMiners[$BestNow.IdF].GenerateConfigFile) {$ActiveMiners[$BestNow.IdF].ConfigFileArguments | Set-Content ($ActiveMiners[$BestNow.IdF].GenerateConfigFile)}
+                if ($ActiveMiners[$BestNow.IdF].PrelaunchCommand) {Start-Process -FilePath $ActiveMiners[$BestNow.IdF].PrelaunchCommand}            #run prelaunch command
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.ActivatedTimes++
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.ActivatedTimes++
 
                 $Arguments = $ActiveMiners[$BestNow.IdF].Arguments
-                if ($ActiveMiners[$BestNow.IdF].NeedBenchmark -and ![string]::IsNullOrWhiteSpace($ActiveMiners[$BestNow.IdF].BenchmarkArg)) {$Arguments += " " + $ActiveMiners[$BestNow.IdF].BenchmarkArg }
+                if ($ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].NeedBenchmark -and $ActiveMiners[$BestNow.IdF].BenchmarkArg) {$Arguments += " " + $ActiveMiners[$BestNow.IdF].BenchmarkArg }
 
                 if ($ActiveMiners[$BestNow.IdF].Api -eq "Wrapper") {
                     $ActiveMiners[$BestNow.IdF].Process = Start_SubProcess `
@@ -1022,7 +1022,7 @@ while ($Quit -eq $false) {
     }
 
     if ($DonationInterval) { $NextInterval = $ConfigDonateTime }
-    elseif (($ActiveMiners.SubMiners | Where-Object NeedBenchmark).Count -gt 0) { $NextInterval = $BenchmarkIntervalTime }
+    elseif (($ActiveMiners.SubMiners | Where-Object NeedBenchmark | Select-Object -ExpandProperty IdF).Count -gt 0) { $NextInterval = $BenchmarkIntervalTime }
     else {
         $NextInterval = $ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object -ExpandProperty IdF | ForEach-Object {
             $PoolInterval = $Config.("INTERVAL_" + $ActiveMiners[$_].PoolRewardType)
