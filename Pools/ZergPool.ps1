@@ -93,15 +93,21 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         switch ($Pool_Algo) {
             "Blake2s" {$Divisor *= 1000}
             "Blakecoin" {$Divisor *= 1000}
+            "BlakeVanilla" {$Divisor *= 1000}
             "Decred" {$Divisor *= 1000}
             "Equihash" {$Divisor /= 1000}
             "Keccak" {$Divisor *= 1000}
             "KeccakC" {$Divisor *= 1000}
+            "Neoscrypt" {$Divisor *= 1000}
             "PHI" {$Divisor *= 1000}
             "Quark" {$Divisor *= 1000}
             "Qubit" {$Divisor *= 1000}
             "Scrypt" {$Divisor *= 1000}
+            "SHA256" {$Divisor *= 1000}
+            "SHA256t" {$Divisor *= 1000}
             "X11" {$Divisor *= 1000}
+            "Yescrypt" {$Divisor /= 1000}
+            "YescryptR16" {$Divisor /= 1000}
         }
 
         foreach ($stratum in $StratumServers) {
@@ -144,21 +150,28 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Pool_Algo = get_algo_unified_name $Coin.algo
         $Pool_Coin = get_coin_unified_name $Coin.name
         $Pool_Symbol = $_
+        if ($Coin.symbol) {$Symbol = $Coin.symbol} else {$Symbol = $Pool_Symbol}
 
         $Divisor = 1000000000
 
         switch ($Pool_Algo) {
             "Blake2s" {$Divisor *= 1000}
             "Blakecoin" {$Divisor *= 1000}
+            "BlakeVanilla" {$Divisor *= 1000}
             "Decred" {$Divisor *= 1000}
             "Equihash" {$Divisor /= 1000}
             "Keccak" {$Divisor *= 1000}
             "KeccakC" {$Divisor *= 1000}
+            "Neoscrypt" {$Divisor *= 1000}
             "PHI" {$Divisor *= 1000}
             "Quark" {$Divisor *= 1000}
             "Qubit" {$Divisor *= 1000}
             "Scrypt" {$Divisor *= 1000}
+            "SHA256" {$Divisor *= 1000}
+            "SHA256t" {$Divisor *= 1000}
             "X11" {$Divisor *= 1000}
+            "Yescrypt" {$Divisor /= 1000}
+            "YescryptR16" {$Divisor /= 1000}
         }
 
         foreach ($stratum in $StratumServers) {
@@ -170,11 +183,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Protocol              = "stratum+tcp"
                 Host                  = $stratum.MineUrl
                 Port                  = $Coin.port
-                User                  = $(if ($Coin.noautotrade -eq 1) {$CoinsWallets.get_item($Pool_Symbol)} else {$CoinsWallets.get_item($Currency)})
-                Pass                  = $(if ($Coin.noautotrade -eq 1) {"c=$Pool_Symbol"} else {"c=$Currency"}) + ",mc=$Pool_Symbol,ID=#WorkerName#"
+                User                  = $(if ($Coin.noautotrade -eq 1) {$CoinsWallets.get_item($Symbol)} else {$CoinsWallets.get_item($Currency)})
+                Pass                  = $(if ($Coin.noautotrade -eq 1) {"c=$Symbol"} else {"c=$Currency"}) + ",mc=$Pool_Symbol,ID=#WorkerName#"
                 Location              = $stratum.Location
                 SSL                   = $false
-                Symbol                = $Pool_Symbol
+                Symbol                = $Symbol
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
