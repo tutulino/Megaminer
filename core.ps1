@@ -1095,7 +1095,7 @@ while ($Quit -eq $false) {
                 $_.TimeSinceStartInterval = (Get-Date) - $_.Stats.LastTimeActive
                 $TimeSinceStartInterval = [int]$_.TimeSinceStartInterval.TotalSeconds
 
-                if ($_.SpeedLive -gt 0) {
+                if ($_.SpeedLive -gt 0 -and ($_.SpeedLiveDual -gt 0 -or [string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual))) {
                     if ($_.Stats.StatsTime -ne 0) { $_.Stats.ActiveTime += (Get-Date) - $_.Stats.StatsTime }
                     $_.Stats.StatsTime = Get-Date
 
