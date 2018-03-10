@@ -61,10 +61,11 @@ if ($Querymode -eq "APIKEY") {
 
 if ($Querymode -eq "SPEED") {
 
-    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey) -Retry 1
+    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey) -Retry 1 |
+        Select-Object -ExpandProperty getuserworkers | Select-Object -ExpandProperty data
 
     if ($Request) {
-        $Request.getuserworkers.data | ForEach-Object {
+        $Request | ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
                 Diff       = $_.difficulty
@@ -72,7 +73,7 @@ if ($Querymode -eq "SPEED") {
                 Hashrate   = $_.hashrate
             }
         }
-        Remove-variable Request
+        Remove-Variable Request
     }
 }
 
