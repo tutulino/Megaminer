@@ -94,8 +94,10 @@ function Get_ComputerStats {
 function ErrorsTolog ($LogFile){
     
     for ($i=0;$i -lt $error.count;$i++) {
-        $Msg="###### ERROR ##### "+[string]($error[$i])+' '+$error[$i].ScriptStackTrace
-        Writelog $msg $LogFile
+        if ($error[$i].InnerException.Paramname -ne "scopeId") {  # errors in debug
+            $Msg="###### ERROR ##### "+[string]($error[$i])+' '+$error[$i].ScriptStackTrace
+            Writelog $msg $LogFile
+        }
         
     }
     $error.clear()
@@ -219,7 +221,7 @@ function Kill_Process($Process) {
             }
 
         if ((get-process |Where-Object id -eq $Process.Id) -eq $null) 
-           {Writelog ("Killed Process"+[string]$Process.Id) $LogFile $false}
+           {Writelog ("Killed Process "+[string]$Process.Id) $LogFile $false}
         else 
            {Writelog ("Can´t be Killed Process"+[string]$Process.Id) $LogFile $false}
 
@@ -1627,3 +1629,7 @@ function Check_GpuGroups_Config ($types) {
    
 
  }
+
+
+
+ 

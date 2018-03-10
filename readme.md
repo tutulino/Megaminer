@@ -22,9 +22,9 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 
 0. Download and decompress source code from latest Release from github (you dont need executable file)
 
-1. Install Microsoft Visual C++ 2015 Redistributable https://www.microsoft.com/en-us/download/details.aspx?id=52685
+1. For AMD, Install Microsoft Visual C++ 2015 Redistributable https://www.microsoft.com/en-us/download/details.aspx?id=52685
 
-2. For AMD rigs, beta blockchain drivers are not recommended (gpus will not show in current screen and activity based watchdog will be disabled)
+2. For AMD, beta blockchain drivers are not recommended (gpus will not show in current screen and activity based watchdog will be disabled)
 
 3. Edit CONFIG.TXT file before mining
 
@@ -37,7 +37,7 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 	- PercentToSwitch = Overrides config.txt config, percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit in specified percent (optional)
  
 
-5. Firt time, software will be donwloaded from miners github repositories
+5. First time, software will be donwloaded from miners github repositories
 	- As usual, some miners are detected as virus by your Antivirus, to avoid this you must set your instalation directory as excluded. For Windows Defender MM path is excluded automatic
 
 6. Your system will be benchmarked (long process)
@@ -45,11 +45,12 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 7. Make profit
 	- Except Nicehash (where you sell your power to indicated price), pools always overstimated profit, you must understand profit column as a way to get best algoritmh. Your real profit will be lower.
 
-9. Tuning (optional)
+8. Tuning (optional)
 	- you can edit miners folders content to delete miners or to assign/unassign algos to miners. 
 	- you can edit pools folders content to delete pools
 	- for advanced users, you can create miners or pools if are based on existing one.
 
+9. Monitorize all your rigs from one machine using Farm Monitor	
 
 
 ---- UPGRADE PROCEDURE ------------------------------------
@@ -107,7 +108,7 @@ If there is a new miner version is recomended delete miner_algo_hashrate.txt fil
 
 -Api rest for other software integration
 
--Farm monitor, you can monitorize all your rigs from one lan machine
+-Utility for Farm rigs monitoring/alert (see config.txt)
 
 ----- DISCLAIMER ---- ------------------------------------------
 
@@ -124,7 +125,7 @@ Pools or Whattomine statistics are based on past (luck, difficulty, exchange-rat
 Local Currency exchange rate to BTC is taken from Coindesk, Local currency profit can vary from whattomine revenue (instant), BTC revenue must be exact.
 
 
-Based 50% on aaronsace, 50% is mine (aprox.) Donations to
+Based 20% on aaronsace, 80% is new at latest release (aprox.) Donations to
 
 BTC: 1AVMHnFgc6SW33cwqrDyy2Fug9CsS8u6TM
 LTC: LVwuYbAvbMDVapheQBA7o2qQ2mKTEXVDbX
@@ -136,6 +137,6 @@ ETH: 0x9b7A01Bf5bD29c66d228d372B5bD1C43cDb78AcC
 
 ---- NO SCAM WARRANTY --------------------------------------------
 
-You can see .ps1 files, are source code, miners are downloaded from github
+You can audit .ps1 files, they are source code and running script (no compilation needed), miners are downloaded from github except not available that are downloaded from developer source and uploaded to my repository
 
 

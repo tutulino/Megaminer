@@ -203,66 +203,12 @@ if ($MiningMode -ne "FARM MONITORING") {
 
 
 else {  #FARM MONITORING
- 
-  $Host.UI.RawUI.WindowTitle = "MM Farm Monitor"
 
+    $command="./farmmonitor.ps1"
+    #write-host $command
+    Invoke-Expression $command
 
-  while ($true)  {
-           
-           $Requests=@()
-           $FarmRigs -split ',' | ForEach-Object {
-                        $uri="http://"+$_
-                        $Request=[pscustomobject]@{}
-                        try {
-                            $Request=Invoke-restmethod $uri -timeoutsec 5 -UseDefaultCredential
-                            #$Request=Invoke-WebRequest $uri -timeoutsec 5 -UseDefaultCredential
-                            $Request=$Request | ConvertFrom-Json
-                             } catch {}
-                        if ( $Request -eq $null) { $Request=[pscustomobject]@{}}
-                        $Request |add-member Server $_
-                        $Requests+=$Request
-                        }         
-            try {set_WindowSize 185 60} catch {}
-            Clear-Host   
-            
-            Print_Horizontal_line ("MEGAMINER FARM MONITOR ("+(get-date).tostring("g")+")")
-            "" | out-host
-            
-            $Requests | ForEach-Object {
-                        
-                        Print_Horizontal_line ($_.Server+"("+$_.config.workername+")")
-
-                        if ($_.config.workername -ne $null) {
-
-                            "Mode: "+$_.params.MiningMode+"       Pool/s: " + ($_.params.pools -join ",")+"         Release: "+$_.Release |out-host
-
-                            $_.Activeminers | Format-Table (
-                                    @{Label = "GroupName"; Expression = {$_.GroupName}},   
-                                    @{Label = "MMPowLmt"; Expression = {$_.MMPowLmt} ; Align = 'right'},   
-                                    @{Label = "LocalSpeed"; Expression = {$_.LocalSpeed} ; Align = 'right'},   
-                                    @{Label = "mbtc/Day"; Expression = {$_.mbtc_Day} ; Align = 'right'},   
-                                    @{Label = "Rev/Day"; Expression = {$_.Rev_Day} ; Align = 'right'},   
-                                    @{Label = "Profit/Day"; Expression = {$_.Profit_Day} ; Align = 'right'},   
-                                    @{Label = "Algorithm"; Expression = {$_.Algorithm}},   
-                                    @{Label = "Coin"; Expression = {$_.Coin}},   
-                                    @{Label = "Miner"; Expression = {$_.Miner}},   
-                                    @{Label = "Power"; Expression = {$_.Power} ; Align = 'right'},   
-                                    @{Label = "Efficiency"; Expression = {$_.EfficiencyH} ; Align = 'right'},   
-                                    @{Label = "Efficiency"; Expression = {$_.EfficiencyW}  ; Align = 'right'},
-                                    @{Label = "Pool"; Expression = {$_.Pool}}
-                                    ) | out-host
-                             }    
-                    else {   
-                        "" | out-host
-                        write-warning "NOT RESPONDING...."
-                        "" | out-host
-                        }
-                     }
-
-           start-sleep 15
-
-
-     }
+    
 
 
 }

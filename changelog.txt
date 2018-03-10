@@ -587,9 +587,12 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 
 ---FEATURES CHANGES:
 *Rest Api available
-*Farm monitoring (fill config.txt fields and run start.bat)
+*New utility for Farm rigs monitoring/alert (see config.txt)
 *Added menu option to quit (close all windows)
 *Activity based watchdog disabled if no gpu detected (https://github.com/tutulino/Megaminer/issues/351)
+*Added more killing process retry triying to prevent not closing miners
+*Changes .batch examples to allow right click "run as admin"
+
 
 
 ---POOLS CHANGES:

@@ -107,7 +107,7 @@
 -- If you activate this option miners ports will be calculated dynamic mode, some software like ethmonitoring will not work due to miner dynamic port assignation
 -- You can group your cards as you want. It's recommended to create a group for each card model in your rig, each group will be benchmarked and run separately (you can identify your GPU id's by launching GpuList.bat)
 -- Type must be NVIDIA or AMD, 
--- You can set Powerlimits (MM must run in administrator mode and UAC disabled or prompt appears) for each NVIDIA group, MM will benchmark all miners with maximum value, done this, when a miner is maximum profit candidate MM will benchmark other power limits of that miner to find best. (zero means MM will not change Power Limit) 
+-- You can set Powerlimits (MM must run from administrator account and UAC disabled or prompt appears) for each NVIDIA group, MM will benchmark all miners with maximum value, done this, when a miner is maximum profit candidate MM will benchmark other power limits of that miner to find best. (zero means MM will not change Power Limit) 
 -- Example1: @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"}]
 -- Example2: @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"100,90,80"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
 
@@ -165,19 +165,27 @@
 @@APIPORT=0
 
 
+
 -- **********************************************************************************************************
--- ********************                                                                  ********************
 -- ********************   				FARM MONITOR OPTIONS                             ********************
--- ********************                                                                  ********************
+-- ********************(only need to set to use this app to monitorize all your rigs)    ********************
+-- ********************           (To run monitoring run start.bat / option 3)           ********************
 -- **********************************************************************************************************
 
+--Farm Monitor adresses, indicates what rigs do you want monitorize in Farm Monitor,only needs to be filled in your monitoring machine
+
+@@FARMRIGS=[{"IpOrLanName":"moneymachine", "ApiPort":"9999","Notifications":"true"},{"IpOrLanName":"filemon", "ApiPort":"9999","Notifications":"true"},{"IpOrLanName":"localhost", "ApiPort":"9999","Notifications":"true"}]
 
 
---[optional]Farm Monitor addresses (separated comma ip:apiport or lanname:apiport). This field indicates what rigs do you want monitorize in Farm Monitor,only needs to be filled in your monitoring machine
---To run monitoring, fill this field and run start.bat
+--Refresh interval in seconds
 
---@@FARMRIGS=192.168.2.100:9999,192.168.2.200:9999,localhost:9999
+@@REFRESHINTERVAL=15
 
 
+--[optionals]Notification Mail and SMTPServer config: password will be asked and encrypted locally first time you run. GMAIL smtp will not work if you have activated two pass verification
+
+@@NOTIFICATIONMAIL=zzzzzzzzzzzzz@yyy.com
+
+@@SMTPSERVER={"url":"smtp-mail.outlook.com","port":587,"user":"xxxxxxxx.outlook.com","password":"yyyyyyyy","ssl":true}
 
 
