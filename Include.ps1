@@ -1014,23 +1014,20 @@ function Expand_WebRequest {
     $FileName = ([IO.FileInfo](Split-Path $Uri -Leaf)).name
     $FilePath = $PSScriptRoot + '\' + $Filename
 
-
     if (Test-Path $FileName) {Remove-Item $FileName}
-    Invoke-WebRequest $Uri -OutFile $FileName -UseBasicParsing
-
-    if (Test-Path $FileName) {
-        if (![string]::IsNullOrEmpty($SHA256)) {
-            $FileHash = (Get-FileHash -Path $FileName -Algorithm SHA256).Hash
-            if ($FileHash -ne $SHA256) {
-                "File hash doesn't match. Skipping miner." + $FileHash + " " + $SHA256 | Write-Host
-                Remove-Item $FileName
-                Return
+    try {
+        (New-Object System.Net.WebClient).DownloadFile($Uri, $FileName)
+        if (Test-Path $FileName) {
+            if ($SHA256) {
+                $FileHash = (Get-FileHash -Path $FileName -Algorithm SHA256).Hash
+                if ($FileHash -ne $SHA256) {Throw "File hash doesn't match. Skipping miner." + $FileHash + " " + $SHA256}
             }
+            $Command = 'x "' + $FilePath + '" -o"' + $DestinationFolder + '" -y -spe'
+            Start-Process ".\bin\7z.exe" $Command -Wait
         }
-
-        $Command = 'x "' + $FilePath + '" -o"' + $DestinationFolder + '" -y -spe'
-        Start-Process ".\bin\7z.exe" $Command -Wait
-        Remove-Item $FileName
+    } catch {
+    } finally {
+        if (Test-Path $FileName) {Remove-Item $FileName}
     }
 }
 
@@ -1486,7 +1483,14 @@ function Start_Downloader {
         try {
             if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
                 New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
-                Invoke-WebRequest $URI -OutFile $Path -UseBasicParsing -ErrorAction Stop
+                (New-Object System.Net.WebClient).DownloadFile($URI, $Path)
+                if ($SHA256) {
+                    $FileHash = (Get-FileHash -Path $Path -Algorithm SHA256).Hash
+                    if ($FileHash -ne $SHA256) {
+                        Remove-Item $Path
+                        Throw "File hash doesn't match. Skipping miner." + $FileHash + " " + $SHA256
+                    }
+                }
             } else {
                 Clear-Host
                 $Message = "Downloading....$($URI)"
