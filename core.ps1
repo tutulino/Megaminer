@@ -146,7 +146,7 @@ $ParamMiningModeBCK = $MiningMode
 
 
 
-try {set_WindowSize 160 50} catch {}
+try {set_WindowSize 180 50} catch {}
 
 $IntervalStartAt = (Get-Date) #first initialization, must be outside loop
 
@@ -200,7 +200,7 @@ while ($Quit -eq $false) {
     Clear-Host; $RepaintScreen = $true
 
     #get mining types
-    $Types = Get_Mining_Types -filter $Groupnames
+    $Types = Get_Mining_Types -filter $GroupNames
 
     WriteLog ( get_devices_information $Types | ConvertTo-Json) $LogFile $false
     WriteLog ( $Types | ConvertTo-Json) $LogFile $false
@@ -542,9 +542,9 @@ while ($Quit -eq $false) {
                             if ($Hrs.Count -gt 10) {
                                 if ([string]::IsNullOrEmpty($_.AlgorithmDual)) {
                                     $Hrs = $Hrs | Sort-Object Speed
-                            $p10Index = [math]::Ceiling(10 / 100 * $Hrs.Count)
-                            $p90Index = [math]::Ceiling(90 / 100 * $Hrs.Count)
-                            $Hrs = $Hrs[$p10Index..$p90Index]
+                                    $p10Index = [math]::Ceiling(10 / 100 * $Hrs.Count)
+                                    $p90Index = [math]::Ceiling(90 / 100 * $Hrs.Count)
+                                    $Hrs = $Hrs[$p10Index..$p90Index]
                                 } else {
                                     $Hrs = $Hrs | Sort-Object Speed
                                     $p5Index = [math]::Ceiling(5 / 100 * $Hrs.Count)
@@ -1041,7 +1041,7 @@ while ($Quit -eq $false) {
 
     Clear-Host; $RepaintScreen = $true
 
-    while ($Host.UI.RawUI.KeyAvailable) {$host.ui.RawUi.Flushinputbuffer()} #keyb buffer flush
+    while ($Host.UI.RawUI.KeyAvailable) {$Host.UI.RawUI.FlushInputBuffer()} #keyb buffer flush
 
 
 
@@ -1560,7 +1560,7 @@ while ($Quit -eq $false) {
             'U' {if ($Screen -eq "WALLETS") {$WalletsUpdate = $null}}
             'T' {if ($Screen -eq "PROFITS") {if ($ProfitsScreenLimit -eq $InitialProfitsScreenLimit) {$ProfitsScreenLimit = 1000} else {$ProfitsScreenLimit = $InitialProfitsScreenLimit}}}
             'B' {if ($Screen -eq "PROFITS") {$ShowBestMinersOnly = !$ShowBestMinersOnly}}
-            'X' {try {set_WindowSize 160 50} catch {}}
+            'X' {try {set_WindowSize 180 50} catch {}}
             'Q' {$Quit = $true; $ExitLoop = $true}
         }
 
