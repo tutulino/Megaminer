@@ -204,7 +204,6 @@ function Query_TCPPort {
 
 
 function Kill_Process($Process) {
-
     
     try {
         if ((get-process |Where-Object id -eq $Process.Id) -ne $null) {
@@ -213,13 +212,17 @@ function Kill_Process($Process) {
             Start-Sleep 2
             }
         else 
-            { Writelog ("Process "+[string]$Process.Id+" not exists now") $LogFile $false    }
-        
-        if ((get-process |Where-Object id -eq $Process.Id) -ne $null) {
-            Stop-Process $Process.Id -force -wa SilentlyContinue -ea SilentlyContinue
-            Writelog ("Killed Process"+[string]$Process.Id) $LogFile $false           
+            { Writelog ("Process "+[string]$Process.Id+" not exists now") $LogFile $false }
+
+        for($i=1;$i -le 3;$i++)  {
+            if ((get-process |Where-Object id -eq $Process.Id) -ne $null) {Stop-Process $Process.Id -force -wa SilentlyContinue -ea SilentlyContinue}
             }
-        
+
+        if ((get-process |Where-Object id -eq $Process.Id) -eq $null) 
+           {Writelog ("Killed Process"+[string]$Process.Id) $LogFile $false}
+        else 
+           {Writelog ("Can´t be Killed Process"+[string]$Process.Id) $LogFile $false}
+
     } catch {}
 }
 
