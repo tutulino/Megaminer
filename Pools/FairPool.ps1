@@ -29,13 +29,9 @@ if ($Querymode -eq "info") {
 
 
 if ($Querymode -eq "speed") {
-    try {
-        $http = "https://" + $Info.Symbol + ".fairpool.cloud/api/stats?login=" + ($Info.user -split "\+")[0]
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
-    $Result = @()
-    if (![string]::IsNullOrEmpty($Request)) {
+    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".fairpool.cloud/api/stats?login=" + ($Info.user -split "\+")[0]) -Retry 1
+
+    if ($Request) {
         $Request.Workers | ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
@@ -43,18 +39,14 @@ if ($Querymode -eq "speed") {
                 Hashrate   = $_[1]
             }
         }
-        remove-variable Request
+        Remove-Variable Request
     }
 }
 
 
 if ($Querymode -eq "wallet") {
-    try {
-        $http = "https://" + $Info.Symbol + ".fairpool.cloud/api/stats?login=" + ($Info.User -split "\+")[0]
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
-    if (![string]::IsNullOrEmpty($Request)) {
+    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".fairpool.cloud/api/stats?login=" + ($Info.User -split "\+")[0]) -Retry 3
+    if ($Request) {
         switch ($Info.Symbol) {
             'pasl' { $Divisor = 10000 }
             'sumo' { $Divisor = 1000000000}
@@ -65,7 +57,7 @@ if ($Querymode -eq "wallet") {
             currency = $Info.Symbol
             balance  = ($Request.balance + $Request.unconfirmed ) / $Divisor
         }
-        remove-variable Request
+        Remove-Variable Request
     }
 }
 
@@ -103,9 +95,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             }
         }
     }
-    remove-variable Pools
+    Remove-Variable Pools
 }
 
 
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
-remove-variable result
+$Result | ConvertTo-Json | Set-Content $info.SharedFile
+Remove-Variable Result

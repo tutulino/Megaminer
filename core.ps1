@@ -379,8 +379,7 @@ while ($Quit -eq $false) {
 
     #Call api to local currency conversion
     try {
-        $CDKResponse = Invoke-WebRequest "https://api.Coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 |
-            ConvertFrom-Json |
+        $CDKResponse = Invoke_APIRequest -Url "https://api.Coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -MaxAge 60 |
             Select-Object -ExpandProperty BPI
         $LocalBTCvalue = $CDKResponse.$LocalCurrency.rate_float
         WriteLog ("CoinDesk API was responsive...") $LogFile $true

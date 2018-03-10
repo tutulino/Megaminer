@@ -33,15 +33,9 @@ if ($Querymode -eq "info") {
 
 if ($Querymode -eq "speed") {
     $Info.user = ($Info.user -split '\.')[0]
+    $Request = Invoke_APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider.workers&addr=" + $Info.user) -Retry 1
 
-    try {
-        $http = "https://api.nicehash.com/api?method=stats.provider.workers&addr=" + $Info.user
-        $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
-
-    $Result = @()
-
-    if (![string]::IsNullOrEmpty($Request.Result.Workers)) {
+    if ($Request.Result.Workers) {
         $Request.Result.Workers | ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
@@ -50,42 +44,32 @@ if ($Querymode -eq "speed") {
                 Hashrate   = [double]$_[1].a * 1000000
             }
         }
-        remove-variable Request
+        Remove-Variable Request
     }
 }
 
 
 if ($Querymode -eq "wallet") {
     $Info.user = ($Info.user -split '\.')[0]
-    try {
-        $http = "https://api.nicehash.com/api?method=stats.provider&addr=" + $Info.user
-        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json |Select-Object -ExpandProperty result | Select-Object -ExpandProperty stats
-    } catch {}
+    $Request = Invoke_APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider&addr=" + $Info.user) -Retry 3
 
-    if (![string]::IsNullOrEmpty($Request)) {
+    if ($Request) {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = "BTC"
-            balance  = ($Request | Measure-Object -Sum balance).sum
+            balance  = ($Request.result.stats | Measure-Object -Sum balance).sum
         }
-        Remove-variable Request
+        Remove-Variable Request
     }
 }
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
-    $retries = 1
-    do {
-        try {
-            $http = "https://api.nicehash.com/api?method=simplemultialgo.info"
-            $Request = Invoke-WebRequest $http -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json |Select-Object -expand result | Select-Object -expand simplemultialgo
-        } catch {start-sleep 2}
-        $retries++
-        if ([string]::IsNullOrEmpty($Request)) {start-sleep 3}
-    } while ($Request -eq $null -and $retries -le 3)
+    $Request = Invoke_APIRequest -Url "https://api.nicehash.com/api?method=simplemultialgo.info" -Retry 3 |
+        Select-Object -expand result | Select-Object -expand simplemultialgo
 
-    if ($retries -gt 3) {
+    if (!$Request) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
@@ -111,11 +95,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Price                 = [double]($_.paying / $Divisor)
                 Price24h              = [double]($_.paying / $Divisor)
                 Protocol              = "stratum+tcp"
-                ProtocolSSL           = if ($enableSSL) {"stratum+tls"} else {$null}
+                ProtocolSSL           = if ($enableSSL) {"ssl"} else {$null}
                 Host                  = $_.name + "." + $location.NhLocation + ".nicehash.com"
-                HostSSL               = $(if ($enableSSL) {$_.name + "." + $location.NhLocation + ".nicehash.com"})
+                HostSSL               = $(if ($enableSSL) {$_.name + "." + $location.NhLocation + ".nicehash.com"} else {$null})
                 Port                  = $_.port
-                PortSSL               = $(if ($enableSSL) {$_.port + 30000})
+                PortSSL               = $(if ($enableSSL) {$_.port + 30000} else {$null})
                 User                  = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')}) + '.' + "#Workername#"
                 Pass                  = "x"
                 Location              = $location.MMLocation
@@ -133,9 +117,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             }
         }
     }
-    Remove-variable Request
+    Remove-Variable Request
 }
 
 
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
-Remove-variable Result
+$Result | ConvertTo-Json | Set-Content $info.SharedFile
+Remove-Variable Result

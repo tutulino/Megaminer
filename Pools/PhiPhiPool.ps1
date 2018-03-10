@@ -17,7 +17,6 @@ $ApiUrl = 'http://www.phi-phi-pool.com/api'
 $MineUrl = 'pool1.phi-phi-pool.com'
 $Location = 'US'
 $RewardType = "PPS"
-$UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
 
@@ -36,14 +35,10 @@ if ($Querymode -eq "info") {
 
 
 if ($Querymode -eq "speed") {
-    try {
-        $Request = Invoke-WebRequest $($ApiUrl + "/walletEx?address=" + $Info.user) -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
+    $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
 
-    $Result = @()
-
-    if (![string]::IsNullOrEmpty($Request)) {
-        $Request.Miners | ForEach-Object {
+    if ($Request) {
+        $Request.Miners |ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
                 Version    = $_.version
@@ -60,11 +55,9 @@ if ($Querymode -eq "speed") {
 
 
 if ($Querymode -eq "wallet") {
-    try {
-        $Request = Invoke-WebRequest $($ApiUrl + "/wallet?address=" + $Info.user) -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
+    $Request = Invoke_APIRequest -Url $($ApiUrl + "/wallet?address=" + $Info.user) -Retry 3
 
-    if (![string]::IsNullOrEmpty($Request)) {
+    if ($Request) {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Request.currency
@@ -76,9 +69,8 @@ if ($Querymode -eq "wallet") {
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-    try {
-        $Request = Invoke-WebRequest $($ApiUrl + "/status") -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {
+    $Request = Invoke_APIRequest -Url $($ApiUrl + "/status") -Retry 3
+    if (!$Request) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }

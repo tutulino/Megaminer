@@ -636,6 +636,45 @@ function Invoke_httpRequest {
     $response
 }
 
+function Invoke_APIRequest {
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]$Url = "http://localhost/",
+        [Parameter(Mandatory = $false)]
+        [Int]$Timeout = 5, #seconds
+        [Parameter(Mandatory = $false)]
+        [Int]$Retry = 3,
+        [Parameter(Mandatory = $false)]
+        [Int]$MaxAge = 10
+    )
+    $UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
+    $CachePath = '.\Cache\'
+    $CacheFile = $CachePath + [System.Web.HttpUtility]::UrlEncode($Url) + '.json'
+
+    if (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes(-1)) {
+        $Response = Get-Content -Path $CacheFile | ConvertFrom-Json
+    } else {
+        if (!(Test-Path -Path $CachePath)) { New-Item -Path $CachePath -ItemType directory}
+
+        while ($Retry -gt 0) {
+            try {
+                $Retry--
+                $Response = Invoke-WebRequest $Url -UserAgent $UserAgent -UseBasicParsing -TimeoutSec $Timeout | ConvertFrom-Json
+                if ($Response) {$Retry = 0}
+            } catch {
+                Start-Sleep -Seconds 2
+                $Error.Remove($error[$Error.Count - 1])
+            }
+        }
+        if ($Response) {
+            $Response | ConvertTo-Json | Set-Content -Path $CacheFile
+        } elseif (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes( - $MaxAge)) {
+            $Response = Get-Content -Path $CacheFile | ConvertFrom-Json
+        }
+    }
+    $Response
+}
+
 
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
@@ -1484,20 +1523,23 @@ function Clear_Files {
     $TargetFolder = ".\Logs"
     $Extension = "*.txt"
     $LastWrite = $Now.AddDays( - $Days)
-
     $Files = Get-Childitem $TargetFolder -Include $Extension -Exclude "empty.txt" -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
-
     $Files | ForEach-Object {Remove-Item $_.fullname}
+
     $TargetFolder = "."
     $Extension = "wrapper_*.txt"
-
     $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse
     $Files | ForEach-Object {Remove-Item $_.fullname}
 
     $TargetFolder = "."
     $Extension = "*.tmp"
-
     $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse
+    $Files | ForEach-Object {Remove-Item $_.fullname}
+
+    $TargetFolder = ".\Cache"
+    $Extension = "*.json"
+    $LastWrite = $Now.AddDays( - $Days)
+    $Files = Get-Childitem $TargetFolder -Include $Extension -Exclude "empty.txt" -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
     $Files | ForEach-Object {Remove-Item $_.fullname}
 }
 

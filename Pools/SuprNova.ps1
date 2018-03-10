@@ -30,14 +30,10 @@ if ($Querymode -eq "info") {
 
 
 if ($Querymode -eq "APIKEY") {
-    try {
-        $http = "https://" + $Info.Symbol + ".suprnova.cc/index.php?page=api&action=getuserbalance&api_key=" + $Info.ApiKey + "&id="
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 |
-            ConvertFrom-Json | Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
-    } catch { }
+    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".suprnova.cc/index.php?page=api&action=getuserbalance&api_key=" + $Info.ApiKey + "&id=") -Retry 3 |
+        Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
 
-    if (![string]::IsNullOrEmpty($Request)) {
+    if ($Request) {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Info.Symbol
@@ -48,14 +44,10 @@ if ($Querymode -eq "APIKEY") {
 
 
 if ($Querymode -eq "speed") {
-    try {
-        $http = "https://" + $Info.Symbol + ".suprnova.cc/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5  | ConvertFrom-Json |
-            Select-Object -ExpandProperty getuserworkers | Select-Object -ExpandProperty data
-    } catch { }
+    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".suprnova.cc/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey) -Retry 1 |
+        Select-Object -ExpandProperty getuserworkers | Select-Object -ExpandProperty data
 
-    if (![string]::IsNullOrEmpty($Request)) {
+    if ($Request) {
         $Request | ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name

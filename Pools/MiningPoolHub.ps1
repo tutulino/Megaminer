@@ -41,14 +41,10 @@ if ($Querymode -eq "info") {
 
 if ($Querymode -eq "APIKEY") {
 
-    try {
-        $http = "https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $Info.ApiKey + "&id="
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json | Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
-    } catch {}
+    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $Info.ApiKey + "&id=") -Retry 3 |
+        Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
 
-
-    if (![string]::IsNullOrEmpty($Request)) {
+    if ($Request) {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Info.Symbol
@@ -58,21 +54,16 @@ if ($Querymode -eq "APIKEY") {
             $Request.balance_for_auto_exchange.unconfirmed +
             $Request.balance_on_exchange
         }
-        Remove-variable Request
+        Remove-Variable Request
     }
 }
 
 
 if ($Querymode -eq "SPEED") {
 
-    try {
-        $http = "https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 5  | ConvertFrom-Json
-    } catch {
-    }
+    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey) -Retry 1
 
-    if (![string]::IsNullOrEmpty($Request)) {
+    if ($Request) {
         $Request.getuserworkers.data | ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
@@ -81,7 +72,7 @@ if ($Querymode -eq "SPEED") {
                 Hashrate   = $_.hashrate
             }
         }
-        Remove-variable Request
+        Remove-Variable Request
     }
 }
 
@@ -93,16 +84,9 @@ if ($Querymode -eq "SPEED") {
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
-    $retries = 1
-    do {
-        try {
-            $MiningPoolHub_Request = Invoke-WebRequest "https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-        } catch {start-sleep 2}
-        $retries++
-        if ($MiningPoolHub_Request -eq $null -or $MiningPoolHub_Request -eq "") {start-sleep 3}
-    } while ($MiningPoolHub_Request -eq $null -and $retries -le 3)
+    $MiningPoolHub_Request = Invoke_APIRequest -Url "https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -Retry 3
 
-    if ($retries -gt 3) {
+    if (!$MiningPoolHub_Request) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
@@ -156,7 +140,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             }
         }
     }
-    Remove-variable MiningPoolHub_Request
+    Remove-Variable MiningPoolHub_Request
 }
 
 #****************************************************************************************************************************************************************************************
@@ -164,5 +148,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 #****************************************************************************************************************************************************************************************
 
 
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
-remove-variable Result
+$Result | ConvertTo-Json | Set-Content $info.SharedFile
+Remove-Variable Result

@@ -68,12 +68,10 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     #Common Data from WTM
 
     #Add main page coins
-    try {
-        $http = 'https://whattomine.com/coins.json'
-        $WTMResponse = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins
-    } catch {
-        WRITE-HOST 'WTM API NOT RESPONDING...ABORTING'
-        EXIT
+    $WTMResponse = Invoke_APIRequest -Url 'https://whattomine.com/coins.json' -Retry 3 | Select-Object -ExpandProperty coins
+    if (!$WTMResponse) {
+        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+        Exit
     }
     $WTMCoins = $WTMResponse.PSObject.Properties.Name | ForEach-Object {
         #convert response to collection
@@ -85,9 +83,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     Remove-Variable WTMResponse
 
     #Add secondary page coins
-    try {
-        $WTMResponse = Invoke-WebRequest 'https://whattomine.com/calculators.json' -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json | Select-Object -ExpandProperty coins
-    } catch {}
+    $WTMResponse = Invoke_APIRequest -Url 'https://whattomine.com/calculators.json' -Retry 3 | Select-Object -ExpandProperty coins
     $WTMSecondaryCoins = $WTMResponse.PSObject.Properties.Name | ForEach-Object {
         #convert response to collection
         $res = $WTMResponse.($_)
@@ -145,20 +141,15 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
                 $_.Algorithm -eq $HPool.Algorithm
             }
 
-            if ($WtmCoin -eq $null) {
+            if (!$WtmCoin) {
                 #look in secondary coins page
                 $WtmSecCoin = $WTMSecondaryCoins | Where-Object {
                     $_.Name -eq $HPool.Info -and
                     $_.Algorithm -eq $HPool.Algorithm
                 }
-                if ($WtmSecCoin -ne $null) {
-                    $page = 'https://whattomine.com/coins/' + $WtmSecCoin.Id + '.json'
-                    try {
-                        $WTMResponse = Invoke-WebRequest $page -UseBasicParsing -timeoutsec 5
-                        $WtmCoin = $WTMResponse | ConvertFrom-Json
-                        $WtmCoin | Add-Member btc_revenue24 $WtmCoin.btc_revenue
-                    } catch {}
-                    Remove-Variable WTMResponse
+                if ($WtmSecCoin) {
+                    $WtmCoin = Invoke_APIRequest -Url $('https://whattomine.com/coins/' + $WtmSecCoin.Id + '.json') -Retry 3
+                    if ($WtmCoin) {$WtmCoin | Add-Member btc_revenue24 $WtmCoin.btc_revenue}
                 }
             }
             if ($WtmCoin -ne $null) {

@@ -17,7 +17,6 @@ $ApiUrl = 'https://protopool.net/api'
 $MineUrl = 'eu1.protopool.net'
 $Location = 'EU'
 $RewardType = "PPS"
-$UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
 
@@ -36,14 +35,9 @@ if ($Querymode -eq "info") {
 
 
 if ($Querymode -eq "speed") {
-    try {
-        $http = $ApiUrl + "/walletEx?address=" + $Info.user
-        $Request = Invoke-WebRequest -UserAgent $UserAgent $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
+    $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
 
-    $Result = @()
-
-    if (![string]::IsNullOrEmpty($Request)) {
+    if ($Request) {
         $Request.Miners |ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
@@ -61,12 +55,9 @@ if ($Querymode -eq "speed") {
 
 
 if ($Querymode -eq "wallet") {
-    try {
-        $http = $ApiUrl + "/wallet?address=" + $Info.user
-        $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
+    $Request = Invoke_APIRequest -Url $($ApiUrl + "/wallet?address=" + $Info.user) -Retry 3
 
-    if (![string]::IsNullOrEmpty($Request)) {
+    if ($Request) {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Request.currency
@@ -74,15 +65,13 @@ if ($Querymode -eq "wallet") {
         }
         Remove-Variable Request
     }
-    Start-Sleep -Seconds 1 # Prevent API Saturation
 }
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-    try {
-        $Request = Invoke-WebRequest $($ApiUrl + "/status") -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-        $RequestCurrencies = Invoke-WebRequest $($ApiUrl + "/currencies") -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {
+    $Request = Invoke_APIRequest -Url $($ApiUrl + "/status") -Retry 3
+    $RequestCurrencies = Invoke_APIRequest -Url $($ApiUrl + "/currencies") -Retry 3
+    if (!$Request -or !$RequestCurrencies) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }

@@ -15,7 +15,6 @@ $AbbName = 'ZERG'
 $WalletMode = 'WALLET'
 $ApiUrl = 'http://api.zergpool.com:8080/api'
 $RewardType = "PPS"
-$UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
 $Result = @()
 
 $StratumServers = @()
@@ -37,14 +36,9 @@ if ($Querymode -eq "info") {
 
 
 if ($Querymode -eq "speed") {
-    try {
-        $http = $ApiUrl + "/walletEx?address=" + $Info.user
-        $Request = Invoke-WebRequest -UserAgent $UserAgent $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
+    $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
 
-    $Result = @()
-
-    if (![string]::IsNullOrEmpty($Request)) {
+    if ($Request) {
         $Request.Miners |ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
@@ -56,39 +50,32 @@ if ($Querymode -eq "speed") {
                 Hashrate   = $_.accepted
             }
         }
-        remove-variable Request
+        Remove-Variable Request
     }
 }
 
 
 if ($Querymode -eq "wallet") {
-    try {
-        $http = $ApiUrl + "/wallet?address=" + $Info.user
-        $Request = Invoke-WebRequest $http -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
+    $Request = Invoke_APIRequest -Url $($ApiUrl + "/wallet?address=" + $Info.user) -Retry 3
 
-    if (![string]::IsNullOrEmpty($Request)) {
+    if ($Request) {
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Request.currency
             balance  = $Request.balance
         }
-        remove-variable Request
+        Remove-Variable Request
     }
 }
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-    try {
-        $Request = Invoke-WebRequest $($ApiUrl + "/status") -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-        Start-Sleep -Seconds 1
-        $RequestCurrencies = Invoke-WebRequest $($ApiUrl + "/currencies") -UserAgent $UserAgent -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-        Start-Sleep -Seconds 1
-    } catch {
+    $Request = Invoke_APIRequest -Url $($ApiUrl + "/status") -Retry 3
+    $RequestCurrencies = Invoke_APIRequest -Url $($ApiUrl + "/currencies") -Retry 3
+    if (!$Request -or !$RequestCurrencies) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
-
 
     $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
 

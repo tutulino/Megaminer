@@ -31,31 +31,26 @@ if ($Querymode -eq "info") {
 
 
 if ($Querymode -eq "SPEED") {
-    try {
-        $http = "https://api.nanopool.org/v1/" + $Info.symbol.tolower() + "/history/" + $Info.user
-        $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
-
-    $Result = [PSCustomObject]@{
-        PoolName   = $name
-        Workername = $Info.WorkerName
-        Hashrate   = ($Request.data)[0].hashrate
+    $Request = Invoke_APIRequest -Url $("https://api.nanopool.org/v1/" + $Info.symbol.tolower() + "/history/" + $Info.user) -Retry 1
+    if ($Request) {
+        $Result = [PSCustomObject]@{
+            PoolName   = $name
+            Workername = $Info.WorkerName
+            Hashrate   = ($Request.data)[0].hashrate
+        }
     }
 }
 
 
 if ($Querymode -eq "WALLET") {
-    try {
-        $http = "https://api.nanopool.org/v1/" + $Info.symbol.tolower() + "/balance/" + $Info.user
-        $Request = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json
-    } catch {}
-
-    $Result = [PSCustomObject]@{
-        Pool     = $name
-        currency = $Info.Symbol
-        balance  = $Request.data
+    $Request = Invoke_APIRequest -Url $("https://api.nanopool.org/v1/" + $Info.symbol.tolower() + "/balance/" + $Info.user) -Retry 3
+    if ($Request) {
+        $Result = [PSCustomObject]@{
+            Pool     = $name
+            currency = $Info.Symbol
+            balance  = $Request.data
+        }
     }
-    Start-Sleep -Seconds 1 # Prevent API Saturation
 }
 
 
@@ -71,17 +66,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Pools = @() #generate a pool for each location and add API data
     $PrePools | ForEach-Object {
-
-        try {
-            $RequestW = $null
-            $http = "https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/pool/activeworkers"
-            $RequestW = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 3 | ConvertFrom-Json
-            $RequestP = $null
-            $http = "https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/approximated_earnings/1"
-            $RequestP = Invoke-WebRequest -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  $http -UseBasicParsing -timeoutsec 3 | ConvertFrom-Json |
-                select-object -ExpandProperty data | select-object -ExpandProperty day
-        } catch {}
-
+        $RequestW = Invoke_APIRequest -Url $("https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/pool/activeworkers") -Retry 1
+        $RequestP = Invoke_APIRequest -Url $("https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/approximated_earnings/1") -Retry 1 |
+            Select-Object -ExpandProperty data | Select-Object -ExpandProperty day
 
         $Locations = @()
         $Locations += [PSCustomObject]@{Location = "EU"; server = $_.Symbol + "-eu1.nanopool.org"}
@@ -117,5 +104,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
 }
 
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $info.SharedFile
 Remove-Variable Result
