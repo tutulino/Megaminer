@@ -213,7 +213,6 @@ if ($config.ApiPort -gt 0) {
     }
 
 
-
     $Quit=$false        
 
 
@@ -401,14 +400,14 @@ while ($Quit -eq $false) {
             try { $Miner =$MinerFile | Get-Content | ConvertFrom-Json } 
             catch {Writelog "-------BAD FORMED JSON: $MinerFile" $LogFile $true;Exit}
 
-            ForEach ( $TypeGroup in $types) { #generate a line for each gpu group that has algorithm as valid
+            ForEach ($TypeGroup in $types) { #generate a line for each gpu group that has algorithm as valid
                 
                 if  ($Miner.Types -notcontains $TypeGroup.type) {
                     if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname+" is NOT valid for "+ $TypeGroup.groupname+"...ignoring") $LogFile $false }
                         continue
                     } #check group and miner types are the same
                 else 
-                    { if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname+" is valid for "+ $TypeGroup.type) $LogFile $false }}
+                    { if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname+" is valid for "+ $TypeGroup.groupname) $LogFile $false }}
 
                 foreach ($Algo in $Miner.Algorithms)
                         {
@@ -613,7 +612,7 @@ while ($Quit -eq $false) {
                                                         PoolPriceDual=$PriceDual
                                                         PoolWorkers = $Pool.PoolWorkers
                                                         PoolWorkersDual = $PoolDual.PoolWorkers
-                                                        Port = if (($Types |Where-object type -eq $TypeGroup.type).count -le 1 -and $DelayCloseMiners -eq 0) {$miner.ApiPort} else {$null}
+                                                        Port = if (($Types |Where-object type -eq $TypeGroup.type).count -le 1 -and $DelayCloseMiners -eq 0 -and $config.ForceDynamicPorts -ne "Enabled" ) {$miner.ApiPort} else {$null}
                                                         PrelaunchCommand = $Miner.PrelaunchCommand
                                                         Subminers = $Subminers
                                                         Symbol = $Pool.Symbol
@@ -845,8 +844,8 @@ while ($Quit -eq $false) {
         if ($BestLast.IdF -ne $BestNow.IdF -or  $BestLast.Id -ne $BestNow.Id -or $BestLast.Status -eq 'PendingCancellation' -or $BestLast.Status -eq 'Cancelled') { #something changes or some miner error
 
         if ($BestLast.IdF -eq $BestNow.IdF -and  $BestLast.Id -ne $BestNow.Id) {              #Must launch other subminer
-                            if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type='NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_Powerlimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].GpuGroup.gpus}
-                            if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type='AMD'-and $BestNow.PowerLimit -gt 0){}
+                            if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_Powerlimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].GpuGroup.gpus}
+                            if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type -eq 'AMD'-and $BestNow.PowerLimit -gt 0){}
                             $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].best=$true
                             $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].Status= "Running"
                             $ActiveMiners[$BestNow.IdF].Subminers[$BestNow.Id].Stats.LastTimeActive = get-date
