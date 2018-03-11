@@ -5,6 +5,24 @@ $config=get_config
 $FarmRigs=$config.FarmRigs |ConvertFrom-Json
 $smtp=$config.Smtpserver |ConvertFrom-Json
 
+#Look for SMTP Password, propmpt and store if not available
+
+if  ($config.NotificationMail -ne $null -and  $config.NotificationMail -ne "") { #mail notification enabled
+
+        if (Test-Path ".\smtp.ctr") {
+            $EncPass = Get-Content -path  ".\smtp.ctr" | ConvertTo-SecureString
+            } 
+        else 
+            {
+            
+            $PlainPass = Read-Host -Prompt 'TYPE YOUR SMTP SERVER ACCOUNT PASSWORD:'
+            $EncPass = Convertto-SecureString $PlainPass -AsPlainText -Force
+            ConvertFrom-SecureString $EncPass | set-content -path ".\smtp.ctr"
+            Remove-variable PlainPass #for security pass is not stored unencrypted in memory
+            }
+        
+    }
+
  
 $Host.UI.RawUI.WindowTitle = "MM Farm Monitor"
 
@@ -68,22 +86,23 @@ $FarmRigs | ForEach-Object {
                         }
                      
                     if ($_.PreviousState -ne $_.LastState -and $_.PreviousState -ne $null) { #change state
+                    #if ($true) {
+
 
                         if  ($config.NotificationMail -ne $null -and  $config.NotificationMail -ne "" -and $_.Notifications) { #mail notification enabled
-               
-                            if ($_.LastState -eq 'OK') {  $mailmsg=$_.IpOrLanName+"("+$_.LastContent.config.workername+") is ONLINE "  }
-                            else {$mailmsg=$_.IpOrLanName+" is OFFLINE" }
-                        
-                            $SmtpPwd= ConvertTo-SecureString $Smtp.Password -AsPlainText -Force
-                          
-                            $Creds  = New-Object PSCredential $smtp.user, $SmtpPwd
+                  
+                                    if ($_.LastState -eq 'OK') {  $mailmsg=$_.IpOrLanName+"("+$_.LastContent.config.workername+") is ONLINE "  }
+                                    else {$mailmsg=$_.IpOrLanName+" is OFFLINE" }
                                 
-                            if ($smtp.ssl) {
-                                    Send-MailMessage -usessl -To $config.NotificationMail -From $smtp.user -Subject  $mailmsg -smtp ($smtp.url) -Port ($smtp.port) -Credential $Creds
-                            }
-                                else {
-                                    Send-MailMessage  -To $config.NotificationMail -From $smtp.user  -Subject  $mailmsg -smtp ($smtp.url) -Port ($smtp.port) -Credential $creds
-                                }
+                                    $Creds  = New-Object PSCredential $smtp.user,$EncPass
+                                    
+
+                                    if ($smtp.ssl) {
+                                            Send-MailMessage -usessl -To $config.NotificationMail -From $smtp.user -Subject  $mailmsg -smtp ($smtp.url) -Port ($smtp.port) -Credential $Creds
+                                    }
+                                        else {
+                                            Send-MailMessage  -To $config.NotificationMail -From $smtp.user  -Subject  $mailmsg -smtp ($smtp.url) -Port ($smtp.port) -Credential $creds
+                                        }
 
                            
                             }
