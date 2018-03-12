@@ -346,9 +346,9 @@ while ($Quit -eq $false) {
                 }
             }
         }
-        ## Order by price (profitability), factoring pool fees
+        ## Order by price (profitability)
         $_.Group | Sort-Object -Property `
-        @{Expression = {$_.Price * (1 - $_.Fee)}; Descending = $true},
+        @{Expression = {if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}}; Descending = $true},
         @{Expression = "LocationPriority"; Ascending = $true} | ForEach-Object {
             if ($NeedPool) {
                 ## test tcp connection to pool
@@ -466,28 +466,14 @@ while ($Quit -eq $false) {
                                 -replace "#DEVICESNSGMODE#", $TypeGroup.GpusNsgMode
                         }
 
-                        #Adjust pool price by pool defined factor
-                        $PoolProfitFactor = [double]($Config.("PoolProfitFactor_" + $Pool.Name))
-                        if ($PoolProfitFactor -eq 0) { $PoolProfitFactor = 1}
-
                         #select correct price by mode
-                        if ($MiningMode -eq 'Automatic24h') {$Price = [double]$Pool.Price24h * $PoolProfitFactor}
-                        else {$Price = [double]$Pool.Price * $PoolProfitFactor}
+                        $Price = $Pool.$(if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"})
 
                         #Search for dualmining pool
                         if (![string]::IsNullOrEmpty($AlgoNameDual)) {
-                            #Adjust pool dual price by pool defined factor
-                            $PoolProfitFactorDual = [double]($Config.("PoolProfitFactor_" + $PoolDual.Name))
-                            if ($PoolProfitFactorDual -eq 0) { $PoolProfitFactorDual = 1}
-
                             #search dual pool and select correct price by mode
-                            if ($MiningMode -eq 'Automatic24h') {
-                                $PoolDual = $Pools | Where-Object Algorithm -eq $AlgoNameDual | Sort-Object Price24h -Descending | Select-Object -First 1
-                                $PriceDual = [double]$PoolDual.Price24h * $PoolProfitFactor
-                            } else {
-                                $PoolDual = $Pools | Where-Object Algorithm -eq $AlgoNameDual | Sort-Object Price -Descending | Select-Object -First 1
-                                $PriceDual = [double]$PoolDual.Price * $PoolProfitFactor
-                            }
+                            $PoolDual = $Pools | Where-Object Algorithm -eq $AlgoNameDual | Sort-Object @{Expression = {if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}}; Descending = $true} | Select-Object -First 1
+                            $PriceDual = [double]$PoolDual.$(if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"})
 
                             #Set flag if both Miner and Pool support SSL
                             $enableDualSSL = ($Miner.SSL -and $PoolDual.SSL)
@@ -588,9 +574,6 @@ while ($Quit -eq $false) {
                             } elseif ([double]$Miner.Fee -gt 0) {
                                 $SubMinerRevenueDual *= (1 - [double]$Miner.Fee)
                             }
-
-                            $SubMinerRevenue *= (1 - [double]$Pool.Fee) #PoolFee
-                            $SubMinerRevenueDual *= (1 - [double]$PoolDual.Fee)
 
                             if ($FoundSubMiner -eq $null) {
                                 $StatsHistory = Get_Stats `

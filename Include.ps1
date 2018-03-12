@@ -72,11 +72,12 @@ function Get_ComputerStats {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
-function ErrorsTolog ($LogFile){
+function ErrorsTolog ($LogFile) {
 
-    for ($i=0;$i -lt $error.count;$i++) {
-        if ($error[$i].InnerException.Paramname -ne "scopeId") {  # errors in debug
-            $Msg="###### ERROR ##### "+[string]($error[$i])+' '+$error[$i].ScriptStackTrace
+    for ($i = 0; $i -lt $error.count; $i++) {
+        if ($error[$i].InnerException.Paramname -ne "scopeId") {
+            # errors in debug
+            $Msg = "###### ERROR ##### " + [string]($error[$i]) + ' ' + $error[$i].ScriptStackTrace
             Writelog $msg $LogFile
         }
 
@@ -1105,11 +1106,21 @@ function Get_Pools {
                 if ($AlgoFilterList.count -eq 0 -or $Algofilter -ne $null) {
 
                     #must be in coin filter list or no list
-                    if ($CoinFilterList -ne $null) {$Coinfilter = Compare-Object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
-                    if ($CoinFilterList.count -eq 0 -or $Coinfilter -ne $null) {
+                    if ($CoinFilterList -ne $null) {$CoinFilter = Compare-Object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
+                    if ($CoinFilterList.count -eq 0 -or $CoinFilter -ne $null) {
                         if ($Pool.Location -eq $Location) {$Pool.LocationPriority = 1}
                         elseif ($Pool.Location -eq 'EU' -and $Location -eq 'US') {$Pool.LocationPriority = 2}
                         elseif ($Pool.Location -eq 'US' -and $Location -eq 'EU') {$Pool.LocationPriority = 2}
+
+                        ## Apply pool fees and pool factors
+                        if ($Pool.Price) {
+                            $Pool.Price *= 1 - [double]$Pool.Fee
+                            $Pool.Price *= $(if ($Config."PoolProfitFactor_$($Pool.Name)") {[double]$Config."PoolProfitFactor_$($Pool.Name)"} else {1})
+                        }
+                        if ($Pool.Price24h) {
+                            $Pool.Price24h *= 1 - [double]$Pool.Fee
+                            $Pool.Price24h *= $(if ($Config."PoolProfitFactor_$($Pool.Name)") {[double]$Config."PoolProfitFactor_$($Pool.Name)"} else {1})
+                        }
                         $AllPools2 += $Pool
                     }
                 }
