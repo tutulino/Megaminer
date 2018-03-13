@@ -31,6 +31,7 @@ $FarmRigs | ForEach-Object {
         $_ | add-member LastState $null
         $_ | add-member PreviousState $null
         $_ | add-member LastTime $null
+        $_ | add-member ChangeStateTime $null
         }
 
   while ($true)  {
@@ -39,7 +40,7 @@ $FarmRigs | ForEach-Object {
            ForEach ($rig in $FarmRigs) {
                         $uri="http://"+$rig.IpOrLanName+':'+$rig.ApiPort
                         $rig.LastTime=get-date
-                        $rig.PreviousState=$rig.LastState
+                        if ($rig.PreviousState -ne $rig.LastState) {$rig.PreviousState=$rig.LastState;$rig.ChangeStateTime=get-date }
                         try {
                             $Request = Invoke-restmethod $uri -timeoutsec 5 -UseDefaultCredential 
                             if ($request.ActiveMiners -ne $null) {$rig.LastState="OK"} else {$rig.LastState="ERROR"}
@@ -58,6 +59,8 @@ $FarmRigs | ForEach-Object {
             $FarmRigs | ForEach-Object {
                         
                         Print_Horizontal_line ($_.IpOrLanName+" ("+$_.LastContent.config.workername+")")
+
+                        if ($_.ChangeStateTime -ne $null) {$ChangeStateElapsed=((get-date) - [datetime]$_.ChangeStateTime).minutes} else {$ChangeStateElapsed=0} #calculates time since state change
 
                         if ($_.LastState -eq "OK") {
 
@@ -81,15 +84,16 @@ $FarmRigs | ForEach-Object {
                              }    
                     else {   
                         "" | out-host
-                        write-warning "NOT RESPONDING...."
+                        write-warning "NOT RESPONDING FOR $ChangeStateElapsed MINUTES...."
                         "" | out-host
                         }
                      
                     if ($_.PreviousState -ne $_.LastState -and $_.PreviousState -ne $null) { #change state
                     #if ($true) {
 
+                       
 
-                        if  ($config.NotificationMail -ne $null -and  $config.NotificationMail -ne "" -and $_.Notifications) { #mail notification enabled
+                        if  ($config.NotificationMail -ne $null -and  $config.NotificationMail -ne "" -and $_.Notifications -and $ChangeStateElapsed -gt 2 ) { #mail notification enabled
                   
                                     if ($_.LastState -eq 'OK') {  $mailmsg=$_.IpOrLanName+"("+$_.LastContent.config.workername+") is ONLINE "  }
                                     else {$mailmsg=$_.IpOrLanName+" is OFFLINE" }
