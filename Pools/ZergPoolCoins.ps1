@@ -9,8 +9,8 @@ param(
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
-$ActiveOnAutomaticMode = $true
-$ActiveOnAutomatic24hMode = $true
+$ActiveOnAutomaticMode = $false
+$ActiveOnAutomatic24hMode = $false
 $AbbName = 'ZERG'
 $WalletMode = 'WALLET'
 $ApiUrl = 'http://api.zergpool.com:8080/api'
@@ -71,23 +71,29 @@ if ($Querymode -eq "wallet") {
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/status") -Retry 3
-    if (!$Request) {
+    $RequestCurrencies = Invoke_APIRequest -Url $($ApiUrl + "/currencies") -Retry 3
+    if (!$RequestCurrencies) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
 
     $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
 
-    ### Option 1 - Mine in particular algorithm
-    $Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
-        $Request.$_.actual_last24h -gt 0 -and
-        $Request.$_.hashrate -gt 0 -and
-        $Request.$_.workers -gt 0
+    ### Option 2 - Mine particular coin
+    ### Option 3 - Mine particular coin with auto exchange to wallet address
+    $RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
+        $RequestCurrencies.$_.'24h_blocks' -gt 0 -and
+        $RequestCurrencies.$_.hashrate -gt 0 -and
+        $RequestCurrencies.$_.workers -gt 0
     } | ForEach-Object {
-        $Coin = $Request.$_
-        $Pool_Algo = get_algo_unified_name $Coin.name
 
-        $Divisor = 1000000
+        $Coin = $RequestCurrencies.$_
+        $Pool_Algo = get_algo_unified_name $Coin.algo
+        $Pool_Coin = get_coin_unified_name $Coin.name
+        $Pool_Symbol = $_
+        if ($Coin.symbol) {$Symbol = $Coin.symbol} else {$Symbol = $Pool_Symbol}
+
+        $Divisor = 1000000000
 
         switch ($Pool_Algo) {
             "Blake2s" {$Divisor *= 1000}
@@ -111,32 +117,34 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         foreach ($stratum in $StratumServers) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $Pool_Algo
-                Info                  = $Pool_Algo
-                Price                 = $Coin.estimate_current / $Divisor
-                Price24h              = $Coin.estimate_last24h / $Divisor
+                Info                  = $Pool_Coin
+                Price                 = $Coin.estimate / $Divisor
+                Price24h              = $Coin.'24h_btc' / $Divisor
                 Protocol              = "stratum+tcp"
                 Host                  = $stratum.MineUrl
                 Port                  = $Coin.port
-                User                  = $CoinsWallets.get_item($Currency)
-                Pass                  = "c=$Currency,ID=#WorkerName#"
+                User                  = $(if ($Coin.noautotrade -eq 1) {$CoinsWallets.get_item($Symbol)} else {$CoinsWallets.get_item($Currency)})
+                Pass                  = $(if ($Coin.noautotrade -eq 1) {"c=$Symbol"} else {"c=$Currency"}) + ",mc=$Pool_Symbol,ID=#WorkerName#"
                 Location              = $stratum.Location
                 SSL                   = $false
-                Symbol                = get_coin_symbol -Coin $Pool_Algo
+                Symbol                = $Symbol
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
                 PoolWorkers           = $Coin.workers
                 PoolHashRate          = $Coin.hashrate
                 WalletMode            = $WalletMode
-                WalletSymbol          = $Currency
+                Walletsymbol          = $(if ($Coin.noautotrade -eq 1) {$Pool_Symbol} else {$Currency})
                 PoolName              = $Name
-                Fee                   = $Coin.fees / 100
+                Fee                   = $Request.($Coin.algo).fees / 100
                 RewardType            = $RewardType
             }
         }
     }
     Remove-Variable Request
+    Remove-Variable RequestCurrencies
 }
+
 
 $Result | ConvertTo-Json | Set-Content $info.SharedFile
 Remove-Variable Result

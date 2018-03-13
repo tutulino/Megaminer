@@ -16,9 +16,6 @@ $WalletMode = "APIKEY"
 $RewardType = "PPLS"
 $Result = @()
 
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
@@ -31,12 +28,6 @@ if ($Querymode -eq "info") {
         RewardType               = $RewardType
     }
 }
-
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
 
 
 if ($Querymode -eq "APIKEY") {
@@ -54,7 +45,7 @@ if ($Querymode -eq "APIKEY") {
             $Request.balance_for_auto_exchange.unconfirmed +
             $Request.balance_on_exchange
         }
-        Remove-variable Request
+        Remove-Variable Request
     }
 }
 
@@ -65,22 +56,19 @@ if ($Querymode -eq "SPEED") {
         Select-Object -ExpandProperty getuserworkers | Select-Object -ExpandProperty data
 
     if ($Request) {
-        $Request | ForEach-Object {
-            $Result += [PSCustomObject]@{
-                PoolName   = $name
-                Diff       = $_.difficulty
-                Workername = $_.username.Split("\.")[1]
-                Hashrate   = $_.hashrate
-            }
+        $Result = $Request | ForEach-Object {
+			if ($_.hashrate -gt 0) {
+				[PSCustomObject]@{
+					PoolName   = $name
+					Diff       = $_.difficulty
+					Workername = $($_.username -split '.')[1]
+					Hashrate   = $_.hashrate
+				}
+			}
         }
         Remove-Variable Request
     }
 }
-
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
@@ -94,15 +82,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Locations = "EU", "US", "Asia"
 
-    $MiningPoolHub_Request.return | ForEach-Object {
+    $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0} | ForEach-Object {
 
         $MiningPoolHub_Algorithm = get_algo_unified_name $_.algo
-        # $MiningPoolHub_Coin = get_coin_unified_name $_.current_mining_coin
+        $MiningPoolHub_Coin = get_coin_unified_name $_.coin_name
 
-        $MiningPoolHub_OriginalCoin = $_.current_mining_coin
+        $MiningPoolHub_OriginalCoin = $_.coin_name
 
-        $MiningPoolHub_Hosts = $_.all_host_list.split(";")
-        $MiningPoolHub_Port = $_.algo_switch_port
+        $MiningPoolHub_Hosts = $_.host_list.split(";")
+        $MiningPoolHub_Port = $_.port
 
         $Divisor = [double]1000000000
 
@@ -115,20 +103,20 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $MiningPoolHub_Algorithm
-                Info                  = $null #$MiningPoolHub_Coin
+                Info                  = $MiningPoolHub_Coin
                 Price                 = $MiningPoolHub_Price
                 Price24h              = $null #MPH not send this on api
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = if ($enableSSL) {"ssl"} else {$null}
                 Host                  = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
-                HostSSL               = $(if ($enableSSL) {$MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1})
+                HostSSL               = $(if ($enableSSL) {$MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1} else {$null})
                 Port                  = $MiningPoolHub_Port
-                PortSSL               = $(if ($enableSSL) {$MiningPoolHub_Port})
+                PortSSL               = $(if ($enableSSL) {$MiningPoolHub_Port} else {$null})
                 User                  = "$UserName.#WorkerName#"
                 Pass                  = "x"
                 Location              = $Location
                 SSL                   = $enableSSL
-                Symbol                = $null #get_coin_symbol -Coin $MiningPoolHub_Coin
+                Symbol                = get_coin_symbol -Coin $MiningPoolHub_Coin
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
@@ -141,13 +129,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             }
         }
     }
-    Remove-variable MiningPoolHub_Request
+    Remove-Variable MiningPoolHub_Request
 }
 
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
-#****************************************************************************************************************************************************************************************
 
-
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
-remove-variable Result
+$Result | ConvertTo-Json | Set-Content $info.SharedFile
+Remove-Variable Result
