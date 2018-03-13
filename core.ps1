@@ -536,23 +536,19 @@ while ($Quit -eq $false) {
                                 $Hrs = $FoundSubMiner.SpeedReads
                             }
 
-                            # Remove 10 percent of lowest and highest rate samples which may skew the average
+                            # Discard hashrates if less than 10 readouts
                             if ($Hrs.Count -gt 10) {
-                                if ([string]::IsNullOrEmpty($_.AlgorithmDual)) {
-                                    $Hrs = $Hrs | Sort-Object Speed
-                                    $p10Index = [math]::Ceiling(10 / 100 * $Hrs.Count)
-                                    $p90Index = [math]::Ceiling(90 / 100 * $Hrs.Count)
-                                    $Hrs = $Hrs[$p10Index..$p90Index]
-                                } else {
+                                # Remove 10 percent of lowest and highest rate samples which may skew the average
                                     $Hrs = $Hrs | Sort-Object Speed
                                     $p5Index = [math]::Ceiling(5 / 100 * $Hrs.Count)
                                     $p95Index = [math]::Ceiling(95 / 100 * $Hrs.Count)
-                                    $Hrs = $Hrs[$p5Index..$p95Index] | Sort-Object SpeedDual
+                                $Hrs = $Hrs[$p5Index..$p95Index] | Sort-Object SpeedDual, Speed
                                     $p5Index = [math]::Ceiling(5 / 100 * $Hrs.Count)
                                     $p95Index = [math]::Ceiling(95 / 100 * $Hrs.Count)
                                     $Hrs = $Hrs[$p5Index..$p95Index]
+                            } else {
+                                $Hrs = @()
                                 }
-                            }
 
                             $PowerValue = [double]($Hrs | Measure-Object -property Power -average).average
                             $HashRateValue = [double]($Hrs | Measure-Object -property Speed -average).average
@@ -1117,7 +1113,17 @@ while ($Quit -eq $false) {
                             }
                         } catch {}
                     }
-                    if ($_.SpeedReads.Count -gt 2000) {$_.SpeedReads = $_.SpeedReads[1..($_.SpeedReads.length - 1)]} #if array is greater than X delete first element
+                    # if ($_.SpeedReads.Count -gt 2000) {$_.SpeedReads = $_.SpeedReads[1..($_.SpeedReads.length - 1)]} #if array is greater than X delete first element
+                    if ($_.SpeedReads.Count -gt 2000) {
+                        # Remove 10 percent of lowest and highest rate samples which may skew the average
+                        $_.SpeedReads = $_.SpeedReads | Sort-Object Speed
+                        $p5Index = [math]::Ceiling(5 / 100 * $_.SpeedReads.Count)
+                        $p95Index = [math]::Ceiling(95 / 100 * $_.SpeedReads.Count)
+                        $_.SpeedReads = $_.SpeedReads[$p5Index..$p95Index] | Sort-Object SpeedDual, Speed
+                        $p5Index = [math]::Ceiling(5 / 100 * $_.SpeedReads.Count)
+                        $p95Index = [math]::Ceiling(95 / 100 * $_.SpeedReads.Count)
+                        $_.SpeedReads = $_.SpeedReads[$p5Index..$p95Index]
+                    }
 
                     if (($Config.LiveStatsUpdate) -eq "ENABLED" -or $_.NeedBenchmark) {
                         Set_HashRates `
