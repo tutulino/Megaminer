@@ -394,11 +394,11 @@ while ($Quit -eq $false) {
         foreach ($TypeGroup in $types) {
             #generate a line for each gpu group that has algorithm as valid
             if ($Miner.Type -ne $TypeGroup.type) {
-                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is NOT valid for " + $TypeGroup.groupname + "...ignoring") $LogFile $false }
+                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is NOT valid for " + $TypeGroup.GroupName + "...ignoring") $LogFile $false }
                 continue
             } #check group and miner types are the same
             else {
-                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is valid for " + $TypeGroup.type) $LogFile $false }
+                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is valid for " + $TypeGroup.GroupName) $LogFile $false }
             }
 
 
@@ -651,7 +651,7 @@ while ($Quit -eq $false) {
                             PoolRewardType      = $Pool.RewardType
                             PoolWorkers         = $Pool.PoolWorkers
                             PoolWorkersDual     = $PoolDual.PoolWorkers
-                            Port                = $(if (($Types | Where-Object type -eq $TypeGroup.type).Count -le 1 -and $DelayCloseMiners -eq 0) { $Miner.ApiPort })
+                            Port                = $(if (($Types | Where-Object type -eq $TypeGroup.type).Count -le 1 -and $DelayCloseMiners -eq 0 -and $config.ForceDynamicPorts -ne "Enabled") { $Miner.ApiPort })
                             PrelaunchCommand    = $Miner.PrelaunchCommand
                             SubMiners           = $SubMiners
                             SHA256              = $Miner.SHA256
@@ -897,10 +897,9 @@ while ($Quit -eq $false) {
                 $BestLast.Id -ne $BestNow.Id
             ) {
                 #Must launch other SubMiner
-                if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type = 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].GpuGroup.gpus}
-                if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type = 'AMD' -and $BestNow.PowerLimit -gt 0) {}
+                if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].GpuGroup.gpus}
+                if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
 
-                $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Best = $false
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = "Running"
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.LastTimeActive = Get-Date
@@ -1287,7 +1286,7 @@ while ($Quit -eq $false) {
             $ApiResponse.Params | Add-Member Pools $PoolsName
             $ApiResponse.Params | Add-Member Coins $CoinsName
             $ApiResponse.Params | Add-Member MiningMode $MiningMode
-            $ApiResponse.Params | Add-Member Groupnames $Groupnames
+            $ApiResponse.Params | Add-Member GroupNames $GroupNames
             $ApiResponse | Add-Member Release $Release
             $ApiResponse | Add-Member RefreshDate ((Get-Date).tostring("o"))
             $ApiResponse | ConvertTo-Json | Set-Content -path $ApiSharedFile

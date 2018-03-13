@@ -615,5 +615,6 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 
 --RELEASE NOTES
 This release changes config.txt variable @@LOCATION (EUROPE--> EU)
-This release add config.txt variables @@APIPORT, @@FARMRIGS
+This release add config.txt variables @@FORCEDYNAMICPORTS
+This release add a new section in config.txt for Farm Monitor
 

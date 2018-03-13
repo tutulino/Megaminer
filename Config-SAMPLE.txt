@@ -78,7 +78,7 @@
 
 @@LiveStatsUpdate=DISABLED
 
--- Screen to be shown at script start-up (WALLETS/CURRENT/HISTORY/PROFITS/STATS)
+-- Screen to be shown at Megaminer start-up (WALLETS/CURRENT/HISTORY/PROFITS/STATS)
 
 @@STARTSCREEN=PROFITS
 
@@ -96,15 +96,18 @@
 @@APIKEY_SUPRNOVA=xxx
 
 -- [OPTIONAL] GPU Groups/PowerLimits
--- if you don't set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
--- If you activate this option miners ports will be calculated dynamic mode, some software like ethmonitoring will not work due to miner dynamic port assignation
+-- if you don´t set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
+-- If you activate this option and you have more than 1 group of same type (AMD,NVIDIA) miners ports will be calculated dynamically, some software like ethmonitoring will not work due to miner dynamic port assignation
 -- You can group your cards as you want. It's recommended to create a group for each card model in your rig, each group will be benchmarked and run separately (you can identify your GPU id's by launching GpuList.bat)
 -- Type must be NVIDIA or AMD,
--- You can set Powerlimits (MM must run from administrator account and UAC disabled or prompt appears) for each NVIDIA group, MM will benchmark all miners with maximum value, done this, when a miner is maximum profit candidate MM will benchmark other power limits of that miner to find best. (zero means MM will not change Power Limit)
--- Example1: @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"}]
--- Example2: @@GPUGROUPS=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"100,90,80"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
 
---@@GPUGroups=[{"GroupName" : "1080","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"110,100,90,80"} , {"GroupName" : "RX580","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
+-- Only for NVIDIA (zero means MM will not change Power Limit):
+-- You can set Powerlimits (MM must run with admin rights and UAC disabled or prompt appears) for each group, MM will benchmark all miners with maximum value, done this, when a miner is maximum profit candidate MM will benchmark other power limits of that miner to find best.
+
+-- Example1: @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"}]
+-- Example2: @@GPUGROUPS=[{"GroupName" : "1080s","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"100,90,80"} , {"GroupName" : "RX580s","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
+
+--@@GPUGROUPS=[{"GroupName" : "1080s","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"110,100,90,80"} , {"GroupName" : "RX580s","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
 
 --[OPTIONAL]  Pools profit correction factors
 --Usually pools revenue is overestimated, this factor allows manual correction (Profit= ReportedPoolProfit * @@POOLPROFITFACTOR)
@@ -155,6 +158,11 @@
 
 @@APIPORT=0
 
+--Force Dynamic Miners Port, if enabled Apiport field from miner file is ignored, you must enabled if you want to run more than one instance of MM with more than one same type gpu group.
+
+@@FORCEDYNAMICPORTS=DISABLED
+
+
 -- **********************************************************************************************************
 -- ********************   				FARM MONITOR OPTIONS                             ********************
 -- ********************(only need to set to use this app to monitor all your rigs)       ********************
@@ -171,8 +179,10 @@
 @@REFRESHINTERVAL=15
 
 
---[optionals]Notification Mail and SMTPServer config: password will be asked and encrypted locally first time you run. GMAIL smtp will not work if you have activated two pass verification
+--[OPTIONAL] Notification Mail and SMTPServer config:
+--Smtp server password will be asked and encrypted locally first time you run (to change password delete smtp.ctr), this file cant be shared between rigs because use local encryption/decryption.
+--GMAIL smtp will not work if you have activated two pass verification
 
 @@NOTIFICATIONMAIL=zzzzzzzzzzzzz@yyy.com
 
-@@SMTPSERVER={"url":"smtp-mail.outlook.com","port":587,"user":"xxxxxxxx.outlook.com","password":"yyyyyyyy","ssl":true}
+@@SMTPSERVER={"url":"smtp-mail.outlook.com","port":587,"user":"xxxxxxxx@outlook.com","ssl":true}
