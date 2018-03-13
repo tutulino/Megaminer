@@ -157,7 +157,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                             Host          = $_.name+".mine.blazepool.com"
                                             Port          = $coin.port
                                             User          = $CoinsWallets.get_item($Currency)
-                                            Pass          = "Id=#Workername#,c=btc"
+                                            Pass          = "ID=#Workername#,c=btc"
                                             Location      = "US"
                                             SSL           = $false
                                             Symbol        = $null
