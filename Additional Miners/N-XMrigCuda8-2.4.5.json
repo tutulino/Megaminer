@@ -5,7 +5,7 @@
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --nicehash --donate-level 1 --cuda-devices=#DEVICES# --cuda-launch=80x30 --cuda-bfactor=10 --cuda-bsleep=26 #ALGORITHMPARAMETERS#",
     "API": "XMRig",
-    "APIPort": 3335,
+    "APIPort": 4068,
     "Fee": 0.01,
     "Algorithms": {
         "CryptoNight": "-a cryptonight"

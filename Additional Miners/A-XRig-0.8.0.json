@@ -5,7 +5,7 @@
     "Type": "AMD",
     "Arguments": "-o #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --port=#APIPORT# --platform-index=#GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API": "XRig",
-    "APIPort": 4444,
+    "APIPort": 4028,
     "Fee": 0.01,
     "Algorithms": {
         "CryptoNight": "-a cryptonight --intensity=2024",

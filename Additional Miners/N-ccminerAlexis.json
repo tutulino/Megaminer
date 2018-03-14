@@ -4,6 +4,7 @@
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",
+    "APIPort": 4068,
     "Algorithms": {
         "Blakecoin": "-a blakecoin",
         "C11": "-a c11 -i 20",

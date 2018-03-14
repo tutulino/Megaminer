@@ -5,7 +5,7 @@
     "Type": "AMD",
     "Arguments": "-S #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -G #DEVICES# -R --remoteport #APIPORT# --opencl #GPUPLATFORM# --forcecompute --fastjobswitch #ALGORITHMPARAMETERS#",
     "API": "castXMR",
-    "APIPort": 7777,
+    "APIPort": 4028,
     "Fee": 0.015,
     "Algorithms": {
         "CryptoNight": "-I 9"

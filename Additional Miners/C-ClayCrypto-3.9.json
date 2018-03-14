@@ -5,7 +5,7 @@
     "Type": "CPU",
     "Arguments": "-mport -#APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -allpools 1 #ALGORITHMPARAMETERS#",
     "API": "Claymore",
-    "APIPort": 4444,
+    "APIPort": 4048,
     "Fee": 0.025,
     "FeeSSL": 0.02,
     "SSL": true,

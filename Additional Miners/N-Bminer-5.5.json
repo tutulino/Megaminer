@@ -4,6 +4,7 @@
     "Type": "NVIDIA",
     "Arguments": "-uri stratum://#LOGIN#.#WORKERNAME#@#SERVER#:#PORT# -devices #DEVICES# -watchdog -api 127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
     "API": "BMINER",
+    "APIPort": 4068,
     "Fee": 0.02,
     "Algorithms": {
         "Equihash": ""

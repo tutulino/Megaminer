@@ -5,6 +5,7 @@
     "Type": "CPU",
     "Arguments": "-a #APIPORT# -l #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
     "API": "nicehashequihash",
+    "APIPort": 4048,
     "Algorithms": {
         "Zero|2": "-t 2",
         "Zero|3": "-t 3",

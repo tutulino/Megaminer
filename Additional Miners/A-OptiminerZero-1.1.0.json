@@ -5,6 +5,7 @@
     "Type": "AMD",
     "Arguments": "-m #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #DEVICESNSGMODE# #ALGORITHMPARAMETERS#",
     "API": "optiminer",
+    "APIPort": 4028,
     "Algorithms": {
         "Zero": "-i 1"
     }

@@ -5,6 +5,7 @@
     "Type": "AMD",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --opencl-platform=#GPUPLATFORM# --nicehash --donate-level 1 #ALGORITHMPARAMETERS#",
     "API": "XMRig",
+    "APIPort": 4028,
     "Fee": 0.01,
     "Algorithms": {
         "CryptoNight": "-a cryptonight",

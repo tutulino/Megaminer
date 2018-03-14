@@ -5,7 +5,7 @@
     "Type": "AMD",
     "Arguments": "-epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -wd 1 -r -1 -logsmaxsize 10 -mode 1 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
     "API": "Claymore",
-    "APIPort": 3333,
+    "APIPort": 4028,
     "Fee": 0.01,
     "SSL": true,
     "Algorithms": {

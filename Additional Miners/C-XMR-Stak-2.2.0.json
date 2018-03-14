@@ -7,6 +7,7 @@
     "PatternConfigFile": ".\\Patterns\\xmr-stak-Pattern.txt",
     "Arguments": "-c config-#GROUPNAME#.txt --noNVIDIA --noAMD --noUAC",
     "API": "XMRig",
+    "APIPort": 4048,
     "Fee": 0.01,
     "Algorithms": {
         "CryptoNight": "monero",

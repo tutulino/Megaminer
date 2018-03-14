@@ -4,6 +4,7 @@
     "Type": "NVIDIA",
     "Arguments": "-m #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# -d #DEVICES# #ALGORITHMPARAMETERS#",
     "API": "optiminer",
+    "APIPort": 4068,
     "Algorithms": {
         "EquihashZero": ""
     }

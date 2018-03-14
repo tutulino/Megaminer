@@ -5,7 +5,7 @@
     "Type": "AMD",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -allpools 1 -di #DEVICESCLAYMODE# -mport -#APIPORT# #ALGORITHMPARAMETERS#",
     "API": "Claymore",
-    "APIPort": 3333,
+    "APIPort": 4028,
     "Fee": 0.025,
     "FeeSSL": 0.02,
     "SSL": true,

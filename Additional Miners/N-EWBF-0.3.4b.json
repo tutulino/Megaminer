@@ -4,6 +4,7 @@
     "Type": "NVIDIA",
     "Arguments": "--api --server #SERVER# --port #PORT# --solver 0 --pec --fee 0 --eexit 1 --user #LOGIN# --pass #PASSWORD# --cuda_devices #DEVICESETHMODE# --api 127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
     "API": "EWBF",
+    "APIPort": 4068,
     "Algorithms": {
         "Equihash": ""
     }

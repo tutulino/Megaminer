@@ -5,7 +5,7 @@
     "Type": "NVIDIA",
     "Arguments": "-U -SP 2 -S #SERVER#:#PORT# -O #LOGIN#:#PASSWORD# --api-port #APIPORT# --cuda-devices #DEVICESETHMODE# #ALGORITHMPARAMETERS#",
     "API": "Claymore",
-    "APIPort": 3333,
+    "APIPort": 4068,
     "Algorithms": {
         "Ethash": ""
     }

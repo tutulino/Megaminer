@@ -4,6 +4,7 @@
     "Type": "NVIDIA",
     "Arguments": "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --color --dev #DEVICESETHMODE# --telemetry=127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
     "API": "DTSM",
+    "APIPort": 4068,
     "Fee": 0.02,
     "Algorithms": {
         "Equihash": ""

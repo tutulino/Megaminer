@@ -6,6 +6,7 @@
     "PatternConfigFile": ".\\Patterns\\excavatorPattern.txt",
     "Arguments": "-p #APIPORT# -c #GROUPNAME#.json -na ",
     "API": "excavator",
+    "APIPort": 4068,
     "Algorithms": {
         "Blake2s": "blake2s",
         "CryptoNight": "cryptonight",

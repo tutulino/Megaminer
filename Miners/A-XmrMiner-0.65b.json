@@ -5,7 +5,7 @@
     "Type": "AMD",
     "Arguments": "-wp #APIPORT# -p #SERVER#:#PORT# -w #LOGIN# -psw #PASSWORD# -pidx #GPUPLATFORM# -do 0 #ALGORITHMPARAMETERS#",
     "API": "XMrig",
-    "APIPort": 4664,
+    "APIPort": 4028,
     "Algorithms": {
         "CryptoNight": ""
     }

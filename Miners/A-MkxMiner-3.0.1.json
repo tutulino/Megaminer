@@ -5,7 +5,7 @@
     "Type": "AMD",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# --exitsick --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API": "wrapper",
-    "APIPort": 3333,
+    "APIPort": 4028,
     "SSL": true,
     "Algorithms": {
         "Lyra2v2": "-I 23",

@@ -4,7 +4,7 @@
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#  -d #DEVICES# --api-bind #APIPORT# -r 10 #ALGORITHMPARAMETERS# ",
     "API": "Palgin",
-    "APIPort": 4004,
+    "APIPort": 4068,
     "Algorithms": {
         "neoscrypt": ""
     }

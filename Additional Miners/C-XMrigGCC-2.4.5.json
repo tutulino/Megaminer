@@ -5,6 +5,7 @@
     "Type": "CPU",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --nicehash --donate-level 1 #ALGORITHMPARAMETERS#",
     "API": "XMRig",
+    "APIPort": 4048,
     "Fee": 0.01,
     "Algorithms": {
         "CryptoNight": "-a cryptonight",

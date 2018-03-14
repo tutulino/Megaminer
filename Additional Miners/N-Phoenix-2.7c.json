@@ -5,7 +5,7 @@
     "Type": "NVIDIA",
     "Arguments": "-pool #PROTOCOL#://#SERVER#:#PORT# -wal #LOGIN# -pass #PASSWORD# -esm #ETHSTMODE# -mi 12 -wd 1 -r -1 -di #DEVICESCLAYMODE# -cdmport #APIPORT# -cdm 1 -nvidia #ALGORITHMPARAMETERS#",
     "API": "Claymore",
-    "APIPort": 3333,
+    "APIPort": 4068,
     "Fee": 0.0065,
     "SSL": true,
     "Algorithms": {

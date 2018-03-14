@@ -5,7 +5,7 @@
     "Type": "AMD",
     "Arguments": "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --device #DEVICES# --use-compact-short-stat --exit-on-zero --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "API": "wrapper",
-    "APIPort": 13333,
+    "APIPort": 4028,
     "Algorithms": {
         "Mars|2g": "--set-work-batch 2G",
         "Mars|Auto": "--set-work-batch AUTO",
