@@ -36,13 +36,13 @@ do {
         $Line = $_
 
 
-        if ($Line -like "*total speed:*" `
-                -or $Line -like "*accepted:*" `
-                -or $Line -like "*Mining on #*" `
-                -or $line -like "*diff*yes!*" `
-                -or $line -like ">*Rej*" `
-                -or $line -like "*overall*" `
-                -or $line -like "Average speed*"
+        if ($Line -like "*total speed:*" -or
+            $Line -like "*accepted:*" -or
+            $Line -like "*Mining on #*" -or
+            $line -like "*diff*yes!*" -or
+            $line -like ">*Rej*" -or
+            $line -like "*overall*" -or
+            $line -like "*Average*"
         ) {
             $Line = $Line  `
                 -replace "\smh/s", "mh/s" `
@@ -51,7 +51,8 @@ do {
                 -replace "\sth/s", "th/s" `
                 -replace "\sph/s", "ph/s" `
                 -replace "\sh/s", "h/s" `
-                -replace "\ssol/s", "h/s"
+                -replace "\ssol/s", "h/s" `
+                -replace "\sHash/s", "h/s"
 
             $Words = $Line -split " "
             $Word = $words -like "*/s*" | Select-Object -Last 1
