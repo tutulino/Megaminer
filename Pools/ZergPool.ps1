@@ -97,7 +97,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "Equihash" {$Divisor /= 1000}
             "Keccak" {$Divisor *= 1000}
             "KeccakC" {$Divisor *= 1000}
-            "PHI" {$Divisor *= 1000}
             "Quark" {$Divisor *= 1000}
             "Qubit" {$Divisor *= 1000}
             "Scrypt" {$Divisor *= 1000}
