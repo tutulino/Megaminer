@@ -7,7 +7,7 @@
 
 -- Your rig ID
 -- if not defined, will use your computername
--- @@WORKERNAME=worker
+-- @@WorkerName=worker
 
 --Autoexchange pools preferred currencies.
 --You can set a generic currency for all autoexchange pools @@CURRENCY=XXX or a specific currency for one pool @@CURRENCY_NAMEOFPOOL=BTC valid only for that pool
@@ -15,21 +15,21 @@
 --You must be sure selected pool support pay that coin or you can lose your money.
 --You must set wallet for this currencies on "Wallets Section"
 
-@@CURRENCY=BTC
-@@CURRENCY_NAMEOFPOOL=XXX
+@@Currency=BTC
+@@Currency_NameOfPool=XXX
 
 -- Local currency shown on the profits screen (USD,EUR,GBP). Any supported coin symbol from CoinDesk
 
-@@LOCALCURRENCY=USD
+@@LocalCurrency=USD
 
 -- Location of your rig: EU/US/ASIA (by default "US" will be used for pools that don't require or support this setting)
 
-@@LOCATION=EU
+@@Location=EU
 
 -- Pool user name for non-anonymous pools such as SprNova, BlocksFactory, or MiningPoolHub
 -- You can ignore this setting if you're not using these types of pools
 
-@@USERNAME=ffwd
+@@UserName=your_pool_username
 
 -- For auto exchange pools. You only need set a wallet for your preferred currencies (@@currency).
 -- Other pools without an auto exchange, like Yiimp, will need a wallet defined for the same coin you are mining.
@@ -37,17 +37,17 @@
 -- For Nicehash if a @@WALLET_BTC_NICE=XXXXXXX is found it will be used, if not @@WALLET_BTC will be used.
 -- For some coins, such as Electroneum, you may need a Payment ID. Add it after your address separated by a dot.
 
-@@WALLET_BTC_NICE=xxx
-@@WALLET_BTC=xxx
-@@WALLET_LTC=xxx
+@@Wallet_BTC_NICE=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+@@Wallet_BTC=YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+@@Wallet_XXX=ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
 
 -- Number of minutes to mine as a donation each day (minimum 5 minutes or 0.34%)
 
-@@DONATE=10
+@@Donate=10
 
 -- Use your cpu to mine: ENABLED = yes, DISABLED = no (you can start cpu alone mining also using -groupnames parameter in batch file)
 
-@@CPUMINING=DISABLED
+@@CpuMining=DISABLED
 
 --Electricity cost in LOCALCURRENCY
 --Example for all day cost [{"HourStart":0,"HourEnd":23,"CostKwh":0.10}]
@@ -64,7 +64,6 @@
 -- **********************************************************************************************************
 
 -- Profit recheck interval time (in seconds) for each kind of pool
--- Profit recheck interval time (in seconds - less than 600 not recommended)
 -- This interval recalculates and selects the most profitable algorithm
 
 @@Interval_PPS=300
@@ -72,7 +71,7 @@
 
 -- Benchmarks interval time (less than 300 not recommended for GPU due to miners ramp time), if you want to use automatic gpu power limit configuration is recommended at least 600
 
-@@BENCHMARKTIME=300
+@@BenchmarkTime=600
 
 -- When enabled miners stats are updated while real mining, if disabled miner stats only are updated while benchmarking (ENABLED/DISABLED)
 
@@ -80,23 +79,23 @@
 
 -- Screen to be shown at Megaminer start-up (WALLETS/CURRENT/HISTORY/PROFITS/STATS)
 
-@@STARTSCREEN=PROFITS
+@@StartScreen=PROFITS
 
 -- Percent to switch miner/algo, new miner/algo only will be launched if new profit is greater than actual profit
 -- in specified percent (example: 10 means that new miner/algo must be 10% more profitable than actual to be launched)
 
-@@PERCENTTOSWITCH=10
+@@PercentToSwitch=10
 
 -- [OPTIONAL] API Keys
 -- Some non-anonymous pools, such as Suprnova and MPH, require API keys to obtain wallet details or pool speed.
 -- For example @@APIKEY_MINING_POOL_HUB=a04e6sx30b38f73878ae40775f70efseff6582e8ec37600215755487ccbd36b4510b4
 -- FORMAT: @@APIKEY_NAMEOFPOOL=XXXXXXXXXX) [optional]
 
-@@APIKEY_MINING_POOL_HUB=xxx
-@@APIKEY_SUPRNOVA=xxx
+@@ApiKey_MiningPoolHub=xxx
+@@ApiKey_Suprnova=xxx
 
 -- [OPTIONAL] GPU Groups/PowerLimits
--- if you don´t set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
+-- if you don't set groups MM automatically makes 2 groups, one for all NVIDIA gpus and other for all AMD gpus
 -- If you activate this option and you have more than 1 group of same type (AMD,NVIDIA) miners ports will be calculated dynamically, some software like ethmonitoring will not work due to miner dynamic port assignation
 -- You can group your cards as you want. It's recommended to create a group for each card model in your rig, each group will be benchmarked and run separately (you can identify your GPU id's by launching GpuList.bat)
 -- Type must be NVIDIA or AMD,
@@ -107,7 +106,7 @@
 -- Example1: @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"}]
 -- Example2: @@GPUGROUPS=[{"GroupName" : "1080s","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"100,90,80"} , {"GroupName" : "RX580s","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
 
---@@GPUGROUPS=[{"GroupName" : "1080s","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"110,100,90,80"} , {"GroupName" : "RX580s","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
+--@@GpuGroups=[{"GroupName" : "1080s","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"110,100,90,80"} , {"GroupName" : "RX580s","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
 
 --[OPTIONAL]  Pools profit correction factors
 --Usually pools revenue is overestimated, this factor allows manual correction (Profit= ReportedPoolProfit * @@POOLPROFITFACTOR)
@@ -130,13 +129,14 @@
 
 --Min number of workers in a pool to be considered as "good"
 
-@@MinWorkers=10
+@@MinWorkers=20
 
 -- This variable defines order for Whattomine based stats virtual pool, for each coin MM find in WTM it will search what real pool has this coin available, first found (in specified order) is selected.
 -- Only these pools are compatible (they works at coin level): Yiimp, Suprnova, MiningPoolHub, FairPool
 -- WTM profit is based on instant coin change rate, is recommended use pools with autoexchange , like MiningPoolHub
 
-@@WhatToMinePoolOrder=MyPools,MiningPoolHub,Suprnova,FairPool
+@@WhatToMinePoolOrder=MyPools,MiningPoolHubCoins,Suprnova,FairPool
+
 
 -- Reporting mining status to https://multipoolminer.io/monitor/
 -- get ApiKey from the site or BTC wallet address will be used as key
@@ -146,21 +146,23 @@
 --Algorithms, define what algorithms can be mined for MM, for an Algo can be mined must exists: 1. A pool, 2. A miner, 3. This config.
 --If used, algorithm parameter from core.ps1 override this config. If Empty - All algos enabled
 
-@@Algorithms_NVIDIA=Bitcore,Blake,Blakecoin,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
-@@Algorithms_AMD=Bitcore,Blake,Blakecoin,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Lbry,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skein,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X14,X16r,X17,Xevan,Zero
-@@Algorithms_CPU=CryptoNight,CryptoLight,HOdl,Lyra2h,Lyra2z,Lyra2z330,M7M,Verium,X16r,Yescrypt,YescryptR8,YescryptR16
+@@Algorithms_NVIDIA=Allium,Bitcore,Blake,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X16r,X17,Xevan,Zero
+@@Algorithms_AMD=Allium,Bitcore,Blake,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Decred,Ethash_Keccak,Ethash_Pascal,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X16r,X17,Xevan,Zero
+@@Algorithms_CPU=Allium,CryptoNight,CryptoLight,HOdl,Lyra2h,Lyra2z,Lyra2z330,M7M,Verium,Yescrypt,YescryptR8,YescryptR16
+
 
 -- Miner windows styles: Normal,Maximized,Minimized
 @@MinerWindowStyle=Minimized
 
 
---[optional]Port for megaminer api (http:\\localhost:port), set zero to disable api.
+--[optional]Port for megaminer api (http://localhost:port), set zero to disable api.
 
-@@APIPORT=0
+@@ApiPort=0
+
 
 --Force Dynamic Miners Port, if enabled Apiport field from miner file is ignored, you must enabled if you want to run more than one instance of MM with more than one same type gpu group.
 
-@@FORCEDYNAMICPORTS=DISABLED
+@@ForceDynamicPorts=DISABLED
 
 
 -- **********************************************************************************************************
@@ -171,18 +173,18 @@
 
 --Farm Monitor adresses, indicates what rigs do you want monitor in Farm Monitor,only needs to be filled in your monitoring machine
 
-@@FARMRIGS=[{"IpOrLanName":"moneymachine", "ApiPort":"9999","Notifications":"true"},{"IpOrLanName":"filemon", "ApiPort":"9999","Notifications":"true"},{"IpOrLanName":"localhost", "ApiPort":"9999","Notifications":"true"}]
+@@FarmRigs=[{"IpOrLanName":"moneymachine", "ApiPort":"9999","Notifications":"true"},{"IpOrLanName":"filemon", "ApiPort":"9999","Notifications":"true"},{"IpOrLanName":"localhost", "ApiPort":"9999","Notifications":"true"}]
 
 
 --Refresh interval in seconds
 
-@@REFRESHINTERVAL=15
+@@RefreshInterval=15
 
 
 --[OPTIONAL] Notification Mail and SMTPServer config:
 --Smtp server password will be asked and encrypted locally first time you run (to change password delete smtp.ctr), this file cant be shared between rigs because use local encryption/decryption.
 --GMAIL smtp will not work if you have activated two pass verification
 
-@@NOTIFICATIONMAIL=zzzzzzzzzzzzz@yyy.com
+@@NotificationMail=zzzzzzzzzzzzz@yyy.com
 
-@@SMTPSERVER={"url":"smtp-mail.outlook.com","port":587,"user":"xxxxxxxx@outlook.com","ssl":true}
+@@SmtpServer={"url":"smtp-mail.outlook.com","port":587,"user":"xxxxxxxx@outlook.com","ssl":true}
