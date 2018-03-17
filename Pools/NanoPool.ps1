@@ -79,7 +79,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $_.algo
                 Info                  = $_.Coin
-                Price                 = ($RequestP.bitcoins / $_.Divisor)
+                Price                 = [decimal]$RequestP.bitcoins / $_.Divisor
                 Price24h              = $null
                 Protocol              = "stratum+tcp" #$_.Protocol
                 Host                  = $loc.server
@@ -104,5 +104,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
 }
 
-$Result | ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

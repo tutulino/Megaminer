@@ -92,8 +92,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $Algo
                 Info                  = $Algo
-                Price                 = [double]($_.paying / $Divisor)
-                Price24h              = [double]($_.paying / $Divisor)
+                Price                 = [decimal]$_.paying / $Divisor
+                Price24h              = [decimal]$_.paying / $Divisor
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = if ($enableSSL) {"ssl"} else {$null}
                 Host                  = $_.name + "." + $location.NhLocation + ".nicehash.com"
@@ -121,5 +121,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result | ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

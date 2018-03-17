@@ -104,7 +104,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $MiningPoolHub_Algorithm
                 Info                  = $MiningPoolHub_Coin
-                Price                 = $MiningPoolHub_Price
+                Price                 = [decimal]$MiningPoolHub_Price
                 Price24h              = $null #MPH not send this on api
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = if ($enableSSL) {"ssl"} else {$null}
@@ -133,5 +133,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result | ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

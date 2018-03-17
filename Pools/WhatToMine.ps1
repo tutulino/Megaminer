@@ -156,8 +156,8 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
                 $Result += [PSCustomObject]@{
                     Info                  = $HPool.Info
                     Algorithm             = $HPool.Algorithm
-                    Price                 = ([decimal]$WtmCoin.btc_revenue / $WTMFactor)
-                    Price24h              = ([decimal]$WtmCoin.btc_revenue24 / $WTMFactor)
+                    Price                 = [decimal]$WtmCoin.btc_revenue / $WTMFactor
+                    Price24h              = [decimal]$WtmCoin.btc_revenue24 / $WTMFactor
                     Symbol                = $WtmCoin.Tag
                     Host                  = $HPool.Host
                     HostSSL               = $HPool.HostSSL
@@ -175,6 +175,8 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
                     EthStMode             = $HPool.EthStMode
                     WalletSymbol          = $HPool.WalletSymbol
                     PoolName              = $HPool.PoolName
+                    PoolWorkers           = $HPool.PoolWorkers
+                    PoolHashRate          = $HPool.PoolHashRate
                     RewardType            = $HPool.RewardType
                     ActiveOnManualMode    = $ActiveOnManualMode
                     ActiveOnAutomaticMode = $ActiveOnAutomaticMode
@@ -185,5 +187,5 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     Remove-Variable HPools
 }
 
-$Result | ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

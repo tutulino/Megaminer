@@ -134,5 +134,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     Remove-Variable Pools
 }
 
-$Result | ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

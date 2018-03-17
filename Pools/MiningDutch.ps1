@@ -62,13 +62,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "Ufocoin"; "algo" = "NeoScrypt"; "symbol" = "UFO"; "port" = "3351"};
     $Pools += [pscustomobject]@{"coin" = "Vivo"; "algo" = "NeoScrypt"; "symbol" = "VIVO"; "port" = "3610"};
 
-    $Pools |ForEach-Object {
+    $Pools | ForEach-Object {
 
         $Result += [PSCustomObject]@{
             Algorithm             = $_.Algo
             Info                  = $_.Coin
-            Price                 = $null
-            Price24h              = $null
             Protocol              = "stratum+tcp"
             Host                  = "mining-dutch.nl"
             Port                  = $_.Port
@@ -80,8 +78,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             AbbName               = $AbbName
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolWorkers           = $null
-            PoolHashRate          = $null
             PoolName              = $Name
             WalletMode            = $WalletMode
             WalletSymbol          = $_.Symbol
@@ -93,5 +89,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     Remove-Variable Pools
 }
 
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

@@ -61,9 +61,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             RewardType            = $RewardType
         }
     }
-    remove-variable Pools
+    Remove-Variable Pools
 }
 
 
-$Result |ConvertTo-Json | Set-Content $info.SharedFile
-remove-variable result
+$Result | ConvertTo-Json | Set-Content $Info.SharedFile
+Remove-Variable result

@@ -38,12 +38,12 @@ if ($Querymode -eq "speed") {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
 
     if ($Request) {
-        $Request.Miners |ForEach-Object {
-            $Result += [PSCustomObject]@{
-                PoolName   = $name
+        $Result = $Request.Miners | ForEach-Object {
+            [PSCustomObject]@{
+                PoolName   = $Name
                 Version    = $_.version
                 Algorithm  = get_algo_unified_name $_.Algo
-                Workername = (($_.password -split 'ID=')[1] -split ',')[0]
+                WorkerName = (($_.password -split 'ID=')[1] -split ',')[0]
                 Diff       = $_.difficulty
                 Rejected   = $_.rejected
                 Hashrate   = $_.accepted
@@ -59,9 +59,9 @@ if ($Querymode -eq "wallet") {
 
     if ($Request) {
         $Result = [PSCustomObject]@{
-            Pool     = $name
-            currency = $Request.currency
-            balance  = $Request.balance
+            Pool     = $Name
+            Currency = $Request.currency
+            Balance  = $Request.balance
         }
         Remove-Variable Request
     }
@@ -84,8 +84,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Request.$_.workers -gt 0
     } | ForEach-Object {
 
-        $Coin = $Request.$_
-        $Pool_Algo = get_algo_unified_name $Coin.name
+        $Algo = $Request.$_
+        $Pool_Algo = get_algo_unified_name $Algo.name
 
         $Divisor = 1000000
 
@@ -105,11 +105,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
             Info                  = $Pool_Algo
-            Price                 = $Coin.estimate_current / $Divisor
-            Price24h              = $Coin.estimate_last24h / $Divisor
+            Price                 = [decimal]$Algo.estimate_current / $Divisor
+            Price24h              = [decimal]$Algo.estimate_last24h / $Divisor
             Protocol              = "stratum+tcp"
-            Host                  = $Coin.name + "." + $MineUrl
-            Port                  = $Coin.port
+            Host                  = $Algo.name + "." + $MineUrl
+            Port                  = $Algo.port
             User                  = $CoinsWallets.get_item("BTC")
             Pass                  = "c=BTC,ID=#WorkerName#"
             Location              = $Location
@@ -118,12 +118,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             AbbName               = $AbbName
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolWorkers           = $Coin.workers
-            PoolHashRate          = $Coin.hashrate
+            PoolWorkers           = $Algo.workers
+            PoolHashRate          = $Algo.hashrate
             WalletMode            = $WalletMode
             WalletSymbol          = $Currency
             PoolName              = $Name
-            Fee                   = $Coin.fees / 100
+            Fee                   = $Algo.fees / 100
             RewardType            = $RewardType
         }
     }
@@ -131,5 +131,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result | ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

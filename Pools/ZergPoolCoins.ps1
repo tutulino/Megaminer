@@ -39,12 +39,12 @@ if ($Querymode -eq "speed") {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
 
     if ($Request) {
-        $Request.Miners |ForEach-Object {
-            $Result += [PSCustomObject]@{
-                PoolName   = $name
+        $Result = $Request.Miners | ForEach-Object {
+            [PSCustomObject]@{
+                PoolName   = $Name
                 Version    = $_.version
                 Algorithm  = get_algo_unified_name $_.Algo
-                Workername = (($_.password -split 'ID=')[1] -split ',')[0]
+                WorkerName = (($_.password -split 'ID=')[1] -split ',')[0]
                 Diff       = $_.difficulty
                 Rejected   = $_.rejected
                 Hashrate   = $_.accepted
@@ -60,9 +60,9 @@ if ($Querymode -eq "wallet") {
 
     if ($Request) {
         $Result = [PSCustomObject]@{
-            Pool     = $name
-            currency = $Request.currency
-            balance  = $Request.balance
+            Pool     = $Name
+            Currency = $Request.currency
+            Balance  = $Request.balance
         }
         Remove-Variable Request
     }
@@ -117,8 +117,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $Pool_Algo
                 Info                  = $Pool_Coin
-                Price                 = $Coin.estimate / $Divisor
-                Price24h              = $Coin.'24h_btc' / $Divisor
+                Price                 = [decimal]$Coin.estimate / $Divisor
+                Price24h              = [decimal]$Coin.'24h_btc' / $Divisor
                 Protocol              = "stratum+tcp"
                 Host                  = $stratum.MineUrl
                 Port                  = $Coin.port
@@ -145,5 +145,5 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 }
 
 
-$Result | ConvertTo-Json | Set-Content $info.SharedFile
+$Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result
