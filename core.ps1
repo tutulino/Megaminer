@@ -1152,13 +1152,13 @@ while ($Quit -eq $false) {
             }
 
             #WATCHDOG
-            $groupcards = @()
-            $groupcards += $Devices | Where-Object gpugroup -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName
+            $GroupCards = @()
+            $GroupCards += $Devices | Where-Object gpugroup -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName
 
             $GpuActivityAverages += [pscustomobject]@{
-                gpugroup     = $ActiveMiners[$_.IdF].GpuGroup.GroupName
-                Average      = ($groupcards | Measure-Object -property utilization -average).average
-                NumberOfGpus = $groupcards.count
+                GpuGroup     = $ActiveMiners[$_.IdF].GpuGroup.GroupName
+                Average      = ($GroupCards | Measure-Object -property utilization -average).average
+                NumberOfGpus = $GroupCards.count
             }
 
 
@@ -1210,9 +1210,11 @@ while ($Quit -eq $false) {
         #write speed
         if ($DetailedLog) {WriteLog ($ActiveMiners | Where-Object Best | Select-Object id, process.Id, GroupName, name, poolabbname, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, location, port, arguments | ConvertTo-Json) $LogFile $false}
 
-
         #get pool reported speed (1 or each 10 executions to not saturate pool)
         if ($SwitchLoop -eq 0) {
+
+            # Report stats
+            if ($MinerStatusURL -and $MinerStatusKey) { & .\Includes\ReportStatus.ps1 -MinerStatusKey $MinerStatusKey -WorkerName $WorkerName -ActiveMiners $ActiveMiners -MinerStatusURL $MinerStatusURL }
 
             #To get pool speed
             $PoolsSpeed = @()
@@ -1243,7 +1245,6 @@ while ($Quit -eq $false) {
                 $PoolsSpeed += Get_Pools -Querymode "speed" -PoolsFilterList $_.PoolNameDual -Info $Info
             }
 
-
             foreach ($Candidate in $Candidates) {
                 $Me = $PoolsSpeed | Where-Object {$_.PoolName -eq $ActiveMiners[$Candidate].PoolName -and $_.WorkerName -eq $ActiveMiners[$Candidate].WorkerName } | Select-Object HashRate, PoolName, WorkerName -first 1
                 $ActiveMiners[$Candidate].PoolHashRate = $Me.HashRate
@@ -1251,10 +1252,10 @@ while ($Quit -eq $false) {
                 $MeDual = $PoolsSpeed | Where-Object {$_.PoolName -eq $ActiveMiners[$Candidate].PoolNameDual -and $_.WorkerName -eq $ActiveMiners[$Candidate].WorkerNameDual} | Select-Object HashRate, PoolName, WorkerName -first 1
                 $ActiveMiners[$Candidate].PoolHashRateDual = $MeDual.HashRate
             }
-        } else {
-            $SwitchLoop++
-            if ($SwitchLoop -gt 10) {$SwitchLoop = 0} #reduces 10-1 ratio of execution
         }
+
+        $SwitchLoop++
+        if ($SwitchLoop -gt 10) {$SwitchLoop = 0} #reduces 10-1 ratio of execution
 
         #display current mining info
 
@@ -1313,9 +1314,6 @@ while ($Quit -eq $false) {
             $ApiResponse | Add-Member RefreshDate ((Get-Date).tostring("o"))
             $ApiResponse | ConvertTo-Json | Set-Content -path $ApiSharedFile
         }
-
-        # Report stats
-        if ($MinerStatusURL -and $MinerStatusKey) { & .\Includes\ReportStatus.ps1 -MinerStatusKey $MinerStatusKey -WorkerName $WorkerName -ActiveMiners $ActiveMiners -MinerStatusURL $MinerStatusURL }
 
         $XToWrite = [ref]0
         $YToWrite = [ref]0
