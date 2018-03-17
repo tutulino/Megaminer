@@ -509,23 +509,22 @@ Function WriteLog ($Message, $LogFile, $SendToScreen) {
 Function Timed_ReadKb {
     param(
         [Parameter(Mandatory = $true)]
-        [int]$secondsToWait,
+        [int]$SecondsToWait,
         [Parameter(Mandatory = $true)]
         [array]$ValidKeys
 
     )
 
-    $Loopstart = Get-Date
+    $LoopStart = Get-Date
     $KeyPressed = $null
 
-    while ((NEW-TIMESPAN $Loopstart (Get-Date)).Seconds -le $SecondsToWait -and $ValidKeys -notcontains $KeyPressed) {
-        if ($host.ui.RawUi.KeyAvailable) {
-            $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyUp")
+    while ((New-TimeSpan $LoopStart (Get-Date)).Seconds -le $SecondsToWait -and $ValidKeys -notcontains $KeyPressed) {
+        if ($host.UI.RawUI.KeyAvailable) {
+            $Key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyUp")
             $KeyPressed = $Key.character
-            while ($Host.UI.RawUI.KeyAvailable) {$host.ui.RawUi.Flushinputbuffer()} #keyb buffer flush
-
+            while ($Host.UI.RawUI.KeyAvailable) {$host.UI.RawUI.FlushInputBuffer()} #keyb buffer flush
         }
-        start-sleep -m 30
+        Start-Sleep -Milliseconds 30
     }
     $KeyPressed
 }

@@ -526,28 +526,25 @@ while ($Quit -eq $false) {
                             $FoundSubMiner = $FoundMiner.SubMiners | Where-Object {$_.PowerLimit -eq $PowerLimit}
 
                             if ($FoundSubMiner -eq $null) {
-                                $Hrs = Get_HashRates `
-                                    -Algorithm $Algorithms `
-                                    -MinerName $MinerFile.BaseName `
-                                    -GroupName $TypeGroup.GroupName `
-                                    -PowerLimit $PowerLimit `
-                                    -AlgoLabel $AlgoLabel
+                                [array]$Hrs = (Get_HashRates `
+                                        -Algorithm $Algorithms `
+                                        -MinerName $MinerFile.BaseName `
+                                        -GroupName $TypeGroup.GroupName `
+                                        -PowerLimit $PowerLimit `
+                                        -AlgoLabel $AlgoLabel)
                             } else {
-                                $Hrs = $FoundSubMiner.SpeedReads
+                                [array]$Hrs = $FoundSubMiner.SpeedReads
                             }
 
-                            # Discard hashrates if less than 10 readouts
                             if ($Hrs.Count -gt 10) {
                                 # Remove 10 percent of lowest and highest rate samples which may skew the average
                                 $Hrs = $Hrs | Sort-Object Speed
-                                $p5Index = [math]::Ceiling(5 / 100 * $Hrs.Count)
-                                $p95Index = [math]::Ceiling(95 / 100 * $Hrs.Count)
+                                $p5Index = [math]::Ceiling($Hrs.Count * 0.05)
+                                $p95Index = [math]::Ceiling($Hrs.Count * 0.95)
                                 $Hrs = $Hrs[$p5Index..$p95Index] | Sort-Object SpeedDual, Speed
-                                $p5Index = [math]::Ceiling(5 / 100 * $Hrs.Count)
-                                $p95Index = [math]::Ceiling(95 / 100 * $Hrs.Count)
+                                $p5Index = [math]::Ceiling($Hrs.Count * 0.05)
+                                $p95Index = [math]::Ceiling($Hrs.Count * 0.95)
                                 $Hrs = $Hrs[$p5Index..$p95Index]
-                            } else {
-                                $Hrs = @()
                             }
 
                             $PowerValue = [double]($Hrs | Measure-Object -property Power -average).average
@@ -1016,8 +1013,10 @@ while ($Quit -eq $false) {
             -Value $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory
     }
 
+    if (($ActiveMiners.SubMiners | Where-Object NeedBenchmark).Count -gt 0 ) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
+
     if ($DonationInterval) { $NextInterval = $ConfigDonateTime }
-    elseif (($ActiveMiners.SubMiners | Where-Object NeedBenchmark | Select-Object -ExpandProperty IdF).Count -gt 0) { $NextInterval = $BenchmarkIntervalTime }
+    elseif ($NeedBenchmark) { $NextInterval = $BenchmarkIntervalTime }
     else {
         $NextInterval = $ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object -ExpandProperty IdF | ForEach-Object {
             $PoolInterval = $Config.("INTERVAL_" + $ActiveMiners[$_].PoolRewardType)
@@ -1054,9 +1053,6 @@ while ($Quit -eq $false) {
     #loop to update info and check if miner is running, exit loop is forced inside
     while ($true) {
 
-        $SwitchLoop++
-        if ($SwitchLoop -gt 10) {$SwitchLoop = 0} #reduces 10-1 ratio of execution
-
         $ExitLoop = $false
 
         $Devices = get_devices_information $Types
@@ -1064,7 +1060,7 @@ while ($Quit -eq $false) {
         #############################################################
 
         #Check Live Speed and record benchmark if necessary
-        $ActiveMiners.SubMiners | Where-Object Best -eq $true | ForEach-Object {
+        $ActiveMiners.SubMiners | Where-Object Best | ForEach-Object {
             if ($FirstLoopExecution -and $_.NeedBenchmark) {$_.Stats.BenchmarkedTimes++; $_.StatsHistory.BenchmarkedTimes++}
             $_.SpeedLive = 0
             $_.SpeedLiveDual = 0
@@ -1094,37 +1090,57 @@ while ($Quit -eq $false) {
                     if ($_.Stats.StatsTime -ne 0) { $_.Stats.ActiveTime += (Get-Date) - $_.Stats.StatsTime }
                     $_.Stats.StatsTime = Get-Date
 
-                    if ($_.SpeedReads.Count -le 10 -or $_.SpeedLive -le ((($_.SpeedReads.Speed | Measure-Object -average).average) * 100)) {
-                        #for avoid miners peaks recording
-                        if (($_.SpeedReads).Count -eq 0 -or $_.SpeedReads -eq $null -or $_.SpeedReads -eq "") {$_.SpeedReads = @()}
-                        try {
-                            #this command fails sometimes, why?
+                    [array]$_.SpeedReads = $_.SpeedReads
 
-                            $_.SpeedReads += [PSCustomObject]@{
-                                Speed                  = $_.SpeedLive
-                                SpeedDual              = $_.SpeedLiveDual
-                                GpuActivity            = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].GpuGroup.GroupName) | Measure-Object -property utilization -average).average
-                                Power                  = $_.PowerLive
-                                Date                   = (Get-Date).DateTime
-                                Benchmarking           = $_.NeedBenchmark
-                                TimeSinceStartInterval = $TimeSinceStartInterval
-                                BenchmarkIntervalTime  = $BenchmarkIntervalTime
-                            }
-                        } catch {}
+                    if ($_.SpeedReads.Count -le 10 -or $_.SpeedLive -le ((($_.SpeedReads | Measure-Object -Property Speed -Average).average) * 100)) {
+                        #for avoid miners peaks recording
+
+                        $_.SpeedReads += [PSCustomObject]@{
+                            Speed                  = $_.SpeedLive
+                            SpeedDual              = $_.SpeedLiveDual
+                            GpuActivity            = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].GpuGroup.GroupName) | Measure-Object -property utilization -average).average
+                            Power                  = $_.PowerLive
+                            Date                   = (Get-Date).DateTime
+                            Benchmarking           = $_.NeedBenchmark
+                            TimeSinceStartInterval = $TimeSinceStartInterval
+                            BenchmarkIntervalTime  = $BenchmarkIntervalTime
+                        }
                     }
                     # if ($_.SpeedReads.Count -gt 2000) {$_.SpeedReads = $_.SpeedReads[1..($_.SpeedReads.length - 1)]} #if array is greater than X delete first element
                     if ($_.SpeedReads.Count -gt 2000) {
                         # Remove 10 percent of lowest and highest rate samples which may skew the average
                         $_.SpeedReads = $_.SpeedReads | Sort-Object Speed
-                        $p5Index = [math]::Ceiling(5 / 100 * $_.SpeedReads.Count)
-                        $p95Index = [math]::Ceiling(95 / 100 * $_.SpeedReads.Count)
+                        $p5Index = [math]::Ceiling($_.SpeedReads.Count * 0.05)
+                        $p95Index = [math]::Ceiling($_.SpeedReads.Count * 0.95)
                         $_.SpeedReads = $_.SpeedReads[$p5Index..$p95Index] | Sort-Object SpeedDual, Speed
-                        $p5Index = [math]::Ceiling(5 / 100 * $_.SpeedReads.Count)
-                        $p95Index = [math]::Ceiling(95 / 100 * $_.SpeedReads.Count)
-                        $_.SpeedReads = $_.SpeedReads[$p5Index..$p95Index]
+                        $p5Index = [math]::Ceiling($_.SpeedReads.Count * 0.05)
+                        $p95Index = [math]::Ceiling($_.SpeedReads.Count * 0.95)
+                        $_.SpeedReads = $_.SpeedReads[$p5Index..$p95Index] | Sort-Object Date
                     }
 
                     if (($Config.LiveStatsUpdate) -eq "ENABLED" -or $_.NeedBenchmark) {
+
+                        if ($_.SpeedReads.Count -gt 10 -and $_.NeedBenchmark) {
+                            ### If average of last 2 periods is within SpeedDelta, we can stop benchmarking
+                            $SpeedDelta = 0.01
+                            $p20Index = [math]::Ceiling($_.SpeedReads.Count * 0.2)
+                            $p60Index = [math]::Ceiling($_.SpeedReads.Count * 0.6)
+
+                            $AvgPrev = $_.SpeedReads[$p20Index..$p60Index] | Measure-Object -Property Speed -Average | Select-Object -ExpandProperty Average
+                            $AvgCurr = $_.SpeedReads[$p60Index..($_.SpeedReads.length - 1)] | Measure-Object -Property Speed -Average | Select-Object -ExpandProperty Average
+
+                            $AvgPrevDual = $_.SpeedReads[$p20Index..$p60Index] | Measure-Object -Property SpeedDual -Average | Select-Object -ExpandProperty Average
+                            $AvgCurrDual = $_.SpeedReads[$p60Index..($_.SpeedReads.length - 1)] | Measure-Object -Property SpeedDual -Average | Select-Object -ExpandProperty Average
+
+                            if (
+                                [math]::Abs(1 - $AvgCurr / $AvgPrev) -le $SpeedDelta -and
+                                ($AvgPrevDual -eq 0 -or [math]::Abs(1 - $AvgCurrDual / $AvgPrevDual) -le $SpeedDelta)
+                            ) {
+                                $_.SpeedReads = $_.SpeedReads[$p20Index..($_.SpeedReads.length - 1)]
+                                $_.NeedBenchmark = $false
+                            }
+                        }
+
                         Set_HashRates `
                             -Algorithm $ActiveMiners[$_.IdF].Algorithms `
                             -MinerName $ActiveMiners[$_.IdF].Name `
@@ -1168,19 +1184,24 @@ while ($Quit -eq $false) {
 
         #############################################################
 
+        if ($NeedBenchmark -and ($ActiveMiners.SubMiners | Where-Object {$_.NeedBenchmark -and $_.Best}).Count -eq 0) {
+            WriteLog ("Benchmark completed early") $LogFile $false
+            $ExitLoop = $true
+        }
+
         #display interval
         $TimeToNextInterval = New-TimeSpan (Get-Date) ($LoopStartTime.AddSeconds($NextInterval))
         $TimeToNextIntervalSeconds = [int]$TimeToNextInterval.TotalSeconds
         if ($TimeToNextIntervalSeconds -lt 0) {$TimeToNextIntervalSeconds = 0}
 
         set_ConsolePosition ($Host.UI.RawUI.WindowSize.Width - 31) 2
-        " | Next Interval: $TimeToNextIntervalSeconds secs..." | Out-host
+        " | Next Interval: $TimeToNextIntervalSeconds secs..." | Out-Host
         set_ConsolePosition 0 0
 
         #display header
         Print_Horizontal_line "MegaMiner $Release"
         Print_Horizontal_line
-        "  (E)nd Interval  (P)rofits  (C)urrent  (H)istory  (W)allets  (S)tats  (Q)uit" | Out-host
+        "  (E)nd Interval  (P)rofits  (C)urrent  (H)istory  (W)allets  (S)tats  (Q)uit" | Out-Host
 
         #display donation message
         if ($DonationInterval) {" THIS INTERVAL YOU ARE DONATING, YOU CAN INCREASE OR DECREASE DONATION ON CONFIG.TXT, THANK YOU FOR YOUR SUPPORT !!!!"}
@@ -1188,7 +1209,7 @@ while ($Quit -eq $false) {
 
 
         #write speed
-        if ($DetailedLog) {WriteLog ($ActiveMiners | Where-Object Status -eq 'Running' | Select-Object id, process.Id, GroupName, name, poolabbname, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, location, port, arguments | ConvertTo-Json) $LogFile $false}
+        if ($DetailedLog) {WriteLog ($ActiveMiners | Where-Object Best | Select-Object id, process.Id, GroupName, name, poolabbname, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, location, port, arguments | ConvertTo-Json) $LogFile $false}
 
 
         #get pool reported speed (1 or each 10 executions to not saturate pool)
@@ -1197,9 +1218,8 @@ while ($Quit -eq $false) {
             #To get pool speed
             $PoolsSpeed = @()
 
-
-            $Candidates = ($ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object Idf).IdF
-            $ActiveMiners | Where-Object {$candidates -contains $_.Id} | Select-Object PoolName, UserName, WalletSymbol, Coin, WorkerName -unique | ForEach-Object {
+            $Candidates = ($ActiveMiners.SubMiners | Where-Object Best | Select-Object Idf).IdF
+            $ActiveMiners | Where-Object {$Candidates -contains $_.Id} | Select-Object PoolName, UserName, WalletSymbol, Coin, WorkerName -unique | ForEach-Object {
                 $Info = [PSCustomObject]@{
                     User       = $_.UserName
                     PoolName   = $_.PoolName
@@ -1212,7 +1232,7 @@ while ($Quit -eq $false) {
             }
 
             #Dual miners
-            $ActiveMiners | Where-Object {$candidates -contains $_.Id -and $_.PoolNameDual} | Select-Object PoolNameDual, UserNameDual, WalletSymbol, CoinDual, WorkerName -unique | ForEach-Object {
+            $ActiveMiners | Where-Object {$Candidates -contains $_.Id -and $_.PoolNameDual} | Select-Object PoolNameDual, UserNameDual, WalletSymbol, CoinDual, WorkerName -unique | ForEach-Object {
                 $Info = [PSCustomObject]@{
                     User       = $_.UserNameDual
                     PoolName   = $_.PoolNameDual
@@ -1232,6 +1252,9 @@ while ($Quit -eq $false) {
                 $MeDual = $PoolsSpeed | Where-Object {$_.PoolName -eq $ActiveMiners[$Candidate].PoolNameDual -and $_.WorkerName -eq $ActiveMiners[$Candidate].WorkerNameDual} | Select-Object HashRate, PoolName, WorkerName -first 1
                 $ActiveMiners[$Candidate].PoolHashRateDual = $MeDual.HashRate
             }
+        } else {
+            $SwitchLoop++
+            if ($SwitchLoop -gt 10) {$SwitchLoop = 0} #reduces 10-1 ratio of execution
         }
 
         #display current mining info
@@ -1240,7 +1263,7 @@ while ($Quit -eq $false) {
 
         $ScreenOut = @()
 
-        $ActiveMiners.Subminers | Where-Object Status -eq 'Running'| Sort-Object {$ActiveMiners[$_.idf].GpuGroup.GroupName}  | Foreach-object {
+        $ActiveMiners.Subminers | Where-Object Status -eq 'Running'| Sort-Object {$ActiveMiners[$_.idf].GpuGroup.GroupName}  | ForEach-Object {
             $ScreenOut += [PSCustomObject]@{
                 GroupName   = $ActiveMiners[$_.IdF].GpuGroup.GroupName
                 MMPowLmt    = if ($_.PowerLimit -gt 0) {$_.PowerLimit} else {""}
@@ -1274,7 +1297,7 @@ while ($Quit -eq $false) {
             @{Label = "$LocalCurrency/W"; Expression = {$_.EfficiencyW}  ; Align = 'right'},
             @{Label = "PoolSpeed"; Expression = {$_.PoolSpeed}},
             @{Label = "Pool"; Expression = {$_.Pool}}
-        ) | out-host
+        ) | Out-Host
 
         if ($config.ApiPort -gt 0) {
             #generate api response
@@ -1435,7 +1458,7 @@ while ($Quit -eq $false) {
                 $WalletsToCheck | ForEach-Object {
 
                     set_ConsolePosition 0 $YToWriteMessages
-                    "                   " | Out-host
+                    "                                                                         " | Out-Host
                     set_ConsolePosition 0 $YToWriteMessages
 
                     if ($_.WalletMode -eq "WALLET") {WriteLog ("Checking " + $_.PoolName + " - " + $_.Symbol) $LogFile $true}
@@ -1450,8 +1473,9 @@ while ($Quit -eq $false) {
 
                     $WalletStatus += $Ws
 
+                } -End {
                     set_ConsolePosition 0 $YToWriteMessages
-                    "                                                                         " | Out-host
+                    "                                                                         " | Out-Host
                 }
 
 
@@ -1483,7 +1507,7 @@ while ($Quit -eq $false) {
                 ) | Out-Host
 
                 $Pools | Where-Object WalletMode -eq 'NONE' | Select-Object PoolName -unique | ForEach-Object {
-                    "NO API FOR POOL " + $_.PoolName + " - NO WALLETS CHECK" | Out-host
+                    "NO API FOR POOL " + $_.PoolName + " - NO WALLETS CHECK" | Out-Host
                 }
                 $RepaintScreen = $false
             }
@@ -1569,7 +1593,7 @@ while ($Quit -eq $false) {
             'Q' {$Quit = $true; $ExitLoop = $true}
         }
 
-        if ($KeyPressed) {Clear-host; $RepaintScreen = $true}
+        if ($KeyPressed) {Clear-Host; $RepaintScreen = $true}
 
         if (((Get-Date) -ge ($LoopStartTime.AddSeconds($NextInterval))) ) {
             #If time of interval has over, exit of main loop
@@ -1590,13 +1614,11 @@ while ($Quit -eq $false) {
     }
 
 
-    Remove-variable miners
-    Remove-variable pools
+    Remove-Variable miners
+    Remove-Variable pools
     Get-Job -State Completed | Remove-Job
     [GC]::Collect() #force garbage collector for free memory
     $FirstTotalExecution = $false
-
-
 }
 
 #-----------------------------------------------------------------------------------------------------------------------
