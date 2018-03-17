@@ -253,19 +253,18 @@ while ($Quit -eq $false) {
         $UserName = "ffwd"
         $WorkerName = "Donate"
         $CoinsWallets = @{}
-        $CoinsWallets.add("BTC", "3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL")
 
-        $NextInterval = ($ConfigDonateTime - $ElapsedDonatedTime) * 60
+        $DonateInterval = ($ConfigDonateTime - $ElapsedDonatedTime) * 60
 
         $Algorithm = $null
-        $PoolsName = "DonationPool"
+        $PoolsName = "MiningPoolHub"
         $CoinsName = $null
         $MiningMode = "Automatic"
 
         if ($ElapsedDonatedTime -ge $ConfigDonateTime) {"0_0" | Set-Content -Path 'Donation.ctr'}
         else {[string]$DonationPastTime + "_" + [string]$ElapsedDonatedTime | Set-Content -Path 'Donation.ctr'}
 
-        WriteLog ("Next interval you will be donating for $NextInterval seconds, thanks for your support") $LogFile $true
+        WriteLog ("Next interval you will be donating for $DonateInterval seconds, thanks for your support") $LogFile $true
     } else {
         #NOT donation interval
         $DonationInterval = $false
@@ -1015,7 +1014,7 @@ while ($Quit -eq $false) {
 
     if (($ActiveMiners.SubMiners | Where-Object NeedBenchmark).Count -gt 0 ) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
 
-    if ($DonationInterval) { $NextInterval = $ConfigDonateTime }
+    if ($DonationInterval) { $NextInterval = $DonateInterval }
     elseif ($NeedBenchmark) { $NextInterval = $BenchmarkIntervalTime }
     else {
         $NextInterval = $ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object -ExpandProperty IdF | ForEach-Object {
