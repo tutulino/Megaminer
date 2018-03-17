@@ -75,7 +75,7 @@
 
 -- Benchmarks interval time (less than 300 not recommended for GPU due to miners ramp time), if you want to use automatic gpu power limit configuration is recommended at least 600
 
-@@BENCHMARKTIME=600
+@@BENCHMARKTIME=300
 
 - When enabled miners stats are updated while real mining, if disabled miner stats only are updated while benchmarking (ENABLED/DISABLED)
 
@@ -110,6 +110,8 @@
 
 -- Only for NVIDIA (zero means MM will not change Power Limit): 
 -- You can set Powerlimits (MM must run with admin rights and UAC disabled or prompt appears) for each group, MM will benchmark all miners with maximum value, done this, when a miner is maximum profit candidate MM will benchmark other power limits of that miner to find best. 
+
+--For this feature @@benchmark=600 is recommended
 
 -- Example1: @@GPUGROUPS=[{"GroupName" : "Card1","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card2","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"},{"GroupName" : "Card3","Type":"NVIDIA","Gpus":"0","PowerLimits":"0"}]
 -- Example2: @@GPUGROUPS=[{"GroupName" : "1080s","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"100,90,80"} , {"GroupName" : "RX580s","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
