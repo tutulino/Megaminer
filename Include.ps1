@@ -1020,14 +1020,13 @@ function Expand_WebRequest {
     try {
         (New-Object System.Net.WebClient).DownloadFile($Uri, $FileName)
         if (Test-Path $FileName) {
-            if ($SHA256) {
-                $FileHash = (Get-FileHash -Path $FileName -Algorithm SHA256).Hash
-                if ($FileHash -ne $SHA256) {Throw "File hash doesn't match. Skipping miner." + $FileHash + " " + $SHA256}
+            if ($SHA256 -and (Get-FileHash -Path $FileName -Algorithm SHA256).Hash -ne $SHA256) {
+                "File hash doesn't match. Skipping miner." | Write-Host -ForegroundColor Red
+            } else {
+                $Command = 'x "' + $FilePath + '" -o"' + $DestinationFolder + '" -y -spe'
+                Start-Process ".\bin\7z.exe" $Command -Wait
             }
-            $Command = 'x "' + $FilePath + '" -o"' + $DestinationFolder + '" -y -spe'
-            Start-Process ".\bin\7z.exe" $Command -Wait
         }
-    } catch {
     } finally {
         if (Test-Path $FileName) {Remove-Item $FileName}
     }
@@ -1496,19 +1495,15 @@ function Start_Downloader {
             if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
                 New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
                 (New-Object System.Net.WebClient).DownloadFile($URI, $Path)
-                if ($SHA256) {
-                    $FileHash = (Get-FileHash -Path $Path -Algorithm SHA256).Hash
-                    if ($FileHash -ne $SHA256) {
-                        Remove-Item $Path
-                        Throw "File hash doesn't match. Skipping miner." + $FileHash + " " + $SHA256
-                    }
+                if ($SHA256 -and (Get-FileHash -Path $Path -Algorithm SHA256).Hash -ne $SHA256) {
+                    Remove-Item $Path
+                    "File hash doesn't match. Skipping miner." | write-host -ForegroundColor Red
                 }
             } else {
-                Clear-Host
                 $Message = "Downloading....$($URI)"
                 Write-Host -BackgroundColor green -ForegroundColor Black  $Message
                 Writelog $Message $LogFile
-                Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop
+                Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop -SHA256 $SHA256
             }
         } catch {
             $Message = "Cannot download $URI"
