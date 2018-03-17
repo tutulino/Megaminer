@@ -72,12 +72,13 @@
         $response.ContentLength64 = $buffer.Length
         $output = $response.OutputStream
         
-        $output.Write($buffer,0,$buffer.Length)
-        $output.Close()
-    }
+        try {
+            $output.Write($buffer,0,$buffer.Length)
+            $output.Close()
+        } catch{}
      
+    }
 
 $listener.Stop()
-Write-Warning $pid
 stop-process -Id $PID
 
