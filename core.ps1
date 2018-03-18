@@ -72,7 +72,13 @@ WriteLog ("Release $Release") $LogFile $false
 
 if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"}
 else {$Host.UI.RawUI.WindowTitle = "MM-" + ($GroupNames -join "/")}
+
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
+$env:GPU_FORCE_64BIT_PTR = 0 #For AMD
+$env:GPU_MAX_HEAP_SIZE = 100 #For AMD
+$env:GPU_USE_SYNC_OBJECTS = 1 #For AMD
+$env:GPU_MAX_ALLOC_PERCENT = 100 #For AMD
+$env:GPU_SINGLE_ALLOC_PERCENT = 100 #For AMD
 
 $progressPreference = 'silentlyContinue' #No progress message on web requests
 #$progressPreference = 'Stop'

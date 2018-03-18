@@ -592,6 +592,8 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 *Activity based watchdog disabled if no gpu detected (https://github.com/tutulino/Megaminer/issues/351)
 *Added more killing process retry triying to prevent not closing miners
 *Changes .batch examples to allow right click "run as admin"
+*Added option to force dynamic miner port allocation to ensure multiple copies of MM can run without flaws
+*AMD Enviroment variables included in main program (not neccesary setx operations on batch starting files)
 
 
 

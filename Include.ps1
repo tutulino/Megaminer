@@ -1607,12 +1607,12 @@ function Check_GpuGroups_Config ($types) {
         $detectedcards = @()
         $detectedcards += $Cards | Where-Object group -eq $_.GroupName
         if ($detectedcards.count -eq 0) {
-            WriteLog ("No gpus for group " + $type.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect @@gpugroups config") $LogFile $false
-            write-warning ("No gpus for group " + $type.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect @@gpugroups config")
+            WriteLog ("No gpus for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect @@gpugroups config") $LogFile $false
+            write-warning ("No gpus for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect @@gpugroups config")
             start-sleep 5
         } elseif ($detectedcards.count -ne $_.gpucount) {
-            WriteLog ("Mismatching gpus for group " + $type.GroupName + " was detected, check @@gpugroups config and gpulist.bat") $LogFile $false
-            write-warning ("Mismatching gpus for group " + $type.GroupName + " was detected, check @@gpugroups config and gpulist.bat")
+            WriteLog ("Mismatching gpus for group " + $_.GroupName + " was detected, check @@gpugroups config and gpulist.bat") $LogFile $false
+            write-warning ("Mismatching gpus for group " + $_.GroupName + " was detected, check @@gpugroups config and gpulist.bat")
             start-sleep 5
         }
     }
