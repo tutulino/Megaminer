@@ -49,6 +49,10 @@ param(
 
 $error.clear()
 $currentDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+Import-Module NetSecurity -ErrorAction Ignore
+Import-Module Defender -ErrorAction Ignore
+Import-Module "$env:Windir\System32\WindowsPowerShell\v1.0\Modules\NetSecurity\NetSecurity.psd1" -ErrorAction Ignore
+Import-Module "$env:Windir\System32\WindowsPowerShell\v1.0\Modules\Defender\Defender.psd1" -ErrorAction Ignore
 
 #Start log file
 
@@ -85,11 +89,12 @@ $progressPreference = 'silentlyContinue' #No progress message on web requests
 
 Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
 
-Get-ChildItem . -Recurse | Unblock-File
-#add MM path to windows defender exclusions
-$DefenderExclusions = (Get-MpPreference).CimInstanceProperties | Where-Object name -eq 'ExclusionPath'
-if ($DefenderExclusions.Value -notcontains (Convert-Path .)) {
-    Start-Process powershell -Verb runAs -ArgumentList "Add-MpPreference -ExclusionPath '$(Convert-Path .)'"
+#Set process priority to BelowNormal to avoid hash rate drops on systems with weak CPUs
+(Get-Process -Id $PID).PriorityClass = "BelowNormal"
+
+if (Get-Command "Unblock-File" -ErrorAction SilentlyContinue) {Get-ChildItem . -Recurse | Unblock-File}
+if ((Get-Command "Get-MpPreference" -ErrorAction SilentlyContinue) -and (Get-MpComputerStatus -ErrorAction SilentlyContinue) -and (Get-MpPreference).ExclusionPath -notcontains (Convert-Path .)) {
+    Start-Process (@{desktop = "powershell"; core = "pwsh"}.$PSEdition) "-Command Import-Module '$env:Windir\System32\WindowsPowerShell\v1.0\Modules\Defender\Defender.psd1'; Add-MpPreference -ExclusionPath '$(Convert-Path .)'" -Verb runAs
 }
 
 $ActiveMiners = @()
