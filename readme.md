@@ -4,6 +4,7 @@ AHASHPOOL -- Anonymous, autoexchange to selected coin in config.txt
 ALTMINER -- Anonymous, no autoexchange, must set a wallet for each coin
 BLAZEPOOL -- Anonymous, autoexchange to selected coin in config.txt
 BLOCKSFACTORY -- Registration required, one registration for all pools, no autoexchange
+BSOD.PW -- Anonymous, no autoexchange, must set a wallet for each coin
 FLYPOOL -- Anonymous, manual mode only
 HASHREFINERY -- Anonymous, autoexchange to selected coin in config.txt
 ITALYIIMP -- Anonymous, autoexchange to selected coin in config.txt

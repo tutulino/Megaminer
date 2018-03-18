@@ -593,14 +593,15 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 *Added more killing process retry triying to prevent not closing miners
 *Changes .batch examples to allow right click "run as admin"
 *Added option to force dynamic miner port allocation to ensure multiple copies of MM can run without flaws
-*AMD Enviroment variables included in main program (not neccesary setx operations on batch starting files)
+*AMD Enviroment variables included in main program (not necessary setx operations on batch starting files)
+*Now when you use a coin level pool without autoexchange (yiimp, bsod, etc) you will see all coins in profits screen, not only indicated config wallet coins.
 
 
 
 ---POOLS CHANGES:
-
+* Added Bsod.pw pool
 * Enhaced Whattomine pool (less api call, more acurate data)
-* Added location europe for Zergpool
+* Added  europe location for Zergpool
 * Zergpool lost coin level mining, now algo level mining due to some coins disabled autoexchange
 
 
