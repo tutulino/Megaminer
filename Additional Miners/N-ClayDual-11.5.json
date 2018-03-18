@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal_Blake2s_Keccak.AMD.NVIDIA.GPU.Miner.v11.5.-.Catalyst.15.12-18.x.-.CUDA.8.0_9.1_7.5_6.5.zip",
     "SHA256": "49143ae6f9271445a9da6df7ea716f64b1a6958178c05a6f3052fb45f73816ae",
     "Type": "NVIDIA",
-    "Arguments": "-epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #PROTOCOLDUAL#://#SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL# -dpsw #PASSWORDDUAL# -wd 1 -r -1 -checkcert 0 -logsmaxsize 10 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
+    "Arguments": "-epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #PROTOCOLDUAL#://#SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL# -dpsw #PASSWORDDUAL# -wd 1 -r -1 -logfile #GROUPNAME#_log.txt -logsmaxsize 10 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
     "API": "Claymore",
     "APIPort": 4068,
     "Fee": 0.015,
@@ -17,36 +17,12 @@
         "Ethash_Blake2s|140": "-dcoin blake2s -dcri 140",
         "Ethash_Blake2s|160": "-dcoin blake2s -dcri 160",
 
-        "Ethash_Decred|40": "-dcoin dcr -dcri 40",
-        "Ethash_Decred|60": "-dcoin dcr -dcri 60",
-        "Ethash_Decred|80": "-dcoin dcr -dcri 80",
-        "Ethash_Decred|100": "-dcoin dcr -dcri 100",
-        "Ethash_Decred|120": "-dcoin dcr -dcri 120",
-        "Ethash_Decred|140": "-dcoin dcr -dcri 140",
-        "Ethash_Decred|160": "-dcoin dcr -dcri 160",
-
         "Ethash_Keccak|40": "-dcoin Keccak -dcri 40",
         "Ethash_Keccak|60": "-dcoin Keccak -dcri 60",
         "Ethash_Keccak|80": "-dcoin Keccak -dcri 80",
         "Ethash_Keccak|100": "-dcoin Keccak -dcri 100",
         "Ethash_Keccak|120": "-dcoin Keccak -dcri 120",
         "Ethash_Keccak|140": "-dcoin Keccak -dcri 140",
-        "Ethash_Keccak|160": "-dcoin Keccak -dcri 160",
-
-        "Ethash_Lbry|40": "-dcoin lbc -dcri 40",
-        "Ethash_Lbry|60": "-dcoin lbc -dcri 60",
-        "Ethash_Lbry|80": "-dcoin lbc -dcri 80",
-        "Ethash_Lbry|100": "-dcoin lbc -dcri 100",
-        "Ethash_Lbry|120": "-dcoin lbc -dcri 120",
-        "Ethash_Lbry|140": "-dcoin lbc -dcri 140",
-        "Ethash_Lbry|160": "-dcoin lbc -dcri 160",
-
-        "Ethash_Pascal|40": "-dcoin pasc -dcri 40",
-        "Ethash_Pascal|60": "-dcoin pasc -dcri 60",
-        "Ethash_Pascal|80": "-dcoin pasc -dcri 80",
-        "Ethash_Pascal|100": "-dcoin pasc -dcri 100",
-        "Ethash_Pascal|120": "-dcoin pasc -dcri 120",
-        "Ethash_Pascal|140": "-dcoin pasc -dcri 140",
-        "Ethash_Pascal|160": "-dcoin pasc -dcri 160"
+        "Ethash_Keccak|160": "-dcoin Keccak -dcri 160"
     }
 }

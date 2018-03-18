@@ -218,12 +218,35 @@ if ($MiningMode -ne "FARM MONITORING") {
                         $WtmCoin = $WTMResponse.PSObject.Properties.Value | Where-Object tag -eq $Coin.Symbol | ForEach-Object {if ($(get_algo_unified_name $_.algorithm) -eq $Coin.Algorithm) {$_}}
                         if ($WtmCoin -ne $null) {
 
-                            $WTMFactor = get_WhattomineFactor $Coin.Algorithm
+                            $WTMFactor = switch ($Coin.Algorithm) {
+                                #main page
+                                "Ethash" { 84000000 }
+                                "Sib" { 20100000 }
+                                "CryptoNight" { 2190 }
+                                "Equihash" { 870 }
+                                "Lyra2v2" { 14700000 }
+                                "NeoScrypt" { 2460000 }
+                                "Skunk" { 54000000 }
+                                "Nist5" { 57000000 }
+
+                                #others
+                                "Bitcore" { 30000000 }
+                                "Blake2s" { 7500000000 }
+                                "CryptoLight" { 6600 }
+                                "Keccak" { 900000000 }
+                                "KeccakC" { 240000000 }
+                                "Lyra2z" { 420000 }
+                                "X17" { 100000 }
+                                "Xevan" { 4800000 }
+                                "Yescrypt" { 13080 }
+                                "Zero" { 18 }
+                                default {$null}
+                            }
 
                             if ($WTMFactor -ne $null) {
                                 $Coin.Reward = [double]([double]$WtmCoin.estimated_rewards * ([double]$Coin.YourHashRate / [double]$WTMFactor))
                                 $Coin.BtcProfit = [double]([double]$WtmCoin.Btc_revenue * ([double]$Coin.YourHashRate / [double]$WTMFactor))
-                            } else { "WTM Factor is missing for " + $Coin.Algorithm | Write-Host }
+                            }
                         }
                     }
                     $Coin.LocalProfit = $CDKResponse.$LocalCurrency.rate_float * [double]$Coin.BtcProfit

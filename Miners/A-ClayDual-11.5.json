@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal_Blake2s_Keccak.AMD.NVIDIA.GPU.Miner.v11.5.-.Catalyst.15.12-18.x.-.CUDA.8.0_9.1_7.5_6.5.zip",
     "SHA256": "49143ae6f9271445a9da6df7ea716f64b1a6958178c05a6f3052fb45f73816ae",
     "Type": "AMD",
-    "Arguments": "-epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #PROTOCOLDUAL#://#SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL# -dpsw #PASSWORDDUAL# -wd 1 -r -1 -logsmaxsize 10 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
+    "Arguments": "-epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #PROTOCOLDUAL#://#SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL# -dpsw #PASSWORDDUAL# -wd 1 -r -1 -logfile #GROUPNAME#_log.txt -logsmaxsize 10 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
     "API": "Claymore",
     "APIPort": 4028,
     "Fee": 0.015,
@@ -13,20 +13,8 @@
         "Ethash_Blake2s|65": "-dcoin blake2s -dcri 65",
         "Ethash_Blake2s|70": "-dcoin blake2s -dcri 70",
 
-        "Ethash_Decred|35": "-dcoin dcr -dcri 35",
-        "Ethash_Decred|40": "-dcoin dcr -dcri 40",
-        "Ethash_Decred|45": "-dcoin dcr -dcri 45",
-
         "Ethash_Keccak|08": "-dcoin keccak -dcri 8",
         "Ethash_Keccak|10": "-dcoin keccak -dcri 10",
-        "Ethash_Keccak|12": "-dcoin keccak -dcri 12",
-
-        "Ethash_Lbry|30": "-dcoin lbc -dcri 30",
-        "Ethash_Lbry|35": "-dcoin lbc -dcri 35",
-        "Ethash_Lbry|40": "-dcoin lbc -dcri 40",
-
-        "Ethash_Pascal|15": "-dcoin pasc -dcri 15",
-        "Ethash_Pascal|20": "-dcoin pasc -dcri 20",
-        "Ethash_Pascal|25": "-dcoin pasc -dcri 25"
+        "Ethash_Keccak|12": "-dcoin keccak -dcri 12"
     }
 }

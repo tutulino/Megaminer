@@ -104,15 +104,11 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
         $WTMFactor = switch ($HPool.Algorithm) {
             #main page
             "Ethash" { 84000000 }
-            "Groestl" { 63900000 }
             "Sib" { 20100000 }
             "CryptoNight" { 2190 }
             "Equihash" { 870 }
             "Lyra2v2" { 14700000 }
             "NeoScrypt" { 2460000 }
-            "Lbry" { 315000000 }
-            "Decred" { 5910000000 }
-            "Pascal" { 2100000000 }
             "Skunk" { 54000000 }
             "Nist5" { 57000000 }
 
@@ -123,8 +119,6 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             "Keccak" { 900000000 }
             "KeccakC" { 240000000 }
             "Lyra2z" { 420000 }
-            "MyriadGroestl" { 3300000000 }
-            "Skein" { 1700000000 }
             "X17" { 100000 }
             "Xevan" { 4800000 }
             "Yescrypt" { 13080 }
@@ -132,7 +126,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             default {$null}
         }
 
-        if (($Result | Where-Object { $_.Info -eq $HPool.Info -and $_.Algorithm -eq $HPool.Algorithm}).count -eq 0 -and $WTMFactor -ne $null) {
+        if (($Result | Where-Object { $_.Info -eq $HPool.Info -and $_.Algorithm -eq $HPool.Algorithm}).count -eq 0 -and $WTMFactor) {
             #look that this coin is not included in result
 
             #look for this coin in main page coins

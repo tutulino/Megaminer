@@ -59,7 +59,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $PrePools = @()
     $PrePools += [pscustomobject]@{"coin" = "EthereumClassic"; "algo" = "Ethash"; "symbol" = "ETC"; "port" = 19999; "Fee" = 0.01; "Divisor" = 1000000; "protocol" = "stratum+tcp"};
     $PrePools += [pscustomobject]@{"coin" = "Ethereum"; "algo" = "Ethash"; "symbol" = "ETH"; "port" = 9999; "Fee" = 0.01; "Divisor" = 1000000; "protocol" = "stratum+tcp"};
-    $PrePools += [pscustomobject]@{"coin" = "Sia"; "algo" = "BLAKE2B"; "symbol" = "SIA"; "port" = 7777; "Fee" = 0.02; "Divisor" = 1000000; "protocol" = "stratum+tcp"};
     $PrePools += [pscustomobject]@{"coin" = "Zcash"; "algo" = "Equihash"; "symbol" = "ZEC"; "port" = 6666; "Fee" = 0.01; "Divisor" = 1; "protocol" = "stratum+ssl"};
     $PrePools += [pscustomobject]@{"coin" = "Monero"; "algo" = "CryptoNight"; "symbol" = "XMR"; "port" = 14444; "Fee" = 0.01; "Divisor" = 1; "protocol" = "stratum+ssl"};
     $PrePools += [pscustomobject]@{"coin" = "Electroneum"; "algo" = "CryptoNight"; "symbol" = "ETN"; "port" = 13333; "Fee" = 0.02; "Divisor" = 1; "protocol" = "stratum+ssl"};
