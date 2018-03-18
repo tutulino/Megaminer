@@ -62,7 +62,11 @@ function Get_ComputerStats {
     $memV = Get-CimInstance win32_operatingsystem | ForEach-Object {"{0:N2}" -f ((($_.TotalVirtualMemorySize - $_.FreeVirtualMemory) * 100) / $_.TotalVirtualMemorySize)}
     $free = Get-CimInstance Win32_Volume -Filter "DriveLetter = 'C:'" | ForEach-Object {"{0:N2}" -f (($_.FreeSpace / $_.Capacity) * 100)}
     $nprocs = (Get-Process).count
-    if (Get-Command "Get-NetTCPConnection" -ErrorAction SilentlyContinue) {$Conns = (Get-NetTCPConnection).count}
+    if (Get-Command "Get-NetTCPConnection" -ErrorAction SilentlyContinue) {
+        $Conns = (Get-NetTCPConnection).count
+    } else {
+        $Error.Remove($Error[$Error.Count - 1])
+    }
 
     "AverageCpu = $avg % | MemoryUsage = $mem % | VirtualMemoryUsage = $memV % | PercentCFree = $free % | Processes = $nprocs | Connections = $Conns"
 }
@@ -303,10 +307,11 @@ function get_devices_information ($Types) {
     $CpuResult = Get-CimInstance Win32_Processor
     $CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json
     # Get-Counter is more accurate and is preferable, but currently not available in Poweshell 6
-    if (Get-Command Get-Counter -Type Cmdlet -errorAction SilentlyContinue) {
+    if (Get-Command "Get-Counter" -Type Cmdlet -errorAction SilentlyContinue) {
         # Language independent version of Get-Counter '\Processor(_Total)\% Processor Time'
         $CpuLoad = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue / 100
     } else {
+        $Error.Remove($Error[$Error.Count - 1])
         $CpuLoad = (Get-CimInstance -ClassName win32_processor | Measure-Object -Property LoadPercentage -Average | Select-Object -ExpandProperty Average) / 100
     }
 
