@@ -33,6 +33,7 @@ $FarmRigs | ForEach-Object {
         $_ | add-member LastTime $null
         $_ | add-member ChangeStateTime (get-date) 
         $_ | add-member PendingNotify $false
+        $_ | add-member Workername ""
         }
 
   while ($true)  {
@@ -41,7 +42,13 @@ $FarmRigs | ForEach-Object {
            ForEach ($rig in $FarmRigs) {
                         $uri="http://"+$rig.IpOrLanName+':'+$rig.ApiPort
                         $rig.LastTime=get-date
-                        if ($rig.LastState -ne $rig.State -and $rig.LastState -ne $null) {$rig.ChangeStateTime=get-date;$rig.PendingNotify=$true}
+                        if ($rig.LastState -ne $rig.State -and $rig.LastState -ne $null) {
+                                $rig.ChangeStateTime=get-date
+                                if ($rig.PendingNotify) 
+                                    {$rig.PendingNotify=$false} #state changes before last change was notified, must anulate notify
+                                else 
+                                    {$rig.PendingNotify=$true}
+                                }
                         $rig.LastState=$rig.State
                         try {
                             $Request = Invoke-restmethod $uri -timeoutsec 10 -UseDefaultCredential 
@@ -67,6 +74,10 @@ $FarmRigs | ForEach-Object {
                         if ($_.State -eq "OK") {
 
                             "Mode: "+$_.LastContent.params.MiningMode+"       Pool/s: " + ($_.LastContent.params.pools -join ",")+"         Release: "+$_.LastContent.Release |out-host
+
+
+                            $_.Workername=$_.LastContent.config.workername
+
 
                             $_.LastContent.Activeminers | Format-Table (
                                     @{Label = "GroupName"; Expression = {$_.GroupName}},   
@@ -97,12 +108,12 @@ $FarmRigs | ForEach-Object {
                   
                                     $_.PendingNotify=$false
 
-                                    if ($_.State -eq 'OK') { $mailmsg=$_.IpOrLanName+"("+$_.LastContent.config.workername+") is ONLINE "  }
-                                    else {$mailmsg=$_.IpOrLanName+" is OFFLINE" }
-                                
+                                    $mailmsg=$_.IpOrLanName+"("+$_.workername+") is "
+
+                                    if ($_.State -eq 'OK') {$mailmsg+="ONLINE"} else {$mailmsg+="OFFLINE"}
+                                        
                                     $Creds  = New-Object PSCredential $smtp.user,$EncPass
                                     
-
                                     if ($smtp.ssl) {
                                             Send-MailMessage -usessl -To $config.NotificationMail -From $smtp.user -Subject  $mailmsg -smtp ($smtp.url) -Port ($smtp.port) -Credential $Creds
                                     }
