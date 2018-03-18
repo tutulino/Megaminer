@@ -121,9 +121,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                         }
                         catch {}
                         $retries++
-                    if ($Request -eq $null -or $Request -eq "") {start-sleep 5}
-                    } while ($Request -eq $null -and $retries -le 3)
-                
+                    if ($Request -eq $null -or $Request -eq "" -or $Request2 -eq $null -or $Request2 -eq "") {start-sleep 5}
+                    } while (($Request -eq $null -or $Request2 -eq $null ) -and $retries -le 3)                
                 if ($retries -gt 3) {
                                     WRITE-HOST 'YIIMP API NOT RESPONDING...ABORTING'
                                     EXIT
