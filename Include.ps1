@@ -664,7 +664,7 @@ function Invoke_APIRequest {
     $CachePath = '.\Cache\'
     $CacheFile = $CachePath + [System.Web.HttpUtility]::UrlEncode($Url) + '.json'
 
-    if (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes(-1)) {
+    if (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes(-2)) {
         $Response = Get-Content -Path $CacheFile | ConvertFrom-Json
     } else {
         if (!(Test-Path -Path $CachePath)) { New-Item -Path $CachePath -ItemType directory}

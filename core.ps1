@@ -1225,7 +1225,7 @@ while ($Quit -eq $false) {
         if ($SwitchLoop -eq 0) {
 
             # Report stats
-            if ($MinerStatusURL -and $MinerStatusKey) { & .\Includes\ReportStatus.ps1 -MinerStatusKey $MinerStatusKey -WorkerName $WorkerName -ActiveMiners $ActiveMiners -MinerStatusURL $MinerStatusURL }
+            if ($MinerStatusURL -and $MinerStatusKey) { & .\Includes\ReportStatus.ps1 -Key $MinerStatusKey -WorkerName $WorkerName -ActiveMiners $ActiveMiners -MinerStatusURL $MinerStatusURL }
 
             #To get pool speed
             $PoolsSpeed = @()
@@ -1266,7 +1266,7 @@ while ($Quit -eq $false) {
         }
 
         $SwitchLoop++
-        if ($SwitchLoop -gt 10) {$SwitchLoop = 0} #reduces 10-1 ratio of execution
+        if ($SwitchLoop -gt 5) {$SwitchLoop = 0} #reduces 10-1 ratio of execution
 
         #display current mining info
 

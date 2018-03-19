@@ -1,5 +1,7 @@
 {
     "allium": "Allium",
+    "argon2d-crds": "Argon2d-Crds",
+    "argon2d-dyn": "Argon2d-Dyn",
     "bitblock": "X15",
     "bitcore": "Bitcore",
     "blake (14r)": "Decred",
@@ -99,6 +101,7 @@
     "yescrypt": "Yescrypt",
     "yescryptr8": "YescryptR8",
     "yescryptr16": "YescryptR16",
+    "yescryptr32": "YescryptR32",
     "zec": "Equihash",
     "zoin": "Lyra2z330",
     "zr5": "ZR5",
