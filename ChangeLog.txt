@@ -614,6 +614,7 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 
 *Fixed: blazepool not showing worker name
 *Fixed: some miners not downloading
+*Fixed: efficiency in Currency/W not shown for dual minning
 
 
 --RELEASE NOTES

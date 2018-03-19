@@ -1290,6 +1290,8 @@ while ($Quit -eq $false) {
                 EfficiencyW = if ($_.PowerLive -gt 0) {($_.ProfitsLive / $_.PowerLive).tostring("n4")} else {$null}
                 PoolSpeed   = "$(ConvertTo_Hash $ActiveMiners[$_.IdF].PoolHashRate)/s" + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {("|$(ConvertTo_Hash $ActiveMiners[$_.IdF].PoolHashRateDual)/s")})
                 Pool        = $ActiveMiners[$_.IdF].PoolAbbName + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$($ActiveMiners[$_.IdF].PoolAbbNameDual)"})
+                Workers     = $ActiveMiners[$_.IdF].PoolWorkers
+                Location    = $ActiveMiners[$_.IdF].Location
             }
         }
 
@@ -1307,7 +1309,10 @@ while ($Quit -eq $false) {
             @{Label = "Hash/W"; Expression = {$_.EfficiencyH} ; Align = 'right'},
             @{Label = "$LocalCurrency/W"; Expression = {$_.EfficiencyW}  ; Align = 'right'},
             @{Label = "PoolSpeed"; Expression = {$_.PoolSpeed}},
-            @{Label = "Pool"; Expression = {$_.Pool}}
+            @{Label = "Pool"; Expression = {$_.Pool} ; Align = 'right'},
+            @{Label = "PoolSpeed"; Expression = {$_.PoolSpeed} ; Align = 'right'},
+            @{Label = "Workers"; Expression = {$_.Workers} ; Align = 'right'},
+            @{Label = "Loc."; Expression = {$_.Location} ; Align = 'right'}
         ) | Out-Host
 
         if ($config.ApiPort -gt 0) {
