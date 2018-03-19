@@ -48,17 +48,15 @@ $SelectedOption = ""
 
 Clear-Host
 Print_Horizontal_line ""
-Print_Horizontal_line "SELECT MODE TO MINE"
+Print_Horizontal_line "SELECT OPTION"
 Print_Horizontal_line ""
 
 $Modes = @()
-$Modes += [pscustomobject]@{"Option" = 0; "Mode" = 'AUTOMATIC'; "Explanation" = 'Not necesary choose coin to mine, program choose more profitable coin based on pool´s current statistics'}
-$Modes += [pscustomobject]@{"Option" = 1; "Mode" = 'AUTOMATIC24h'; "Explanation" = 'Same as Automatic mode but based on pools/WTM reported last 24h profit'}
-$Modes += [pscustomobject]@{"Option" = 2; "Mode" = 'MANUAL'; "Explanation" = 'You select coin to mine'}
+$Modes += [pscustomobject]@{"Option" = 0; "Mode" = 'MINE AUTOMATIC'; "Explanation" = 'Not necesary choose coin to mine, program choose more profitable coin based on pool´s current statistics'}
+$Modes += [pscustomobject]@{"Option" = 1; "Mode" = 'MINE AUTOMATIC24h'; "Explanation" = 'Same as Automatic mode but based on pools/WTM reported last 24h profit'}
+$Modes += [pscustomobject]@{"Option" = 2; "Mode" = 'MINE MANUAL'; "Explanation" = 'You select coin to mine'}
 
-if ($FarmRigs -ne $null -and $FarmRigs -ne "" ) {
-    $Modes += [pscustomobject]@{"Option" = 3; "Mode" = 'FARM MONITORING'; "Explanation" = 'I want to see my rigs state'}
-}
+if ($FarmRigs) {$Modes += [pscustomobject]@{"Option" = 3; "Mode" = 'FARM MONITORING'; "Explanation" = 'I want to see my rigs state'}}
 $Modes | Format-Table Option, Mode, Explanation  | Out-Host
 
 

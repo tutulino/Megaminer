@@ -864,7 +864,7 @@ while ($Quit -eq $false) {
         }
 
         #look for best for next round
-        $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id -and $_.IsValid}
+        $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id -and $_.IsValid -and $_.Username}
 
         ## Select top miner that need Benchmark, or if running in Manual mode, or highest Profit above zero.
         $BestNow = $Candidates.SubMiners |
@@ -1406,7 +1406,7 @@ while ($Quit -eq $false) {
                 @{Label = "Profit/Day"; Expression = {if ($_.SubMiner.NeedBenchmark) {"Benchmarking"} else {($_.SubMiner.Profits).tostring("n2") + " $LocalCurrency"}}; Align = 'right'},
                 @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:P2}" -f $_.PoolFee}}; Align = 'right'},
                 @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:P2}" -f $_.MinerFee}}; Align = 'right'},
-                @{Label = "Loc."; Expression = {$_.Location}} ,
+                @{Label = "Loc."; Expression = {if ($_.Username) {$_.Location} else {$color = 93; $e = [char]27; "$e[${color}m$("NO WALLET")${e}[0m"}}} ,
                 @{Label = "Pool"; Expression = {$_.PoolAbbName + $(if ($_.AlgorithmDual) {"|$($_.PoolAbbNameDual)"})}}
 
             ) -GroupBy GroupName | Out-Host
@@ -1435,7 +1435,7 @@ while ($Quit -eq $false) {
 
                 $WalletsToCheck = @()
 
-                $AllPools | Where-Object WalletMode -eq 'WALLET' | Select-Object PoolName, User, WalletMode, WalletSymbol -unique | ForEach-Object {
+                $AllPools | Where-Object WalletMode -eq 'WALLET' | Where-Object User | Select-Object PoolName, User, WalletMode, WalletSymbol -unique | ForEach-Object {
                     $WalletsToCheck += [PSCustomObject]@{
                         PoolName   = $_.PoolName
                         WalletMode = $_.WalletMode

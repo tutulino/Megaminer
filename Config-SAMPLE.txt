@@ -111,7 +111,7 @@
 --@@GpuGroups=[{"GroupName" : "1080s","Type":"NVIDIA","Gpus":"0,1,2,3,4","PowerLimits":"110,100,90,80"} , {"GroupName" : "RX580s","Type":"AMD","Gpus":"0,1","PowerLimits":"0"} ]
 
 --[OPTIONAL]  Pools profit correction factors
---Usually pools revenue is overestimated, this factor allows manual correction (Profit= ReportedPoolProfit * @@POOLPROFITFACTOR)
+--Usually pools revenue is overestimated, this factor allows manual correction (Profit= ReportedPoolProfit * @@PoolProfitFactor)
 --This values are based on experience
 
 @@PoolProfitFactor_AHashPool=0.7
@@ -120,6 +120,8 @@
 @@PoolProfitFactor_ZPool=0.7
 @@PoolProfitFactor_ZergPool=0.5
 @@PoolProfitFactor_BlazePool=0.7
+@@PoolProfitFactor_BSODPW=0.7
+@@PoolProfitFactor_YIIMP=0.7
 
 --Enabled or Disabled detailed log
 

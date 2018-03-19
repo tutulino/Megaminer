@@ -214,8 +214,7 @@ function get_devices_information ($Types) {
     $Devices = @()
 
     #NVIDIA
-    $NVPlatform = [OpenCl.Platform]::GetPlatformIDs() | Where-Object vendor -like "*NVIDIA*"
-    if ($NVPlatform -ne $null) {
+    if ($Types | Where-Object Type -eq 'NVIDIA') {
         $GpuId = 0
         Invoke-Expression ".\bin\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader" | ForEach-Object {
             $SMIresultSplit = $_ -split (",")
@@ -250,8 +249,7 @@ function get_devices_information ($Types) {
 
 
     #AMD
-    $AMDPlatform = [OpenCl.Platform]::GetPlatformIDs() | Where-Object vendor -like "*Advanced Micro Devices*"
-    if ($AMDPlatform -ne $null) {
+    if ($Types | Where-Object Type -eq 'AMD') {
         #ADL
         $GpuId = 0
         $AdlResult = invoke-expression ".\bin\OverdriveN.exe" | Where-Object {$_ -notlike "*&???" -and $_ -ne "ADL2_OverdriveN_Capabilities_Get is failed"}
@@ -304,33 +302,36 @@ function get_devices_information ($Types) {
         }
         Clear-Variable AmdCardsTDP
     }
-    $CpuResult = Get-CimInstance Win32_Processor
-    $CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json
-    # Get-Counter is more accurate and is preferable, but currently not available in Poweshell 6
-    if (Get-Command "Get-Counter" -Type Cmdlet -errorAction SilentlyContinue) {
-        # Language independent version of Get-Counter '\Processor(_Total)\% Processor Time'
-        $CpuLoad = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue / 100
-    } else {
-        $Error.Remove($Error[$Error.Count - 1])
-        $CpuLoad = (Get-CimInstance -ClassName win32_processor | Measure-Object -Property LoadPercentage -Average | Select-Object -ExpandProperty Average) / 100
-    }
 
-    $CpuResult | ForEach-Object {
-        $Devices += [pscustomObject]@{
-            Type        = 'CPU'
-            Id          = $_.DeviceID
-            Group       = "CPU"
-            Clock       = $_.MaxClockSpeed
-            Utilization = $_.LoadPercentage
-            CacheL3     = $_.L3CacheSize
-            Cores       = $_.NumberOfCores
-            Threads     = $_.NumberOfLogicalProcessors
-            Power_Draw  = [int]($CpuTDP.($_.Name) * $CpuLoad)
-            Name        = $_.Name
+    # CPU
+    if ($Types | Where-Object Type -eq 'CPU') {
+        $CpuResult = Get-CimInstance Win32_Processor
+        $CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json
+        # Get-Counter is more accurate and is preferable, but currently not available in Poweshell 6
+        if (Get-Command "Get-Counter" -Type Cmdlet -errorAction SilentlyContinue) {
+            # Language independent version of Get-Counter '\Processor(_Total)\% Processor Time'
+            $CpuLoad = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue / 100
+        } else {
+            $Error.Remove($Error[$Error.Count - 1])
+            $CpuLoad = (Get-CimInstance -ClassName win32_processor | Measure-Object -Property LoadPercentage -Average | Select-Object -ExpandProperty Average) / 100
         }
-    }
-    Clear-Variable CpuTDP
 
+        $CpuResult | ForEach-Object {
+            $Devices += [pscustomObject]@{
+                Type        = 'CPU'
+                Id          = $_.DeviceID
+                Group       = "CPU"
+                Clock       = $_.MaxClockSpeed
+                Utilization = $_.LoadPercentage
+                CacheL3     = $_.L3CacheSize
+                Cores       = $_.NumberOfCores
+                Threads     = $_.NumberOfLogicalProcessors
+                Power_Draw  = [int]($CpuTDP.($_.Name) * $CpuLoad)
+                Name        = $_.Name
+            }
+        }
+        Clear-Variable CpuTDP
+    }
     $Devices
 }
 
@@ -1108,35 +1109,35 @@ function Get_Pools {
     if ($Querymode -eq "core" -or $Querymode -eq "menu" ) {
         foreach ($Pool in $AllPools) {
             #must have wallet
-            if (![string]::IsNullOrEmpty($Pool.User)) {
+            # if ($Pool.User) {
 
-                #must be in algo filter list or no list
-                if ($AlgoFilterList -ne $null) {$Algofilter = Compare-Object $AlgoFilterList $Pool.Algorithm -IncludeEqual -ExcludeDifferent}
-                if ($AlgoFilterList.count -eq 0 -or $Algofilter -ne $null) {
+            #must be in algo filter list or no list
+            if ($AlgoFilterList -ne $null) {$Algofilter = Compare-Object $AlgoFilterList $Pool.Algorithm -IncludeEqual -ExcludeDifferent}
+            if ($AlgoFilterList.count -eq 0 -or $Algofilter -ne $null) {
 
-                    #must be in coin filter list or no list
-                    if ($CoinFilterList -ne $null) {$CoinFilter = Compare-Object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
-                    if ($CoinFilterList.count -eq 0 -or $CoinFilter -ne $null) {
-                        if ($Pool.Location -eq $Location) {$Pool.LocationPriority = 1}
-                        elseif ($Pool.Location -eq 'EU' -and $Location -eq 'US') {$Pool.LocationPriority = 2}
-                        elseif ($Pool.Location -eq 'US' -and $Location -eq 'EU') {$Pool.LocationPriority = 2}
+                #must be in coin filter list or no list
+                if ($CoinFilterList -ne $null) {$CoinFilter = Compare-Object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
+                if ($CoinFilterList.count -eq 0 -or $CoinFilter -ne $null) {
+                    if ($Pool.Location -eq $Location) {$Pool.LocationPriority = 1}
+                    elseif ($Pool.Location -eq 'EU' -and $Location -eq 'US') {$Pool.LocationPriority = 2}
+                    elseif ($Pool.Location -eq 'US' -and $Location -eq 'EU') {$Pool.LocationPriority = 2}
 
-                        ## Apply pool fees and pool factors
-                        if ($Pool.Price) {
-                            $Pool.Price *= 1 - [double]$Pool.Fee
-                            $Pool.Price *= $(if ($Config."PoolProfitFactor_$($Pool.Name)") {[double]$Config."PoolProfitFactor_$($Pool.Name)"} else {1})
-                        }
-                        if ($Pool.Price24h) {
-                            $Pool.Price24h *= 1 - [double]$Pool.Fee
-                            $Pool.Price24h *= $(if ($Config."PoolProfitFactor_$($Pool.Name)") {[double]$Config."PoolProfitFactor_$($Pool.Name)"} else {1})
-                        }
-                        $AllPools2 += $Pool
+                    ## Apply pool fees and pool factors
+                    if ($Pool.Price) {
+                        $Pool.Price *= 1 - [double]$Pool.Fee
+                        $Pool.Price *= $(if ($Config."PoolProfitFactor_$($Pool.Name)") {[double]$Config."PoolProfitFactor_$($Pool.Name)"} else {1})
                     }
+                    if ($Pool.Price24h) {
+                        $Pool.Price24h *= 1 - [double]$Pool.Fee
+                        $Pool.Price24h *= $(if ($Config."PoolProfitFactor_$($Pool.Name)") {[double]$Config."PoolProfitFactor_$($Pool.Name)"} else {1})
+                    }
+                    $AllPools2 += $Pool
                 }
             }
+            # }
         }
         #Insert by priority of location
-        if (![string]::IsNullOrEmpty($Location)) {
+        if ($Location) {
             $Return = @()
             $AllPools2 | Sort-Object Info, Algorithm, LocationPriority | ForEach-Object {
                 $Ex = $Return | Where-Object Info -eq $_.Info | Where-Object Algorithm -eq $_.Algorithm | Where-Object PoolName -eq $_.PoolName
