@@ -162,8 +162,8 @@
 --Algorithms, define what algorithms can be mined for MM, for an Algo can be mined must exists: 1. A pool, 2. A miner, 3. This config.
 --If used, algorithm parameter from core.ps1 override this config.
 
-@@ALGORITHMS_NVIDIA=bitcore,blake2s,blakecoin,c11,cryptonight,Equihash,Ethash,Ethash_Blake2b,Ethash_Blake14r,Ethash_Keccak,Ethash_blake2s,Ethash_pascal,Ethash_Lbry,groestl,hsr,jha,keccakc,lyra2v2,lyra2z,Myriad-Groestl,Neoscrypt,nist5,pascal,phi,polytimos,sib,skein,skunk,timetravel,tribus,veltor,whirpool,x11evo,x11gost,x14,x16r,x17,xevan,yescrypt
-@@ALGORITHMS_AMD=bitcore,blake,blake2s,cryptonight,darkcoin-mod,equihash,Ethash,Ethash_Blake2b,Ethash_Blake14r,Ethash_Keccak,Ethash_blake2s,Ethash_pascal,Ethash_Lbry,Groestl,hsr,Keccak,lyra2v2,lyra2z,Myriad-groestl,neoscrypt,Pascal,phi,skein,tribus,vanilla,veltor,x11gost,xevan,yescrypt
+@@ALGORITHMS_NVIDIA=bitcore,blakecoin,c11,cryptonight,Equihash,Ethash,Ethash_Blake2b,Ethash_Blake14r,Ethash_Keccak,Ethash_blake2s,Ethash_pascal,Ethash_Lbry,groestl,hsr,jha,keccakc,lyra2v2,lyra2z,Myriad-Groestl,Neoscrypt,nist5,pascal,phi,polytimos,sib,skein,skunk,timetravel,tribus,veltor,whirpool,x11evo,x11gost,x14,x16r,x17,xevan,yescrypt
+@@ALGORITHMS_AMD=bitcore,blake,cryptonight,darkcoin-mod,equihash,Ethash,Ethash_Blake2b,Ethash_Blake14r,Ethash_Keccak,Ethash_blake2s,Ethash_pascal,Ethash_Lbry,Groestl,hsr,Keccak,lyra2v2,lyra2z,Myriad-groestl,neoscrypt,Pascal,phi,skein,tribus,vanilla,veltor,x11gost,xevan,yescrypt
 @@ALGORITHMS_CPU=bitcore,blakecoin,cryptonight,hmq1725,jha,keccak,keccakc,lyra2v2,lyra2z,m7m,neoscrypt,nist5,phi,polytimos,timetravel,tribus,veltor
 
  
