@@ -979,10 +979,8 @@ while ($Quit -eq $false) {
         {
 
         
-
-        if  ($SwitchLoop -gt 10) {$SwitchLoop=0} #reduces 10-1 ratio of execution 
         $SwitchLoop++ 
-        
+        if  ($SwitchLoop -gt 10) {$SwitchLoop=0} #reduces 10-1 ratio of execution 
 
         $ExitLoop = $false
         
@@ -1191,8 +1189,11 @@ while ($Quit -eq $false) {
                     Miner        = $ActiveMiners[$_.IdF].Name 
                     Power        = [string]$_.PowerLive+'W'
                     EfficiencyH  = if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null -and $_.PowerLive -gt 0) {(ConvertTo_Hash  ($_.SpeedLive/$_.PowerLive))+'/W'} else {$null} 
-                    EfficiencyW  = if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null -and $_.PowerLive -gt 0) {($_.ProfitsLive/$_.PowerLive).tostring("n4")+" $LocalSymbol/W"} else {$null} 
+                    EfficiencyW  = if ($_.PowerLive -gt 0) {($_.ProfitsLive/$_.PowerLive).tostring("n4")+" $LocalSymbol/W"} else {$null} 
                     Pool         = if ($ActiveMiners[$_.IdF].AlgorithmDual -eq $null)  {$ActiveMiners[$_.IdF].PoolAbbName} else {$ActiveMiners[$_.IdF].PoolAbbName+'|'+$ActiveMiners[$_.IdF].PoolAbbNameDual}
+                    PoolSpeed    = if ($_.AlgorithmDual -eq $null) {(ConvertTo_Hash  ($ActiveMiners[$_.IdF].PoolHashrate))+'/s'} else {(ConvertTo_Hash  ($ActiveMiners[$_.IdF].PoolHashrate))+'/s|'+(ConvertTo_Hash ($ActiveMiners[$_.IdF].PoolHashrateDual))+'/s'} 
+                    Workers      = $ActiveMiners[$_.IdF].PoolWorkers
+                    Location     = $ActiveMiners[$_.IdF].Location
                   
                }
             }   
@@ -1211,7 +1212,10 @@ while ($Quit -eq $false) {
             @{Label = "Power"; Expression = {$_.Power} ; Align = 'right'},   
             @{Label = "Efficiency"; Expression = {$_.EfficiencyH} ; Align = 'right'},   
             @{Label = "Efficiency"; Expression = {$_.EfficiencyW}  ; Align = 'right'},
-            @{Label = "Pool"; Expression = {$_.Pool}}
+            @{Label = "Pool"; Expression = {$_.Pool} ; Align = 'right'},
+            @{Label = "PoolSpeed"; Expression = {$_.PoolSpeed} ; Align = 'right'},
+            @{Label = "Workers"; Expression = {$_.Workers} ; Align = 'right'},
+            @{Label = "Loc."; Expression = {$_.Location} ; Align = 'right'}
         ) | out-host
         
 
