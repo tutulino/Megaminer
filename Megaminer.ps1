@@ -65,9 +65,9 @@ if ($MiningMode -ne "FARM MONITORING") {
                     #-----------------Ask user for pool/s to use, if a pool is indicated in parameters no prompt
 
                         switch ($MiningMode) {
-                                "Automatic" {$Pools=Get_Pools -Querymode "Info" | Where-Object ActiveOnAutomaticMode -eq $true | sort name }
-                                "Automatic24h" {$Pools=Get_Pools -Querymode "Info" | Where-Object ActiveOnAutomatic24hMode -eq $true | sort name }
-                                "Manual" {$Pools=Get_Pools -Querymode "Info" | Where-Object ActiveOnManualMode -eq $true | sort name }
+                                "MINE Automatic" {$MiningMode='AUTOMATIC';$Pools=Get_Pools -Querymode "Info" | Where-Object ActiveOnAutomaticMode -eq $true | Sort-Object name }
+                                "MINE Automatic24h" {$MiningMode='AUTOMATIC24H';$Pools=Get_Pools -Querymode "Info" | Where-Object ActiveOnAutomatic24hMode -eq $true | Sort-Object name }
+                                "MINE Manual" {$MiningMode='MANUAL';$Pools=Get_Pools -Querymode "Info" | Where-Object ActiveOnManualMode -eq $true | Sort-Object name }
                                 }
 
                     $Pools | Add-Member Option "0"
