@@ -1435,30 +1435,31 @@ while ($Quit -eq $false) {
 
                 $WalletsToCheck = @()
 
-                $AllPools | Where-Object WalletMode -eq 'WALLET' | Where-Object User | Select-Object PoolName, User, WalletMode, WalletSymbol -unique | ForEach-Object {
-                    $WalletsToCheck += [PSCustomObject]@{
+                $WalletsToCheck += $AllPools |
+                    Where-Object {$_.WalletMode -eq 'WALLET' -and $_.User} |
+                    Select-Object PoolName, User, WalletMode, WalletSymbol -unique |
+                    ForEach-Object {
+                    [PSCustomObject]@{
                         PoolName   = $_.PoolName
                         WalletMode = $_.WalletMode
                         User       = $_.User
                         Coin       = $null
                         Algorithm  = $null
-                        Host       = $null
                         Symbol     = $_.WalletSymbol
                     }
                 }
 
-                $AllPools | Where-Object WalletMode -eq 'APIKEY' | Select-Object PoolName, Algorithm, WalletMode, WalletSymbol -unique | ForEach-Object {
-                    $ApiKey = $Config.("APIKEY_" + $_.PoolName)
-
-                    if ($Apikey -ne "") {
-                        $WalletsToCheck += [PSCustomObject]@{
-                            PoolName   = $_.PoolName
-                            WalletMode = $_.WalletMode
-                            User       = $null
-                            Algorithm  = $_.Algorithm
-                            Symbol     = $_.WalletSymbol
-                            ApiKey     = $ApiKey
-                        }
+                $WalletsToCheck += $AllPools |
+                    Where-Object {$_.WalletMode -eq 'APIKEY' -and $Config.("APIKEY_" + $_.PoolName)} |
+                    Select-Object PoolName, Algorithm, WalletMode, WalletSymbol, @{Name = "ApiKey"; Expression = {$Config.("APIKEY_" + $_.PoolName)}} -unique |
+                    ForEach-Object {
+                    [PSCustomObject]@{
+                        PoolName   = $_.PoolName
+                        WalletMode = $_.WalletMode
+                        User       = $null
+                        Algorithm  = $_.Algorithm
+                        Symbol     = $_.WalletSymbol
+                        ApiKey     = $_.ApiKey
                     }
                 }
 
@@ -1486,15 +1487,10 @@ while ($Quit -eq $false) {
                     "                                                                         " | Out-Host
                 }
 
-
-                if ($FirstTotalExecution) {$WalletStatusAtStart = $WalletStatus}
-
-                $WalletStatus | Add-Member BalanceAtStart [double]$null
-                $WalletStatus | ForEach-Object {
-                    $_.BalanceAtStart = ($WalletStatusAtStart |
-                            Where-Object wallet -eq $_.Wallet |
-                            Where-Object PoolName -eq $_.PoolName |
-                            Where-Object currency -eq $_.Currency).balance
+                foreach ($Wallet in $WalletStatus) {
+                    if (!$Wallet.BalanceAtStart) {
+                        $Wallet | Add-Member BalanceAtStart $Wallet.Balance
+                    }
                 }
             }
 
@@ -1506,7 +1502,7 @@ while ($Quit -eq $false) {
                 "(U)pdate" | Out-Host
                 "" | Out-Host
 
-                $WalletStatus | Where-Object Balance -gt 0 |
+                $WalletStatus | Where-Object Balance |
                     Sort-Object @{expression = "PoolName"; Ascending = $true}, @{expression = "balance"; Descending = $true} |
                     Format-Table -Wrap -groupby PoolName (
                     @{Label = "Coin"; Expression = {if ($_.WalletSymbol -ne $null) {$_.WalletSymbol} else {$_.wallet}}},

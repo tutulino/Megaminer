@@ -84,14 +84,16 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
 
     #Add secondary page coins
     $WTMResponse = Invoke_APIRequest -Url 'https://whattomine.com/calculators.json' -Retry 3 | Select-Object -ExpandProperty coins
-    $WTMSecondaryCoins = $WTMResponse.PSObject.Properties.Name | ForEach-Object {
-        #convert response to collection
-        $res = $WTMResponse.($_)
-        $res | Add-Member name (get_coin_unified_name $_)
-        $res.Algorithm = get_algo_unified_name ($res.Algorithm)
-        if ($res.Status -eq "Active") {$res}
+    if ($WTMResponse) {
+        $WTMSecondaryCoins = $WTMResponse.PSObject.Properties.Name | ForEach-Object {
+            #convert response to collection
+            $res = $WTMResponse.($_)
+            $res | Add-Member name (get_coin_unified_name $_)
+            $res.Algorithm = get_algo_unified_name ($res.Algorithm)
+            if ($res.Status -eq "Active") {$res}
+        }
+        Remove-Variable WTMResponse
     }
-    Remove-Variable WTMResponse
 
 
     #join pools and coins
@@ -135,7 +137,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
                 $_.Algorithm -eq $HPool.Algorithm
             }
 
-            if (!$WtmCoin) {
+            if (!$WtmCoin -and $WTMSecondaryCoins) {
                 #look in secondary coins page
                 $WtmSecCoin = $WTMSecondaryCoins | Where-Object {
                     $_.Name -eq $HPool.Info -and

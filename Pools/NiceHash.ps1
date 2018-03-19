@@ -51,13 +51,14 @@ if ($Querymode -eq "speed") {
 
 if ($Querymode -eq "wallet") {
     $Info.user = ($Info.user -split '\.')[0]
-    $Request = Invoke_APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider&addr=" + $Info.user) -Retry 3
+    $Request = Invoke_APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider&addr=" + $Info.user) -Retry 3 |
+        Select-Object -ExpandProperty result | Select-Object -ExpandProperty stats
 
     if ($Request) {
         $Result = [PSCustomObject]@{
             Pool     = $name
-            currency = "BTC"
-            balance  = ($Request.result.stats | Measure-Object -Sum balance).sum
+            Currency = "BTC"
+            Balance  = ($Request | Measure-Object -Sum -Property balance).Sum
         }
         Remove-Variable Request
     }
