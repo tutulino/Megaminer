@@ -69,6 +69,12 @@ if ($Querymode -eq "wallet") {
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
+
+    if (!$CoinsWallets.BTC) {
+        Write-Host $Name 'Requires BTC wallet in config.txt'
+        Exit
+    }
+
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/status") -Retry 3
     if (!$Request) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
@@ -109,7 +115,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Protocol              = "stratum+tcp"
             Host                  = $Algo.name + "." + $MineUrl
             Port                  = $Algo.port
-            User                  = $CoinsWallets.get_item("BTC")
+            User                  = $CoinsWallets.BTC
             Pass                  = "c=BTC,ID=#WorkerName#"
             Location              = $Location
             SSL                   = $false

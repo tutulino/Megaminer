@@ -1,10 +1,12 @@
 @echo off
-setx GPU_FORCE_64BIT_PTR 0
-setx GPU_MAX_HEAP_SIZE 100
-setx GPU_USE_SYNC_OBJECTS 1
-setx GPU_MAX_ALLOC_PERCENT 100
-setx GPU_SINGLE_ALLOC_PERCENT 100
 
 cd /d %~dp0
 
-powershell -version 5.0 -noexit -executionpolicy bypass -command "&.\Megaminer.ps1
+set "command=& .\Megaminer.ps1"
+
+pwsh -noexit -executionpolicy bypass -command "%command%"
+powershell -version 5.0 -noexit -executionpolicy bypass -command "%command%"
+msiexec -i https://github.com/PowerShell/PowerShell/releases/download/v6.0.2/PowerShell-6.0.2-win-x64.msi -qb!
+pwsh -noexit -executionpolicy bypass -command "%command%"
+
+pause

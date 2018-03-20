@@ -1099,7 +1099,7 @@ function Get_Pools {
         $Content | ForEach-Object {$ChildItems += [PSCustomObject]@{Name = $Basename; Content = $_}}
     }
 
-    $AllPools = $ChildItems | ForEach-Object {if ($_.content -ne $null) {$_.Content | Add-Member @{Name = $_.Name} -PassThru}}
+    $AllPools = $ChildItems | ForEach-Object {if ($_.Content) {$_.Content | Add-Member @{Name = $_.Name} -PassThru}}
 
 
     $AllPools | Add-Member LocationPriority 9999
@@ -1109,15 +1109,15 @@ function Get_Pools {
     if ($Querymode -eq "core" -or $Querymode -eq "menu" ) {
         foreach ($Pool in $AllPools) {
             #must have wallet
-            # if ($Pool.User) {
+            if (!$Pool.User) {continue}
 
             #must be in algo filter list or no list
-            if ($AlgoFilterList -ne $null) {$Algofilter = Compare-Object $AlgoFilterList $Pool.Algorithm -IncludeEqual -ExcludeDifferent}
-            if ($AlgoFilterList.count -eq 0 -or $Algofilter -ne $null) {
+            if ($AlgoFilterList) {$Algofilter = Compare-Object $AlgoFilterList $Pool.Algorithm -IncludeEqual -ExcludeDifferent}
+            if ($AlgoFilterList.count -eq 0 -or $Algofilter) {
 
                 #must be in coin filter list or no list
-                if ($CoinFilterList -ne $null) {$CoinFilter = Compare-Object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
-                if ($CoinFilterList.count -eq 0 -or $CoinFilter -ne $null) {
+                if ($CoinFilterList) {$CoinFilter = Compare-Object $CoinFilterList $Pool.info -IncludeEqual -ExcludeDifferent}
+                if ($CoinFilterList.count -eq 0 -or $CoinFilter) {
                     if ($Pool.Location -eq $Location) {$Pool.LocationPriority = 1}
                     elseif ($Pool.Location -eq 'EU' -and $Location -eq 'US') {$Pool.LocationPriority = 2}
                     elseif ($Pool.Location -eq 'US' -and $Location -eq 'EU') {$Pool.LocationPriority = 2}
@@ -1134,7 +1134,6 @@ function Get_Pools {
                     $AllPools2 += $Pool
                 }
             }
-            # }
         }
         #Insert by priority of location
         if ($Location) {
@@ -1159,12 +1158,9 @@ function Get_Pools {
 
 function get_config {
 
-
-    $content = [pscustomobject]@{}
-    Get-Content config.txt | Where-Object {$_ -like "@@*"} | ForEach-Object {
-        $content | Add-Member (($_ -split '=')[0] -replace '@@', '') (($_ -split '=')[1])
-    }
-    $content
+    $Result = @{}
+    ((Get-Content config.txt | Where-Object {$_ -like '@@*=*'}) -replace '@@', '') | ForEach-Object {$Result += ConvertFrom-StringData $_}
+    $Result  # Return Value
 }
 
 
@@ -1179,14 +1175,9 @@ Function get_config_variable {
         [string]$VarName
     )
 
-    $Var = [string]$null
-    $content = @()
-
     $SearchPattern = "@@" + $VarName + "=*"
-
-    Get-Content config.txt | Where-Object {$_ -like $SearchPattern} | ForEach-Object {$content += ($_ -split '=')[1]}
-    if (($content | Measure-Object).count -gt 1) {$var = $content} else {$var = [string]$content[0]}
-    if ($Var -ne $null) {$Var.Trim()}
+    $Result = ((Get-Content config.txt | Where-Object {$_ -like $SearchPattern}) -replace '@@', '' | ConvertFrom-StringData).$VarName | Select-Object -First 1
+    $Result  # Return Value
 }
 
 #************************************************************************************************************************************************************************************

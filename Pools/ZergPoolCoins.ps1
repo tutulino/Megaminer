@@ -122,7 +122,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Protocol              = "stratum+tcp"
                 Host                  = $stratum.MineUrl
                 Port                  = $Coin.port
-                User                  = $(if ($Coin.noautotrade -eq 1) {$CoinsWallets.get_item($Symbol)} else {$CoinsWallets.get_item($Currency)})
+                User                  = $(if ($Coin.noautotrade -eq 1) {$CoinsWallets.$Symbol} else {$CoinsWallets.$Currency})
                 Pass                  = $(if ($Coin.noautotrade -eq 1) {"c=$Symbol"} else {"c=$Currency"}) + ",mc=$Pool_Symbol,ID=#WorkerName#"
                 Location              = $stratum.Location
                 SSL                   = $false

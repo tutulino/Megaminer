@@ -67,6 +67,11 @@ if ($Querymode -eq "wallet") {
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
+    if (!$CoinsWallets.BTC_NICE -and !$CoinsWallets.BTC) {
+        Write-Host $Name 'Requires BTC or BTC_NICE wallet in config.txt'
+        Exit
+    }
+
     $Request = Invoke_APIRequest -Url "https://api.nicehash.com/api?method=simplemultialgo.info" -Retry 3 |
         Select-Object -expand result | Select-Object -expand simplemultialgo
 
@@ -101,7 +106,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 HostSSL               = $(if ($enableSSL) {$_.name + "." + $location.NhLocation + ".nicehash.com"} else {$null})
                 Port                  = $_.port
                 PortSSL               = $(if ($enableSSL) {$_.port + 30000} else {$null})
-                User                  = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {$CoinsWallets.get_item('BTC_NICE')} else {$CoinsWallets.get_item('BTC')}) + '.' + "#Workername#"
+                User                  = $(if ($CoinsWallets.BTC_NICE) {$CoinsWallets.BTC_NICE} else {$CoinsWallets.BTC}) + '.' + "#Workername#"
                 Pass                  = "x"
                 Location              = $location.MMLocation
                 SSL                   = $enableSSL
@@ -112,7 +117,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 PoolName              = $Name
                 WalletMode            = $WalletMode
                 WalletSymbol          = "BTC"
-                Fee                   = $(if ($CoinsWallets.get_item('BTC_NICE') -ne $null) {0.02} else {0.05})
+                Fee                   = $(if ($CoinsWallets.BTC_NICE) {0.02} else {0.05})
                 EthStMode             = 3
                 RewardType            = $RewardType
             }

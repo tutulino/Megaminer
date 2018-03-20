@@ -38,9 +38,9 @@ if ($LocalCurrency.length -eq 0) {
     }
 }
 
-$CoinsWallets = @{} #needed for anonymous pools load
-((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_*=*', '').Trim() | ForEach-Object {$CoinsWallets.add(($_ -split "=")[0], ($_ -split "=")[1])}
-
+#needed for anonymous pools load
+$CoinsWallets = @{}
+((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_', '') | ForEach-Object {$CoinsWallets += ConvertFrom-StringData $_}
 
 $SelectedOption = ""
 

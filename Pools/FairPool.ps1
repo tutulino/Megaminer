@@ -72,14 +72,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "Sumokoin"; "algo" = "CryptoNight"; "symbol" = "SUMO"; "server" = "mine.sumo.fairpool.cloud"; "port" = 5555; "fee" = 0.01}
 
     $Pools | ForEach-Object {
-        if ($CoinsWallets.get_item($_.symbol) -ne $null) {
+        if ($CoinsWallets.($_.symbol)) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $_.Algo
                 Info                  = $_.Coin
                 Protocol              = "stratum+tcp"
                 Host                  = $_.Server
                 Port                  = $_.Port
-                User                  = $CoinsWallets.get_item($_.symbol) + "+#WORKERNAME#"
+                User                  = $CoinsWallets.($_.symbol) + "+#WORKERNAME#"
                 Pass                  = "x"
                 Location              = "US"
                 SSL                   = $false

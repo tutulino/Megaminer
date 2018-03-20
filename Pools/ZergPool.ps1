@@ -116,7 +116,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Protocol              = "stratum+tcp"
                 Host                  = $stratum.MineUrl
                 Port                  = [int]$Algo.port
-                User                  = $CoinsWallets.get_item($Currency)
+                User                  = $CoinsWallets.$Currency
                 Pass                  = "c=$Currency,ID=#WorkerName#"
                 Location              = $stratum.Location
                 SSL                   = $false
