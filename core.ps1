@@ -205,8 +205,8 @@ $Quit = $false
 while ($Quit -eq $false) {
 
     $Config = get_config
-
-    $DetailedLog = ($Config.DEBUGLOG -eq "ENABLED")
+    $DetailedLog = ($Config.DebugLog -eq "ENABLED")
+    if ($DetailedLog) {WriteLog ($Config | ConvertTo-Json) $LogFile $false}
 
     Clear-Host; $RepaintScreen = $true
 
