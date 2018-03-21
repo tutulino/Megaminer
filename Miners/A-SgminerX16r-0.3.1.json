@@ -1,6 +1,6 @@
 {
     "Path": "sgminer-x16r-windows\\sgminer.exe",
-    "Uri": "https://github.com/brian112358/sgminer-x16r/releases/download/v0.3.0-dev/sgminer-x16r-v0.3.0-dev-windows.zip",
+    "Uri": "https://github.com/brian112358/sgminer-x16r/releases/download/v0.3.1-dev/sgminer-x16r-v0.3.1-dev-windows.zip",
     "Type": "AMD",
     "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "#BenchmarkArg": "--benchmark-sequence=0123456789ABCDEF",
