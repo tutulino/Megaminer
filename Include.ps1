@@ -712,9 +712,9 @@ function Get_Live_HashRate {
 
             "Dtsm" {
                 $Request = Invoke_TcpRequest $server $port "empty" 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request | ConvertFrom-Json | Select-Object  -ExpandProperty result
-                    $HashRate = [Double](($Data.sol_ps) | Measure-Object -Sum).Sum
+                    $HashRate = [double](($Data.sol_ps) | Measure-Object -Sum).Sum
                 }
             }
 
@@ -722,30 +722,30 @@ function Get_Live_HashRate {
                 $Message = @{command = "summary"; parameter = ""} | ConvertTo-Json -Compress
                 $Request = Invoke_TcpRequest $server $port $Message 5
 
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request.Substring($Request.IndexOf("{"), $Request.LastIndexOf("}") - $Request.IndexOf("{") + 1) -replace " ", "_" | ConvertFrom-Json
 
-                    $HashRate = if ($Data.SUMMARY.HS_5s -ne $null) {[Double]$Data.SUMMARY.HS_5s}
-                    elseif ($Data.SUMMARY.KHS_5s -ne $null) {[Double]$Data.SUMMARY.KHS_5s * [math]::Pow(1000, 1)}
-                    elseif ($Data.SUMMARY.MHS_5s -ne $null) {[Double]$Data.SUMMARY.MHS_5s * [math]::Pow(1000, 2)}
-                    elseif ($Data.SUMMARY.GHS_5s -ne $null) {[Double]$Data.SUMMARY.GHS_5s * [math]::Pow(1000, 3)}
-                    elseif ($Data.SUMMARY.THS_5s -ne $null) {[Double]$Data.SUMMARY.THS_5s * [math]::Pow(1000, 4)}
-                    elseif ($Data.SUMMARY.PHS_5s -ne $null) {[Double]$Data.SUMMARY.PHS_5s * [math]::Pow(1000, 5)}
+                    $HashRate = if ($Data.SUMMARY.HS_5s) {[double]$Data.SUMMARY.HS_5s}
+                    elseif ($Data.SUMMARY.KHS_5s) {[double]$Data.SUMMARY.KHS_5s * [math]::Pow(1000, 1)}
+                    elseif ($Data.SUMMARY.MHS_5s) {[double]$Data.SUMMARY.MHS_5s * [math]::Pow(1000, 2)}
+                    elseif ($Data.SUMMARY.GHS_5s) {[double]$Data.SUMMARY.GHS_5s * [math]::Pow(1000, 3)}
+                    elseif ($Data.SUMMARY.THS_5s) {[double]$Data.SUMMARY.THS_5s * [math]::Pow(1000, 4)}
+                    elseif ($Data.SUMMARY.PHS_5s) {[double]$Data.SUMMARY.PHS_5s * [math]::Pow(1000, 5)}
 
                     if ($HashRate -eq $null) {
-                        $HashRate = if ($Data.SUMMARY.HS_av -ne $null) {[Double]$Data.SUMMARY.HS_av}
-                        elseif ($Data.SUMMARY.KHS_av -ne $null) {[Double]$Data.SUMMARY.KHS_av * [math]::Pow(1000, 1)}
-                        elseif ($Data.SUMMARY.MHS_av -ne $null) {[Double]$Data.SUMMARY.MHS_av * [math]::Pow(1000, 2)}
-                        elseif ($Data.SUMMARY.GHS_av -ne $null) {[Double]$Data.SUMMARY.GHS_av * [math]::Pow(1000, 3)}
-                        elseif ($Data.SUMMARY.THS_av -ne $null) {[Double]$Data.SUMMARY.THS_av * [math]::Pow(1000, 4)}
-                        elseif ($Data.SUMMARY.PHS_av -ne $null) {[Double]$Data.SUMMARY.PHS_av * [math]::Pow(1000, 5)}
+                        $HashRate = if ($Data.SUMMARY.HS_av) {[double]$Data.SUMMARY.HS_av}
+                        elseif ($Data.SUMMARY.KHS_av) {[double]$Data.SUMMARY.KHS_av * [math]::Pow(1000, 1)}
+                        elseif ($Data.SUMMARY.MHS_av) {[double]$Data.SUMMARY.MHS_av * [math]::Pow(1000, 2)}
+                        elseif ($Data.SUMMARY.GHS_av) {[double]$Data.SUMMARY.GHS_av * [math]::Pow(1000, 3)}
+                        elseif ($Data.SUMMARY.THS_av) {[double]$Data.SUMMARY.THS_av * [math]::Pow(1000, 4)}
+                        elseif ($Data.SUMMARY.PHS_av) {[double]$Data.SUMMARY.PHS_av * [math]::Pow(1000, 5)}
                     }
                 }
             }
 
             "palgin" {
                 $Request = Invoke_TcpRequest $server $port "summary" 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request -split ";"
                     $HashRate = [double]($Data[5] -split '=')[1] * 1000
                 }
@@ -753,20 +753,20 @@ function Get_Live_HashRate {
 
             "ccminer" {
                 $Request = Invoke_TcpRequest $server $port "summary" 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request -split ";" | ConvertFrom-StringData
-                    $HashRate = if ([double]$Data.HS -gt 0) {[double]$Data.HS}
-                    elseif ([double]$Data.KHS -gt 0) {[double]$Data.KHS * [math]::Pow(1000, 1)}
-                    elseif ([double]$Data.MHS -gt 0) {[double]$Data.MHS * [math]::Pow(1000, 2)}
-                    elseif ([double]$Data.GHS -gt 0) {[double]$Data.GHS * [math]::Pow(1000, 3)}
-                    elseif ([double]$Data.THS -gt 0) {[double]$Data.THS * [math]::Pow(1000, 4)}
-                    elseif ([double]$Data.PHS -gt 0) {[double]$Data.PHS * [math]::Pow(1000, 5)}
+                    $HashRate = if ($Data.HS) {[double]$Data.HS}
+                    elseif ($Data.KHS) {[double]$Data.KHS * [math]::Pow(1000, 1)}
+                    elseif ($Data.MHS) {[double]$Data.MHS * [math]::Pow(1000, 2)}
+                    elseif ($Data.GHS) {[double]$Data.GHS * [math]::Pow(1000, 3)}
+                    elseif ($Data.THS) {[double]$Data.THS * [math]::Pow(1000, 4)}
+                    elseif ($Data.PHS) {[double]$Data.PHS * [math]::Pow(1000, 5)}
                 }
             }
 
             "nicehashequihash" {
                 $Request = Invoke_TcpRequest $server $port "status" 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = $Data.result.speed_hps
                     if ($HashRate -eq $null) {$HashRate = $Data.result.speed_sps}
@@ -776,25 +776,25 @@ function Get_Live_HashRate {
             "excavator" {
                 $Message = @{id = 1; method = "algorithm.list"; params = @()} | ConvertTo-Json -Compress
                 $Request = Invoke_TcpRequest $server $port $message 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = ($Request | ConvertFrom-Json).Algorithms
-                    $HashRate = [Double](($Data.workers.speed) | Measure-Object -Sum).Sum
+                    $HashRate = [double](($Data.workers.speed) | Measure-Object -Sum).Sum
                 }
             }
 
             "ewbf" {
                 $Message = @{id = 1; method = "getstat"} | ConvertTo-Json -Compress
                 $Request = Invoke_TcpRequest $server $port $message 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [Double](($Data.result.speed_sps) | Measure-Object -Sum).Sum
+                    $HashRate = [double](($Data.result.speed_sps) | Measure-Object -Sum).Sum
                 }
             }
 
             "Claymore" {
                 $Message = '{"id":0,"jsonrpc":"2.0","method":"miner_getstat1"}'
                 $Request = Invoke_TcpRequest -Server $Server -Port $Port -Request $Message -Timeout 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request | ConvertFrom-Json
                     $Miner = $Data.result[0]
                     switch -wildcard ($Miner) {
@@ -809,9 +809,9 @@ function Get_Live_HashRate {
 
             "prospector" {
                 $Request = Invoke_httpRequest $Server 42000 "/api/v0/hashrates" 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [Double]($Data.rate | Measure-Object -Sum).sum
+                    $HashRate = [double]($Data.rate | Measure-Object -Sum).sum
                 }
             }
 
@@ -827,23 +827,23 @@ function Get_Live_HashRate {
 
             "castXMR" {
                 $Request = Invoke_httpRequest $Server $Port "" 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [Double]($Data.devices.hash_rate | Measure-Object -Sum).Sum / 1000
+                    $HashRate = [double]($Data.devices.hash_rate | Measure-Object -Sum).Sum / 1000
                 }
             }
 
             "XMrig" {
                 $Request = Invoke_httpRequest $Server $Port "/api.json" 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [Double]$Data.hashrate.total[0]
+                    $HashRate = [double]$Data.hashrate.total[0]
                 }
             }
 
             "Bminer" {
                 $Request = Invoke_httpRequest $Server $Port "/api/status" 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request.content | ConvertFrom-Json
                     $HashRate = 0
                     $Data.miners | Get-Member -MemberType NoteProperty | ForEach-Object {
@@ -854,20 +854,20 @@ function Get_Live_HashRate {
 
             "optiminer" {
                 $Request = Invoke_httpRequest $Server $Port "" 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [Double]($Data.solution_rate.Total."60s" | Measure-Object -Sum).sum
-                    if ($HashRate -eq 0) { $HashRate = [Double]($Data.solution_rate.Total."5s" | Measure-Object -Sum).sum }
+                    $HashRate = [double]($Data.solution_rate.Total."60s" | Measure-Object -Sum).sum
+                    if ($HashRate -eq 0) { $HashRate = [double]($Data.solution_rate.Total."5s" | Measure-Object -Sum).sum }
                 }
             }
 
             "Xrig" {
                 $Request = Invoke_httpRequest $Server $Port "" 5
-                if (![string]::IsNullOrEmpty($Request)) {
+                if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    if ([Double]$Data.hashrate_15m -gt 0) {$HashRate = [Double]$Data.hashrate_15m}
-                    elseif ([Double]$Data.hashrate_60s -gt 0) {$HashRate = [Double]$Data.hashrate_60s}
-                    elseif ([Double]$Data.hashrate_10s -gt 0) {$HashRate = [Double]$Data.hashrate_10s}
+                    if ([double]$Data.hashrate_15m -gt 0) {$HashRate = [double]$Data.hashrate_15m}
+                    elseif ([double]$Data.hashrate_60s -gt 0) {$HashRate = [double]$Data.hashrate_60s}
+                    elseif ([double]$Data.hashrate_10s -gt 0) {$HashRate = [double]$Data.hashrate_10s}
                 }
             }
         } #end switch

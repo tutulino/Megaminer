@@ -263,13 +263,14 @@ while ($Quit -eq $false) {
         $DonationInterval = $true
         $Config.UserName = "ffwd"
         $Config.WorkerName = "Donate"
-        $CoinsWallets = @{}
-        $CoinsWallets.BTC = "3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL"
+        $CoinsWallets = @{
+            BTC = "3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL"
+        }
 
         $DonateInterval = ($ConfigDonateTime - $ElapsedDonatedTime) * 60
 
         $Algorithm = $null
-        $PoolsName = "MiningPoolHub,NiceHash"
+        $PoolsName = ("MiningPoolHub","NiceHash")
         $CoinsName = $null
         $MiningMode = "Automatic"
 
@@ -435,42 +436,31 @@ while ($Quit -eq $false) {
                         } else {
                             $WorkerName2 = $WorkerName + '_' + $TypeGroup.GroupName
                         }
-                        $PoolUser = $Pool.User -replace '#WorkerName#', $WorkerName2
+                        $PoolUser = $Pool.User -replace '#WORKERNAME#', $WorkerName2
+                        $PoolPass = $Pool.Pass -replace '#WORKERNAME#', $WorkerName2
 
-                        $Arguments = $Miner.Arguments `
-                            -replace '#PORT#', $(if ($enableSSL) {$Pool.PortSSL} else {$Pool.Port}) `
-                            -replace '#SERVER#', $(if ($enableSSL) {$Pool.HostSSL} else {$Pool.Host}) `
-                            -replace '#PROTOCOL#', $(if ($enableSSL) {$Pool.ProtocolSSL} else {$Pool.Protocol}) `
-                            -replace '#LOGIN#', $Pool.User `
-                            -replace '#PASSWORD#', $Pool.Pass `
-                            -replace "#GPUPLATFORM#", $TypeGroup.GpuPlatform `
-                            -replace '#ALGORITHM#', $AlgoName `
-                            -replace '#ALGORITHMPARAMETERS#', $Algo.Value `
-                            -replace '#WORKERNAME#', $WorkerName2 `
-                            -replace '#DEVICES#', $TypeGroup.Gpus `
-                            -replace '#DEVICESCLAYMODE#', $TypeGroup.GpusClayMode `
-                            -replace '#DEVICESETHMODE#', $TypeGroup.GpusETHMode `
-                            -replace '#GROUPNAME#', $TypeGroup.GroupName `
-                            -replace "#ETHSTMODE#", $Pool.EthStMode `
-                            -replace "#DEVICESNSGMODE#", $TypeGroup.GpusNsgMode
+                        $Params = @{
+                            '#PORT#'                = $(if ($enableSSL) {$Pool.PortSSL} else {$Pool.Port})
+                            '#SERVER#'              = $(if ($enableSSL) {$Pool.HostSSL} else {$Pool.Host})
+                            '#PROTOCOL#'            = $(if ($enableSSL) {$Pool.ProtocolSSL} else {$Pool.Protocol})
+                            '#LOGIN#'               = $PoolUser
+                            '#PASSWORD#'            = $PoolPass
+                            '#GPUPLATFORM#'         = $TypeGroup.GpuPlatform
+                            '#ALGORITHM#'           = $AlgoName
+                            '#ALGORITHMPARAMETERS#' = $Algo.Value
+                            '#WORKERNAME#'          = $WorkerName2
+                            '#DEVICES#'             = $TypeGroup.Gpus
+                            '#DEVICESCLAYMODE#'     = $TypeGroup.GpusClayMode
+                            '#DEVICESETHMODE#'      = $TypeGroup.GpusETHMode
+                            '#GROUPNAME#'           = $TypeGroup.GroupName
+                            '#ETHSTMODE#'           = $Pool.EthStMode
+                            '#DEVICESNSGMODE#'      = $TypeGroup.GpusNsgMode
+                        }
+                        $Arguments = $Miner.Arguments
+                        foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
                         if ($Miner.PatternConfigFile) {
                             $ConfigFileArguments = replace_foreach_gpu (Get-Content $Miner.PatternConfigFile -raw) $TypeGroup.Gpus
-                            $ConfigFileArguments = $ConfigFileArguments `
-                                -replace '#PORT#', $(if ($enableSSL) {$Pool.PortSSL} else {$Pool.Port}) `
-                                -replace '#SERVER#', $(if ($enableSSL) {$Pool.HostSSL} else {$Pool.Host}) `
-                                -replace '#PROTOCOL#', $(if ($enableSSL) {$Pool.ProtocolSSL} else {$Pool.Protocol}) `
-                                -replace '#LOGIN#', $Pool.User `
-                                -replace '#PASSWORD#', $Pool.Pass `
-                                -replace "#GPUPLATFORM#", $TypeGroup.GpuPlatform `
-                                -replace '#ALGORITHM#', $AlgoName `
-                                -replace '#ALGORITHMPARAMETERS#', $Algo.Value `
-                                -replace '#WORKERNAME#', $WorkerName2 `
-                                -replace '#DEVICES#', $TypeGroup.Gpus `
-                                -replace '#DEVICESCLAYMODE#', $TypeGroup.GpusClayMode `
-                                -replace '#DEVICESETHMODE#', $TypeGroup.GpusETHMode `
-                                -replace '#GROUPNAME#', $TypeGroup.GroupName `
-                                -replace "#ETHSTMODE#", $Pool.EthStMode `
-                                -replace "#DEVICESNSGMODE#", $TypeGroup.GpusNsgMode
+                            foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
                         }
 
                         #select correct price by mode
@@ -488,24 +478,20 @@ while ($Quit -eq $false) {
                             #Replace wildcards patterns
                             $WorkerName3 = $WorkerName2 + 'D'
                             $PoolUserDual = $PoolDual.User -replace '#WorkerName#', $WorkerName3
+                            $PoolPassDual = $PoolDual.Pass -replace '#WorkerName#', $WorkerName3
 
-                            $Arguments = $Arguments `
-                                -replace '#PORTDUAL#', $(if ($enableDualSSL) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
-                                -replace '#SERVERDUAL#', $(if ($enableDualSSL) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
-                                -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
-                                -replace '#LOGINDUAL#', $PoolDual.User `
-                                -replace '#PASSWORDDUAL#', $PoolDual.Pass `
-                                -replace '#ALGORITHMDUAL#', $AlgoNameDual `
-                                -replace '#WORKERNAME#', $WorkerName3
+                            $Params = @{
+                                '#PORTDUAL#'      = $(if ($enableDualSSL) {$PoolDual.PortSSL} else {$PoolDual.Port})
+                                '#SERVERDUAL#'    = $(if ($enableDualSSL) {$PoolDual.HostSSL} else {$PoolDual.Host})
+                                '#PROTOCOLDUAL#'  = $(if ($enableDualSSL) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol})
+                                '#LOGINDUAL#'     = $PoolUserDual
+                                '#PASSWORDDUAL#'  = $PoolPassDual
+                                '#ALGORITHMDUAL#' = $AlgoNameDual
+                                '#WORKERNAME#'    = $WorkerName3
+                            }
+                            foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
                             if ($Miner.PatternConfigFile) {
-                                $ConfigFileArguments = $ConfigFileArguments `
-                                    -replace '#PORTDUAL#', $(if ($enableDualSSL) {$PoolDual.PortSSL} else {$PoolDual.Port}) `
-                                    -replace '#SERVERDUAL#', $(if ($enableDualSSL) {$PoolDual.HostSSL} else {$PoolDual.Host}) `
-                                    -replace '#PROTOCOLDUAL#', $(if ($enableDualSSL) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol}) `
-                                    -replace '#LOGINDUAL#', $PoolDual.User `
-                                    -replace '#PASSWORDDUAL#', $PoolDual.Pass `
-                                    -replace '#ALGORITHMDUAL#', $AlgoNameDual `
-                                    -replace '#WORKERNAME#', $WorkerName3
+                                foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
                             }
                         } else {
                             $PoolDual = $null
@@ -608,7 +594,7 @@ while ($Quit -eq $false) {
                                     BestBySwitch           = ""
                                     HashRate               = $HashRateValue
                                     HashRateDual           = $HashRateValueDual
-                                    NeedBenchmark          = [bool]($HashRateValue -eq 0 -or (![string]::IsNullOrEmpty($AlgorithmDual) -and $HashRateValueDual -eq 0))
+                                    NeedBenchmark          = [bool]($HashRateValue -eq 0 -or ($AlgorithmDual -and $HashRateValueDual -eq 0))
                                     PowerAvg               = $PowerValue
                                     PowerLimit             = [int]$PowerLimit
                                     PowerLive              = 0
@@ -641,7 +627,7 @@ while ($Quit -eq $false) {
                             CoinDual            = $PoolDual.Info
                             ConfigFileArguments = $ConfigFileArguments
                             ExtractionPath      = $(".\Bin\" + $MinerFile.BaseName + "\")
-                            GenerateConfigFile  = $(if (![string]::IsNullOrEmpty($Miner.GenerateConfigFile)) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $TypeGroup.GroupName})
+                            GenerateConfigFile  = $(if ($Miner.GenerateConfigFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $TypeGroup.GroupName})
                             GpuGroup            = $TypeGroup
                             Host                = $Pool.Host
                             Location            = $Pool.Location
@@ -650,8 +636,8 @@ while ($Quit -eq $false) {
                             Path                = $(".\Bin\" + $MinerFile.BaseName + "\" + $Miner.Path)
                             PoolAbbName         = $Pool.AbbName
                             PoolAbbNameDual     = $PoolDual.AbbName
-                            PoolFee             = $(if ($Pool.Fee -ne $null) {[double]$Pool.Fee})
-                            PoolFeeDual         = $(if ($PoolDual.Fee -ne $null) {[double]$PoolDual.Fee})
+                            PoolFee             = $(if ($Pool.Fee) {[double]$Pool.Fee})
+                            PoolFeeDual         = $(if ($PoolDual.Fee) {[double]$PoolDual.Fee})
                             PoolName            = $Pool.PoolName
                             PoolNameDual        = $PoolDual.PoolName
                             PoolPrice           = $(if ($MiningMode -eq 'Automatic24h') {[double]$Pool.Price24h} else {[double]$Pool.Price})
@@ -984,20 +970,22 @@ while ($Quit -eq $false) {
                 if ($ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].NeedBenchmark -and $ActiveMiners[$BestNow.IdF].BenchmarkArg) {$Arguments += " " + $ActiveMiners[$BestNow.IdF].BenchmarkArg }
 
                 if ($ActiveMiners[$BestNow.IdF].Api -eq "Wrapper") {
-                    $ActiveMiners[$BestNow.IdF].Process = Start_SubProcess `
-                        -FilePath ((Get-Process -Id $Global:PID).path) `
-                        -ArgumentList "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($ActiveMiners[$BestNow.IdF].Port)' -FilePath '$($ActiveMiners[$BestNow.IdF].Path)' -ArgumentList '$($Arguments)' -WorkingDirectory '$(Split-Path $ActiveMiners[$BestNow.IdF].Path)'" `
-                        -WorkingDirectory (Split-Path $ActiveMiners[$BestNow.IdF].Path) `
-                        -MinerWindowStyle $MinerWindowStyle `
-                        -Priority $(if ($ActiveMiners[$BestNow.IdF].GroupType -eq "CPU") {-2} else {-1})
+                    $ProcessParams = @{
+                        FilePath     = (Get-Process -Id $Global:PID).Path
+                        ArgumentList = "-executionpolicy bypass -command . '$(Convert-Path ".\Wrapper.ps1")' -ControllerProcessID $PID -Id '$($ActiveMiners[$BestNow.IdF].Port)' -FilePath '$($ActiveMiners[$BestNow.IdF].Path)' -ArgumentList '$($Arguments)' -WorkingDirectory '$(Split-Path $ActiveMiners[$BestNow.IdF].Path)'"
+                    }
                 } else {
-                    $ActiveMiners[$BestNow.IdF].Process = Start_SubProcess `
-                        -FilePath $ActiveMiners[$BestNow.IdF].Path `
-                        -ArgumentList $Arguments `
-                        -WorkingDirectory (Split-Path $ActiveMiners[$BestNow.IdF].Path) `
-                        -MinerWindowStyle $MinerWindowStyle `
-                        -Priority $(if ($ActiveMiners[$BestNow.IdF].GroupType -eq "CPU") {-2} else {-1})
+                    $ProcessParams = @{
+                        FilePath     = $ActiveMiners[$BestNow.IdF].Path
+                        ArgumentList = $Arguments
+                    }
                 }
+                $CommonParams = @{
+                    WorkingDirectory = Split-Path $ActiveMiners[$BestNow.IdF].Path
+                    MinerWindowStyle = $MinerWindowStyle
+                    Priority         = if ($ActiveMiners[$BestNow.IdF].GroupType -eq "CPU") {-2} else {-1}
+                }
+                $ActiveMiners[$BestNow.IdF].Process = Start_SubProcess @ProcessParams @CommonParams
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = "Running"
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].BestBySwitch = ""
