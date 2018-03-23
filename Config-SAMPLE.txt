@@ -150,9 +150,9 @@
 --Algorithms, define what algorithms can be mined for MM, for an Algo can be mined must exists: 1. A pool, 2. A miner, 3. This config.
 --If used, algorithm parameter from core.ps1 override this config. If Empty - All algos enabled
 
-@@Algorithms_NVIDIA=Allium,Bitcore,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Keccak,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X16r,X17,Xevan,Zero
-@@Algorithms_AMD=Allium,Bitcore,C11,CryptoLight,CryptoNight,Equihash,Ethash,Ethash_Blake2s,Ethash_Keccak,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X16r,X17,Xevan,Zero
-@@Algorithms_CPU=Allium,CryptoNight,CryptoLight,HOdl,Lyra2h,Lyra2z,Lyra2z330,M7M,Verium,Yescrypt,YescryptR8,YescryptR16
+@@Algorithms_NVIDIA=Allium,Bitcore,C11,CryptoLight,CryptoNight,CryptoNightV7,Equihash,Ethash,Ethash_Blake2s,Ethash_Keccak,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X16r,X17,Xevan,Zero
+@@Algorithms_AMD=Allium,Bitcore,C11,CryptoLight,CryptoNight,CryptoNightV7,Equihash,Ethash,Ethash_Blake2s,Ethash_Keccak,Fresh,HMQ1725,HSR,JHA,KeccakC,Lyra2v2,Lyra2h,Mars,NeoScrypt,Nist5,PHI,Polytimos,ScryptN,Sib,Skunk,Tribus,Veltor,Whirlpool,WhirlpoolX,X11evo,X16r,X17,Xevan,Zero
+@@Algorithms_CPU=Allium,CryptoLight,CryptoNight,CryptoNightV7,HOdl,Lyra2h,Lyra2z,Lyra2z330,M7M,Verium,Yescrypt,YescryptR8,YescryptR16,YescryptR32
 
 
 -- Miner windows styles: Normal,Maximized,Minimized

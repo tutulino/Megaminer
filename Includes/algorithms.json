@@ -16,6 +16,7 @@
     "c11": "C11",
     "cryptolight": "CryptoLight",
     "cryptonight": "CryptoNight",
+    "cryptonightv7": "CryptoNightV7",
     "cryptonight-light": "CryptoLight",
     "cryptonight-lite": "CryptoLight",
     "daggerhashimoto": "Ethash",

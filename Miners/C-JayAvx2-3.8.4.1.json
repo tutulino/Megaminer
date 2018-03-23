@@ -1,7 +1,7 @@
 ﻿{
-    "Path": "cpuminer-opt-3.8.4-windows\\cpuminer-avx2.exe",
-    "Uri": "https://github.com/JayDDee/cpuminer-opt/files/1822931/cpuminer-opt-3.8.4-windows.zip",
-    "SHA256": "2abf68624ebf4c3eb8888cf1d8092e523659df1fcddce548dbff043f3e5ef8d6",
+    "Path": "cpuminer-opt-3.8.4.1-windows\\cpuminer-avx2.exe",
+    "Uri": "https://github.com/JayDDee/cpuminer-opt/files/1838763/cpuminer-opt-3.8.4.1-windows.zip",
+    "SHA256": "6dc3913ee43555d919b20da5c705b3e9403b08f823425cc0aac9fccf054a681f",
     "Type": "CPU",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# #ALGORITHMPARAMETERS# -q",
     "BenchmarkArg": "--benchmark",

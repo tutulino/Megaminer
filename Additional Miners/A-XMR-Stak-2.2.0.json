@@ -8,7 +8,7 @@
     "Arguments": "-c config-#GROUPNAME#.txt --noCPU --noNVIDIA --noUAC",
     "API": "XMRig",
     "APIPort": 4028,
-    "Fee": 0.01,
+    "Fee": 0.02,
     "Algorithms": {
         "CryptoNight": "monero",
         "CryptoLight": "aeon"
