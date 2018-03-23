@@ -114,7 +114,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Price                 = [decimal]$Algo.estimate_current / $Divisor
                 Price24h              = [decimal]$Algo.estimate_last24h / $Divisor
                 Protocol              = "stratum+tcp"
-                Host                  = $stratum.MineUrl
+                Host                  = $Algo.name + "." + $stratum.MineUrl
                 Port                  = [int]$Algo.port
                 User                  = $CoinsWallets.$Currency
                 Pass                  = "c=$Currency,ID=#WorkerName#"

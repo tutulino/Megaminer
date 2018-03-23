@@ -120,7 +120,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Price                 = [decimal]$Coin.estimate / $Divisor
                 Price24h              = [decimal]$Coin.'24h_btc' / $Divisor
                 Protocol              = "stratum+tcp"
-                Host                  = $stratum.MineUrl
+                Host                  = $Coin.algo + "." + $stratum.MineUrl
                 Port                  = $Coin.port
                 User                  = $(if ($Coin.noautotrade -eq 1) {$CoinsWallets.$Symbol} else {$CoinsWallets.$Currency})
                 Pass                  = $(if ($Coin.noautotrade -eq 1) {"c=$Symbol"} else {"c=$Currency"}) + ",mc=$Pool_Symbol,ID=#WorkerName#"
