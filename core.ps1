@@ -348,13 +348,10 @@ while ($Quit -eq $false) {
         $NeedPool = $false
         foreach ($TypeGroup in $Types) {
             ## Is pool algorithm defined in config?
-            if ([string]::IsNullOrEmpty($TypeGroup.Algorithms) -or $_.Name -in $TypeGroup.Algorithms) {$NeedPool = $true}
-            else {
-                foreach ($algo in $TypeGroup.Algorithms) {
-                    if ($algo -like "$($_.Name)_*" -or $algo -like "*_$($_.Name)") {$NeedPool = $true}
+            $AlgoList = $TypeGroup.Algorithms | ForEach-Object {$_ -split '_'} | Select-Object -Unique
+            if (!$AlgoList -or $_.Name -in $AlgoList) {$NeedPool = $true}
                 }
-            }
-        }
+        if ($NeedPool) {
         ## Order by price (profitability)
         $_.Group | Sort-Object -Property `
         @{Expression = {if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}}; Descending = $true},
@@ -369,6 +366,7 @@ while ($Quit -eq $false) {
                 }
             }
         }
+    }
     }
     $Pools = $PoolsFiltered
     WriteLog ([string]$Pools.Count + " pools left") $LogFile $true
@@ -469,7 +467,10 @@ while ($Quit -eq $false) {
                         #Search for dualmining pool
                         if ($AlgoNameDual) {
                             #search dual pool and select correct price by mode
-                            $PoolDual = $Pools | Where-Object Algorithm -eq $AlgoNameDual | Sort-Object @{Expression = {if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}}; Descending = $true} | Select-Object -First 1
+                            $PoolDual = $Pools |
+                                Where-Object Algorithm -eq $AlgoNameDual |
+                                Sort-Object @{Expression = {if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}}; Descending = $true} |
+                                Select-Object -First 1
                             $PriceDual = [double]$PoolDual.$(if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"})
 
                             #Set flag if both Miner and Pool support SSL
@@ -565,7 +566,7 @@ while ($Quit -eq $false) {
                                 $SubMinerRevenueDual *= (1 - [double]$Miner.Fee)
                             }
 
-                            if ($FoundSubMiner -eq $null) {
+                            if (!$FoundSubMiner) {
                                 $StatsHistory = Get_Stats `
                                     -Algorithm $Algorithms `
                                     -MinerName $MinerFile.BaseName `
@@ -584,7 +585,7 @@ while ($Quit -eq $false) {
                                 FailedTimes      = 0
                                 StatsTime        = [TimeSpan]0
                             }
-                            if ($StatsHistory -eq $null) {$StatsHistory = $Stats}
+                            if (!$StatsHistory) {$StatsHistory = $Stats}
 
                             if ($SubMiners.Count -eq 0 -or $SubMiners[0].StatsHistory.BestTimes -gt 0) {
                                 #only add a SubMiner (distinct from first if sometime first was best)
@@ -1121,7 +1122,7 @@ while ($Quit -eq $false) {
 
                     if (($Config.LiveStatsUpdate) -eq "ENABLED" -or $_.NeedBenchmark) {
 
-                        if ($_.SpeedReads.Count -gt 10 -and $_.NeedBenchmark) {
+                        if ($_.SpeedReads.Count -gt 20 -and $_.NeedBenchmark) {
                             ### If average of last 2 periods is within SpeedDelta, we can stop benchmarking
                             $SpeedDelta = 0.01
                             $p20Index = [math]::Ceiling($_.SpeedReads.Count * 0.2)
@@ -1480,9 +1481,21 @@ while ($Quit -eq $false) {
                     "                                                                         " | Out-Host
                 }
 
+                if (!$WalletStatusAtStart) {$WalletStatusAtStart = $WalletStatus}
+
                 foreach ($Wallet in $WalletStatus) {
                     if (!$Wallet.BalanceAtStart) {
-                        $Wallet | Add-Member BalanceAtStart $Wallet.Balance
+                        $BalanceAtStart = $WalletStatusAtStart | Where-Object {
+                            $_.Wallet -eq $Wallet.Wallet -and
+                            $_.PoolName -eq $Wallet.PoolName -and
+                            $_.Currency -eq $Wallet.Currency
+                        } | Select-Object -ExpandProperty Balance
+
+                        if ($BalanceAtStart) {
+                            $Wallet | Add-Member BalanceAtStart $BalanceAtStart
+                        } else {
+                            $WalletStatusAtStart += $Wallet
+                        }
                     }
                 }
             }
