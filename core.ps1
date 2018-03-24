@@ -270,7 +270,7 @@ while ($Quit -eq $false) {
         $DonateInterval = ($ConfigDonateTime - $ElapsedDonatedTime) * 60
 
         $Algorithm = $null
-        $PoolsName = ("MiningPoolHub","NiceHash")
+        $PoolsName = ("MiningPoolHub", "NiceHash")
         $CoinsName = $null
         $MiningMode = "Automatic"
 
@@ -289,7 +289,7 @@ while ($Quit -eq $false) {
         if (!$Config.WorkerName) {$Config.WorkerName = $env:COMPUTERNAME}
 
         $CoinsWallets = @{}
-        ((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_', '') | ForEach-Object {$CoinsWallets += ConvertFrom-StringData $_}
+        ((Get-Content config.txt | Where-Object {$_ -like 'WALLET_*=*'}) -replace 'WALLET_', '') | ForEach-Object {$CoinsWallets += ConvertFrom-StringData $_}
 
         [string]$ElapsedDonationTime + "_0" | Set-Content -Path Donation.ctr
     }
@@ -350,23 +350,23 @@ while ($Quit -eq $false) {
             ## Is pool algorithm defined in config?
             $AlgoList = $TypeGroup.Algorithms | ForEach-Object {$_ -split '_'} | Select-Object -Unique
             if (!$AlgoList -or $_.Name -in $AlgoList) {$NeedPool = $true}
-                }
+        }
         if ($NeedPool) {
-        ## Order by price (profitability)
-        $_.Group | Sort-Object -Property `
-        @{Expression = {if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}}; Descending = $true},
-        @{Expression = "LocationPriority"; Ascending = $true} | ForEach-Object {
-            if ($NeedPool) {
-                ## test tcp connection to pool
-                if (Query_TCPPort -Server $_.Host -Port $_.Port -Timeout 100) {
-                    $NeedPool = $false
-                    $_  ## return result
-                } else {
-                    WriteLog "$($_.PoolName): $($_.Host):$($_.Port) is not responding!" $LogFile $true
+            ## Order by price (profitability)
+            $_.Group | Sort-Object -Property `
+            @{Expression = {if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}}; Descending = $true},
+            @{Expression = "LocationPriority"; Ascending = $true} | ForEach-Object {
+                if ($NeedPool) {
+                    ## test tcp connection to pool
+                    if (Query_TCPPort -Server $_.Host -Port $_.Port -Timeout 100) {
+                        $NeedPool = $false
+                        $_  ## return result
+                    } else {
+                        WriteLog "$($_.PoolName): $($_.Host):$($_.Port) is not responding!" $LogFile $true
+                    }
                 }
             }
         }
-    }
     }
     $Pools = $PoolsFiltered
     WriteLog ([string]$Pools.Count + " pools left") $LogFile $true
@@ -1001,7 +1001,7 @@ while ($Quit -eq $false) {
                 $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Best = $true
                 if ($ProfitLast -lt $ProfitNow) {
                     $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].BestBySwitch = "*"
-                    WriteLog ("$BestNowLogMsg continue mining due to @@percenttoswitch value") $LogFile $true
+                    WriteLog ("$BestNowLogMsg continue mining due to percenttoswitch value") $LogFile $true
                 }
             }
         }

@@ -40,7 +40,7 @@ if ($LocalCurrency.length -eq 0) {
 
 #needed for anonymous pools load
 $CoinsWallets = @{}
-((Get-Content config.txt | Where-Object {$_ -like '@@WALLET_*=*'}) -replace '@@WALLET_', '') | ForEach-Object {$CoinsWallets += ConvertFrom-StringData $_}
+((Get-Content config.txt | Where-Object {$_ -like 'WALLET_*=*'}) -replace 'WALLET_', '') | ForEach-Object {$CoinsWallets += ConvertFrom-StringData $_}
 
 $SelectedOption = ""
 
@@ -152,7 +152,7 @@ if ($MiningMode -ne "FARM MONITORING") {
             $CoinsPool | Add-Member LocalPrice ([Double]0.0)
 
             $ManualMiningApiUse = $true
-            # (Get-Content config.txt | Where-Object {$_ -like '@@MANUALMININGAPIUSE=*'} ) -replace '@@MANUALMININGAPIUSE=', ''
+            # (Get-Content config.txt | Where-Object {$_ -like 'MANUALMININGAPIUSE=*'} ) -replace 'MANUALMININGAPIUSE=', ''
 
             if ($ManualMiningApiUse -eq $true) {
                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
