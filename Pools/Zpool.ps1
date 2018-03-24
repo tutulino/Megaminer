@@ -99,6 +99,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "Qubit" {$Divisor *= 1000}
             "Scrypt" {$Divisor *= 1000}
             "SHA256" {$Divisor *= 1000000000}
+            "SHA256t" {$Divisor *= 1000}
             "X11" {$Divisor *= 1000}
             "Yescrypt" {$Divisor /= 1000}
         }

@@ -35,27 +35,27 @@ if ($Querymode -eq "info") {
 
 
 if ($Querymode -eq "speed") {
-    $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
+    # $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
 
-    if ($Request) {
-        $Result = $Request.Miners | ForEach-Object {
-            [PSCustomObject]@{
-                PoolName   = $Name
-                Version    = $_.version
-                Algorithm  = get_algo_unified_name $_.Algo
-                WorkerName = (($_.password -split 'ID=')[1] -split ',')[0]
-                Diff       = $_.difficulty
-                Rejected   = $_.rejected
-                Hashrate   = $_.accepted
-            }
-        }
-        Remove-Variable Request
-    }
+    # if ($Request) {
+    #     $Result = $Request.Miners | ForEach-Object {
+    #         [PSCustomObject]@{
+    #             PoolName   = $Name
+    #             Version    = $_.version
+    #             Algorithm  = get_algo_unified_name $_.Algo
+    #             WorkerName = (($_.password -split 'ID=')[1] -split ',')[0]
+    #             Diff       = $_.difficulty
+    #             Rejected   = $_.rejected
+    #             Hashrate   = $_.accepted
+    #         }
+    #     }
+    #     Remove-Variable Request
+    # }
 }
 
 
 if ($Querymode -eq "wallet") {
-    $Request = Invoke_APIRequest -Url $($ApiUrl + "/wallet?address=" + $Info.user) -Retry 3
+    $Request = Invoke_APIRequest -Url $($ApiUrl + "/wallet/" + $Info.user) -Retry 3
 
     if ($Request) {
         $Result = [PSCustomObject]@{

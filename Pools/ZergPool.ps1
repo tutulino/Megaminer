@@ -14,12 +14,11 @@ $ActiveOnAutomatic24hMode = $true
 $AbbName = 'ZERG'
 $WalletMode = 'WALLET'
 $ApiUrl = 'http://api.zergpool.com:8080/api'
+$MineUrl = 'mine.zergpool.com'
+$Location = 'US'
 $RewardType = "PPS"
 $Result = @()
 
-$StratumServers = @()
-$StratumServers += [PSCustomObject]@{Location = 'US'; MineUrl = 'mine.zergpool.com'}
-$StratumServers += [PSCustomObject]@{Location = 'EU'; MineUrl = 'europe.mine.zergpool.com'}
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
@@ -107,31 +106,29 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "YescryptR16" {$Divisor /= 1000}
         }
 
-        foreach ($stratum in $StratumServers) {
-            $Result += [PSCustomObject]@{
-                Algorithm             = $Pool_Algo
-                Info                  = $Pool_Algo
-                Price                 = [decimal]$Algo.estimate_current / $Divisor
-                Price24h              = [decimal]$Algo.estimate_last24h / $Divisor
-                Protocol              = "stratum+tcp"
-                Host                  = $Algo.name + "." + $stratum.MineUrl
-                Port                  = [int]$Algo.port
-                User                  = $CoinsWallets.$Currency
-                Pass                  = "c=$Currency,ID=#WorkerName#"
-                Location              = $stratum.Location
-                SSL                   = $false
-                Symbol                = get_coin_symbol -Coin $Pool_Algo
-                AbbName               = $AbbName
-                ActiveOnManualMode    = $ActiveOnManualMode
-                ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                PoolWorkers           = [int]$Algo.workers
-                PoolHashRate          = [decimal]$Algo.hashrate
-                WalletMode            = $WalletMode
-                WalletSymbol          = $Currency
-                PoolName              = $Name
-                Fee                   = $Algo.fees / 100
-                RewardType            = $RewardType
-            }
+        $Result += [PSCustomObject]@{
+            Algorithm             = $Pool_Algo
+            Info                  = $Pool_Algo
+            Price                 = [decimal]$Algo.estimate_current / $Divisor
+            Price24h              = [decimal]$Algo.estimate_last24h / $Divisor
+            Protocol              = "stratum+tcp"
+            Host                  = $Algo.name + "." + $MineUrl
+            Port                  = [int]$Algo.port
+            User                  = $CoinsWallets.$Currency
+            Pass                  = "c=$Currency,ID=#WorkerName#"
+            Location              = $Location
+            SSL                   = $false
+            Symbol                = get_coin_symbol -Coin $Pool_Algo
+            AbbName               = $AbbName
+            ActiveOnManualMode    = $ActiveOnManualMode
+            ActiveOnAutomaticMode = $ActiveOnAutomaticMode
+            PoolWorkers           = [int]$Algo.workers
+            PoolHashRate          = [decimal]$Algo.hashrate
+            WalletMode            = $WalletMode
+            WalletSymbol          = $Currency
+            PoolName              = $Name
+            Fee                   = $Algo.fees / 100
+            RewardType            = $RewardType
         }
     }
     Remove-Variable Request
