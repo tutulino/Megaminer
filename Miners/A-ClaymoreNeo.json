@@ -3,7 +3,7 @@
 "ExtractionPath" : ".\\Bin\\AMD-ClaymoreNeo\\",
 "Uri" : "http://github.com/tutulino/Software/releases/download/0/Claymore.s.NeoScrypt.AMD.GPU.Miner.v1.0.zip",
 "Types" : ["AMD"],
-"Arguments" : "-r -1 -mport -#APIPORT# -pool #SERVER#:#PORT#  -wal #LOGIN# -psw #PASSWORD# #ALGORITHMPARAMETERS#",
+"Arguments" : "-r -1 -mport -#APIPORT# -pool #SERVER#:#PORT# -di #DEVICES# -wal #LOGIN# -psw #PASSWORD# #ALGORITHMPARAMETERS#",
 "API" : "Claymore",
 "Fee" : "0.02",
 "DualMining": false,
