@@ -44,7 +44,7 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 6. Your system will be benchmarked (long process)
  
 7. Make profit
-	- Except Nicehash (where you sell your power to indicated price), pools always overstimated profit, you must understand profit column as a way to get best algoritmh. Your real profit will be lower.
+	- Except Nicehash (where you sell your power to indicated price), pools always overstimated profit, you must understand profit column as a way to get best algorithm. Your real profit will be lower.
 
 8. Tuning (optional)
 	- you can edit miners folders content to delete miners or to assign/unassign algos to miners. 
