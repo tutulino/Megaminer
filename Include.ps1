@@ -801,6 +801,7 @@ function Get_Live_HashRate {
                     switch -wildcard ($Miner) {
                         "* - ETH" {$Multiplier = 1000} #Ethash
                         "* - NS" {$Multiplier = 1000} #NeoScrypt
+                        "PM*" {$Multiplier = 1000} #PhoenixMiner
                         Default {$Multiplier = 1}
                     }
                     $HashRate = [double]$Data.result[2].Split(";")[0] * $Multiplier
