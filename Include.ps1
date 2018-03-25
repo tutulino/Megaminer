@@ -95,12 +95,12 @@ function ErrorsTolog ($LogFile) {
 #************************************************************************************************************************************************************************************
 #************************************************************************************************************************************************************************************
 
-function replace_foreach_gpu {
+function replace_foreach_device {
     param(
         [Parameter(Mandatory = $true)]
         [string]$ConfigFileArguments,
         [Parameter(Mandatory = $false)]
-        [string]$Gpus
+        [string]$Devices
     )
 
 
@@ -115,7 +115,7 @@ function replace_foreach_gpu {
         $Match.Matches | ForEach-Object {
             $Base = $_.value -replace "#FOR_EACH_GPU#", "" -replace "#END_FOR_EACH_GPU#", ""
             $Final = ""
-            $Gpus -split ',' | ForEach-Object {$Final += ($base -replace "#GPUID#", $_)}
+            $Devices -split ',' | ForEach-Object {$Final += ($base -replace "#GPUID#", $_)}
             $ConfigFileArguments = $ConfigFileArguments.Substring(0, $_.index) + $final + $ConfigFileArguments.Substring($_.index + $_.Length, $ConfigFileArguments.Length - ($_.index + $_.Length))
         }
     }
@@ -215,17 +215,17 @@ function get_devices_information ($Types) {
 
     #NVIDIA
     if ($Types | Where-Object Type -eq 'NVIDIA') {
-        $GpuId = 0
+        $DeviceId = 0
         Invoke-Expression ".\bin\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader" | ForEach-Object {
             $SMIresultSplit = $_ -split (",")
             if ($SMIresultSplit.count -gt 10) {
                 #less is error or no NVIDIA gpu present
 
-                $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object GpusArray -contains $GpuId).groupname
+                $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object DeviceArray -contains $DeviceId).groupname
 
                 $Card = [pscustomObject]@{
                     Type               = 'NVIDIA'
-                    Id                 = $GpuId
+                    Id                 = $DeviceId
                     Group              = $Group
                     Name               = $SMIresultSplit[0]
                     Utilization        = if ($SMIresultSplit[1] -like "*Supported*") {100} else {[int]($SMIresultSplit[1] -replace '%', '')} #If we dont have real Utilization, at least make the watchdog happy
@@ -242,7 +242,7 @@ function get_devices_information ($Types) {
                 }
                 if ($Card.Power_DefaultLimit -gt 0) { $Card | Add-Member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
                 $Devices += $Card
-                $GpuId++
+                $DeviceId++
             }
         }
     }
@@ -251,7 +251,7 @@ function get_devices_information ($Types) {
     #AMD
     if ($Types | Where-Object Type -eq 'AMD') {
         #ADL
-        $GpuId = 0
+        $DeviceId = 0
         $AdlResult = invoke-expression ".\bin\OverdriveN.exe" | Where-Object {$_ -notlike "*&???" -and $_ -ne "ADL2_OverdriveN_Capabilities_Get is failed"}
         $AmdCardsTDP = Get-Content .\Includes\amd-cards-tdp.json | ConvertFrom-Json
 
@@ -259,11 +259,11 @@ function get_devices_information ($Types) {
             $AdlResult | ForEach-Object {
 
                 $AdlResultSplit = $_ -split (",")
-                $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object GpusArray -contains $GpuId).groupname
+                $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object DeviceArray -contains $DeviceId).groupname
 
                 $Devices += [pscustomObject]@{
                     Type                = 'AMD'
-                    Id                  = $GpuId
+                    Id                  = $DeviceId
                     Group               = $Group
                     AdapterId           = [int]$AdlResultSplit[0]
                     FanSpeed            = [int][int]([int]$AdlResultSplit[1] / [int]$AdlResultSplit[2] * 100)
@@ -276,7 +276,7 @@ function get_devices_information ($Types) {
                     Name                = $AdlResultSplit[8].Trim()
                     UDID                = $AdlResultSplit[9].Trim()
                 }
-                $GpuId++
+                $DeviceId++
             }
         } else {
             # For older drivers
@@ -284,12 +284,12 @@ function get_devices_information ($Types) {
             $AdlResult | ForEach-Object {
 
                 $AdlResultSplit = $_ -split (",")
-                $GpuId = [int]$AdlResultSplit[0]
-                $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object GpusArray -contains $GpuId ).groupname
+                $DeviceId = [int]$AdlResultSplit[0]
+                $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object DeviceArray -contains $DeviceId ).groupname
 
                 $Devices += [pscustomObject]@{
                     Type                = 'AMD'
-                    Id                  = $GpuId
+                    Id                  = $DeviceId
                     Group               = $Group
                     FanSpeed            = [int]$AdlResultSplit[3]
                     Temperature         = [int]$AdlResultSplit[2]
@@ -413,7 +413,8 @@ Function Get_Mining_Types () {
     $Types = @()
     $OCLDevices = @()
 
-    $Types0 = get_config_variable "GpuGroups" | ConvertFrom-Json
+    $Types0 = get_config_variable "GpuGroups"
+    if ($Types0) {$Types0 | ConvertFrom-Json}
 
     $OCLPlatforms = [OpenCl.Platform]::GetPlatformIDs()
     for ($i = 0; $i -lt $OCLPlatforms.length; $i++) {$OCLDevices += ([OpenCl.Device]::GetDeviceIDs($OCLPlatforms[$i], "ALL"))}
@@ -422,32 +423,32 @@ Function Get_Mining_Types () {
         #Autodetection on, must add types manually
         $Types0 = @()
 
-        $NumberNvidiaGPU = ($OCLDevices | Where-Object Vendor -like '*NVIDIA*' | Measure-Object).count
-        if ($NumberNvidiaGPU -gt 0) {
+        $NumberNvidiaDevices = ($OCLDevices | Where-Object Vendor -like '*NVIDIA*' | Measure-Object).count
+        if ($NumberNvidiaDevices -gt 0) {
             $Types0 += [pscustomobject] @{
                 GroupName   = "NVIDIA"
                 Type        = "NVIDIA"
-                Gpus        = (get_comma_separated_string 0 $NumberNvidiaGPU)
+                Devices     = (get_comma_separated_string 0 $NumberNvidiaDevices)
                 Powerlimits = "0"
             }
         }
 
-        $NumberAmdGPU = ($OCLDevices | Where-Object Vendor -like '*Advanced Micro Devices*' | Measure-Object).count
-        if ($NumberAmdGPU -gt 0) {
+        $NumberAmdDevices = ($OCLDevices | Where-Object Vendor -like '*Advanced Micro Devices*' | Measure-Object).count
+        if ($NumberAmdDevices -gt 0) {
             $Types0 += [pscustomobject] @{
                 GroupName   = "AMD"
                 Type        = "AMD"
-                Gpus        = (get_comma_separated_string 0 $NumberAmdGPU)
+                Devices     = (get_comma_separated_string 0 $NumberAmdDevices)
                 Powerlimits = "0"
             }
         }
 
-        # $NumberIntelGPU = ($OCLDevices | Where-Object Vendor -like '*Intel*' | Measure-Object).count
-        # if ($NumberIntelGPU -gt 0) {
+        # $NumberIntelDevices = ($OCLDevices | Where-Object Vendor -like '*Intel*' | Measure-Object).count
+        # if ($NumberIntelDevices -gt 0) {
         #     $Types0 += [pscustomobject] @{
         #         GroupName   = "Intel"
         #         Type        = "Intel"
-        #         Gpus        = (get_comma_separated_string 0 $NumberIntelGPU)
+        #         Devices        = (get_comma_separated_string 0 $NumberIntelDevices)
         #         Powerlimits = "0"
         #     }
         # }
@@ -455,13 +456,13 @@ Function Get_Mining_Types () {
 
     #if cpu mining is enabled add a new group
     if (
-        ((get_config_variable "CPUMINING") -eq 'ENABLED' -and ($Filter | Measure-Object).count -eq 0) -or
-        ((compare-object "CPU" $Filter -IncludeEqual -ExcludeDifferent | Measure-Object).count -gt 0)
+        ((get_config_variable "CPUMINING") -eq 'ENABLED' -and !$Filter) -or
+        "CPU" -in $Filter
     ) {
         $Types0 += [pscustomobject]@{
             GroupName   = "CPU"
             Type        = "CPU"
-            Gpus        = $null
+            Devices     = $null
             PowerLimits = "0"
         }
     }
@@ -476,12 +477,12 @@ Function Get_Mining_Types () {
             $_ | Add-Member Id $c
             $c = $c + 1
 
-            $_ | Add-Member GpusClayMode ($_.gpus -replace '10', 'A' -replace '11', 'B' -replace '12', 'C' -replace '13', 'D' -replace '14', 'E' -replace '15', 'F' -replace '16', 'G' -replace ',', '')
-            $_ | Add-Member GpusETHMode ($_.gpus -replace ',', ' ')
-            $_ | Add-Member GpusNsgMode ("-d " + $_.gpus -replace ',', ' -d ')
-            $_ | Add-Member GpuPlatform (Get_Gpu_Platform $_.Type)
-            $_ | Add-Member GpusArray ($_.gpus -split ",")
-            $_ | Add-Member GpuCount ($_.gpus -split ",").count
+            $_ | Add-Member DevicesClayMode ($_.Devices -replace '10', 'A' -replace '11', 'B' -replace '12', 'C' -replace '13', 'D' -replace '14', 'E' -replace '15', 'F' -replace '16', 'G' -replace ',', '')
+            $_ | Add-Member DevicesETHMode ($_.Devices -replace ',', ' ')
+            $_ | Add-Member DevicesNsgMode ("-d " + $_.Devices -replace ',', ' -d ')
+            $_ | Add-Member Platform (Get_Gpu_Platform $_.Type)
+            $_ | Add-Member DeviceArray ($_.Devices -split ",")
+            $_ | Add-Member DeviceCount ($_.Devices -split ",").count
             $Pl = @()
             ($_.PowerLimits -split ',') | ForEach-Object {$Pl += [int]$_}
             $_.PowerLimits = $Pl | Sort-Object -Descending
@@ -1175,8 +1176,7 @@ Function get_config_variable {
         [string]$VarName
     )
 
-    $SearchPattern = $VarName + "=*"
-    $Result = (Get-Content config.txt | Where-Object {$_ -like $SearchPattern} | ConvertFrom-StringData).$VarName | Select-Object -First 1
+    $Result = (get_config).$VarName
     $Result  # Return Value
 }
 
@@ -1604,18 +1604,18 @@ function get_coin_symbol ([string]$Coin) {
     }
 }
 
-function Check_GpuGroups_Config ($types) {
-    $Cards = get_devices_information $types
+function Check_DeviceGroups_Config ($types) {
+    $Devices = get_devices_information $types
     $types | ForEach-Object {
-        $detectedcards = @()
-        $detectedcards += $Cards | Where-Object group -eq $_.GroupName
-        if ($detectedcards.count -eq 0) {
-            WriteLog ("No gpus for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config") $LogFile $false
-            write-warning ("No gpus for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config")
+        $DetectedDevices = @()
+        $DetectedDevices += $Devices | Where-Object group -eq $_.GroupName
+        if ($DetectedDevices.count -eq 0) {
+            WriteLog ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config") $LogFile $false
+            write-warning ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config")
             start-sleep 5
-        } elseif ($detectedcards.count -ne $_.gpucount) {
-            WriteLog ("Mismatching gpus for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat") $LogFile $false
-            write-warning ("Mismatching gpus for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat")
+        } elseif ($DetectedDevices.count -ne $_.DeviceCount) {
+            WriteLog ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat") $LogFile $false
+            write-warning ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat")
             start-sleep 5
         }
     }

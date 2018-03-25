@@ -129,17 +129,17 @@ $PoolsErrors | ForEach-Object {
     EXIT
 }
 
-if ($MiningMode -eq 'Manual' -and ($CoinsName | Measure-Object).Count -gt 1) {
+if ($MiningMode -eq 'Manual' -and $CoinsName) {
     "On manual mode only one coin must be selected" | Write-Host -ForegroundColor Red
     EXIT
 }
 
-if ($MiningMode -eq 'Manual' -and ($CoinsName | Measure-Object).Count -eq 0) {
+if ($MiningMode -eq 'Manual' -and !$CoinsName) {
     "On manual mode must select one coin" | Write-Host -ForegroundColor Red
     EXIT
 }
 
-if ($MiningMode -eq 'Manual' -and ($Algorithm | Measure-Object).Count -gt 1) {
+if ($MiningMode -eq 'Manual' -and $Algorithm) {
     "On manual mode only one algorithm must be selected" | Write-Host -ForegroundColor Red
     EXIT
 }
@@ -163,11 +163,11 @@ ErrorsToLog $LogFile
 
 
 $Msg = "Starting Parameters: "
-$Msg += " //Algorithm: " + [String]($Algorithm -join ",")
-$Msg += " //PoolsName: " + [String]($PoolsName -join ",")
-$Msg += " //CoinsName: " + [String]($CoinsName -join ",")
+$Msg += " //Algorithm: " + [string]($Algorithm -join ",")
+$Msg += " //PoolsName: " + [string]($PoolsName -join ",")
+$Msg += " //CoinsName: " + [string]($CoinsName -join ",")
 $Msg += " //MiningMode: " + $MiningMode
-$Msg += " //GroupNames: " + [String]($GroupNames -join ",")
+$Msg += " //GroupNames: " + [string]($GroupNames -join ",")
 $Msg += " //PercentToSwitch: " + $PercentToSwitch
 
 WriteLog $msg $LogFile $false
@@ -215,7 +215,7 @@ while ($Quit -eq $false) {
 
     WriteLog ( get_devices_information $Types | ConvertTo-Json) $LogFile $false
     WriteLog ( $Types | ConvertTo-Json) $LogFile $false
-    if ($FirstTotalExecution) {Check_GpuGroups_Config $types}
+    if ($FirstTotalExecution) {Check_DeviceGroups_Config $types}
 
     $NumberTypesGroups = ($Types | Measure-Object).count
     if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [Math]::Floor(30 / $NumberTypesGroups) - 5} #screen adjust to number of groups
@@ -389,7 +389,7 @@ while ($Quit -eq $false) {
     $MinersFolderContent = (Get-ChildItem "Miners" -Filter "*.json")
 
     WriteLog ("Files in miner folder: " + [string]($MinersFolderContent.count)) $LogFile $false
-    WriteLog ("Number of gpu groups: " + $types.count) $LogFile $false
+    WriteLog ("Number of device groups: " + $types.count) $LogFile $false
 
     foreach ($MinerFile in $MinersFolderContent) {
         try { $Miner = $MinerFile | Get-Content | ConvertFrom-Json }
@@ -399,7 +399,7 @@ while ($Quit -eq $false) {
         }
 
         foreach ($TypeGroup in $types) {
-            #generate a line for each gpu group that has algorithm as valid
+            #generate a line for each device group that has algorithm as valid
             if ($Miner.Type -ne $TypeGroup.type) {
                 if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is NOT valid for " + $TypeGroup.GroupName + "...ignoring") $LogFile $false }
                 continue
@@ -434,30 +434,30 @@ while ($Quit -eq $false) {
                         } else {
                             $WorkerName2 = $WorkerName + '_' + $TypeGroup.GroupName
                         }
-                        $PoolUser = $Pool.User -replace '#WORKERNAME#', $WorkerName2
-                        $PoolPass = $Pool.Pass -replace '#WORKERNAME#', $WorkerName2
+                        $PoolUser = $Pool.User -replace '#WorkerName#', $WorkerName2
+                        $PoolPass = $Pool.Pass -replace '#WorkerName#', $WorkerName2
 
                         $Params = @{
-                            '#PORT#'                = $(if ($enableSSL) {$Pool.PortSSL} else {$Pool.Port})
-                            '#SERVER#'              = $(if ($enableSSL) {$Pool.HostSSL} else {$Pool.Host})
-                            '#PROTOCOL#'            = $(if ($enableSSL) {$Pool.ProtocolSSL} else {$Pool.Protocol})
-                            '#LOGIN#'               = $PoolUser
-                            '#PASSWORD#'            = $PoolPass
-                            '#GPUPLATFORM#'         = $TypeGroup.GpuPlatform
-                            '#ALGORITHM#'           = $AlgoName
-                            '#ALGORITHMPARAMETERS#' = $Algo.Value
-                            '#WORKERNAME#'          = $WorkerName2
-                            '#DEVICES#'             = $TypeGroup.Gpus
-                            '#DEVICESCLAYMODE#'     = $TypeGroup.GpusClayMode
-                            '#DEVICESETHMODE#'      = $TypeGroup.GpusETHMode
-                            '#GROUPNAME#'           = $TypeGroup.GroupName
-                            '#ETHSTMODE#'           = $Pool.EthStMode
-                            '#DEVICESNSGMODE#'      = $TypeGroup.GpusNsgMode
+                            '#Protocol#'            = $(if ($enableSSL) {$Pool.ProtocolSSL} else {$Pool.Protocol})
+                            '#Server#'              = $(if ($enableSSL) {$Pool.HostSSL} else {$Pool.Host})
+                            '#Port#'                = $(if ($enableSSL) {$Pool.PortSSL} else {$Pool.Port})
+                            '#Login#'               = $PoolUser
+                            '#Password#'            = $PoolPass
+                            '#GPUPlatform#'         = $TypeGroup.Platform
+                            '#Algorithm#'           = $AlgoName
+                            '#AlgorithmParameters#' = $Algo.Value
+                            '#WorkerName#'          = $WorkerName2
+                            '#Devices#'             = $TypeGroup.Devices
+                            '#DevicesClayMode#'     = $TypeGroup.DevicesClayMode
+                            '#DevicesETHMode#'      = $TypeGroup.DevicesETHMode
+                            '#DevicesNsgMode#'      = $TypeGroup.DevicesNsgMode
+                            '#EthStMode#'           = $Pool.EthStMode
+                            '#GroupName#'           = $TypeGroup.GroupName
                         }
                         $Arguments = $Miner.Arguments
                         foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
                         if ($Miner.PatternConfigFile) {
-                            $ConfigFileArguments = replace_foreach_gpu (Get-Content $Miner.PatternConfigFile -raw) $TypeGroup.Gpus
+                            $ConfigFileArguments = replace_foreach_device (Get-Content $Miner.PatternConfigFile -raw) $TypeGroup.Devices
                             foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
                         }
 
@@ -482,13 +482,13 @@ while ($Quit -eq $false) {
                             $PoolPassDual = $PoolDual.Pass -replace '#WorkerName#', $WorkerName3
 
                             $Params = @{
-                                '#PORTDUAL#'      = $(if ($enableDualSSL) {$PoolDual.PortSSL} else {$PoolDual.Port})
-                                '#SERVERDUAL#'    = $(if ($enableDualSSL) {$PoolDual.HostSSL} else {$PoolDual.Host})
-                                '#PROTOCOLDUAL#'  = $(if ($enableDualSSL) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol})
-                                '#LOGINDUAL#'     = $PoolUserDual
-                                '#PASSWORDDUAL#'  = $PoolPassDual
-                                '#ALGORITHMDUAL#' = $AlgoNameDual
-                                '#WORKERNAME#'    = $WorkerName3
+                                '#PortDual#'      = $(if ($enableDualSSL) {$PoolDual.PortSSL} else {$PoolDual.Port})
+                                '#ServerDual#'    = $(if ($enableDualSSL) {$PoolDual.HostSSL} else {$PoolDual.Host})
+                                '#ProtocolDual#'  = $(if ($enableDualSSL) {$PoolDual.ProtocolSSL} else {$PoolDual.Protocol})
+                                '#LoginDual#'     = $PoolUserDual
+                                '#PasswordDual#'  = $PoolPassDual
+                                '#AlgorithmDual#' = $AlgoNameDual
+                                '#WorkerName#'    = $WorkerName3
                             }
                             foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
                             if ($Miner.PatternConfigFile) {
@@ -518,7 +518,7 @@ while ($Quit -eq $false) {
                                 $_.AlgorithmDual -eq $AlgoNameDual -and
                                 $_.PoolAbbName -eq $Pool.AbbName -and
                                 $_.PoolAbbNameDual -eq $PoolDual.AbbName -and
-                                $_.GpuGroup.Id -eq $TypeGroup.Id -and
+                                $_.DeviceGroup.Id -eq $TypeGroup.Id -and
                                 $_.AlgoLabel -eq $AlgoLabel }
 
                             $FoundSubMiner = $FoundMiner.SubMiners | Where-Object {$_.PowerLimit -eq $PowerLimit}
@@ -629,7 +629,7 @@ while ($Quit -eq $false) {
                             ConfigFileArguments = $ConfigFileArguments
                             ExtractionPath      = $(".\Bin\" + $MinerFile.BaseName + "\")
                             GenerateConfigFile  = $(if ($Miner.GenerateConfigFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $TypeGroup.GroupName})
-                            GpuGroup            = $TypeGroup
+                            DeviceGroup         = $TypeGroup
                             Host                = $Pool.Host
                             Location            = $Pool.Location
                             MinerFee            = $(if ($enableSSL -and $Miner.FeeSSL) { [double]$Miner.FeeSSL } elseif ($Miner.Fee) { [double]$Miner.Fee })
@@ -700,7 +700,7 @@ while ($Quit -eq $false) {
             $_.AlgorithmDual -eq $ActiveMiner.AlgorithmDual -and
             $_.PoolAbbName -eq $ActiveMiner.PoolAbbName -and
             $_.PoolAbbNameDual -eq $ActiveMiner.PoolAbbNameDual -and
-            $_.GpuGroup.Id -eq $ActiveMiner.GpuGroup.Id -and
+            $_.DeviceGroup.Id -eq $ActiveMiner.DeviceGroup.Id -and
             $_.AlgoLabel -eq $ActiveMiner.AlgoLabel }
 
         if (($Miner | Measure-Object).count -gt 1) {
@@ -750,7 +750,7 @@ while ($Quit -eq $false) {
             $_.AlgorithmDual -eq $Miner.AlgorithmDual -and
             $_.PoolAbbName -eq $Miner.PoolAbbName -and
             $_.PoolAbbNameDual -eq $Miner.PoolAbbNameDual -and
-            $_.GpuGroup.Id -eq $Miner.GpuGroup.Id -and
+            $_.DeviceGroup.Id -eq $Miner.DeviceGroup.Id -and
             $_.AlgoLabel -eq $Miner.AlgoLabel}
 
 
@@ -768,7 +768,7 @@ while ($Quit -eq $false) {
                 CoinDual            = $Miner.CoinDual
                 ConfigFileArguments = $Miner.ConfigFileArguments
                 GenerateConfigFile  = $Miner.GenerateConfigFile
-                GpuGroup            = $Miner.GpuGroup
+                DeviceGroup         = $Miner.DeviceGroup
                 Host                = $Miner.Host
                 Id                  = $ActiveMiners.Count
                 IsValid             = $true
@@ -811,7 +811,7 @@ while ($Quit -eq $false) {
     if ($DetailedLog) {
         $msg = $ActiveMiners.SubMiners | ForEach-Object {
             "$($_.IdF)-$($_.Id), " +
-            "$($ActiveMiners[$_.IdF].GpuGroup.GroupName), " +
+            "$($ActiveMiners[$_.IdF].DeviceGroup.GroupName), " +
             "$(if ($ActiveMiners[$_.IdF].IsValid) {'Valid'} else {Invalid}), " +
             "PL $($_.PowerLimit), " +
             "$($_.Status), " +
@@ -828,7 +828,7 @@ while ($Quit -eq $false) {
     foreach ($Type in $Types) {
 
         #look for last round best
-        $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id}
+        $Candidates = $ActiveMiners | Where-Object {$_.DeviceGroup.Id -eq $Type.Id}
         $BestLast = $Candidates.SubMiners | Where-Object {$_.Status -in @("Running", "PendingCancellation")}
         if ($BestLast -ne $null) {
             $ProfitLast = $BestLast.Profits
@@ -853,7 +853,7 @@ while ($Quit -eq $false) {
         }
 
         #look for best for next round
-        $Candidates = $ActiveMiners | Where-Object {$_.GpuGroup.Id -eq $Type.Id -and $_.IsValid -and $_.Username}
+        $Candidates = $ActiveMiners | Where-Object {$_.DeviceGroup.Id -eq $Type.Id -and $_.IsValid -and $_.Username}
 
         ## Select top miner that need Benchmark, or if running in Manual mode, or highest Profit above zero.
         $BestNow = $Candidates.SubMiners |
@@ -862,7 +862,7 @@ while ($Quit -eq $false) {
             Sort-Object -Descending NeedBenchmark, Profits, {$ActiveMiners[$_.IdF].Algorithm}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
 
-        if ($BestNow -eq $null) {WriteLog ("No detected any valid candidate for gpu group " + $Type.GroupName) $LogFile $true ; break }
+        if ($BestNow -eq $null) {WriteLog ("No detected any valid candidate for device group " + $Type.GroupName) $LogFile $true ; break }
 
         $BestNowLogMsg = $(
             "$($ActiveMiners[$BestNow.IdF].Name)/" +
@@ -880,7 +880,7 @@ while ($Quit -eq $false) {
             $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.BestTimes++
         }
 
-        WriteLog ("$BestNowLogMsg is the best combination for gpu group, last was $BestLastLogMsg") $LogFile $true
+        WriteLog ("$BestNowLogMsg is the best combination for device group, last was $BestLastLogMsg") $LogFile $true
 
         if (
             $BestLast.IdF -ne $BestNow.IdF -or
@@ -894,16 +894,16 @@ while ($Quit -eq $false) {
                 $BestLast.Id -ne $BestNow.Id
             ) {
                 #Must launch other SubMiner
-                if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].GpuGroup.gpus}
-                if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
+                if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
+                if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = "Running"
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.LastTimeActive = Get-Date
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.LastTimeActive = Get-Date
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.StatsTime = Get-Date
-                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].stats.ActivatedTimes++
-                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].statsHistory.ActivatedTimes++
+                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.ActivatedTimes++
+                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.ActivatedTimes++
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].TimeSinceStartInterval = [TimeSpan]0
 
                 $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Best = $false
@@ -953,8 +953,8 @@ while ($Quit -eq $false) {
                 }
 
                 #Start New
-                if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].GpuGroup.gpus}
-                if ($ActiveMiners[$BestNow.IdF].GpuGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
+                if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
+                if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
 
@@ -1009,7 +1009,7 @@ while ($Quit -eq $false) {
         Set_Stats `
             -Algorithm $ActiveMiners[$BestNow.IdF].Algorithms `
             -MinerName $ActiveMiners[$BestNow.IdF].Name `
-            -GroupName $ActiveMiners[$BestNow.IdF].GpuGroup.GroupName `
+            -GroupName $ActiveMiners[$BestNow.IdF].DeviceGroup.GroupName `
             -AlgoLabel $ActiveMiners[$BestNow.IdF].AlgoLabel `
             -PowerLimit $BestNow.PowerLimit `
             -Value $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory
@@ -1033,7 +1033,7 @@ while ($Quit -eq $false) {
 
     ErrorsToLog $LogFile
     $SwitchLoop = 0
-    $GpuActivityAverages = @()
+    $ActivityAverages = @()
 
     Clear-Host; $RepaintScreen = $true
 
@@ -1079,7 +1079,7 @@ while ($Quit -eq $false) {
                 $_.RevenueLive = $_.SpeedLive * $ActiveMiners[$_.IdF].PoolPrice
                 $_.RevenueLiveDual = $_.SpeedLiveDual * $ActiveMiners[$_.IdF].PoolPriceDual
 
-                $_.PowerLive = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].GpuGroup.GroupName) | Measure-Object -property power_draw -sum).sum
+                $_.PowerLive = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].DeviceGroup.GroupName) | Measure-Object -property power_draw -sum).sum
 
                 $_.ProfitsLive = (($_.RevenueLive * (1 - [double]$ActiveMiners[$_.IdF].PoolFee) + $_.RevenueLiveDual * (1 - [double]$ActiveMiners[$_.IdF].PoolFeeDual)) * $LocalBTCvalue)
                 $_.ProfitsLive -= ($ActiveMiners[$_.IdF].MinerFee * $_.ProfitsLive)
@@ -1088,8 +1088,11 @@ while ($Quit -eq $false) {
                 $_.TimeSinceStartInterval = (Get-Date) - $_.Stats.LastTimeActive
                 $TimeSinceStartInterval = [int]$_.TimeSinceStartInterval.TotalSeconds
 
-                if ($_.SpeedLive -gt 0 -and ($_.SpeedLiveDual -gt 0 -or [string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual))) {
-                    if ($_.Stats.StatsTime -ne 0) { $_.Stats.ActiveTime += (Get-Date) - $_.Stats.StatsTime }
+                if (
+                    $_.SpeedLive -and
+                    ($_.SpeedLiveDual -or !$ActiveMiners[$_.IdF].AlgorithmDual)
+                ) {
+                    if ($_.Stats.StatsTime) { $_.Stats.ActiveTime += (Get-Date) - $_.Stats.StatsTime }
                     $_.Stats.StatsTime = Get-Date
 
                     [array]$_.SpeedReads = $_.SpeedReads
@@ -1100,7 +1103,7 @@ while ($Quit -eq $false) {
                         $_.SpeedReads += [PSCustomObject]@{
                             Speed                  = $_.SpeedLive
                             SpeedDual              = $_.SpeedLiveDual
-                            GpuActivity            = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].GpuGroup.GroupName) | Measure-Object -property utilization -average).average
+                            Activity               = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].DeviceGroup.GroupName) | Measure-Object -property utilization -average).average
                             Power                  = $_.PowerLive
                             Date                   = (Get-Date).DateTime
                             Benchmarking           = $_.NeedBenchmark
@@ -1125,20 +1128,19 @@ while ($Quit -eq $false) {
                         if ($_.SpeedReads.Count -gt 20 -and $_.NeedBenchmark) {
                             ### If average of last 2 periods is within SpeedDelta, we can stop benchmarking
                             $SpeedDelta = 0.01
-                            $p20Index = [math]::Ceiling($_.SpeedReads.Count * 0.2)
-                            $p60Index = [math]::Ceiling($_.SpeedReads.Count * 0.6)
+                            $pIndex = [math]::Ceiling($_.SpeedReads.Count * 0.1)
 
-                            $AvgPrev = $_.SpeedReads[$p20Index..$p60Index] | Measure-Object -Property Speed -Average | Select-Object -ExpandProperty Average
-                            $AvgCurr = $_.SpeedReads[$p60Index..($_.SpeedReads.length - 1)] | Measure-Object -Property Speed -Average | Select-Object -ExpandProperty Average
+                            $AvgPrev = $_.SpeedReads[($pIndex * 2)..($pIndex * 6)] | Measure-Object -Property Speed -Average | Select-Object -ExpandProperty Average
+                            $AvgCurr = $_.SpeedReads[($pIndex * 6)..($_.SpeedReads.count - 1)] | Measure-Object -Property Speed -Average | Select-Object -ExpandProperty Average
 
-                            $AvgPrevDual = $_.SpeedReads[$p20Index..$p60Index] | Measure-Object -Property SpeedDual -Average | Select-Object -ExpandProperty Average
-                            $AvgCurrDual = $_.SpeedReads[$p60Index..($_.SpeedReads.length - 1)] | Measure-Object -Property SpeedDual -Average | Select-Object -ExpandProperty Average
+                            $AvgPrevDual = $_.SpeedReads[($pIndex * 2)..($pIndex * 6)] | Measure-Object -Property SpeedDual -Average | Select-Object -ExpandProperty Average
+                            $AvgCurrDual = $_.SpeedReads[($pIndex * 6)..($_.SpeedReads.count - 1)] | Measure-Object -Property SpeedDual -Average | Select-Object -ExpandProperty Average
 
                             if (
-                                [math]::Abs(1 - $AvgCurr / $AvgPrev) -le $SpeedDelta -and
-                                ($AvgPrevDual -eq 0 -or [math]::Abs(1 - $AvgCurrDual / $AvgPrevDual) -le $SpeedDelta)
+                                [math]::Abs($AvgPrev / $AvgCurr - 1) -le $SpeedDelta -and
+                                ($AvgPrevDual -eq 0 -or [math]::Abs($AvgPrevDual / $AvgCurrDual - 1) -le $SpeedDelta)
                             ) {
-                                $_.SpeedReads = $_.SpeedReads[$p20Index..($_.SpeedReads.length - 1)]
+                                $_.SpeedReads = $_.SpeedReads[$p20Index..($_.SpeedReads.count - 1)]
                                 $_.NeedBenchmark = $false
                             }
                         }
@@ -1146,7 +1148,7 @@ while ($Quit -eq $false) {
                         Set_HashRates `
                             -Algorithm $ActiveMiners[$_.IdF].Algorithms `
                             -MinerName $ActiveMiners[$_.IdF].Name `
-                            -GroupName $ActiveMiners[$_.IdF].GpuGroup.GroupName `
+                            -GroupName $ActiveMiners[$_.IdF].DeviceGroup.GroupName `
                             -AlgoLabel $ActiveMiners[$_.IdF].AlgoLabel `
                             -PowerLimit $_.PowerLimit `
                             -Value $_.SpeedReads
@@ -1155,32 +1157,54 @@ while ($Quit -eq $false) {
             }
 
             #WATCHDOG
-            $GroupCards = @()
-            $GroupCards += $Devices | Where-Object Group -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName
+            $GroupDevices = @()
+            $GroupDevices += $Devices | Where-Object Group -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName
 
-            $GpuActivityAverages += [pscustomobject]@{
-                GpuGroup     = $ActiveMiners[$_.IdF].GpuGroup.GroupName
-                Average      = ($GroupCards | Measure-Object -property utilization -average).average
-                NumberOfGpus = $GroupCards.count
+            $ActivityAverages += [pscustomobject]@{
+                DeviceGroup     = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
+                Average         = ($GroupDevices | Measure-Object -property utilization -average).average
+                NumberOfDevices = $GroupDevices.count
             }
 
+            if ($ActivityAverages.count -gt 20) {
+                $ActivityAverages = $ActivityAverages[($ActivityAverages.Count - 20)..($ActivityAverages.Count - 1)]
+                $ActivityAverage = ($ActivityAverages | Where-Object DeviceGroup -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName | Measure-Object -property average -maximum).maximum
+                $ActivityDeviceCount = ($ActivityAverages | Where-Object DeviceGroup -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName | Measure-Object -property NumberOfDevices -maximum).maximum
+                if ($DetailedLog) {WriteLog ("Last 20 reads maximum Device activity is $ActivityAverage for DeviceGroup $($ActiveMiners[$_.IdF].DeviceGroup.GroupName)") $LogFile $false}
+            } else { $ActivityAverage = 100 } #only want watchdog works with at least 20 reads
 
-            if ($GpuActivityAverages.Count -gt 20) {
-                $GpuActivityAverages = $GpuActivityAverages[($GpuActivityAverages.Count - 20)..($GpuActivityAverages.Count - 1)]
-                $GpuActivityAverage = ($GpuActivityAverages | Where-Object GpuGroup -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName | Measure-Object -property average -maximum).maximum
-                $GpuActivityGpuCount = ($GpuActivityAverages | Where-Object GpuGroup -eq $ActiveMiners[$_.IdF].GpuGroup.GroupName | Measure-Object -property NumberOfGpus -maximum).maximum
-                if ($DetailedLog) {WriteLog ("Last 20 reads maximum GPU activity is $GpuActivityAverage for GpuGroup $($ActiveMiners[$_.IdF].GpuGroup.GroupName)") $LogFile $false}
-            } else { $GpuActivityAverage = 100 } #only want watchdog works with at least 20 reads
+            ## Hashrate Watchdog
+            $WatchdogHashrateFail = $false
+            if (
+                $Config.WatchdogHashrate -and
+                $_.HashRate -and
+                $_.SpeedReads.count -gt 20
+            ) {
+                $AvgCurr = $_.SpeedReads[-10..-1] | Measure-Object -Average -Property Speed | Select-Object -ExpandProperty Average
+                $AvgCurrDual = $_.SpeedReads[-10..-1] | Measure-Object -Average -Property SpeedDual | Select-Object -ExpandProperty Average
+                if (
+                    ($_.HashRate / $AvgCurr - 1) -ge ($Config.WatchdogHashrate / 100) -and
+                    (!$_.HashRateDual -or ($_.HashRateDual / $AvgCurrDual - 1) -ge ($Config.WatchdogHashrate / 100))
+                ) {
+                    # Remove failing SpeedReads from statistics to prevent average skewing
+                    $_.SpeedReads = $_.SpeedReads[0..($_.SpeedReads.count - 10)]
+                    $WatchdogHashrateFail = $true
+                    WriteLog ("Detected low hashrate " + $ActiveMiners[$_.IdF].Name + "/" + $ActiveMiners[$_.IdF].Algorithm + ": " + (ConvertTo_Hash $AvgCurr) + " vs " + (ConvertTo_Hash $_.HashRate)) $LogFile $false
+                }
+            }
 
-
-            if ($ActiveMiners[$_.IdF].Process -eq $null -or $ActiveMiners[$_.IdF].Process.HasExited -or ($GpuActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100 -and $GpuActivityGpuCount -gt 0) ) {
-                $ActiveMiners[$_.IdF].Stats.StatsTime = [timespan]0
+            if (
+                ($Config.WatchdogHashrate -and $WatchdogHashrateFail) -or
+                $ActiveMiners[$_.IdF].Process -eq $null -or
+                $ActiveMiners[$_.IdF].Process.HasExited -or
+                ($ActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100 -and $ActivityDeviceCount -gt 0)
+            ) {
                 $ExitLoop = $true
                 $_.Status = "PendingCancellation"
                 $_.Stats.FailedTimes++
                 $_.StatsHistory.FailedTimes++
                 WriteLog ("Detected miner error " + $ActiveMiners[$_.IdF].Name + "/" + $ActiveMiners[$_.IdF].Algorithm + " (id " + $_.IdF + '-' + $_.Id + ") --> " + $ActiveMiners[$_.IdF].Path + " " + $ActiveMiners[$_.IdF].Arguments) $LogFile $false
-                # WriteLog ([string]$ActiveMiners[$_.IdF].Process + ',' + [string]$ActiveMiners[$_.IdF].Process.HasExited + ',' + $GpuActivityAverage + ',' + $TimeSinceStartInterval) $LogFile $false
+                # WriteLog ([string]$ActiveMiners[$_.IdF].Process + ',' + [string]$ActiveMiners[$_.IdF].Process.HasExited + ',' + $ActivityAverage + ',' + $TimeSinceStartInterval) $LogFile $false
             }
         } #End For each
 
@@ -1264,9 +1288,9 @@ while ($Quit -eq $false) {
 
         Print_Horizontal_line
 
-        $ScreenOut = $ActiveMiners.Subminers | Where-Object Best | Sort-Object {$ActiveMiners[$_.idf].GpuGroup.GroupName} | ForEach-Object {
+        $ScreenOut = $ActiveMiners.Subminers | Where-Object Best | Sort-Object {$ActiveMiners[$_.idf].DeviceGroup.GroupName} | ForEach-Object {
             [PSCustomObject]@{
-                GroupName   = $ActiveMiners[$_.IdF].GpuGroup.GroupName
+                GroupName   = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
                 MMPowLmt    = if ($_.PowerLimit -gt 0) {$_.PowerLimit} else {""}
                 LocalSpeed  = "$(ConvertTo_Hash $_.SpeedLive)/s" + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$(ConvertTo_Hash $_.SpeedLiveDual)/s"})
                 mbtc_Day    = ((($_.RevenueLive + $_.RevenueLiveDual) * 1000).tostring("n5"))
@@ -1346,7 +1370,7 @@ while ($Quit -eq $false) {
                 foreach ($SubMiner in ($ActiveMiners.SubMiners | Where-Object {$ActiveMiners[$_.IdF].IsValid -and $_.Status -ne "Cancelled"})) {
                     $Candidates = $ActiveMiners |
                         Where-Object {$_.IsValid -and
-                        $_.GpuGroup.Id -eq $ActiveMiners[$SubMiner.IdF].GpuGroup.Id -and
+                        $_.DeviceGroup.Id -eq $ActiveMiners[$SubMiner.IdF].DeviceGroup.Id -and
                         $_.Algorithm -eq $ActiveMiners[$SubMiner.IdF].Algorithm -and
                         $_.AlgorithmDual -eq $ActiveMiners[$SubMiner.IdF].AlgorithmDual }
                     $ExistsBest = $Candidates.SubMiners | Where-Object {$_.Profits -gt $SubMiner.Profits}
@@ -1356,7 +1380,7 @@ while ($Quit -eq $false) {
                     if ($ExistsBest -eq $null -or $SubMiner.NeedBenchmark -eq $true) {
                         $ProfitMiner = $ActiveMiners[$SubMiner.IdF] | Select-Object * -ExcludeProperty SubMiners
                         $ProfitMiner | Add-Member SubMiner $SubMiner
-                        $ProfitMiner | Add-Member GroupName $ProfitMiner.GpuGroup.GroupName #needed for groupby
+                        $ProfitMiner | Add-Member GroupName $ProfitMiner.DeviceGroup.GroupName #needed for groupby
                         $ProfitMiner | Add-Member NeedBenchmark $ProfitMiner.SubMiner.NeedBenchmark #needed for sort
                         $ProfitMiner | Add-Member Profits $ProfitMiner.SubMiner.Profits #needed for sort
                         $ProfitMiner | Add-Member Status $ProfitMiner.SubMiner.Status #needed for sort
@@ -1367,7 +1391,7 @@ while ($Quit -eq $false) {
                 $ActiveMiners.SubMiners | Where-Object {$ActiveMiners[$_.IdF].IsValid} | ForEach-Object {
                     $ProfitMiner = $ActiveMiners[$_.IdF] | Select-Object * -ExcludeProperty SubMiners
                     $ProfitMiner | Add-Member SubMiner $_
-                    $ProfitMiner | Add-Member GroupName $ProfitMiner.GpuGroup.GroupName #needed for groupby
+                    $ProfitMiner | Add-Member GroupName $ProfitMiner.DeviceGroup.GroupName #needed for groupby
                     $ProfitMiner | Add-Member NeedBenchmark $ProfitMiner.SubMiner.NeedBenchmark #needed for sort
                     $ProfitMiner | Add-Member Profits $ProfitMiner.SubMiner.Profits #needed for sort
                     $ProfitMiner | Add-Member Status $ProfitMiner.SubMiner.Status #needed for sort
@@ -1379,7 +1403,7 @@ while ($Quit -eq $false) {
             $ProfitMiners2 = @()
             foreach ($TypeId in $types.Id) {
                 $inserted = 1
-                $ProfitMiners | Where-Object {$_.GpuGroup.Id -eq $TypeId} | Sort-Object -Descending GroupName, NeedBenchmark, Profits | ForEach-Object {
+                $ProfitMiners | Where-Object {$_.DeviceGroup.Id -eq $TypeId} | Sort-Object -Descending GroupName, NeedBenchmark, Profits | ForEach-Object {
                     if ($inserted -le $ProfitsScreenLimit) {$ProfitMiners2 += $_; $inserted++} #this can be done with Select-Object -first but then memory leak happens, ¿why?
                 }
             }
@@ -1535,12 +1559,12 @@ while ($Quit -eq $false) {
             #Display activated miners list
             $ActiveMiners.SubMiners |
                 Where-Object {$_.Stats.ActivatedTimes -gt 0} |
-                Sort-Object -Descending {$ActiveMiners[$_.IdF].GpuGroup.GroupName}, {$_.Stats.LastTimeActive} |
-                Format-Table -Wrap -GroupBy @{Label = "Group"; Expression = {$ActiveMiners[$_.IdF].GpuGroup.GroupName}} (
+                Sort-Object -Descending {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}, {$_.Stats.LastTimeActive} |
+                Format-Table -Wrap -GroupBy @{Label = "Group"; Expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}} (
                 #@{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
                 @{Label = "LastTimeActive"; Expression = {$($_.Stats.LastTimeActive).tostring("dd/MM/yy H:mm")}},
                 # @{Label = "Miner"; Expression = {$ActiveMiners[$_.IdF].Name}},
-                # @{Label = "GroupName"; Expression = {$ActiveMiners[$_.IdF].GpuGroup.GroupName}},
+                # @{Label = "GroupName"; Expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}},
                 # @{Label = "PowLmt"; Expression = {if ($_.PowerLimit -gt 0) {$_.PowerLimit}}},
                 @{Label = "Command"; Expression = {"$($ActiveMiners[$_.IdF].Path.TrimStart((Convert-Path ".\Bin\"))) $($ActiveMiners[$_.IdF].Arguments)"}}
             ) | Out-Host
@@ -1563,10 +1587,10 @@ while ($Quit -eq $false) {
             #Display activated miners list
             $ActiveMiners.SubMiners |
                 Where-Object {$_.Stats.ActivatedTimes -gt 0} |
-                Sort-Object -Descending {$ActiveMiners[$_.IdF].GpuGroup.GroupName}, {$_.Stats.Activetime.TotalMinutes} |
-                Format-Table -Wrap -GroupBy @{Label = "Group"; Expression = {$ActiveMiners[$_.IdF].GpuGroup.GroupName}}(
+                Sort-Object -Descending {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}, {$_.Stats.Activetime.TotalMinutes} |
+                Format-Table -Wrap -GroupBy @{Label = "Group"; Expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}}(
                 #@{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
-                # @{Label = "GpuGroup"; Expression = {$ActiveMiners[$_.IdF].GpuGroup.GroupName}},
+                # @{Label = "DeviceGroup"; Expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}},
                 @{Label = "Algorithm"; Expression = {$ActiveMiners[$_.IdF].Algorithm + $ActiveMiners[$_.IdF].AlgoLabel + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$($ActiveMiners[$_.IdF].AlgorithmDual)"})}},
                 @{Label = "Coin"; Expression = {$ActiveMiners[$_.IdF].Symbol + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$($ActiveMiners[$_.IdF].SymbolDual)"})}},
                 @{Label = "Pool"; Expression = {$ActiveMiners[$_.IdF].PoolAbbName + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$($ActiveMiners[$_.IdF].PoolAbbNameDual)"})}},
@@ -1609,7 +1633,7 @@ while ($Quit -eq $false) {
             #If time of interval has over, exit of main loop
             #If last interval was benchmark and no speed detected mark as failed
             $ActiveMiners.SubMiners | Where-Object Best | ForEach-Object {
-                if ($_.NeedBenchmark -and $_.Speedreads.Count -eq 0) {
+                if ($_.NeedBenchmark -and $_.SpeedReads.Count -eq 0) {
                     $_.Status = 'PendingCancellation'
                     WriteLog ("No speed detected while benchmark " + $ActiveMiners[$_.IdF].Name + "/" + $ActiveMiners[$_.IdF].Algorithm + " (id " + $ActiveMiners[$_.IdF].Id + ")") $LogFile $false
                 }
