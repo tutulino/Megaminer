@@ -87,7 +87,6 @@ $A= $Request.Result.Workers
 if ($Querymode -eq "wallet")    {
         
                             $Info.user=($Info.user -split '\.')[0]
-
                             try {
                                 $http="https://api.nicehash.com/api?method=stats.provider&addr="+$Info.user
                                 $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
@@ -129,7 +128,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         $Locations=@()
         $Locations += [PSCustomObject]@{NhLocation ='USA';MMlocation='US'}
-        $Locations += [PSCustomObject]@{NhLocation ='EU';MMlocation='EUROPE'}
+        $Locations += [PSCustomObject]@{NhLocation ='EU';MMlocation='EU'}
 
         $Request | ForEach-Object {
 
