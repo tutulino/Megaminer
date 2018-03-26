@@ -9,7 +9,7 @@ $Profit = 0
 $MinerReport = ConvertTo-Json @($ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | ForEach-Object {
         $Profit += [decimal]$_.RevenueLive + [decimal]$_.RevenueLiveDual
 
-        $Type = $ActiveMiners[$_.IdF].GpuGroup.GroupName
+        $Type = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
 
         [pscustomobject]@{
             Name           = $ActiveMiners[$_.IdF].Name
@@ -17,7 +17,7 @@ $MinerReport = ConvertTo-Json @($ActiveMiners.SubMiners | Where-Object Status -e
             Path           = $ActiveMiners[$_.IdF].Symbol + $(
                 if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + $ActiveMiners[$_.IdF].SymbolDual}
             )
-            Type           = $ActiveMiners[$_.IdF].GpuGroup.GroupName
+            Type           = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
             # Active         = "{0:N1} min" -f ($_.TimeSinceStartInterval.TotalMinutes)
             Active         = $(if ($_.Stats.Activetime.TotalMinutes -le 60) {"{0:N1} min" -f ($_.Stats.ActiveTime.TotalMinutes)} else {"{0:N1} hours" -f ($_.Stats.ActiveTime.TotalHours)})
             Algorithm      = $ActiveMiners[$_.IdF].Algorithm + $ActiveMiners[$_.IdF].AlgoLabel + $(
@@ -33,7 +33,7 @@ $MinerReport = ConvertTo-Json @($ActiveMiners.SubMiners | Where-Object Status -e
                 if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + (ConvertTo_Hash $_.HashrateDual) + '/s'}
             ) -replace ",", "."
             PID            = $ActiveMiners[$_.IdF].Process.Id
-            StatusMiner    = $(if ($_.NeedBenchmark) {"Benchmarking($([string](($ActiveMiners | Where-Object {$_.GpuGroup.GroupName -eq $Type}).count)))"} else {$_.Status})
+            StatusMiner    = $(if ($_.NeedBenchmark) {"Benchmarking($([string](($ActiveMiners | Where-Object {$_.DeviceGroup.GroupName -eq $Type}).count)))"} else {$_.Status})
             'BTC/day'      = [decimal]$_.RevenueLive + [decimal]$_.RevenueLiveDual
         }
     })
