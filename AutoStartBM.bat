@@ -2,7 +2,7 @@
 
 cd /d %~dp0
 
-set "command=& .\core.ps1 -MiningMode Automatic -PoolsName BlockMunch"
+set "command=& .\core.ps1 -MiningMode Automatic -PoolsName BlockMasters"
 
 pwsh -noexit -executionpolicy bypass -command "%command%"
 powershell -version 5.0 -noexit -executionpolicy bypass -command "%command%"
