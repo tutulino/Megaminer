@@ -1075,7 +1075,7 @@ function Get_Pools {
 
     if ($location -eq 'GB') {$location = 'EU'}
 
-    $PoolsFolderContent = Get-ChildItem ($PSScriptRoot + '\pools') | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare-Object $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0}
+    $PoolsFolderContent = Get-ChildItem ($PSScriptRoot + '\pools') -File | Where-Object {$PoolsFilterList.Count -eq 0 -or (Compare-Object $PoolsFilterList $_.BaseName -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0}
 
     $ChildItems = @()
 
@@ -1189,7 +1189,7 @@ function Get_Best_Hashrate_Algo {
 
     $Besthashrate = 0
 
-    Get-ChildItem ($PSScriptRoot + "\Stats") -Filter $Pattern | ForEach-Object {
+    Get-ChildItem ($PSScriptRoot + "\Stats") -Filter $Pattern -File | ForEach-Object {
         $Content = ($_ | Get-Content | ConvertFrom-Json )
         $Hrs = 0
         if ($Content -ne $null) {$Hrs = $($Content | Where-Object TimeSinceStartInterval -gt 60 | Measure-Object -property Speed -average).Average}
@@ -1531,23 +1531,23 @@ function Clear_Files {
     $TargetFolder = ".\Logs"
     $Extension = "*.txt"
     $LastWrite = $Now.AddDays( - $Days)
-    $Files = Get-Childitem $TargetFolder -Include $Extension -Exclude "empty.txt" -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
+    $Files = Get-Childitem $TargetFolder -Include $Extension -Exclude "empty.txt" -File -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
     $Files | ForEach-Object {Remove-Item $_.fullname}
 
     $TargetFolder = "."
     $Extension = "wrapper_*.txt"
-    $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse
+    $Files = Get-Childitem $TargetFolder -Include $Extension -File -Recurse
     $Files | ForEach-Object {Remove-Item $_.fullname}
 
     $TargetFolder = "."
     $Extension = "*.tmp"
-    $Files = Get-Childitem $TargetFolder -Include $Extension -Recurse
+    $Files = Get-Childitem $TargetFolder -Include $Extension -File -Recurse
     $Files | ForEach-Object {Remove-Item $_.fullname}
 
     $TargetFolder = ".\Cache"
     $Extension = "*.json"
     $LastWrite = $Now.AddDays( - $Days)
-    $Files = Get-Childitem $TargetFolder -Include $Extension -Exclude "empty.txt" -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
+    $Files = Get-Childitem $TargetFolder -Include $Extension -Exclude "empty.txt" -File -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
     $Files | ForEach-Object {Remove-Item $_.fullname}
 }
 
