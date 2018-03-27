@@ -1,7 +1,7 @@
 ﻿{
     "Path": "xmrig.exe",
-    "Uri": "https://github.com/xmrig/xmrig/releases/download/v2.5.0/xmrig-2.5.0-gcc-win64.zip",
-    "SHA256": "0316af8b60a7d54d2707e0f5a2a347d88a7ecaa67991aec5592e0cfa0642d0ec",
+    "Uri": "https://github.com/xmrig/xmrig/releases/download/v2.5.2/xmrig-2.5.2-gcc-win64.zip",
+    "SHA256": "88c475e529fb0faccb1b7530f4b7dbb27fadff4061295a4e96b71f2146ab661b",
     "Type": "CPU",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --donate-level 1 #ALGORITHMPARAMETERS#",
     "API": "XMRig",
