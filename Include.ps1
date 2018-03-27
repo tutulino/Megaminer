@@ -682,7 +682,7 @@ function Invoke_APIRequest {
             }
         }
         if ($Response) {
-            $Response | ConvertTo-Json | Set-Content -Path $CacheFile
+            $Response | ConvertTo-Json -Depth 100 | Set-Content -Path $CacheFile
         } elseif (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes( - $MaxAge)) {
             $Response = Get-Content -Path $CacheFile | ConvertFrom-Json
         }
