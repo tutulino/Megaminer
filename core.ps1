@@ -543,11 +543,15 @@ while ($Quit -eq $false) {
                                 $p5Index = [math]::Ceiling($Hrs.Count * 0.05)
                                 $p95Index = [math]::Ceiling($Hrs.Count * 0.95)
                                 $Hrs = $Hrs[$p5Index..$p95Index]
-                            }
 
-                            $PowerValue = [double]($Hrs | Measure-Object -property Power -average).average
-                            $HashRateValue = [double]($Hrs | Measure-Object -property Speed -average).average
-                            $HashRateValueDual = [double]($Hrs | Measure-Object -property SpeedDual -average).average
+                                $PowerValue = [double]($Hrs | Measure-Object -property Power -average).average
+                                $HashRateValue = [double]($Hrs | Measure-Object -property Speed -average).average
+                                $HashRateValueDual = [double]($Hrs | Measure-Object -property SpeedDual -average).average
+                            } else {
+                                $PowerValue = 0
+                                $HashRateValue = 0
+                                $HashRateValueDual = 0
+                            }
 
                             #calculates revenue
                             $SubMinerRevenue = [double]($HashRateValue * $Price)
