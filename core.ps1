@@ -963,9 +963,13 @@ while ($Quit -eq $false) {
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
 
                 if ($ActiveMiners[$BestNow.IdF].Port -eq $null) { $ActiveMiners[$BestNow.IdF].Port = get_next_free_port (Get-Random -minimum 2000 -maximum 48000)}
-                $ActiveMiners[$BestNow.IdF].Arguments = $ActiveMiners[$BestNow.IdF].Arguments -replace '#APIPORT#', $ActiveMiners[$BestNow.IdF].Port
-                $ActiveMiners[$BestNow.IdF].ConfigFileArguments = $ActiveMiners[$BestNow.IdF].ConfigFileArguments -replace '#APIPORT#', $ActiveMiners[$BestNow.IdF].Port
-                if ($ActiveMiners[$BestNow.IdF].GenerateConfigFile) {$ActiveMiners[$BestNow.IdF].ConfigFileArguments | Set-Content ($ActiveMiners[$BestNow.IdF].GenerateConfigFile)}
+                $ActiveMiners[$BestNow.IdF].Arguments = $ActiveMiners[$BestNow.IdF].Arguments -replace '#APIPort#', $ActiveMiners[$BestNow.IdF].Port
+
+                if ($ActiveMiners[$BestNow.IdF].GenerateConfigFile) {
+                    $ActiveMiners[$BestNow.IdF].ConfigFileArguments = $ActiveMiners[$BestNow.IdF].ConfigFileArguments -replace '#APIPort#', $ActiveMiners[$BestNow.IdF].Port
+                    $ActiveMiners[$BestNow.IdF].ConfigFileArguments | Set-Content ($ActiveMiners[$BestNow.IdF].GenerateConfigFile)
+                }
+
                 if ($ActiveMiners[$BestNow.IdF].PrelaunchCommand) {Start-Process -FilePath $ActiveMiners[$BestNow.IdF].PrelaunchCommand}            #run prelaunch command
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.ActivatedTimes++
