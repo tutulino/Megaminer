@@ -1137,16 +1137,7 @@ function Get_Pools {
                 }
             }
         }
-        #Insert by priority of location
-        # if ($Location) {
-        #     $Return = @()
-        #     $AllPools2 | Sort-Object Info, Algorithm, LocationPriority | ForEach-Object {
-        #         $Ex = $Return | Where-Object Info -eq $_.Info | Where-Object Algorithm -eq $_.Algorithm | Where-Object PoolName -eq $_.PoolName
-        #         if ($Ex.count -eq 0) {$Return += $_}
-        #     }
-        # } else {
         $Return = $AllPools2
-        # }
     } else { $Return = $AllPools }
 
 
