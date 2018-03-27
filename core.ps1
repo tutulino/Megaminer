@@ -889,7 +889,7 @@ while ($Quit -eq $false) {
             Sort-Object -Descending NeedBenchmark, Profits, {$ActiveMiners[$_.IdF].Algorithm}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
 
-        if ($BestNow -eq $null) 1{WriteLog ("No detected any valid candidate for device group " + $Type.GroupName) $LogFile $true; continue}
+        if ($BestNow -eq $null) {WriteLog ("No detected any valid candidate for device group " + $Type.GroupName) $LogFile $true; continue}
 
         $BestNowLogMsg = $(
             "$($ActiveMiners[$BestNow.IdF].Name)/" +
