@@ -810,7 +810,7 @@ while ($Quit -eq $false) {
 
     WriteLog ("Active Miners-pools: $($ActiveMiners.Count)...") $LogFile $true
     ErrorsToLog $LogFile
-    WriteLog ("Pending benchmarks: $(($ActiveMiners.SubMiners | Where-Object NeedBenchmark -eq $true).Count)...") $LogFile $true
+    WriteLog ("Pending benchmarks: $(($ActiveMiners.SubMiners | Where-Object NeedBenchmark | Select-Object -ExpandProperty Id).Count)...") $LogFile $true
 
     if ($DetailedLog) {
         $msg = $ActiveMiners.SubMiners | ForEach-Object {
