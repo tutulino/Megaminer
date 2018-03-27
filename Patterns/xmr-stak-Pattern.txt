@@ -4,8 +4,10 @@
 		"pool_address" : "#SERVER#:#PORT#",
 		"wallet_address" : "#LOGIN#",
 		"pool_password" : "#PASSWORD#",
-		"use_nicehash" : false,
-		"use_tls" : false,
+		#NH#"use_nicehash" : true,#NH#
+		#NoNH#"use_nicehash" : false,#NoNH#
+		#SSL#"use_tls" : true,#SSL#
+		#NoSSL#"use_tls" : false,#NoSSL#
 		"tls_fingerprint" : "",
 		"pool_weight" : 1
 	},

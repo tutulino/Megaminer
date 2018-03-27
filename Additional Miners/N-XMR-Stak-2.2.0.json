@@ -9,6 +9,7 @@
     "API": "XMRig",
     "APIPort": 4068,
     "Fee": 0.02,
+    "SSL": true,
     "Algorithms": {
         "CryptoNight": "monero",
         "CryptoLight": "aeon"

@@ -3,7 +3,7 @@
     "Uri": "https://github.com/xmrig/xmrig-nvidia/releases/download/v2.5.2/xmrig-nvidia-2.5.2-cuda9-win64.zip",
     "SHA256": "73122febd81fe015d7f08e96fd142ba421f73a7cf782e3ac82414cb8af6fa853",
     "Type": "NVIDIA",
-    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --donate-level 1 --cuda-devices=#DEVICES# --cuda-launch=80x30 --cuda-bfactor=10 --cuda-bsleep=26 #ALGORITHMPARAMETERS#",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# #NH#--nicehash#NH# --donate-level 1 --cuda-devices=#DEVICES# --cuda-launch=80x30 --cuda-bfactor=10 --cuda-bsleep=26 #ALGORITHMPARAMETERS#",
     "API": "XMRig",
     "APIPort": 4068,
     "Fee": 0.01,

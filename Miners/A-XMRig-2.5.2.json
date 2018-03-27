@@ -3,7 +3,7 @@
     "Uri": "https://github.com/xmrig/xmrig-amd/releases/download/v2.5.2/xmrig-amd-2.5.2-win64.zip",
     "SHA256": "0b2278724086237e312d4d2ca210105cf86ee213042860879fba5c74f3b646a9",
     "Type": "AMD",
-    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --opencl-platform=#GPUPLATFORM# --donate-level 1 #ALGORITHMPARAMETERS#",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --opencl-platform=#GPUPLATFORM# #NH#--nicehash#NH# --donate-level 1 #ALGORITHMPARAMETERS#",
     "API": "XMRig",
     "APIPort": 4028,
     "Fee": 0.01,

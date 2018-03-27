@@ -454,6 +454,29 @@ while ($Quit -eq $false) {
                             '#EthStMode#'           = $Pool.EthStMode
                             '#GroupName#'           = $TypeGroup.GroupName
                         }
+                        if ($enableSSL) {
+                            $Params += @{
+                                '#SSL#(.*)#SSL#'     = '$1'
+                                '#NoSSL#(.*)#NoSSL#' = ''
+                            }
+                        } else {
+                            $Params += @{
+                                '#SSL#(.*)#SSL#'     = ''
+                                '#NoSSL#(.*)#NoSSL#' = '$1'
+                            }
+                        }
+                        if ($Pool.PoolName -eq 'Nicehash') {
+                            $Params += @{
+                                '#NH#(.*)#NH#'     = '$1'
+                                '#NoNH#(.*)#NoNH#' = ''
+                            }
+                        } else {
+                            $Params += @{
+                                '#NH#(.*)#NH#'     = ''
+                                '#NoNH#(.*)#NoNH#' = '$1'
+                            }
+                        }
+
                         $Arguments = $Miner.Arguments
                         foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
                         if ($Miner.PatternConfigFile) {
