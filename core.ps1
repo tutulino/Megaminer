@@ -831,6 +831,15 @@ while ($Quit -eq $false) {
         }
     }
 
+    ## Reset failed miners after 4 hours
+    $ActiveMiners.SubMiners | Where-Object Status -eq 'Cancelled' | ForEach-Object {
+        if ($_.Stats.LastTimeActive -lt (Get-Date).AddHours(-4)) {
+            $_.Status = 'Idle'
+            $_.Stats.FailedTimes = 0
+            WriteLog ("Reset miner status: $($ActiveMiners[$_.Idf].Name)") $LogFile $true
+        }
+    }
+
     WriteLog ("Active Miners-pools: $($ActiveMiners.Count)...") $LogFile $true
     ErrorsToLog $LogFile
     WriteLog ("Pending benchmarks: $(($ActiveMiners.SubMiners | Where-Object NeedBenchmark | Select-Object -ExpandProperty Id).Count)...") $LogFile $true
@@ -873,7 +882,7 @@ while ($Quit -eq $false) {
 
         #check if must cancel miner/algo/coin combo
         if ($BestLast.Status -eq 'PendingCancellation') {
-            if (($ActiveMiners[$BestLast.IdF].SubMiners.Stats.FailedTimes | Measure-Object -sum).sum -ge 2) {
+            if (($ActiveMiners[$BestLast.IdF].SubMiners.Stats.FailedTimes | Measure-Object -sum).sum -ge 3) {
                 $ActiveMiners[$BestLast.IdF].SubMiners | ForEach-Object {$_.Status = 'Cancelled'}
                 WriteLog ("Detected more than 3 fails, cancelling combination for $BestNowLogMsg") $LogFile $true
             }
