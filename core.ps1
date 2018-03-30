@@ -850,7 +850,7 @@ while ($Quit -eq $false) {
         if ($_.Stats.LastTimeActive -lt (Get-Date).AddHours(-4)) {
             $_.Status = 'Idle'
             $_.Stats.FailedTimes = 0
-            WriteLog ("Reset miner status: $($ActiveMiners[$_.Idf].Name)") $LogFile $true
+            WriteLog ("Reset failed miner status: $($ActiveMiners[$_.IdF].Name)") $LogFile $true
         }
     }
 
@@ -862,7 +862,7 @@ while ($Quit -eq $false) {
         $msg = $ActiveMiners.SubMiners | ForEach-Object {
             "$($_.IdF)-$($_.Id), " +
             "$($ActiveMiners[$_.IdF].DeviceGroup.GroupName), " +
-            "$(if ($ActiveMiners[$_.IdF].IsValid) {'Valid'} else {Invalid}), " +
+            "$(if ($ActiveMiners[$_.IdF].IsValid) {'Valid'} else {'Invalid'}), " +
             "PL $($_.PowerLimit), " +
             "$($_.Status), " +
             "$($ActiveMiners[$_.IdF].Name), " +
@@ -909,7 +909,7 @@ while ($Quit -eq $false) {
         $BestNow = $Candidates.SubMiners |
             Where-Object Status -ne 'Cancelled' |
             ForEach-Object {if ($_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt 0) {$_}} |
-            Sort-Object -Descending NeedBenchmark, Profits, {$ActiveMiners[$_.IdF].Algorithm}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
+            Sort-Object -Descending NeedBenchmark, Profits, @{Expression = {$ActiveMiners[$_.IdF].Algorithm}; Ascending = $true}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
 
         if ($BestNow -eq $null) {WriteLog ("No detected any valid candidate for device group " + $Type.GroupName) $LogFile $true; continue}
@@ -1300,7 +1300,7 @@ while ($Quit -eq $false) {
             #To get pool speed
             $PoolsSpeed = @()
 
-            $Candidates = ($ActiveMiners.SubMiners | Where-Object Best | Select-Object Idf).IdF
+            $Candidates = ($ActiveMiners.SubMiners | Where-Object Best | Select-Object IdF).IdF
             $ActiveMiners | Where-Object {$Candidates -contains $_.Id} | Select-Object PoolName, UserName, WalletSymbol, Coin, WorkerName -unique | ForEach-Object {
                 $Info = [PSCustomObject]@{
                     User       = $_.UserName
@@ -1342,21 +1342,21 @@ while ($Quit -eq $false) {
 
         Print_Horizontal_line
 
-        $ScreenOut = $ActiveMiners.Subminers | Where-Object Best | Sort-Object {$ActiveMiners[$_.idf].DeviceGroup.GroupName} | ForEach-Object {
+        $ScreenOut = $ActiveMiners.Subminers | Where-Object Best | Sort-Object {$ActiveMiners[$_.IdF].DeviceGroup.GroupName} | ForEach-Object {
             [PSCustomObject]@{
                 GroupName   = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
                 MMPowLmt    = if ($_.PowerLimit -gt 0) {$_.PowerLimit} else {""}
-                LocalSpeed  = "$(ConvertTo_Hash $_.SpeedLive)/s" + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$(ConvertTo_Hash $_.SpeedLiveDual)/s"})
+                LocalSpeed  = "$(ConvertTo_Hash $_.SpeedLive)" + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"/$(ConvertTo_Hash $_.SpeedLiveDual)"})
                 mbtc_Day    = ((($_.RevenueLive + $_.RevenueLiveDual) * 1000).tostring("n5"))
-                Rev_Day     = ((($_.RevenueLive + $_.RevenueLiveDual) * $localBTCvalue ).tostring("n2"))
+                Rev_Day     = ((($_.RevenueLive + $_.RevenueLiveDual) * $localBTCvalue ).tostring("n5"))
                 Profit_Day  = (($_.ProfitsLive).tostring("n2"))
-                Algorithm   = $ActiveMiners[$_.IdF].Algorithm + $ActiveMiners[$_.IdF].AlgoLabel + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) { "|$($ActiveMiners[$_.IdF].AlgorithmDual)" }) + $_.BestBySwitch
-                Coin        = $ActiveMiners[$_.IdF].Symbol + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$($ActiveMiners[$_.IdF].SymbolDual)"})
+                Algorithm   = $ActiveMiners[$_.IdF].Algorithms + $(if ($ActiveMiners[$_.IdF].AlgoLabel) {'|' + $ActiveMiners[$_.IdF].AlgoLabel}) + $_.BestBySwitch
+                Coin        = $ActiveMiners[$_.IdF].Symbol + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"_$($ActiveMiners[$_.IdF].SymbolDual)"})
                 Miner       = $ActiveMiners[$_.IdF].Name
                 Power       = [string]$_.PowerLive + 'W'
-                EfficiencyH = if (!($ActiveMiners[$_.IdF].AlgorithmDual) -and $_.PowerLive -gt 0) {(ConvertTo_Hash ($_.SpeedLive / $_.PowerLive))} else {$null}
+                EfficiencyH = if (!($ActiveMiners[$_.IdF].AlgorithmDual) -and $_.PowerLive -gt 0) {ConvertTo_Hash ($_.SpeedLive / $_.PowerLive)} else {$null}
                 EfficiencyW = if ($_.PowerLive -gt 0) {($_.ProfitsLive / $_.PowerLive).tostring("n4")} else {$null}
-                PoolSpeed   = "$(ConvertTo_Hash $ActiveMiners[$_.IdF].PoolHashRate)/s" + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {("|$(ConvertTo_Hash $ActiveMiners[$_.IdF].PoolHashRateDual)/s")})
+                PoolSpeed   = "$(ConvertTo_Hash $ActiveMiners[$_.IdF].PoolHashRate)" + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"/$(ConvertTo_Hash $ActiveMiners[$_.IdF].PoolHashRateDual)"})
                 Pool        = $ActiveMiners[$_.IdF].PoolAbbName + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$($ActiveMiners[$_.IdF].PoolAbbNameDual)"})
                 Workers     = $ActiveMiners[$_.IdF].PoolWorkers
                 Location    = $ActiveMiners[$_.IdF].Location
@@ -1465,21 +1465,21 @@ while ($Quit -eq $false) {
             #Display profits information
             $ProfitMiners2 | Sort-Object @{expression = "GroupName"; Ascending = $true}, @{expression = "Status"; Descending = $true}, @{expression = "NeedBenchmark"; Descending = $true}, @{expression = "Profits"; Descending = $true} | Format-Table (
                 #@{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
-                @{Label = "Algorithm"; Expression = {$_.Algorithm + $_.AlgoLabel + $(if ($_.AlgorithmDual) {"|$($_.AlgorithmDual)"})}},
-                @{Label = "Coin"; Expression = {$_.Symbol + $(if ($_.AlgorithmDual) {"|$($_.SymbolDual)"})}},
+                @{Label = "Algorithm"; Expression = {$_.Algorithms + $(if ($_.AlgoLabel) {"|$($_.AlgoLabel)"})}},
+                @{Label = "Coin"; Expression = {$_.Symbol + $(if ($_.AlgorithmDual) {"_$($_.SymbolDual)"})}},
                 @{Label = "Miner"; Expression = {$_.Name}},
                 # @{Label = "PowLmt"; Expression = {if ($_.SubMiner.PowerLimit -gt 0) {$_.SubMiner.PowerLimit}}; align = 'right'},
-                @{Label = "StatsSpeed"; Expression = {"$(ConvertTo_Hash $_.SubMiner.HashRate)/s" + $(if ($_.AlgorithmDual) {"|$(ConvertTo_Hash $_.SubMiner.HashRatedual)/s"})}; Align = 'right'},
-                @{Label = "Watt"; Expression = {if ($_.SubMiner.NeedBenchmark) {"Benchmarking"} else {$_.SubMiner.PowerAvg.tostring("n0")}}; Align = 'right'},
+                @{Label = "StatsSpeed"; Expression = {if ($_.SubMiner.NeedBenchmark) {"Benchmarking"} else {"$(ConvertTo_Hash $_.SubMiner.HashRate)" + $(if ($_.AlgorithmDual) {"/$(ConvertTo_Hash $_.SubMiner.HashRateDual)"})}}; Align = 'right'},
+                @{Label = "Watt"; Expression = {if ($_.SubMiner.PowerAvg -gt 0) {$_.SubMiner.PowerAvg.tostring("n0")} else {$null}}; Align = 'right'},
                 # @{Label = "Efficiency"; Expression = {if (!($_.AlgorithmDual)) {(ConvertTo_Hash ($_.SubMiner.HashRate / $_.SubMiner.PowerAvg)) + '/W'} else {$null} }; Align = 'right'},
                 @{Label = "$LocalCurrency/W"; Expression = {if ($_.SubMiner.PowerAvg -gt 0) {($_.SubMiner.Profits / $_.SubMiner.PowerAvg).tostring("n4")} else {$null} }; Align = 'right'},
-                @{Label = "mBTC/Day"; Expression = {((($_.SubMiner.Revenue + $_.SubMiner.RevenueDual) * 1000).tostring("n5"))} ; Align = 'right'},
-                @{Label = $LocalCurrency + "/Day"; Expression = {((($_.SubMiner.Revenue + $_.SubMiner.RevenueDual) * [double]$localBTCvalue).tostring("n2"))} ; Align = 'right'},
-                @{Label = "Profit/Day"; Expression = {if ($_.SubMiner.NeedBenchmark) {"Benchmarking"} else {($_.SubMiner.Profits).tostring("n2") + " $LocalCurrency"}}; Align = 'right'},
-                @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:P2}" -f $_.PoolFee}}; Align = 'right'},
-                @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:P2}" -f $_.MinerFee}}; Align = 'right'},
+                @{Label = "mBTC/Day"; Expression = {if ($_.SubMiner.Revenue) {((($_.SubMiner.Revenue + $_.SubMiner.RevenueDual) * 1000).tostring("n5"))} else {$null}} ; Align = 'right'},
+                @{Label = $LocalCurrency + "/Day"; Expression = {if ($_.SubMiner.Revenue) {((($_.SubMiner.Revenue + $_.SubMiner.RevenueDual) * [double]$localBTCvalue).tostring("n2"))} else {$null}} ; Align = 'right'},
+                @{Label = "Profit/Day"; Expression = {if ($_.SubMiner.Profits) {($_.SubMiner.Profits).tostring("n2") + " $LocalCurrency"} else {$null}}; Align = 'right'},
+                @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:p2}" -f $_.PoolFee}}; Align = 'right'},
+                @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:p2}" -f $_.MinerFee}}; Align = 'right'},
                 @{Label = "Loc."; Expression = {$_.Location}} ,
-                @{Label = "Pool"; Expression = {$_.PoolAbbName + $(if ($_.AlgorithmDual) {"|$($_.PoolAbbNameDual)"})}}
+                @{Label = "Pool"; Expression = {$_.PoolAbbName + $(if ($_.AlgorithmDual) {"/$($_.PoolAbbNameDual)"})}}
 
             ) -GroupBy GroupName | Out-Host
             Remove-Variable ProfitMiners
@@ -1645,9 +1645,9 @@ while ($Quit -eq $false) {
                 Format-Table -Wrap -GroupBy @{Label = "Group"; Expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}}(
                 #@{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
                 # @{Label = "DeviceGroup"; Expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}},
-                @{Label = "Algorithm"; Expression = {$ActiveMiners[$_.IdF].Algorithm + $ActiveMiners[$_.IdF].AlgoLabel + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$($ActiveMiners[$_.IdF].AlgorithmDual)"})}},
-                @{Label = "Coin"; Expression = {$ActiveMiners[$_.IdF].Symbol + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$($ActiveMiners[$_.IdF].SymbolDual)"})}},
-                @{Label = "Pool"; Expression = {$ActiveMiners[$_.IdF].PoolAbbName + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"|$($ActiveMiners[$_.IdF].PoolAbbNameDual)"})}},
+                @{Label = "Algorithm"; Expression = {$ActiveMiners[$_.IdF].Algorithms + $(if ($ActiveMiners[$_.IdF].AlgoLabel) {"|$($ActiveMiners[$_.IdF].AlgoLabel)"})}},
+                @{Label = "Coin"; Expression = {$ActiveMiners[$_.IdF].Symbol + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"_$($ActiveMiners[$_.IdF].SymbolDual)"})}},
+                @{Label = "Pool"; Expression = {$ActiveMiners[$_.IdF].PoolAbbName + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"/$($ActiveMiners[$_.IdF].PoolAbbNameDual)"})}},
                 @{Label = "Miner"; Expression = {$ActiveMiners[$_.IdF].Name}},
                 # @{Label = "PwLmt"; Expression = {if ($_.PowerLimit -gt 0) {$_.PowerLimit}}},
                 @{Label = "Launch"; Expression = {$_.Stats.ActivatedTimes}},

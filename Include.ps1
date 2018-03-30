@@ -666,7 +666,7 @@ function Invoke_APIRequest {
     $CachePath = '.\Cache\'
     $CacheFile = $CachePath + [System.Web.HttpUtility]::UrlEncode($Url) + '.json'
 
-    if (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes(-2)) {
+    if (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes(-3)) {
         $Response = Get-Content -Path $CacheFile | ConvertFrom-Json
     } else {
         if (!(Test-Path -Path $CachePath)) { New-Item -Path $CachePath -ItemType directory}
@@ -897,12 +897,12 @@ function ConvertTo_Hash {
     $Return = switch ([math]::truncate([math]::log($Hash, [math]::Pow(1000, 1)))) {
 
         "-Infinity" {"0 h"}
-        0 {"{0:n1} h" -f ($Hash / [math]::Pow(1000, 0))}
-        1 {"{0:n1} kh" -f ($Hash / [math]::Pow(1000, 1))}
-        2 {"{0:n1} mh" -f ($Hash / [math]::Pow(1000, 2))}
-        3 {"{0:n1} gh" -f ($Hash / [math]::Pow(1000, 3))}
-        4 {"{0:n1} th" -f ($Hash / [math]::Pow(1000, 4))}
-        Default {"{0:n1} ph" -f ($Hash / [math]::Pow(1000, 5))}
+        0 {"{0:g4}  h" -f ($Hash / [math]::Pow(1000, 0))}
+        1 {"{0:g4} kh" -f ($Hash / [math]::Pow(1000, 1))}
+        2 {"{0:g4} mh" -f ($Hash / [math]::Pow(1000, 2))}
+        3 {"{0:g4} gh" -f ($Hash / [math]::Pow(1000, 3))}
+        4 {"{0:g4} th" -f ($Hash / [math]::Pow(1000, 4))}
+        Default {"{0:g4} ph" -f ($Hash / [math]::Pow(1000, 5))}
     }
     $Return
 }
