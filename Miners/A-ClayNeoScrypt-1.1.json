@@ -1,7 +1,7 @@
 {
-    "Path": "Claymore's NeoScrypt AMD GPU Miner v1.0\\NeoScryptMiner.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.NeoScrypt.AMD.GPU.Miner.v1.0.zip",
-    "SHA256": "96afa7f2bf13cadda96a83e820e81084b8bb414bd78f81514bb61c64469e0be8",
+    "Path": "Claymore's NeoScrypt AMD GPU Miner v1.1\\NeoScryptMiner.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.NeoScrypt.AMD.GPU.Miner.v1.1.zip",
+    "SHA256": "92d0a0fcd77a2593f064326d36b24956e6cff35db1842cfe89d23d534017ae96",
     "Type": "AMD",
     "Arguments": "-pool #PROTOCOL#://#SERVER#:#PORT# -wal #LOGIN# -psw #PASSWORD# -wd 1 -r -1 -logsmaxsize 10 -logfile #GROUPNAME#_log.txt -di #DEVICESCLAYMODE# -mport -#APIPORT# #ALGORITHMPARAMETERS#",
     "API": "Claymore",
