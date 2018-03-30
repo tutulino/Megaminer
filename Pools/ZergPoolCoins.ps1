@@ -25,7 +25,7 @@ $StratumServers += [PSCustomObject]@{Location = 'EU'; MineUrl = 'europe.mine.zer
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "Autoexchange to @@currency coin specified in config.txt, no registration required"
+        Disclaimer               = "Autoexchange to @@currency coin specified in config.ini, no registration required"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode

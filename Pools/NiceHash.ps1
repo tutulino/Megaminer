@@ -1,4 +1,4 @@
-﻿param(
+param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
@@ -68,7 +68,7 @@ if ($Querymode -eq "wallet") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$CoinsWallets.BTC_NICE -and !$CoinsWallets.BTC) {
-        Write-Host $Name 'Requires BTC or BTC_NICE wallet in config.txt'
+        Write-Host $Name 'Requires BTC or BTC_NICE wallet in config.ini'
         Exit
     }
 

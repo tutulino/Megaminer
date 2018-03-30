@@ -22,7 +22,7 @@ $Result = @()
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "No registration, Autoexchange to LTC for Blake2S / Keccak / YescryptR16, need wallet for each coin on config.txt"
+        Disclaimer               = "No registration, Autoexchange to LTC for Blake2S / Keccak / YescryptR16, need wallet for each coin on config.ini"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode

@@ -20,14 +20,14 @@ param(
 if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY ONE POOL CAN BE SELECTED ON MANUAL MODE}
 
 
-#--------------Load config.txt file
+#--------------Load config.ini file
 
 $Currency = get_config_variable "CURRENCY"
 $Location = get_config_variable "LOCATION"
 $FarmRigs = get_config_variable "FARMRIGS"
 $LocalCurrency = get_config_variable "LOCALCURRENCY"
 if ($LocalCurrency.length -eq 0) {
-    #for old config.txt compatibility
+    #for old config.ini compatibility
     switch ($location) {
         'Europe' {$LocalCurrency = "EUR"}
         'EU' {$LocalCurrency = "EUR"}
@@ -40,7 +40,12 @@ if ($LocalCurrency.length -eq 0) {
 
 #needed for anonymous pools load
 $CoinsWallets = @{}
-((Get-Content config.txt | Where-Object {$_ -like 'WALLET_*=*'}) -replace 'WALLET_', '') | ForEach-Object {$CoinsWallets += ConvertFrom-StringData $_}
+switch -regex -file config.ini {
+    "^\s*WALLET_(\w+)\s*=\s*(.*)" {
+        $name, $value = $matches[1..2]
+        $CoinsWallets[$name] = $value.Trim()
+    }
+}
 
 $SelectedOption = ""
 
@@ -152,7 +157,7 @@ if ($MiningMode -ne "FARM MONITORING") {
             $CoinsPool | Add-Member LocalPrice ([Double]0.0)
 
             $ManualMiningApiUse = $true
-            # (Get-Content config.txt | Where-Object {$_ -like 'MANUALMININGAPIUSE=*'} ) -replace 'MANUALMININGAPIUSE=', ''
+            # (Get-Content config.ini | Where-Object {$_ -like 'MANUALMININGAPIUSE=*'} ) -replace 'MANUALMININGAPIUSE=', ''
 
             if ($ManualMiningApiUse -eq $true) {
                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12

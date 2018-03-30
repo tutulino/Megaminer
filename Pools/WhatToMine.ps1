@@ -27,7 +27,7 @@ $Result = @()
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "Based on WhatToMine statistics, you must have account on Suprnova a wallets for each coin on config.txt "
+        Disclaimer               = "Based on WhatToMine statistics, you must have account on Suprnova a wallets for each coin on config.ini "
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode

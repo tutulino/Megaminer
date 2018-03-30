@@ -1,4 +1,4 @@
-﻿param(
+param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
@@ -19,7 +19,7 @@ $Result = @()
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "Registration required, set username/workername in config.txt file"
+        Disclaimer               = "Registration required, set username/workername in config.ini file"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
@@ -72,6 +72,11 @@ if ($Querymode -eq "SPEED") {
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
+
+    if (!$UserName) {
+        Write-Host $Name 'Requires USERNAME in config.ini'
+        Exit
+    }
 
     $MiningPoolHub_Request = Invoke_APIRequest -Url "https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -Retry 3
 

@@ -1154,7 +1154,12 @@ function Get_Pools {
 function get_config {
 
     $Result = @{}
-    Get-Content config.txt | Where-Object {$_ -like '*=*' -and $_ -notlike '#*'} | ForEach-Object {$Result += ConvertFrom-StringData $_}
+    switch -regex -file config.ini {
+        "^\s*(\w+)\s*=\s*(.*)" {
+            $name, $value = $matches[1..2]
+            $Result[$name] = $value.Trim()
+        }
+    }
     $Result  # Return Value
 }
 

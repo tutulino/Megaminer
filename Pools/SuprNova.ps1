@@ -61,6 +61,12 @@ if ($Querymode -eq "speed") {
 
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
+
+    if (!$UserName) {
+        Write-Host $Name 'Requires USERNAME in config.ini'
+        Exit
+    }
+
     $Pools = @()
     $Pools += [pscustomobject]@{"coin" = "AchieveCoin"; "algo" = "Equihash"; "symbol" = "ACH"; "server" = "ach.suprnova.cc"; "port" = 4242; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "BitcoinGold"; "algo" = "Equihash"; "symbol" = "BTG"; "server" = "btg.suprnova.cc"; "port" = 8816; "location" = "US"};

@@ -36,6 +36,10 @@ if ($Querymode -eq "info") {
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
+    if (!$UserName) {
+        Write-Host $Name 'Requires USERNAME in config.ini'
+        Exit
+    }
 
     $Pools = @()
 

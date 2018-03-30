@@ -234,7 +234,7 @@ while ($Quit -eq $false) {
     $BenchmarkIntervalTime = [int]($Config.BenchmarkTime)
     $LocalCurrency = $Config.LocalCurrency
     if ([string]::IsNullOrWhiteSpace($LocalCurrency)) {
-        #for old config.txt compatibility
+        #for old config.ini compatibility
         switch ($location) {
             'Europe' {$LocalCurrency = "EUR"}
             'EU' {$LocalCurrency = "EUR"}
@@ -289,8 +289,12 @@ while ($Quit -eq $false) {
         if (!$Config.WorkerName) {$Config.WorkerName = $env:COMPUTERNAME}
 
         $CoinsWallets = @{}
-        ((Get-Content config.txt | Where-Object {$_ -like 'WALLET_*=*'}) -replace 'WALLET_', '') | ForEach-Object {$CoinsWallets += ConvertFrom-StringData $_}
-
+        switch -regex -file config.ini {
+            "^\s*WALLET_(\w+)\s*=\s*(.*)" {
+                $name, $value = $matches[1..2]
+                $CoinsWallets[$name] = $value.Trim()
+            }
+        }
         [string]$ElapsedDonationTime + "_0" | Set-Content -Path Donation.ctr
     }
     $UserName = $Config.UserName
@@ -322,7 +326,7 @@ while ($Quit -eq $false) {
             -Location $Location `
             -AlgoFilterList $Algorithm
         if ($AllPools.Count -eq 0) {
-            $Msg = "NO POOLS!...retry in 10 sec --- REMEMBER, IF YOUR ARE MINING ON ANONYMOUS WITHOUT AUTOEXCHANGE POOLS LIKE YIIMP, NANOPOOL, ETC. YOU MUST SET WALLET FOR AT LEAST ONE POOL COIN IN CONFIG.TXT"
+            $Msg = "NO POOLS!...retry in 10 sec --- REMEMBER, IF YOUR ARE MINING ON ANONYMOUS WITHOUT AUTOEXCHANGE POOLS LIKE YIIMP, NANOPOOL, ETC. YOU MUST SET WALLET FOR AT LEAST ONE POOL COIN IN config.ini"
             WriteLog $msg $LogFile $true
 
             Start-Sleep 10
@@ -1270,7 +1274,7 @@ while ($Quit -eq $false) {
         "  (E)nd Interval  (P)rofits  (C)urrent  (H)istory  (W)allets  (S)tats  (Q)uit" | Out-Host
 
         #display donation message
-        if ($DonationInterval) {" THIS INTERVAL YOU ARE DONATING, YOU CAN INCREASE OR DECREASE DONATION ON CONFIG.TXT, THANK YOU FOR YOUR SUPPORT !!!!"}
+        if ($DonationInterval) {" THIS INTERVAL YOU ARE DONATING, YOU CAN INCREASE OR DECREASE DONATION ON config.ini, THANK YOU FOR YOUR SUPPORT !!!!"}
 
 
 

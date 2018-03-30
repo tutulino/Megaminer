@@ -17,7 +17,7 @@ $Result = @()
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer            = "Must set wallet for each coin on web, set login on config.txt file"
+        Disclaimer            = "Must set wallet for each coin on web, set login on config.ini file"
         ActiveOnManualMode    = $ActiveOnManualMode
         ActiveOnAutomaticMode = $ActiveOnAutomaticMode
         ApiData               = $true
