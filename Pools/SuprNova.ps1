@@ -91,6 +91,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "Polytimos"; "algo" = "Polytimos"; "symbol" = "POLY"; "server" = "poly.suprnova.cc"; "port" = 7935; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Race"; "algo" = "Lyra2v2"; "symbol" = "RACE"; "server" = "race.suprnova.cc"; "port" = 5650; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Raven"; "algo" = "X16r"; "symbol" = "RVN"; "server" = "rvn.suprnova.cc"; "port" = 6666; "location" = "US"};
+    $Pools += [pscustomobject]@{"coin" = "Pigeon"; "algo" = "X16s"; "symbol" = "PGN"; "server" = "pign.suprnova.cc"; "port" = 4096; "location" = "US"; "WalletSymbol" = "PIGN"};
     $Pools += [pscustomobject]@{"coin" = "ROIcoin"; "algo" = "HOdl"; "symbol" = "ROI"; "server" = "roi.suprnova.cc"; "port" = 4699; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "SibCoin"; "algo" = "Sib"; "symbol" = "SIB"; "server" = "sib.suprnova.cc"; "port" = 3458; "location" = "US"};
     $Pools += [pscustomobject]@{"coin" = "Straks"; "algo" = "Lyra2v2"; "symbol" = "STAK"; "server" = "stak.suprnova.cc"; "port" = 7706; "location" = "US"; "portSSL" = 7710; "SSL" = $true};
@@ -113,11 +114,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Algorithm             = $_.Algo
             Info                  = $_.Coin
             Protocol              = "stratum+tcp"
-            ProtocolSSL           = $(if ([bool]$_.SSL) {if ($_.Algo -eq "Lyra2v2") {"stratum+tls"} else {"ssl"}} else {$null})
+            ProtocolSSL           = $(if ($_.Algo -eq "Lyra2v2") {"stratum+tls"} else {"ssl"})
             Host                  = $_.Server
-            HostSSL               = $(if ([bool]$_.SSL) {if (!$_.serverSSL) {$_.serverSSL} else {$_.server}} else {$null})
+            HostSSL               = $(if (!$_.serverSSL) {$_.serverSSL} else {$_.server})
             Port                  = $_.Port
-            PortSSL               = $(if ([bool]$_.SSL) {$_.PortSSL} else {$null})
+            PortSSL               = $_.PortSSL
             User                  = "$Username.#Workername#"
             Pass                  = "x"
             Location              = $_.Location
@@ -128,7 +129,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
             PoolName              = $Name
             WalletMode            = $WalletMode
-            WalletSymbol          = if ($_.WalletSymbol -ne $null) {$_.WalletSymbol} else {$_.Symbol}
+            WalletSymbol          = if ($_.WalletSymbol) {$_.WalletSymbol} else {$_.Symbol}
             Fee                   = 0.01
             EthStMode             = 3
             RewardType            = $RewardType

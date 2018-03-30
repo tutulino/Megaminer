@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
@@ -84,7 +84,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
 
         $Coin = $RequestCurrencies.$_
-        $Pool_Algo = get_algo_unified_name $Coin.algo
+        $Pool_Algo = get_algo_unified_name ($Coin.algo -split '-')[0]
         $Pool_Coin = get_coin_unified_name $Coin.name
         $Pool_Symbol = $_
 
@@ -98,20 +98,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "sha256" {$Divisor *= 1000}
         }
 
-        # Comment the coins if you use 6-8 GPUs
-        switch ($Pool_symbol) {
-            'ARGO' { $Port = 4932 }
-            'BHD' { $Port = 3572 }
-            'BWK' { $Port = 3832 }
-            'CBS' { $Port = 4231 }
-            'CURV' { $Port = 4912 }
-            'LIZ' { $Port = 4922 }
-            'RACE' { $Port = 4532 }
-            'SPD' { $Port = 3582 }
-            'TIN' { $Port = 8532 }
-            Default { $Port = $Coin.Port}
-        }
-
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
             Info                  = $Pool_Coin
@@ -119,7 +105,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Price24h              = [decimal]$Coin.'24h_btc' / $Divisor
             Protocol              = "stratum+tcp"
             Host                  = $MineUrl
-            Port                  = $Port
+            Port                  = $Coin.Port
             User                  = $CoinsWallets.$Pool_Symbol
             Pass                  = "c=$Pool_Symbol,ID=#WorkerName#"
             Location              = $Location

@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
@@ -80,10 +80,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Exit
     }
 
-    $Locations = @()
-    $Locations += [PSCustomObject]@{NhLocation = 'USA'; MMlocation = 'US'}
-    $Locations += [PSCustomObject]@{NhLocation = 'EU'; MMlocation = 'EU'}
-    $Locations += [PSCustomObject]@{NhLocation = 'HK'; MMlocation = 'Asia'}
+    $Locations = @{
+        US   = 'USA'
+        EU   = 'EU'
+        Asia = 'HK'
+    }
 
     $Request | Where-Object {$_.paying -gt 0} | ForEach-Object {
 
@@ -91,7 +92,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         $Divisor = 1000000000
 
-        foreach ($location in $Locations) {
+        foreach ($location in $Locations.Keys) {
 
             $enableSSL = ($Algo -in @('CryptoNight', 'CryptoNightV7', 'Equihash'))
 
@@ -101,14 +102,14 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Price                 = [decimal]$_.paying / $Divisor
                 Price24h              = [decimal]$_.paying / $Divisor
                 Protocol              = "stratum+tcp"
-                ProtocolSSL           = if ($enableSSL) {"ssl"} else {$null}
-                Host                  = $_.name + "." + $location.NhLocation + ".nicehash.com"
-                HostSSL               = $(if ($enableSSL) {$_.name + "." + $location.NhLocation + ".nicehash.com"} else {$null})
+                ProtocolSSL           = "ssl"
+                Host                  = $_.name + "." + $Locations.$location + ".nicehash.com"
+                HostSSL               = $_.name + "." + $Locations.$location + ".nicehash.com"
                 Port                  = $_.port
-                PortSSL               = $(if ($enableSSL) {$_.port + 30000} else {$null})
+                PortSSL               = $_.port + 30000
                 User                  = $(if ($CoinsWallets.BTC_NICE) {$CoinsWallets.BTC_NICE} else {$CoinsWallets.BTC}) + '.' + "#Workername#"
                 Pass                  = "x"
-                Location              = $location.MMLocation
+                Location              = $Location
                 SSL                   = $enableSSL
                 Symbol                = get_coin_symbol -Coin $Algo
                 AbbName               = $AbbName

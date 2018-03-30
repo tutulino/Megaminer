@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
@@ -101,8 +101,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         $MiningPoolHub_Price = [Double]($_.profit / $Divisor)
 
-        $Locations | ForEach-Object {
-            $Location = $_
+        foreach ($Location in $Locations) {
 
             $enableSSL = ($MiningPoolHub_Algorithm -in @('Cryptonight', 'Equihash'))
 
@@ -112,11 +111,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Price                 = [decimal]$MiningPoolHub_Price
                 Price24h              = $null #MPH not send this on api
                 Protocol              = "stratum+tcp"
-                ProtocolSSL           = if ($enableSSL) {"ssl"} else {$null}
+                ProtocolSSL           = "ssl"
                 Host                  = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
-                HostSSL               = $(if ($enableSSL) {$MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1} else {$null})
+                HostSSL               = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
                 Port                  = $MiningPoolHub_Port
-                PortSSL               = $(if ($enableSSL) {$MiningPoolHub_Port} else {$null})
+                PortSSL               = $MiningPoolHub_Port
                 User                  = "$UserName.#WorkerName#"
                 Pass                  = "x"
                 Location              = $Location
