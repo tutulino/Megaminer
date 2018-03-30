@@ -312,9 +312,19 @@ while ($Quit -eq $false) {
 
 
     #get actual hour electricity cost
-    $ElectricityCostValue = [double](($Config.ElectricityCost | ConvertFrom-Json) |
-            Where-Object HourStart -le (Get-Date).Hour |
-            Where-Object HourEnd -ge (Get-Date).Hour).CostKwh
+    ($Config.ElectricityCost | ConvertFrom-Json) | ForEach-Object {
+        if ((
+                $_.HourStart -lt $_.HourEnd -and
+                (Get-Date).Hour -in @(($_.HourStart)..($_.HourEnd))
+            ) -or (
+                $_.HourStart -gt $_.HourEnd -and (
+                    (Get-Date).Hour -in @(($_.HourStart)..23) -or
+                    (Get-Date).Hour -in @(0..($_.HourEnd))
+                )
+            )
+        ) {$ElectricityCostValue = [double]$_.CostKwh}
+    }
+
     WriteLog "Loading Pools Information..." $LogFile $true
 
     #Load information about the Pools, only must read parameter passed files (not all as mph do), level is Pool-Algo-Coin
