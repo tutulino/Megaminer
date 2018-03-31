@@ -1,0 +1,12 @@
+{
+    "Path": "suprminer-1.3.7\\ccminer.exe",
+    "Uri": "https://github.com/ocminer/suprminer/releases/download/1.3/suprminer-1.3.7z",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Algorithms": {
+        "X16r": "-a x16r",
+        "X16s": "-a x16s"
+    }
+}
