@@ -1329,7 +1329,7 @@ function  get_coin_unified_name ([string]$Coin) {
 
     if (![string]::IsNullOrEmpty($Coin)) {
         switch -wildcard ($Coin.Trim()) {
-            "Auroracoin-*" { "Auroracoin" }
+            "Auroracoin-*" { "Aurora" }
             "Dgb-*" { "Digibyte" }
             "Digibyte-*" { "Digibyte" }
             "Ethereum-Classic" { "EthereumClassic" }
@@ -1339,6 +1339,7 @@ function  get_coin_unified_name ([string]$Coin) {
             "Bitcoin-Gold" { "BitcoinGold" }
             "Bitcoin-Cash" { "BitcoinCash" }
             "Bitcoin-Private" { "BitcoinPrivate" }
+            "*coin" { $Coin.Trim().Replace('coin', '') }
             Default { $Coin.Trim() }
         }
     }
