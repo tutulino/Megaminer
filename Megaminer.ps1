@@ -46,6 +46,7 @@ switch -regex -file config.ini {
         $CoinsWallets[$name] = $value.Trim()
     }
 }
+$UserName = get_config_variable "USERNAME"
 
 $SelectedOption = ""
 
@@ -146,7 +147,7 @@ if ($MiningMode -ne "FARM MONITORING") {
         If ($CoinsName -eq "") {
 
             #Load coins from pools
-            $CoinsPool = Get_Pools -Querymode "Menu" -PoolsFilterList $PoolsName -location $Location | Select-Object info, symbol, algorithm, Workers, PoolHashRate, Blocks_24h -unique | Sort-Object info
+            $CoinsPool = Get_Pools -Querymode "Menu" -PoolsFilterList $PoolsName -location $Location | Select-Object Info, Symbol, Algorithm, Workers, PoolHashRate, Blocks_24h, Price -unique | Sort-Object info
 
             $CoinsPool | Add-Member Option "0"
             $CoinsPool | Add-Member YourHashRate ([Double]0.0)
@@ -156,10 +157,19 @@ if ($MiningMode -ne "FARM MONITORING") {
             $CoinsPool | Add-Member LocalProfit ([Double]0.0)
             $CoinsPool | Add-Member LocalPrice ([Double]0.0)
 
-            $ManualMiningApiUse = $true
-            # (Get-Content config.ini | Where-Object {$_ -like 'MANUALMININGAPIUSE=*'} ) -replace 'MANUALMININGAPIUSE=', ''
+            'Calling Coindesk API' | Write-Host
+            $CDKResponse = try { Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json | Select-Object -ExpandProperty BPI } catch { $null; Write-Host "Not responding" }
 
-            if ($ManualMiningApiUse -eq $true) {
+            if (($CoinsPool | Where-Object Price -gt 0).count -gt 0) {
+                $Counter = 0
+                foreach ($Coin in $CoinsPool) {
+                    $Coin.Option = $Counter
+                    $counter++
+                    $Coin.YourHashRate = (Get_Best_Hashrate_Algo $Coin.Algorithm).hashrate
+                    $Coin.BtcProfit = $Coin.price * $Coin.YourHashRate
+                    $Coin.LocalProfit = $CDKResponse.$LocalCurrency.rate_float * [double]$Coin.BtcProfit
+                }
+            } else {
                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
                 'Calling CoinMarketCap API' | Write-Host
                 $CMCResponse = try { Invoke-WebRequest "https://api.coinmarketcap.com/v1/ticker/?limit=0" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json } catch { $null; Write-Host "Not responding" }
@@ -167,17 +177,26 @@ if ($MiningMode -ne "FARM MONITORING") {
                 $BTXResponse = try { Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'result' } catch { $null; Write-Host "Not responding" }
                 'Calling Cryptopia API' | Write-Host
                 $CRYResponse = try { Invoke-WebRequest "https://www.cryptopia.co.nz/api/GetMarkets/BTC" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'data' } catch { $null; Write-Host "Not responding" }
-                'Calling StocksExchange API' | Write-Host
-                $SEXResponse = try { Invoke-WebRequest "https://stocks.exchange/api2/prices" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json } catch { $null; Write-Host "Not responding" }
-                'Calling C-CEX API' | Write-Host
-                $CEXResponse = try { Invoke-WebRequest "https://c-cex.com/t/prices.json" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json } catch { $null; Write-Host "Not responding" }
-                'Calling TradeSatoshi API' | Write-Host
-                $TSAResponse = try { Invoke-WebRequest "https://tradesatoshi.com/api/public/getmarketsummaries" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'result' } catch { $null; Write-Host "Not responding" }            'Calling CryptoID API' | Write-Host
+
+                #Add main page coins
+                $WtmUrl = 'https://whattomine.com/coins.json?' +
+                'eth=true&factor[eth_hr]=10&factor[eth_p]=0&' + #Ethash
+                'grof=true&factor[gro_hr]=10&factor[gro_p]=0&' + #Groestl
+                'x11gf=true&factor[x11g_hr]=10&factor[x11g_p]=0&' + #X11gost
+                'cn=true&factor[cn_hr]=10&factor[cn_p]=0&' + #CryptoNight
+                'eq=true&factor[eq_hr]=10&factor[eq_p]=0&' + #Equihash
+                'lre=true&factor[lrev2_hr]=10&factor[lrev2_p]=0&' + #Lyra2v2
+                'ns=true&factor[ns_hr]=10&factor[ns_p]=0&' + #NeoScrypt
+                'lbry=true&factor[lbry_hr]=10&factor[lbry_p]=0&' + #Lbry
+                'bk14=true&factor[bk14_hr]=10&factor[bk14_p]=0&' + #Decred
+                'pas=true&factor[pas_hr]=10&factor[pas_p]=0&' + #Pascal
+                'skh=true&factor[skh_hr]=10&factor[skh_p]=0&' + #Skunk
+                'n5=true&factor[n5_hr]=10&factor[n5_p]=0&' + #Nist5
+                'l2z=true&factor[l2z_hr]=10&factor[l2z_p]=0&' + #Lyra2z
+                'xn=true&factor[xn_hr]=10&factor[xn_p]=0' #Xevan
 
                 'Calling WhatToMine API' | Write-Host
-                $WTMResponse = try { Invoke-WebRequest "http://whattomine.com/coins.json" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'coins' } catch { $null; Write-Host "Not responding" }
-                'Calling Coindesk API' | Write-Host
-                $CDKResponse = try { Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json | Select-Object -ExpandProperty BPI } catch { $null; Write-Host "Not responding" }
+                $WTMResponse = try { Invoke_APIRequest -Url $WtmUrl -Retry 3 | Select-Object -ExpandProperty coins } catch { $null; Write-Host "Not responding" }
             }
 
             $Counter = 0
@@ -191,9 +210,7 @@ if ($MiningMode -ne "FARM MONITORING") {
                     $PriceCMC = [decimal]($CMCResponse | Where-Object Symbol -eq $Coin.Symbol | ForEach-Object {if ($(get_coin_unified_name $_.Id) -eq $Coin.Info) {$_.price_btc} })
                     $PriceBTX = [decimal]($BTXResponse | Where-Object MarketName -eq ('BTC-' + $Coin.Symbol) | Select-Object -ExpandProperty Last)
                     $PriceCRY = [decimal]($CRYResponse | Where-Object Label -eq ($Coin.Symbol + '/BTC') | Select-Object -ExpandProperty LastPrice)
-                    $PriceSEX = [decimal]($SEXResponse | Where-Object market_name -eq ($Coin.Symbol + '_BTC') | ForEach-Object {([double]$Coin.buy + [double]$Coin.sell) / 2})
-                    $PriceCEX = [decimal]($CEXResponse.($Coin.Symbol + "-btc").lastprice)
-                    $PriceTSA = [decimal]($TSAResponse | Where-Object market -eq ($Coin.Symbol + '_BTC') | Select-Object -ExpandProperty last)
+
 
                     if ($PriceCMC -gt 0) {
                         $Coin.BTCPrice = $PriceCMC
@@ -201,20 +218,11 @@ if ($MiningMode -ne "FARM MONITORING") {
                         $Coin.BTCPrice = $PriceBTX
                     } elseif ($PriceCRY -gt 0) {
                         $Coin.BTCPrice = $PriceCRY
-                    } elseif ($PriceSEX -gt 0) {
-                        $Coin.BTCPrice = $PriceSEX
-                    } elseif ($PriceCEX -gt 0) {
-                        $Coin.BTCPrice = $PriceCEX
-                    } elseif ($PriceTSA -gt 0) {
-                        $Coin.BTCPrice = $PriceTSA
                     }
 
                     Remove-Variable PriceCMC
                     Remove-Variable PriceBTX
                     Remove-Variable PriceCRY
-                    Remove-Variable PriceSEX
-                    Remove-Variable PriceCEX
-                    Remove-Variable PriceTSA
 
                     #Data from WTM
                     if ($WTMResponse -ne $null) {
@@ -222,28 +230,26 @@ if ($MiningMode -ne "FARM MONITORING") {
                         if ($WtmCoin -ne $null) {
 
                             $WTMFactor = switch ($Coin.Algorithm) {
-                                #main page
-                                "Ethash" { 84000000 }
-                                "Sib" { 20100000 }
-                                "CryptoNight" { 2190 }
-                                "Equihash" { 870 }
-                                "Lyra2v2" { 14700000 }
-                                "NeoScrypt" { 2460000 }
-                                "Skunk" { 54000000 }
-                                "Nist5" { 57000000 }
-
-                                #others
-                                "Bitcore" { 30000000 }
-                                "Blake2s" { 7500000000 }
-                                "CryptoLight" { 6600 }
-                                "Keccak" { 900000000 }
-                                "KeccakC" { 240000000 }
-                                "Lyra2z" { 420000 }
-                                "X17" { 100000 }
-                                "Xevan" { 4800000 }
-                                "Yescrypt" { 13080 }
-                                "Zero" { 18 }
-                                default {$null}
+                                "Bitcore" { 1000000 }
+                                "Blake2s" { 1000000 }
+                                "CryptoLight" { 1 }
+                                "CryptoNight" { 1 }
+                                "Equihash" { 1 }
+                                "Ethash" { 1000000 }
+                                "Keccak" { 1000000 }
+                                "KeccakC" { 1000000 }
+                                "Lyra2v2" {1000}
+                                "Lyra2z" { 1000 }
+                                "NeoScrypt" { 1000 }
+                                "Nist5" { 1000000 }
+                                "PHI" { 1000000 }
+                                "Sib" { 1000000 }
+                                "Skunk" { 1000000 }
+                                "X16r" { 1000000 }
+                                "X17" { 1000 }
+                                "Yescrypt" { 1 }
+                                "Zero" { 1 }
+                                default { $null }
                             }
 
                             if ($WTMFactor -ne $null) {
