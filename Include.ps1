@@ -82,7 +82,7 @@ function ErrorsTolog ($LogFile) {
         if ($error[$i].InnerException.Paramname -ne "scopeId") {
             # errors in debug
             $Msg = "###### ERROR ##### " + [string]($error[$i]) + ' ' + $error[$i].ScriptStackTrace
-            Writelog $msg $LogFile
+            WriteLog $msg $LogFile
         }
 
     }
@@ -1190,12 +1190,12 @@ function Get_Best_Hashrate_Algo {
     )
 
 
-    $Pattern = "*_" + $Algorithm + "_*_HashRate.txt"
+    $Pattern = "*_" + $Algorithm + "_*_HashRate.csv"
 
     $Besthashrate = 0
 
     Get-ChildItem ($PSScriptRoot + "\Stats") -Filter $Pattern -File | ForEach-Object {
-        $Content = ($_ | Get-Content | ConvertFrom-Json )
+        $Content = ($_ | Get-Content | ConvertFrom-Csv )
         $Hrs = 0
         if ($Content -ne $null) {$Hrs = $($Content | Where-Object TimeSinceStartInterval -gt 60 | Measure-Object -property Speed -average).Average}
 
@@ -1369,19 +1369,29 @@ function Get_Hashrates {
 
 
     if ($AlgoLabel -eq "") {$AlgoLabel = 'X'}
-    $Pattern = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.txt"
+    $Pattern = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.csv"
 
-    if (test-path -path $pattern) {
-        $Content = (Get-Content -path $pattern)
-        try {$Content = $Content | ConvertFrom-Json} catch {
+    if (!(Test-Path -path $Pattern)) {
+        $PatternOld = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.txt"
+        if (Test-Path -path $PatternOld) {
+            $Content = (Get-Content -path $PatternOld)
+            try {$Content = $Content | ConvertFrom-Json} catch {
+            } finally {
+                if ($Content) {$Content | ConvertTo-Csv | Set-Content -Path $Pattern}
+                Remove-Item -path $PatternOld
+            }
+        }
+    } else {
+        $Content = (Get-Content -path $Pattern)
+        try {$Content = $Content | ConvertFrom-Csv} catch {
             #if error from convert from json delete file
-            writelog ("Corrupted file $Pattern, deleting") $LogFile $true
-            remove-item -path $pattern
+            WriteLog ("Corrupted file $Pattern, deleting") $LogFile $true
+            Remove-Item -path $Pattern
         }
     }
 
     if ($Content -eq $null) {$Content = @()}
-    $content
+    $Content
 }
 
 #************************************************************************************************************************************************************************************
@@ -1408,9 +1418,9 @@ function Set_Hashrates {
 
     if ($AlgoLabel -eq "") {$AlgoLabel = 'X'}
 
-    $Path = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.txt"
+    $Path = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.csv"
 
-    $Value | Convertto-Json | Set-Content  -Path $Path
+    $Value | ConvertTo-Csv | Set-Content  -Path $Path
 }
 
 
@@ -1434,17 +1444,20 @@ function Get_Stats {
     )
 
     if ($AlgoLabel -eq "") {$AlgoLabel = 'X'}
-    $Pattern = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_stats.txt"
+    $Pattern = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_stats.json"
 
-    if (Test-Path -path $pattern) {
-        $Content = (Get-Content -path $pattern)
+    if (!(Test-Path -path $Pattern)) {
+        $PatternOld = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_stats.txt"
+        if (Test-Path -path $PatternOld) {Rename-Item -Path $PatternOld -NewName $Pattern}
+    } else {
+        $Content = (Get-Content -path $Pattern)
         try {$Content = $Content | ConvertFrom-Json} catch {
             #if error from convert from json delete file
             writelog ("Corrupted file $Pattern, deleting") $LogFile $true
-            Remove-Item -path $pattern
+            Remove-Item -path $Pattern
         }
     }
-    $content
+    $Content
 }
 
 #************************************************************************************************************************************************************************************
@@ -1471,9 +1484,9 @@ function Set_Stats {
 
     if ($AlgoLabel -eq "") {$AlgoLabel = 'X'}
 
-    $Path = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_stats.txt"
+    $Path = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_stats.json"
 
-    $Value | Convertto-Json | Set-Content -Path $Path
+    $Value | ConvertTo-Json | Set-Content -Path $Path
 }
 
 #************************************************************************************************************************************************************************************
@@ -1505,7 +1518,7 @@ function Start_Downloader {
             } else {
                 $Message = "Downloading....$($URI)"
                 Write-Host -BackgroundColor green -ForegroundColor Black  $Message
-                Writelog $Message $LogFile
+                WriteLog $Message $LogFile
                 Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop -SHA256 $SHA256
             }
         } catch {
@@ -1519,7 +1532,7 @@ function Start_Downloader {
             } else {
                 $Message = "Cannot find $($Path) distributed at $($URI). "
                 Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
-                Writelog $Message $LogFile
+                WriteLog $Message $LogFile
             }
         }
     }
