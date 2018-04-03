@@ -9,8 +9,9 @@
 "APIPort" : 4068,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"x16r":"-a x16r  "}
-                
+                {"x16r":"-a x16r"},
+				        {"x17":"-a x17"}
+
               ]
 }
 
