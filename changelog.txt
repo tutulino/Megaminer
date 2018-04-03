@@ -641,6 +641,8 @@ This release add a new section in config.txt for Farm Monitor
 
 * Updated ccminer tpruvot to 2.2.5
 * Updated xmrig to 2.5.2
+* Updated Claymore ETH to 11.6
+* Updated Phoenixminer to 2.8c
 
 
 ---BUG FIXES:
