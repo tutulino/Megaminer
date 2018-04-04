@@ -10,7 +10,7 @@ param(
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode    = $true
 $ActiveOnAutomaticMode = $true
-$ActiveOnAutomatic24hMode = $false
+$ActiveOnAutomatic24hMode = $true
 $AbbName = 'ZERG'
 $WalletMode ='WALLET'
 $Result = @()
