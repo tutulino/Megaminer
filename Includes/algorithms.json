@@ -19,6 +19,7 @@
     "cryptonightv7": "CryptoNightV7",
     "cryptonight-light": "CryptoLight",
     "cryptonight-lite": "CryptoLight",
+    "cryptonight-heavy": "CryptoNightHeavy",
     "daggerhashimoto": "Ethash",
     "darkcoinmod": "X11",
     "decred": "Decred",
