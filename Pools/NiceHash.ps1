@@ -51,8 +51,9 @@ if ($Querymode -eq "speed") {
 
 if ($Querymode -eq "wallet") {
     $Info.user = ($Info.user -split '\.')[0]
-    $Request = Invoke_APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider&addr=" + $Info.user) -Retry 3 |
-        Select-Object -ExpandProperty result | Select-Object -ExpandProperty stats
+	$http="https://api.nicehash.com/api?method=stats.provider&addr="+$Info.user
+    $Request = Invoke-WebRequest $http -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json 
+    $Request = $Request |Select-Object -ExpandProperty result  |Select-Object -ExpandProperty stats 
 
     if ($Request) {
         $Result = [PSCustomObject]@{
@@ -94,7 +95,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         foreach ($location in $Locations.Keys) {
 
-            $enableSSL = ($Algo -in @('CryptoNight', 'Equihash'))
+            $enableSSL = ($Algo -in @('CryptoNight', 'CryptoNightV7', 'Equihash'))
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $Algo
