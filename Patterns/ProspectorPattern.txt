@@ -2,14 +2,26 @@
 gpu-coin = "#ALGORITHMPARAMETERS#"
 
 [pools.#ALGORITHMPARAMETERS#]
-url = "#PROTOCOL#://#SERVER#:#PORT#"
+url = "stratum+tcp://#SERVER#:#PORT#"
 username = "#LOGIN#"
 password = "#PASSWORD#"
-#FOR_EACH_GPU#
 
-[gpus.#GpuPlatform#-#GPUID#]
+[gpus.#GpuPlatform#-0]
 enabled = true
-#END_FOR_EACH_GPU#
+[gpus.#GpuPlatform#-1]
+enabled = true
+[gpus.#GpuPlatform#-2]
+enabled = true
+[gpus.#GpuPlatform#-3]
+enabled = true
+[gpus.#GpuPlatform#-4]
+enabled = true
+[gpus.#GpuPlatform#-5]
+enabled = true
+[gpus.#GpuPlatform#-6]
+enabled = true
+[gpus.#GpuPlatform#-7]
+enabled = true
 
 [cpu]
 enabled = false

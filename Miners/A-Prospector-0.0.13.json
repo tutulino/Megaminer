@@ -6,8 +6,8 @@
     "GenerateConfigFile": "#GROUPNAME#.toml",
     "PatternConfigFile": ".\\Patterns\\ProspectorPattern.txt",
     "Arguments": "-c #GROUPNAME#.toml",
-    "API": "wrapper",
-    "APIPort": 4028,
+    "API": "prospector",
+    "APIPort": 42000,
     "PrelaunchCommand": "",
     "Fee": 0.01,
     "Algorithms": {

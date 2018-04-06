@@ -1,6 +1,6 @@
 {
-    "Path": "suprminer-1.4.7\\ccminer.exe",
-    "Uri": "https://github.com/ocminer/suprminer/releases/download/1.4/suprminer-1.4.7z",
+    "Path": "suprminer-1.6\\ccminer.exe",
+    "Uri": "https://github.com/ocminer/suprminer/releases/download/1.6/suprminer-1.6.7z",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",

@@ -10,7 +10,7 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
-$ActiveOnAutomatic24hMode = $false
+$ActiveOnAutomatic24hMode = $true
 $AbbName = "MPH"
 $WalletMode = "APIKEY"
 $RewardType = "PPLS"
@@ -103,6 +103,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         foreach ($Location in $Locations) {
 
+            $Server = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
+            $IP =  ([Net.DNS]::Resolve($Server).AddressList.IPAddressToString | Select-Object -First 1)
+
             $enableSSL = ($MiningPoolHub_Algorithm -in @('CryptoNight', 'Equihash'))
 
             if ($MiningPoolHub_Coin -eq 'Monero') {$MiningPoolHub_Algorithm = 'CryptoNightV7'}
@@ -111,11 +114,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Algorithm             = $MiningPoolHub_Algorithm
                 Info                  = $MiningPoolHub_Coin
                 Price                 = [decimal]$MiningPoolHub_Price
-                Price24h              = $null #MPH not send this on api
+                Price24h              = [decimal]$MiningPoolHub_Price #MPH not send this on api
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = "ssl"
-                Host                  = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
-                HostSSL               = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
+                Host                  = $IP
+                HostSSL               = $IP
                 Port                  = $MiningPoolHub_Port
                 PortSSL               = $MiningPoolHub_Port
                 User                  = "$UserName.#WorkerName#"
