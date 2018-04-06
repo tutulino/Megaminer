@@ -1,7 +1,6 @@
 {
-    "Path": "bminer-v6.0.0-d111154-amd64\\bminer.exe",
-    "Uri": "https://www.bminercontent.com/releases/bminer-v6.0.0-d111154-amd64.zip",
-    "SHA256": "bd6c0766dfb1a996f3fbe946ddb6ec8daa2e800300cd40a7a10a7f3e97057e67",
+    "Path": "bminer-v6.1.0-7ea8bbe-amd64\\bminer.exe",
+    "Uri": "https://www.bminercontent.com/releases/bminer-v6.1.0-7ea8bbe-amd64.zip",
     "Type": "NVIDIA",
     "Arguments": "-uri stratum://#LOGIN#.#WORKERNAME#@#SERVER#:#PORT# -devices #DEVICES# -watchdog -api 127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
     "API": "BMINER",

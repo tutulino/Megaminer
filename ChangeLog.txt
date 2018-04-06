@@ -622,3 +622,40 @@ This release changes config.txt variable @@LOCATION (EUROPE--> EU)
 This release add config.txt variables @@FORCEDYNAMICPORTS
 This release add a new section in config.txt for Farm Monitor
 
+
+
+------------------------------------------------
+6.2
+
+
+---FEATURES CHANGES:
+
+* Cancelled miners due to fails will be retried after 6 hours
+* New x16r, x16s ans x12 algos
+
+
+---POOLS CHANGES:
+* Enabled 24h mode for zergpool
+
+
+---MINERS CHANGES:
+
+* Updated ccminer tpruvot to 2.2.5
+* Updated xmrig to 2.5.2
+* Updated Claymore ETH to 11.6
+* Updated Phoenixminer to 2.8c
+* Updated bminer to 6.1.0
+* Replaced ccminer x16 for enemy release
+
+
+---BUG FIXES:
+
+* Blazepool Wallet not shown
+* Claymore Neoscrypt for AMD not using selected devices
+
+
+
+--RELEASE NOTES
+
+
+

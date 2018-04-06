@@ -1,0 +1,12 @@
+{
+    "Path": "rvnenemy\\ccminer.exe",
+    "Uri": "https://github.com/tutulino/Software/releases/download/0/rvnenemy.zip",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Algorithms": {
+        "X16r": "-a x16r",
+        "X17": "-a x17"
+    }
+}
