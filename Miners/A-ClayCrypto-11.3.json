@@ -9,6 +9,6 @@
     "SSL": true,
     "Algorithms": {
         "CryptoNight": "",
-        "CryptoNightV7": ""
+        "CryptoNightV7": "-pow7 1"
     }
 }

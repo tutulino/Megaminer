@@ -57,14 +57,14 @@ if ($Querymode -eq "SPEED") {
 
     if ($Request) {
         $Result = $Request | ForEach-Object {
-			if ($_.hashrate -gt 0) {
-				[PSCustomObject]@{
-					PoolName   = $name
-					Diff       = $_.difficulty
-					Workername = $($_.username -split '.')[1]
-					Hashrate   = $_.hashrate
-				}
-			}
+            if ($_.hashrate -gt 0) {
+                [PSCustomObject]@{
+                    PoolName   = $name
+                    Diff       = $_.difficulty
+                    Workername = $($_.username -split '.')[1]
+                    Hashrate   = $_.hashrate
+                }
+            }
         }
         Remove-Variable Request
     }
@@ -87,15 +87,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Locations = "EU", "US", "Asia"
 
-    $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0 -and $_.profit -gt 0} | ForEach-Object {
+    $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0} | ForEach-Object {
 
         $MiningPoolHub_Algorithm = get_algo_unified_name $_.algo
         $MiningPoolHub_Coin = get_coin_unified_name $_.coin_name
 
         $MiningPoolHub_OriginalCoin = $_.coin_name
 
-        $MiningPoolHub_Hosts = $_.direct_mining_host_list.split(";")
-        $MiningPoolHub_Port = $_.direct_mining_algo_port
+        $MiningPoolHub_Hosts = $_.host_list.split(";")
+        $MiningPoolHub_Port = $_.port
 
         $Divisor = [double]1000000000
 
@@ -103,7 +103,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         foreach ($Location in $Locations) {
 
-            $enableSSL = ($MiningPoolHub_Algorithm -in @('Cryptonight', 'Equihash'))
+            $enableSSL = ($MiningPoolHub_Algorithm -in @('CryptoNight', 'Equihash'))
+
+            if ($MiningPoolHub_Coin -eq 'Monero') {$MiningPoolHub_Algorithm = 'CryptoNightV7'}
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $MiningPoolHub_Algorithm
