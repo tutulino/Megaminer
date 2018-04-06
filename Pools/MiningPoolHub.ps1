@@ -10,7 +10,7 @@
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
-$ActiveOnAutomatic24hMode = $false
+$ActiveOnAutomatic24hMode = $true
 $AbbName = "MPH"
 $WalletMode = "APIKEY"
 $RewardType = "PPLS"
@@ -111,7 +111,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Algorithm             = $MiningPoolHub_Algorithm
                 Info                  = $MiningPoolHub_Coin
                 Price                 = [decimal]$MiningPoolHub_Price
-                Price24h              = $null #MPH not send this on api
+                Price24h              = [decimal]$MiningPoolHub_Price #MPH not send this on api
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = "ssl"
                 Host                  = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1

@@ -2,9 +2,9 @@
     "Path": "hsrminer_hsr.exe",
     "Uri": "https://github.com/palginpav/hsrminer/raw/master/HSR%20algo/Windows/hsrminer_hsr.zip",
     "Type": "NVIDIA",
-    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#  -d #DEVICES# --api-bind #APIPORT# -r 10 #ALGORITHMPARAMETERS# ",
-    "API": "Palgin",
-    "APIPort": 4068,
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "palgin",
+    "APIPort": 4001,
     "Fee": 0.01,
     "Algorithms": {
         "hsr": ""

@@ -1,6 +1,6 @@
 {
     "Path": "ccminer-x64.exe",
-    "Uri": "https://github.com/MSFTserver/ccminer/releases/download/2.2.5-rvn/ccminer-x64-2.2.5-rvn-cuda9.7z",
+    "Uri": "https://github.com/tpruvot/ccminer/releases/download/2.2.5-tpruvot/ccminer-x64-2.2.5-cuda9.7z",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",
@@ -33,7 +33,9 @@
         "Tribus": "-a tribus",
         "Veltor": "-a veltor",
         "X11evo": "-a x11evo",
+		"X12": "-a x12",
         "X16r": "-a x16R",
+		"X16s": "-a x16S",
         "X17": "-a x17"
     }
 }

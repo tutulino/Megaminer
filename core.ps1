@@ -261,18 +261,18 @@ while ($Quit -eq $false) {
         # donation interval
 
         $DonationInterval = $true
-        $Config.UserName = "ffwd"
+        $Config.UserName = "Fedeparma74"
         $Config.WorkerName = "Donate"
         $CoinsWallets = @{
-            BTC = "3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL"
+            BTC = "3NgabhETVq6JUfxsuoJSbA9dyPpRn65eZK"
         }
 
         $DonateInterval = ($ConfigDonateTime - $ElapsedDonatedTime) * 60
 
         $Algorithm = $null
-        $PoolsName = ("MiningPoolHub", "NiceHash")
+        $PoolsName = ("NiceHash")
         $CoinsName = $null
-        $MiningMode = "Automatic"
+        $MiningMode = "Automatic24h"
 
         if ($ElapsedDonatedTime -ge $ConfigDonateTime) {"0_0" | Set-Content -Path 'Donation.ctr'}
         else {[string]$DonationPastTime + "_" + [string]$ElapsedDonatedTime | Set-Content -Path 'Donation.ctr'}

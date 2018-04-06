@@ -1,12 +1,12 @@
 {
-    "Path": "ccminer_cuda9.exe",
-    "Uri": "https://github.com/djm34/ccminer-msvc2015/releases/download/v0.2.1/ccminer_cuda9.exe",
+    "Path": "ccminer.exe",
+    "Uri": "https://github.com/djm34/ccminer-msvc2015/releases/download/v0.3.0/ccminer.rar",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {
         "Lyra2z": "-a lyra2z",
-        "Yescript": "-a yescript"
+        "Lyra2h": "-a lyra2h"
     }
 }

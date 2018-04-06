@@ -14,7 +14,6 @@
         "Lyra2v2": "-k lyra2rev2 -g 2 -w 64 -I 16",
         "Nist5": "-k nist5 -g 2 -w 256 -I 20",
         "ScryptN": "-k scrypt-n --nfactor 12 -I 15",
-        "Sib": "-k sibcoin-mod -g 4 -w 128 -I 20",
         "Whirlpool": "-k whirlpool -I d",
         "WhirlpoolX": "-k whirlpoolx -I d",
         "Yescrypt": "-k yescrypt -w 4 --rawintensity 256"
