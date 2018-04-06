@@ -102,6 +102,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $MiningPoolHub_Price = [Double]($_.profit / $Divisor)
 
         foreach ($Location in $Locations) {
+		
+            $Server = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$_*"} | Select-Object -First 1
+            $IP =  ([Net.DNS]::Resolve($Server).AddressList.IPAddressToString | Select-Object -First 1)
 
             $enableSSL = ($MiningPoolHub_Algorithm -in @('CryptoNight', 'Equihash'))
 
@@ -114,8 +117,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Price24h              = [decimal]$MiningPoolHub_Price #MPH not send this on api
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = "ssl"
-                Host                  = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
-                HostSSL               = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
+                Host                  = $IP
+                HostSSL               = $IP
                 Port                  = $MiningPoolHub_Port
                 PortSSL               = $MiningPoolHub_Port
                 User                  = "$UserName.#WorkerName#"
