@@ -2,10 +2,8 @@ This Megaminer fork is aimed at AMD + CPU usage without interfering with normal 
 
 AMD miners tuned for RX480/580 with low memory timings
 
-Recommended drivers for AMD are latest Adrenalin edition or Radeon Blockchain beta from August 23 for specific cases
-	- MkxMiner ASM mode works only with Blockchain drivers
-	- CastXMR gives higher hashrate with Blockshain drivers
-	- AMD monitoring with OverdriveN is unsupported on Blockchain driver and adli is used in that case with less info
+* Recommended drivers for AMD are latest Adrenalin edition (18.3.4 and newer)
+* MkxMiner ASM mode works only with Blockchain drivers
 
 New features from tutulino are merged manually after a review to ensure stability.
 
@@ -30,6 +28,8 @@ NVidia miners are untested.
 	- XMR-Stak (AMD, NVidia, CPU)
 	- XMRig (AMD, NVidia, CPU)
 	- XmrMiner (AMD)
+* Faster benchmarking (Benchmark in config is now max benchmark time. Most algos hashrate stabilize and finish within 2-3mins)
+* Hashrate watchdog to detect underperforming miners
 * Miner optimizations for CPU and AMD
 * Low process priority for CPU miners to prevent responsiveness issue
 * Use C# assembly to prevent miners from stealing focus
