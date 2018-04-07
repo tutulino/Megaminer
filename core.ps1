@@ -68,6 +68,12 @@ if ([Net.ServicePointManager]::SecurityProtocol -notmatch [Net.SecurityProtocolT
     [Net.ServicePointManager]::SecurityProtocol += [Net.SecurityProtocolType]::Tls12
 }
 
+# Force Culture to en-US
+$culture = [System.Globalization.CultureInfo]::CreateSpecificCulture("en-US")
+$culture.NumberFormat.NumberDecimalSeparator = "."
+$culture.NumberFormat.NumberGroupSeparator = ","
+[System.Threading.Thread]::CurrentThread.CurrentCulture = $culture
+
 $ErrorActionPreference = "Continue"
 $Config = get_config
 
