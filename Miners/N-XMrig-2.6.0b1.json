@@ -1,15 +1,16 @@
 {
     "Path": "xmrig-nvidia.exe",
-    "Uri": "https://github.com/xmrig/xmrig-nvidia/releases/download/v2.5.2/xmrig-nvidia-2.5.2-cuda9-win64.zip",
-    "SHA256": "73122febd81fe015d7f08e96fd142ba421f73a7cf782e3ac82414cb8af6fa853",
+    "Uri": "https://github.com/xmrig/xmrig-nvidia/releases/download/v2.6.0-beta1/xmrig-nvidia-2.6.0-beta1-cuda9-win64.zip",
+    "SHA256": "b914ec05cd725640e1e6e55e2ff133f5415ac8a6ac03feb5c84a41ac57467385",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# #NH#--nicehash#NH# --donate-level 1 --cuda-devices=#DEVICES# --cuda-launch=80x30 --cuda-bfactor=10 --cuda-bsleep=26 #ALGORITHMPARAMETERS#",
     "API": "XMRig",
     "APIPort": 4068,
     "Fee": 0.01,
     "Algorithms": {
-        "CryptoNight": "-a cryptonight --variant 0",
+        "CryptoLight": "-a cryptonight-lite",
+        "CryptoNight": "-a cryptonight",
         "CryptoNightV7": "-a cryptonight",
-        "CryptoLight": "-a cryptonight-lite"
+        "CryptoNightHeavy": "-a cryptonight-heavy"
     }
 }

@@ -1,7 +1,8 @@
 {
     "allium": "Allium",
-    "argon2d-crds": "Argon2d-Crds",
-    "argon2d-dyn": "Argon2d-Dyn",
+    "argon2d-crds": "Argon2d250",
+    "argon2d-dyn": "Argon2d500",
+    "argon2d-uis": "Argon2d4096",
     "bitblock": "X15",
     "bitcore": "Bitcore",
     "blake (14r)": "Decred",
