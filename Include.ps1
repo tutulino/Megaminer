@@ -802,7 +802,10 @@ function Get_Live_HashRate {
                         "* - ETH" {$Multiplier = 1000} #Ethash
                         "* - NS" {$Multiplier = 1000} #NeoScrypt
                         "PM*" {$Multiplier = 1000} #PhoenixMiner
-                        Default {$Multiplier = 1}
+                        "* - AEO" {$Multiplier = 1} #CryptoLight
+                        "* - XMR" {$Multiplier = 1} #CryptoNight
+                        "* - CN" {$Multiplier = 1} #CryptoNight
+                        Default {$Multiplier = 1000}
                     }
                     $HashRate = [double]$Data.result[2].Split(";")[0] * $Multiplier
                     $HashRate_Dual = [double]$Data.result[4].Split(";")[0] * $Multiplier
