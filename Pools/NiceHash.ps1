@@ -37,11 +37,17 @@ if ($Querymode -eq "speed") {
 
     if ($Request.Result.Workers) {
         $Request.Result.Workers | ForEach-Object {
+            $Multiplier = switch ($_[6]) {
+                {$PSItem -in @(16, 17, 18, 21, 23, 25, 28)} {1000000000} #GH
+                {$PSItem -in @(5, 7, 8, 9, 10, 14, 20, 26, 29)} {1000000} #MH
+                {$PSItem -in @(19, 22, 30)} {1000} #KH
+                {$PSItem -in @(24)} {1}
+            }
             $Result += [PSCustomObject]@{
                 PoolName   = $name
                 WorkerName = $_[0]
                 Rejected   = $_[4]
-                Hashrate   = [double]$_[1].a * 1000000
+                Hashrate   = [double]$_[1].a * $Multiplier
             }
         }
         Remove-Variable Request

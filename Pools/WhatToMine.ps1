@@ -73,6 +73,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     'grof=true&factor[gro_hr]=10&factor[gro_p]=0&' + #Groestl
     'x11gf=true&factor[x11g_hr]=10&factor[x11g_p]=0&' + #X11gost
     'cn=true&factor[cn_hr]=10&factor[cn_p]=0&' + #CryptoNight
+    'cn7=true&factor[cn7_hr]=10&factor[cn7_p]=0&' + #CryptoNightV7
     'eq=true&factor[eq_hr]=10&factor[eq_p]=0&' + #Equihash
     'lre=true&factor[lrev2_hr]=10&factor[lrev2_p]=0&' + #Lyra2v2
     'ns=true&factor[ns_hr]=10&factor[ns_p]=0&' + #NeoScrypt
