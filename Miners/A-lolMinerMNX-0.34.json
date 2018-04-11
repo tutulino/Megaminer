@@ -1,0 +1,14 @@
+{
+    "Path": "lolMiner-mnx.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/lolMiner-mnx_v034_Win64.zip",
+    "SHA256": "67fa653ca96a0531689ec38108b76908e02c02353fc48912a7c0902323bbae9d",
+    "Type": "AMD",
+    "Arguments": "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --device #DEVICES# --use-compact-short-stat --platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "wrapper",
+    "APIPort": 4028,
+    "Algorithms": {
+        "Mars|2g": "--set-work-batch 2G",
+        "Mars|Auto": "--set-work-batch AUTO",
+        "Mars|High": "--set-work-batch HIGH"
+    }
+}
