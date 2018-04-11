@@ -6,8 +6,6 @@
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {
-        "Blakecoin": "-a blakecoin",
-        "Sib": "-a sib",
         "X11evo": "-a x11evo",
         "X17": "-a x17"
     }

@@ -8,16 +8,11 @@
     "Algorithms": {
         "Blakecoin": "-a blakecoin",
         "C11": "-a c11",
-        "DiamondGroestl": "-a dmd-gr",
         "Fresh": "-a fresh",
-        "Groestl": "-a groestl",
         "Keccak": "-a keccak -m 2",
         "Lyra2v2": "-a lyra2v2",
-        "MyriadGroestl": "-a myr-gr",
         "Neoscrypt": "-a Neoscrypt",
-        "Nist5": "-a nist5",
         "SHA256t": "-a s3",
-        "Skein": "-a skein",
         "WhirlpoolX": "-a whirlpoolx",
         "Whirlpool": "-a whirl",
         "X17": "-a x17"

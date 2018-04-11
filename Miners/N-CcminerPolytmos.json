@@ -7,14 +7,9 @@
     "APIPort": 4068,
     "Algorithms": {
         "Blake2s": "-a blake2s",
-        "Blakecoin": "-a blakecoin",
         "Keccak": "-a keccak -m 2",
-        "Lbry": "-a lbry",
         "Lyra2v2": "-a lyra2v2",
-        "MyriadGroestl": "-a myr-gr",
-        "Nist5": "-a nist5",
         "Polytimos": "-a poly",
-        "Skein": "-a skein",
         "Veltor": "-a veltor"
     }
 }

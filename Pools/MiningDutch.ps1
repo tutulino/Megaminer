@@ -43,12 +43,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Pools = @()
 
-    $Pools += [pscustomobject]@{"coin" = "Bulwark"; "algo" = "Nist5"; "symbol" = "BWK"; "port" = "3758"};
-    $Pools += [pscustomobject]@{"coin" = "Coimatic2"; "algo" = "Nist5"; "symbol" = "CTIC2"; "port" = "3712"};
-    $Pools += [pscustomobject]@{"coin" = "Ectam"; "algo" = "Nist5"; "symbol" = "ECT"; "port" = "3759"};
-    $Pools += [pscustomobject]@{"coin" = "Virtauniquecoin"; "algo" = "Nist5"; "symbol" = "VUC"; "port" = "3408"};
-    $Pools += [pscustomobject]@{"coin" = "Wyvern"; "algo" = "Nist5"; "symbol" = "WYV"; "port" = "3497"};
-
     $Pools += [pscustomobject]@{"coin" = "Desire"; "algo" = "NeoScrypt"; "symbol" = "DSR"; "port" = "3635"};
     $Pools += [pscustomobject]@{"coin" = "Feathercoin"; "algo" = "NeoScrypt"; "symbol" = "FTC"; "port" = "3347"};
     $Pools += [pscustomobject]@{"coin" = "Gobyte"; "algo" = "NeoScrypt"; "symbol" = "GBX"; "port" = "3606"};

@@ -10,14 +10,10 @@
     "Algorithms": {
         "Blake2s": "blake2s",
         "CryptoNight": "cryptonight",
-        "Decred": "decred",
         "Equihash": "equihash",
         "Ethash": "daggerhashimoto",
         "Keccak": "keccak",
-        "Lbry": "lbry",
         "Lyra2v2": "lyra2rev2",
-        "Neoscrypt": "neoscrypt",
-        "Nist5": "nist5",
-        "Pascal": "pascal"
+        "Neoscrypt": "neoscrypt"
     }
 }

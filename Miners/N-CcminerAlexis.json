@@ -8,9 +8,6 @@
     "Algorithms": {
         "Blakecoin": "-a blakecoin",
         "C11": "-a c11 -i 20",
-        "Lbry": "-a lbry",
-        "Nist5": "-a nist5",
-        "Skein": "-a skein",
         "X11evo": "-a x11evo",
         "X14": "-a x14",
         "X17": "-a x17 -i 20"
