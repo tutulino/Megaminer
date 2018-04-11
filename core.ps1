@@ -1075,7 +1075,7 @@ while ($Quit -eq $false) {
             -Value $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory
     }
 
-    if ($ActiveMiners.SubMiners | Where-Object {$_.NeedBenchmark -and $_.Status -ne 'Cancelled'}) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
+    if ($ActiveMiners.SubMiners | Where-Object {$_.NeedBenchmark -and $_.Status -notin @('Cancelled', 'Failed')}) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
 
     if ($DonationInterval) { $NextInterval = $DonateInterval }
     elseif ($NeedBenchmark) { $NextInterval = $BenchmarkIntervalTime }
