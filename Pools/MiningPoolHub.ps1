@@ -103,8 +103,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         foreach ($Location in $Locations) {
 
-            $Server = $MiningPoolHub_Hosts | Sort-Object -Descending {$_ -ilike "$Location*"} | Select-Object -First 1
-            $IP =  ([Net.DNS]::Resolve($Server).AddressList.IPAddressToString | Select-Object -First 1)
+            $Server = $MiningPoolHub_Hosts | Where-Object {$_ -like "$Location*"} | Select-Object -First 1
+            $IP = [Net.DNS]::Resolve($Server).AddressList.IPAddressToString | Select-Object -First 1 #Fix for Excavator
 
             $enableSSL = ($MiningPoolHub_Algorithm -in @('CryptoNight', 'Equihash'))
 
