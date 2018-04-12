@@ -26,8 +26,7 @@
         "Veltor": "-a veltor",
         "X11evo": "-a x11evo",
         "X12": "-a x12",
-        "X16r": "-a x16R",
-        "X16s": "-a x16S",
+        "X16r": "-a x16r",
         "X17": "-a x17"
     }
 }
