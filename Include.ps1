@@ -805,6 +805,7 @@ function Get_Live_HashRate {
                         "* - AEO" {$Multiplier = 1} #CryptoLight
                         "* - XMR" {$Multiplier = 1} #CryptoNight
                         "* - CN" {$Multiplier = 1} #CryptoNight
+                        "* - ZEC" {$Multiplier = 1} #Equihash
                         Default {$Multiplier = 1000}
                     }
                     $HashRate = [double]$Data.result[2].Split(";")[0] * $Multiplier
