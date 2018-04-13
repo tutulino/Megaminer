@@ -1,0 +1,14 @@
+{
+    "Path": "PhoenixMiner_2.9d\\PhoenixMiner.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/PhoenixMiner_2.9d.zip",
+	"SHA256": "fa32a6694c1eeff8e3f543a878fff1996da781b6a445aeeae532d07ab1c3d71e",
+    "Type": "NVIDIA",
+    "Arguments": "-pool #PROTOCOL#://#SERVER#:#PORT# -wal #LOGIN# -pass #PASSWORD# -esm #ETHSTMODE# -mi 12 -wd 1 -r -1 -logfile #GROUPNAME#_log.txt -logsmaxsize 10 -di #DEVICESCLAYMODE# -cdmport #APIPORT# -cdm 1 -nvidia #ALGORITHMPARAMETERS#",
+    "API": "Claymore",
+    "APIPort": 4068,
+    "Fee": 0.0065,
+    "SSL": true,
+    "Algorithms": {
+        "Ethash": ""
+    }
+}
