@@ -423,8 +423,11 @@ while ($Quit -eq $false) {
             if ($Miner.Type -ne $TypeGroup.type) {
                 if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is NOT valid for " + $TypeGroup.GroupName + "...ignoring") $LogFile $false }
                 continue
-            } #check group and miner types are the same
-            else {
+            } elseif ($Config.("ExcludeMiners_" + $TypeGroup.GroupName) -and ($Config.("ExcludeMiners_" + $TypeGroup.GroupName).split(',') | Where-Object {$MinerFile.BaseName -like $_})) {
+                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is Excluded for " + $TypeGroup.GroupName + "...ignoring") $LogFile $false }
+                continue
+            } else {
+                #check group and miner types are the same
                 if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is valid for " + $TypeGroup.GroupName) $LogFile $false }
             }
 
