@@ -1662,7 +1662,8 @@ while ($Quit -eq $false) {
                 @{Label = "Launch"; Expression = {$_.Stats.ActivatedTimes}},
                 @{Label = "Best"; Expression = {$_.Stats.BestTimes}},
                 @{Label = "ActiveTime"; Expression = {if ($_.Stats.ActiveTime.TotalMinutes -le 60) {"{0:N1} min" -f ($_.Stats.ActiveTime.TotalMinutes)} else {"{0:N1} hours" -f ($_.Stats.ActiveTime.TotalHours)}}},
-                @{Label = "LastTimeActive"; Expression = {$($_.Stats.LastTimeActive).tostring("dd/MM/yy H:mm")}}
+                @{Label = "LastTimeActive"; Expression = {$($_.Stats.LastTimeActive).tostring("dd/MM/yy H:mm")}},
+                @{Label = "Status"; Expression = {$_.Status}}
             ) | Out-Host
         }
 
