@@ -1,0 +1,13 @@
+{
+    "Path": "sgminer-x16s-aeris-v0.1\\sgminer.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/sgminer-x16s-aeris-v0.1.zip",
+    "SHA256": "e14313ab83008a7c4e3586cdadb7c50a33f8a3224a0b16044503e467a000afe0",
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Fee": 0.02,
+    "Algorithms": {
+        "X16s": "-k x16s -g 2 -w 256 -I 21"
+    }
+}
