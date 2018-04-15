@@ -1,0 +1,14 @@
+{
+    "Path": "avermore-windows\\sgminer.exe",
+    "Uri": "https://github.com/brian112358/avermore-miner/releases/download/v1.1/avermore-v1.1-windows.zip",
+    "SHA256": "6a98f9cb951beaaf90c1f58b5bd88e7e756ea3f73409f6fd2582320cb9b7fb0a",
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Fee": 0.01,
+    "Algorithms": {
+        "X16r": "-k x16r -X 256",
+        "X16s": "-k x16s -X 256"
+    }
+}
