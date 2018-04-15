@@ -1,4 +1,4 @@
-﻿param(
+param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
@@ -32,7 +32,7 @@ if ($Querymode -eq "info") {
 
 if ($Querymode -eq "APIKEY") {
 
-    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $Info.ApiKey + "&id=") -Retry 3 |
+    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $Info.ApiKey + "&id=" + "&$(Get-Date -Format "yyyy-MM-dd_HH-mm")") -Retry 3 |
         Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
 
     if ($Request) {
@@ -52,7 +52,7 @@ if ($Querymode -eq "APIKEY") {
 
 if ($Querymode -eq "SPEED") {
 
-    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey) -Retry 1 |
+    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey + "&$(Get-Date -Format "yyyy-MM-dd_HH-mm")") -Retry 1 |
         Select-Object -ExpandProperty getuserworkers | Select-Object -ExpandProperty data
 
     if ($Request) {
@@ -61,7 +61,7 @@ if ($Querymode -eq "SPEED") {
                 [PSCustomObject]@{
                     PoolName   = $name
                     Diff       = $_.difficulty
-                    Workername = $($_.username -split '.')[1]
+                    Workername = $_.username.split('.')[1]
                     Hashrate   = $_.hashrate
                 }
             }
@@ -78,7 +78,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Exit
     }
 
-    $MiningPoolHub_Request = Invoke_APIRequest -Url "https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics" -Retry 3
+    $MiningPoolHub_Request = Invoke_APIRequest -Url "https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics&$(Get-Date -Format "yyyy-MM-dd_HH-mm")" -Retry 3
 
     if (!$MiningPoolHub_Request) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
@@ -103,7 +103,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         foreach ($Location in $Locations) {
 
-            $Server = $MiningPoolHub_Hosts | Where-Object {$_ -like "$Location*"} | Select-Object -First 1
+            $Server = $MiningPoolHub_Hosts | Sort-Object {$_ -like "$Location*"} -Descending | Select-Object -First 1
             $IP = [Net.DNS]::Resolve($Server).AddressList.IPAddressToString | Select-Object -First 1 #Fix for Excavator
 
             $enableSSL = ($MiningPoolHub_Algorithm -in @('CryptoNight', 'Equihash'))
