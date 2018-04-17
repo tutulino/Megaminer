@@ -414,7 +414,7 @@ Function Get_Mining_Types () {
     $OCLDevices = @()
 
     $Types0 = get_config_variable "GpuGroups"
-    if ($Types0) {$Types0 | ConvertFrom-Json}
+    if ($Types0) {$Types0 = $Types0 | ConvertFrom-Json}
 
     $OCLPlatforms = [OpenCl.Platform]::GetPlatformIDs()
     for ($i = 0; $i -lt $OCLPlatforms.length; $i++) {$OCLDevices += ([OpenCl.Device]::GetDeviceIDs($OCLPlatforms[$i], "ALL"))}
