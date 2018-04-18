@@ -4,11 +4,13 @@
     "SHA256": "6a98f9cb951beaaf90c1f58b5bd88e7e756ea3f73409f6fd2582320cb9b7fb0a",
     "Type": "AMD",
     "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "BenchmarkArg": "--benchmark",
     "API": "Xgminer",
     "APIPort": 4028,
     "Fee": 0.01,
     "Algorithms": {
-        "X16r": "-k x16r -X 256",
-        "X16s": "-k x16s -X 256"
+        "X16r": "-k x16r -g 2 -w 64 -X 256",
+        "X16s": "-k x16s -g 2 -w 64 -X 256",
+        "Xevan": "-k xevan -g 2 -w 64 -X 256"
     }
 }
