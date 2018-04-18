@@ -42,7 +42,8 @@ do {
             $line -like "*diff*yes!*" -or
             $line -like ">*Rej*" -or
             $line -like "*overall*" -or
-            $line -like "*Average*"
+            $line -like "*Average*" -or
+            $line -like "*Total:*" 
         ) {
             $Line = $Line  `
                 -replace "\smh/s", "mh/s" `

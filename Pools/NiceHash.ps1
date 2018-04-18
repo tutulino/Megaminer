@@ -32,7 +32,7 @@ if ($Querymode -eq "info") {
 
 
 if ($Querymode -eq "speed") {
-    $Info.user = ($Info.user -split '\.')[0]
+    $Info.user = $Info.user.split('.')[0]
     $Request = Invoke_APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider.workers&addr=" + $Info.user) -Retry 1
 
     if ($Request.Result.Workers) {
