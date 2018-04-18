@@ -1,0 +1,14 @@
+﻿{
+    "Path": "zero_nheqminer\\zero_nheqminer.exe",
+    "Uri": "https://zero.suprnova.cc/zero_nheqminer.zip",
+    "SHA256": "13798714138fd7d749cdb6f53fb542e005ab9e20e30bf0a034990d45480096ca",
+    "Type": "CPU",
+    "Arguments": "-a #APIPORT# -l #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
+    "API": "nicehashequihash",
+    "APIPort": 4048,
+    "Algorithms": {
+        "Zero|2": "-t 2",
+        "Zero|3": "-t 3",
+        "Zero|4": "-t 4"
+    }
+}

@@ -1,0 +1,14 @@
+﻿{
+    "Path": "Release\\nheqminer.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/nheqminer_v0.6a_x64_win.zip",
+    "SHA256": "5a992f89553598073e0a66e23cacf462d01f6c0895a22da388aa1a2261ab8431",
+    "Type": "CPU",
+    "Arguments": "-a #APIPORT# -l #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
+    "API": "nicehashequihash",
+    "APIPort": 4048,
+    "Algorithms": {
+        "Equihash|2": "-t 2",
+        "Equihash|3": "-t 3",
+        "Equihash|4": "-t 4"
+    }
+}
