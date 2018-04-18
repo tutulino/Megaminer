@@ -865,7 +865,7 @@ while ($Quit -eq $false) {
 
     WriteLog ("Active Miners-pools: $($ActiveMiners.Count)...") $LogFile $true
     ErrorsToLog $LogFile
-    WriteLog ("Pending benchmarks: $(($ActiveMiners.SubMiners | Where-Object NeedBenchmark | Select-Object -ExpandProperty Id).Count)...") $LogFile $true
+    WriteLog ("Pending benchmarks: $(($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty SubMiners | Where-Object NeedBenchmark | Select-Object -ExpandProperty Id).Count)...") $LogFile $true
 
     if ($DetailedLog) {
         $msg = $ActiveMiners.SubMiners | ForEach-Object {
@@ -1078,7 +1078,7 @@ while ($Quit -eq $false) {
             -Value $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory
     }
 
-    if ($ActiveMiners.SubMiners | Where-Object {$_.NeedBenchmark -and $_.Status -notin @('Cancelled', 'Failed')}) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
+    if ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty Subminers | Where-Object {$_.NeedBenchmark -and $_.Status -ne 'Cancelled'}) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
 
     if ($DonationInterval) { $NextInterval = $DonateInterval }
     elseif ($NeedBenchmark) { $NextInterval = $BenchmarkIntervalTime }
@@ -1273,7 +1273,7 @@ while ($Quit -eq $false) {
 
         #############################################################
 
-        if ($NeedBenchmark -and ($ActiveMiners.SubMiners | Where-Object {$_.NeedBenchmark -and $_.Best}).Count -eq 0) {
+        if ($NeedBenchmark -and ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty SubMiners | Where-Object {$_.NeedBenchmark -and $_.Best}).Count -eq 0) {
             WriteLog ("Benchmark completed early") $LogFile $false
             $ExitLoop = $true
         }
