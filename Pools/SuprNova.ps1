@@ -63,7 +63,7 @@ if ($Querymode -eq "speed") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$UserName) {
-        Write-Host $Name 'Requires USERNAME in config.ini'
+        Write-Host "$Name USERNAME not defined in config.ini"
         Exit
     }
 

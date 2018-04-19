@@ -71,7 +71,7 @@ if ($Querymode -eq "wallet") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$CoinsWallets.BTC) {
-        Write-Host $Name 'Requires BTC wallet in config.ini'
+        Write-Host "$Name BTC wallet not defined in config.ini"
         Exit
     }
 

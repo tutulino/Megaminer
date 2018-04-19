@@ -40,7 +40,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{"coin" = "Cryply"; "algo" = "YescryptR16"; "symbol" = "CRP"; "server" = "cryply.luckypool.org"; "port" = 9997; "fee" = 0; "User" = "$Username.#Workername#"}
 
 
-    $Pools |ForEach-Object {
+    $Pools | ForEach-Object {
         $Result += [PSCustomObject]@{
             Algorithm             = $_.Algo
             Info                  = $_.Coin

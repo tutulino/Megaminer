@@ -9,8 +9,8 @@
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
-$ActiveOnAutomaticMode = $true
-$ActiveOnAutomatic24hMode = $true
+$ActiveOnAutomaticMode = $false
+$ActiveOnAutomatic24hMode = $false
 $AbbName = 'BM'
 $WalletMode = 'WALLET'
 $ApiUrl = 'http://blockmasters.co/api'

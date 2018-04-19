@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
@@ -74,7 +74,7 @@ if ($Querymode -eq "SPEED") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$UserName) {
-        Write-Host $Name 'Requires USERNAME in config.ini'
+        Write-Host "$Name USERNAME not defined in config.ini"
         Exit
     }
 
@@ -117,8 +117,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Price24h              = [decimal]$MiningPoolHub_Price #MPH not send this on api
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = "ssl"
-                Host                  = $IP
-                HostSSL               = $IP
+                Host                  = $Server
+                HostSSL               = $Server
                 Port                  = $MiningPoolHub_Port
                 PortSSL               = $MiningPoolHub_Port
                 User                  = "$UserName.#WorkerName#"

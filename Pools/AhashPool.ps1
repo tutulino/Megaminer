@@ -71,7 +71,7 @@ if ($Querymode -eq "wallet") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$CoinsWallets.BTC) {
-        Write-Host $Name 'Requires BTC wallet in config.ini'
+        Write-Host "$Name BTC wallet not defined in config.ini"
         Exit
     }
 
@@ -80,9 +80,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
-
-
-    $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
 
     $Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
         $Request.$_.actual_last24h -gt 0 -and
@@ -126,7 +123,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             PoolWorkers           = $Algo.workers
             PoolHashRate          = $Algo.hashrate
             WalletMode            = $WalletMode
-            WalletSymbol          = $Currency
+            WalletSymbol          = 'BTC'
             PoolName              = $Name
             Fee                   = $Algo.fees / 100
             RewardType            = $RewardType

@@ -74,7 +74,7 @@ if ($Querymode -eq "wallet") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$CoinsWallets.BTC_NICE -and !$CoinsWallets.BTC) {
-        Write-Host $Name 'Requires BTC or BTC_NICE wallet in config.ini'
+        Write-Host "$Name BTC or BTC_NICE wallets not defined in config.ini"
         Exit
     }
 

@@ -70,13 +70,26 @@ if ($Querymode -eq "wallet") {
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/status") -Retry 3
-    if (!$Request) {
+    $RequestCurrencies = Invoke_APIRequest -Url $($ApiUrl + "/currencies") -Retry 3
+    if (!$Request -or !$RequestCurrencies) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
 
-
     $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
+
+    if (
+        $Currency -notin @('BTC', 'LTC') -and
+        !($RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object { $_ -eq $Currency })
+    ) {
+        Write-Host "$Name $Currency not supported for payment"
+        Exit
+    }
+
+    if (!$CoinsWallets.$Currency) {
+        Write-Host "$Name $Currency wallet not defined in config.ini"
+        Exit
+    }
 
     $Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
         $Request.$_.actual_last24h -gt 0 -and
