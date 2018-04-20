@@ -1,7 +1,7 @@
 {
-    "Path": "XMR-AEON-STAK-2.4.3-20180409-win64-1%fee\\xmr-stak.exe",
-    "Uri": "https://github.com/IndeedMiners/xmr-aeon-stak/releases/download/2.4.3/XMR-AEON-STAK-2.4.3-V7-CN-HEAVY-haven-fix-1.fee.zip",
-    "SHA256": "7f66ec887512f502964d8835e5b45cde0f8ca9e8a54dbadb536fc9cd9ab0ff71",
+    "Path": "XMR-AEON-STAK-2.4.4-20180417-win64-1%fee\\xmr-stak.exe",
+    "Uri": "https://github.com/IndeedMiners/xmr-aeon-stak/releases/download/2.4.4/XMR-AEON-STAK-2.4.4-20180417-win64-1.fee.zip",
+    "SHA256": "dbd06e58d0f59e7c82f2244e27a72758d491f41f6ce5558847af6cc02294fea3",
     "Type": "CPU",
     "Arguments": "--noNVIDIA --noAMD --noUAC --cpu #GroupName#-#ALGORITHM#.txt #NoSSL#-o#NoSSL# #SSL#-O#SSL# #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -r #WORKERNAME# -i #APIPORT# #NH#--use-nicehash#NH# #ALGORITHMPARAMETERS#",
     "API": "XMRig",
@@ -13,6 +13,8 @@
         "CryptoLightV7": "--currency aeon7",
         "CryptoNight": "--currency cryptonight",
         "CryptoNightV7": "--currency monero7",
-        "CryptoNightHeavy": "--currency sumokoin"
+        "CryptoNightHeavy": "--currency sumokoin",
+        "Graft": "--currency graft",
+        "IPBC": "--currency ipbc"
     }
 }

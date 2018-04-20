@@ -1,7 +1,7 @@
 {
     "Path": "xmr-stak-win64\\xmr-stak.exe",
-    "Uri": "https://github.com/fireice-uk/xmr-stak/releases/download/2.4.2/xmr-stak-win64.zip",
-    "SHA256": "7b671afbb948077a45ba2e4028bd5e939d0b3a2374af030f601a562b9c8ad7cc",
+    "Uri": "https://github.com/fireice-uk/xmr-stak/releases/download/2.4.3/xmr-stak-win64.zip",
+    "SHA256": "eb774f39ebc83522fb0d4e80d0a02aac35e2d6c1d859400f540df897a144bbe3",
     "Type": "NVIDIA",
     "Arguments": "--noCPU --noAMD --noUAC --nvidia #GroupName#-#ALGORITHM#.txt #NoSSL#-o#NoSSL# #SSL#-O#SSL# #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -r #WORKERNAME# -i #APIPORT# #NH#--use-nicehash#NH# #ALGORITHMPARAMETERS#",
     "API": "XMRig",
@@ -10,9 +10,10 @@
     "SSL": true,
     "Algorithms": {
         "CryptoLight": "--currency cryptonight_lite",
-        "CryptoLightV7": "--currency aeon7",
+        "CryptoLightV7": "--currency cryptonight_lite_v7",
         "CryptoNight": "--currency cryptonight",
-        "CryptoNightV7": "--currency monero7",
-        "CryptoNightHeavy": "--currency sumokoin"
+        "CryptoNightV7": "--currency cryptonight_v7",
+        "CryptoNightHeavy": "--currency cryptonight_heavy",
+        "Graft": "--currency graft"
     }
 }
