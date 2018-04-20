@@ -1,0 +1,11 @@
+{
+    "Path": "hsrminer_neoscrypt_fork_hp.exe",
+    "Uri": "https://github.com/justaminer/hsrm-fork/raw/master/hsrminer_neoscrypt_fork_hp.zip",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD#  -d #DEVICES# --api-bind #APIPORT# -r 10 #ALGORITHMPARAMETERS# ",
+    "API": "Palgin",
+    "APIPort": 4068,
+    "Algorithms": {
+        "neoscrypt": ""
+    }
+}
