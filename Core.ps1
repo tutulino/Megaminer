@@ -77,7 +77,7 @@ $culture.NumberFormat.NumberGroupSeparator = ","
 $ErrorActionPreference = "Continue"
 $Config = get_config
 
-$Release = "6.1"
+$Release = "6.2"
 WriteLog ("Release $Release") $LogFile $false
 
 if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"}
@@ -855,12 +855,9 @@ while ($Quit -eq $false) {
     }
 
     ## Reset failed miners after 4 hours
-    $ActiveMiners.SubMiners | Where-Object Status -eq 'Cancelled' | ForEach-Object {
-        if ($_.Stats.LastTimeActive -lt (Get-Date).AddHours(-4)) {
-            $_.Status = 'Idle'
-            $_.Stats.FailedTimes = 0
-            WriteLog ("Reset failed miner status: $($ActiveMiners[$_.IdF].Name)") $LogFile $true
-        }
+    $ActiveMiners.SubMiners | Where-Object {$_.Status -eq 'Cancelled' -and $_.Stats.LastTimeActive -lt (Get-Date).AddHours(-4)} | ForEach-Object {
+        $_.Status = 'Idle'
+        WriteLog ("Reset failed miner status: $($ActiveMiners[$_.IdF].Name)/$($ActiveMiners[$_.IdF].Algorithms)") $LogFile $true
     }
 
     WriteLog ("Active Miners-pools: $($ActiveMiners.Count)...") $LogFile $true

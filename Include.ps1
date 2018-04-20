@@ -232,9 +232,9 @@ function get_devices_information ($Types) {
                     Utilization_Memory = if ($SMIresultSplit[2] -like "*Supported*") {$null} else {[int]($SMIresultSplit[2] -replace '%', '')}
                     Temperature        = if ($SMIresultSplit[3] -like "*Supported*") {$null} else {[int]($SMIresultSplit[3] -replace '%', '')}
                     Power_Draw         = if ($SMIresultSplit[4] -like "*Supported*") {$null} else {[int]($SMIresultSplit[4] -replace 'W', '')}
-                    Power_Limit        = if ($SMIresultSplit[5] -like "*Supported*") {$null} else {[int]($SMIresultSplit[5] -replace 'W', '')}
+                    Power_Limit        = if ($SMIresultSplit[5] -like "*Supported*" -or $SMIresultSplit[5] -like "*error*") {$null} else {[int]($SMIresultSplit[5] -replace 'W', '')}
                     Pstate             = $SMIresultSplit[7]
-                    FanSpeed           = if ($SMIresultSplit[6] -like "*Supported*") {$null} else {[int]($SMIresultSplit[6] -replace '%', '')}
+                    FanSpeed           = if ($SMIresultSplit[6] -like "*Supported*" -or $SMIresultSplit[6] -like "*error*") {$null} else {[int]($SMIresultSplit[6] -replace '%', '')}
                     Clock              = if ($SMIresultSplit[8] -like "*Supported*") {$null} else {[int]($SMIresultSplit[8] -replace 'Mhz', '')}
                     ClockMem           = if ($SMIresultSplit[9] -like "*Supported*") {$null} else {[int]($SMIresultSplit[9] -replace 'Mhz', '')}
                     Power_MaxLimit     = if ($SMIresultSplit[10] -like "*Supported*") {$null} else { [int]($SMIresultSplit[10] -replace 'W', '')}
