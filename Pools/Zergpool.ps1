@@ -171,7 +171,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 WalletMode    = $WalletMode
                                 Walletsymbol = $Currency
                                 PoolName = $Name
-                                Fee = ($request.($coin.algo).Fees)/100
+                                Fee = $coin.Fees/100
                                 RewardType=$RewardType
                                 }
                             }

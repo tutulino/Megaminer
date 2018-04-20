@@ -74,7 +74,7 @@ $ErrorActionPreference = "Continue"
 
 $config=get_config
 
-$Release="6.1"
+$Release="6.2"
 writelog ("Release $Release") $logfile $false
 
 if ($Groupnames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($Groupnames -join "/")}
@@ -585,7 +585,8 @@ while ($Quit -eq $false) {
                                                                         Status                = 'Idle'
                                                                         Stats                 = $Stats
                                                                         StatsHistory          = $StatsHistory
-                                                                        TimeSinceStartInterval= [TimeSpan]0              
+                                                                        TimeSinceStartInterval= [TimeSpan]0    
+                                                                        CancelationTime       = $null          
                                                                 } 
                                                             }
                                                 }   
@@ -808,6 +809,18 @@ while ($Quit -eq $false) {
         Writelog $msg $LogFile $false
         }
 
+
+    #checks if there is any cancelled miner that must reactivate
+     $ActiveMiners.subminers | Where-Object {$_.Status -eq "Cancelled" -and $_.CancellationTime.TotalMinutes -gt 3600} | foreach-object {
+
+        $_.Status = "Iddle"
+        $_.CancellationTime = $null
+        
+        Writelog ("Cancelation time elapsed, reactivated"+$ActiveMiners[$_.IdF].name+"/"+$ActiveMiners[$_.IdF].Algorithms+'/'+$ActiveMiners[$_.IdF].Coin+" with Power Limit "+[string]$_.PowerLimit+" (id "+[string]$_.IdF+"-"+[string]$_.Id+")") $LogFile $true 
+
+     }
+
+
     #For each type, select most profitable miner, not benchmarked has priority, only new miner is lauched if new profit is greater than old by percenttoswitch
     #This section changes subminer 
     foreach ($Type in $Types) {
@@ -827,7 +840,10 @@ while ($Quit -eq $false) {
             if ($BestLast.Status -eq 'PendingCancellation') {
                
                 if (($ActiveMiners[$BestLast.IdF].subminers.stats.FailedTimes | Measure-Object -sum).sum -ge 2) {
-                                    $ActiveMiners[$BestLast.IdF].subminers |foreach-object{$_.Status='Cancelled'}
+                                    $ActiveMiners[$BestLast.IdF].subminers |foreach-object{
+                                            $_.Status = 'Cancelled'
+                                            $_.CancelationTime = get-date
+                                        }
                                     Writelog ("Detected more than 3 fails,cancelling combination  for $BestNowLogMsg") $LogFile $true           
                                 }
                 }

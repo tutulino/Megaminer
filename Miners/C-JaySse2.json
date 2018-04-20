@@ -1,7 +1,7 @@
 {
-"Path" : ".\\Bin\\CPU-Jaydee\\cpuminer-opt-3.8.2.1-windows\\cpuminer-sse2.exe",
+"Path" : ".\\Bin\\CPU-Jaydee\\cpuminer-opt-3.8.7.2-windows\\cpuminer-sse2.exe",
 "ExtractionPath" : ".\\Bin\\CPU-Jaydee\\",
-"Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1734002/cpuminer-opt-3.8.2.1-windows.zip",
+"Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1899884/cpuminer-opt-3.8.7.2-windows.zip",
 "Types" : ["CPU"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# #ALGORITHMPARAMETERS#",
 "API" : "ccminer",
@@ -22,7 +22,8 @@
               {"phi":"-a phi1612"},      
               {"polytimos":"-a polytimos"},    
               {"blakecoin":"-a blakecoin"},  
-              {"neoscrypt":"-a neoscrypt"}
+              {"neoscrypt":"-a neoscrypt"},
+              {"x16s":"-a x16s"}
               
               ]
 

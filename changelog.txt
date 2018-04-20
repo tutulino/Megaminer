@@ -631,7 +631,8 @@ This release add a new section in config.txt for Farm Monitor
 ---FEATURES CHANGES:
 
 * Cancelled miners due to fails will be retried after 6 hours
-* New x16r, x16s ans x12 algos
+* New CryptonightV7, x16r, x16s ans x12 algos
+
 
 
 ---POOLS CHANGES:
@@ -641,17 +642,22 @@ This release add a new section in config.txt for Farm Monitor
 ---MINERS CHANGES:
 
 * Updated ccminer tpruvot to 2.2.5
-* Updated xmrig to 2.5.2
+* Updated cpu xmrig to v2.6.0-beta2
+* Added nvdia xmrig v2.6.0-beta1
 * Updated Claymore ETH to 11.6
 * Updated Phoenixminer to 2.8c
 * Updated bminer to 6.1.0
-* Replaced ccminer x16 for enemy release
+* Replaced ccminer x16 for enemy 1.05 release
+* Updated Claymore-cryptonote to 11.3
+* Updated ccminer klausT to 8.21
+* Updated cpuminer Jayddee to 3.8.7.2
 
 
 ---BUG FIXES:
 
 * Blazepool Wallet not shown
 * Claymore Neoscrypt for AMD not using selected devices
+* Wrong Zergpool fee
 
 
 
