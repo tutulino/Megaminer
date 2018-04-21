@@ -1,0 +1,12 @@
+{
+    "Path": "Release\\sgminer.exe",
+    "Uri": "https://github.com/yuzi-co/sgminer-oc/releases/download/1.0/sgminer-4ward-oc-1.0.7z",
+    "SHA256": "9d2ecd0e8ae542a6a310bb158c2de7f876493816322c5efea21867f03b9b6d9d",
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Algorithms": {
+        "SHA256t": "-k sha256t -g 2 -w 64 -I 21"
+    }
+}
