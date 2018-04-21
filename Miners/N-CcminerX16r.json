@@ -10,7 +10,7 @@
 "PrelaunchCommand":"",
 "Algorithms": [
                 {"x16r":"-a x16r"},
-                {"x16r":"-a x16s"},
+                {"x16s":"-a x16s"},
 			    {"x17":"-a x17"}
 
               ]
