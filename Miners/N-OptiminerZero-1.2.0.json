@@ -2,10 +2,10 @@
     "Path": "optiminer-zero-win\\optiminer.exe",
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/optiminer-zero-1.2.0.7z",
     "SHA256": "a35174b556a22c656744b3f740b516c0585f6da2851e55000f0306311273ddf1",
-    "Type": "AMD",
+    "Type": "NVIDIA",
     "Arguments": "-m #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #DEVICESNSGMODE# #ALGORITHMPARAMETERS#",
     "API": "optiminer",
-    "APIPort": 4028,
+    "APIPort": 4068,
     "Algorithms": {
         "Zero": ""
     }
