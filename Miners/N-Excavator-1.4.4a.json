@@ -9,7 +9,6 @@
     "APIPort": 4068,
     "Algorithms": {
         "Blake2s": "blake2s",
-        "CryptoNight": "cryptonight",
         "Equihash": "equihash",
         "Ethash": "daggerhashimoto",
         "Keccak": "keccak",

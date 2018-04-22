@@ -8,7 +8,6 @@
     "APIPort": 4028,
     "Algorithms": {
         "Equihash": "-k equihash -I 16 -g 2",
-        "NeoScrypt": "-k neoscrypt -g 1 -w 64 -I 16",
-        "CryptoNight": "-k cryptonight -g 2 -w 8 --rawintensity 1024"
+        "NeoScrypt": "-k neoscrypt -g 1 -w 64 -I 16"
     }
 }

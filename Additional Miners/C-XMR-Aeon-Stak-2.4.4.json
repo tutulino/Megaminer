@@ -11,7 +11,6 @@
     "Algorithms": {
         "CryptoLight": "--currency cryptonight_lite",
         "CryptoLightV7": "--currency aeon7",
-        "CryptoNight": "--currency cryptonight",
         "CryptoNightV7": "--currency monero7",
         "CryptoNightHeavy": "--currency sumokoin",
         "Graft": "--currency graft",

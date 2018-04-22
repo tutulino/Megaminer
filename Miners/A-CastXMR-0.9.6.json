@@ -8,7 +8,6 @@
     "APIPort": 4028,
     "Fee": 0.015,
     "Algorithms": {
-        "CryptoNight": "-I 9 --algo-0",
         "CryptoNightV7": "-I 9 --algo=1",
         "CryptoNightHeavy": "-I 9 --algo=2"
     }

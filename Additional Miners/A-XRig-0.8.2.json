@@ -9,7 +9,6 @@
     "Fee": 0.01,
     "Algorithms": {
         "CryptoLight": "-a cryptonight-lite --intensity=2024",
-        "CryptoNight": "-a cryptonight --intensity=2024",
         "CryptoNightV7": "-a cryptonight --intensity=2024"
     }
 }

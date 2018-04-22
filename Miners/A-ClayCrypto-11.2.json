@@ -10,7 +10,6 @@
     "FeeSSL": 0.01,
     "SSL": true,
     "Algorithms": {
-        "CryptoNight": "",
         "CryptoLight": "-lite 1"
     }
 }

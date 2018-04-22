@@ -124,7 +124,6 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             "Bitcore" { 1000000 }
             "Blake2s" { 1000000 }
             "CryptoLight" { 1 }
-            "CryptoNight" { 1 }
             "CryptoNightV7" { 1 }
             "CryptoNightHeavy" { 1 }
             "Equihash" { 1 }

@@ -233,7 +233,8 @@ if ($MiningMode -ne "FARM MONITORING") {
                                 "Bitcore" { 1000000 }
                                 "Blake2s" { 1000000 }
                                 "CryptoLight" { 1 }
-                                "CryptoNight" { 1 }
+                                "CryptoNightV7" { 1 }
+                                "CryptoNightHeavy" { 1 }
                                 "Equihash" { 1 }
                                 "Ethash" { 1000000 }
                                 "Keccak" { 1000000 }

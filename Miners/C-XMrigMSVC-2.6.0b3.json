@@ -9,7 +9,6 @@
     "Fee": 0.01,
     "Algorithms": {
         "CryptoLight": "-a cryptonight-lite",
-        "CryptoNight": "-a cryptonight",
         "CryptoNightV7": "-a cryptonight",
         "CryptoNightHeavy": "-a cryptonight-heavy"
     }
