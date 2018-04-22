@@ -8,7 +8,6 @@
     "Algorithms": {
         "Bitcore": "-a bitcore",
         "Blake2s": "-a blake2s",
-        "BlakeVanilla": "-a vanilla",
         "C11": "-a c11",
         "Equihash": "-a equihash",
         "HMQ1725": "-a hmq1725",

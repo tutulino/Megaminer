@@ -7,7 +7,6 @@
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "BlakeVanilla": "-k vanilla -I d",
         "Fresh": "-k fresh -g 2 -w 256 -I 20",
         "Keccak": "-k maxcoin -g 2 -I 10",
         "Lyra2RE": "-k lyra2re -I d",

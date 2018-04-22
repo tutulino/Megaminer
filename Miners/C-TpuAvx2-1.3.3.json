@@ -12,7 +12,6 @@
         "BMW": "-a bmw",
         "Bitcore": "-a bitcore",
         "Blake2s": "-a blake2s",
-        "BlakeVanilla": "-a vanilla",
         "C11": "-a c11",
         "Drop": "-a drop",
         "Fresh": "-a fresh",
