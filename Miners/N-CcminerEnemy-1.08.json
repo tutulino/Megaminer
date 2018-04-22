@@ -1,0 +1,14 @@
+{
+    "Path": "z-enemy.exe",
+    "Uri": "https://github.com/Fedeparma74/Miners/releases/download/1.0/z-enemy-1.08-release.zip",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# -i 20 #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Bitcore": "-a bitcore",
+        "PHI": "-a phi",
+        "X16r": "-a x16r",
+        "X16s": "-a x16s"
+    }
+}

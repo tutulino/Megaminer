@@ -12,7 +12,7 @@
         "Keccak": "-a keccak -m 2",
         "Lyra2v2": "-a lyra2v2",
         "Neoscrypt": "-a Neoscrypt",
-        "SHA256t": "-a s3",
+		"Skein": "-a skein",
         "WhirlpoolX": "-a whirlpoolx",
         "Whirlpool": "-a whirl",
         "X17": "-a x17"
