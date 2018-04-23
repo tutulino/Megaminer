@@ -1,7 +1,7 @@
 {
-    "Path": "Claymore's Dual Ethereum+Decred_Siacoin_Lbry_Pascal_Blake2s_Keccak AMD+NVIDIA GPU Miner v11.6\\EthDcrMiner64.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal_Blake2s_Keccak.AMD.NVIDIA.GPU.Miner.v11.6.-.Catalyst.15.12-18.x.-.CUDA.8.0_9.1_7.5_6.5.zip",
-    "SHA256": "9055bd43eb9024014e0330a73e5448dd60cba364b369617cba88add3569782df",
+    "Path": "EthDcrMiner64.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/ClaymoreDual11.7.7z",
+    "SHA256": "e62333328b10f6748144357a4349b74db95452006d4d6021b9a7e04cd39d9b1b",
     "Type": "NVIDIA",
     "Arguments": "-epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #PROTOCOLDUAL#://#SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL# -dpsw #PASSWORDDUAL# -wd 1 -r -1 -logfile #GROUPNAME#_log.txt -logsmaxsize 10 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
     "API": "Claymore",
