@@ -167,9 +167,6 @@
 @@ALGORITHMS_CPU=bitcore,blakecoin,cryptonight,hmq1725,jha,keccak,keccakc,lyra2v2,lyra2z,m7m,neoscrypt,nist5,phi,polytimos,timetravel,tribus,veltor,cryptonightv7,x16s
 
  
---[optional]Port for megaminer api (http:\\localhost:port), set zero to disable api.
-
-@@APIPORT=0
 
 
 --Force Dynamic Miners Port, if enabled Apiport field from miner file is ignored, you must enabled if you want to run more than one instance of MM with more than one same type gpu group.
@@ -182,6 +179,11 @@
 -- ********************(only need to set to use this app to monitorize all your rigs)    ********************
 -- ********************           (To run monitoring run start.bat / option 3)           ********************
 -- **********************************************************************************************************
+
+--[optional]Port for megaminer api (http:\\localhost:port), set zero to disable api, need to setup on each monitorized machine
+
+@@APIPORT=0
+
 
 --Farm Monitor adresses, indicates what rigs do you want monitorize in Farm Monitor,only needs to be filled in your monitoring machine
 
