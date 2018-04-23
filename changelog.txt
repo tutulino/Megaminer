@@ -664,4 +664,19 @@ This release add a new section in config.txt for Farm Monitor
 --RELEASE NOTES
 
 
+------------------------------------------------
+6.2.1
+
+
+---MINERS CHANGES:
+
+* Updated Claymore Neoscrypt to 1.2
+
+
+---BUG FIXES:
+
+* Duplicated algo in ccminerx16R
+
+
+
 
