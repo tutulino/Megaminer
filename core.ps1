@@ -74,7 +74,7 @@ $ErrorActionPreference = "Continue"
 
 $config=get_config
 
-$Release="6.2"
+$Release="6.2.1"
 writelog ("Release $Release") $logfile $false
 
 if ($Groupnames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"} else {$Host.UI.RawUI.WindowTitle = "MM-" + ($Groupnames -join "/")}
