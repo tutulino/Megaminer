@@ -155,7 +155,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Price         = [Double]$coin.estimate_current / $Divisor * 1000
                                 Price24h      = [Double]$coin.estimate_last24h  / $Divisor * 1000
                                 Protocol      = "stratum+tcp"
-                                Host          = if ($location -eq 'EU') {"europe.mine.zergpool.com"} else {"mine.zergpool.com"}
+                                Host          = "$zerg_Algorithm.mine.zergpool.com" #if ($location -eq 'EU') {"europe.mine.zergpool.com"} else {"mine.zergpool.com"}
                                 Port          = $coin.port
                                 User          = $CoinsWallets.get_item($Currency)
                                 Pass          = "c=$Currency,mc=$zerg_symbol,ID=#WorkerName#"
