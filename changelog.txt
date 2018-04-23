@@ -664,8 +664,16 @@ This release add a new section in config.txt for Farm Monitor
 --RELEASE NOTES
 
 
+
 ------------------------------------------------
 6.2.1
+
+
+
+
+
+---POOLS CHANGES:
+* Zergpool: Changed stratum servers to algo.zergpool.com
 
 
 ---MINERS CHANGES:
