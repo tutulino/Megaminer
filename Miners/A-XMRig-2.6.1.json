@@ -1,7 +1,7 @@
 ﻿{
     "Path": "xmrig-amd.exe",
-    "Uri": "https://github.com/xmrig/xmrig-amd/releases/download/v2.6.0-beta1/xmrig-amd-2.6.0-beta1-win64.zip",
-    "SHA256": "ea675b6b0d94f8b5da1ae1dc7b9be617133f26341a596ef0c5eefb25ab726cab",
+    "Uri": "https://github.com/xmrig/xmrig-amd/releases/download/v2.6.1/xmrig-amd-2.6.1-win64.zip",
+    "SHA256": "65ba8939570b0c30191186fffe1449fcbce795937c9b4bf8cf871183182f7bf2",
     "Type": "AMD",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# --opencl-platform=#GPUPLATFORM# #NH#--nicehash#NH# --donate-level 1 #ALGORITHMPARAMETERS#",
     "API": "XMRig",

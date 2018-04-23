@@ -1,7 +1,7 @@
 {
     "Path": "xmrig-nvidia.exe",
-    "Uri": "https://github.com/xmrig/xmrig-nvidia/releases/download/v2.6.0-beta1/xmrig-nvidia-2.6.0-beta1-cuda9-win64.zip",
-    "SHA256": "b914ec05cd725640e1e6e55e2ff133f5415ac8a6ac03feb5c84a41ac57467385",
+    "Uri": "https://github.com/xmrig/xmrig-nvidia/releases/download/v2.6.1/xmrig-nvidia-2.6.1-cuda9-win64.zip",
+    "SHA256": "4bf8380367438cbc51b2c2ca8a2abc06f3deb06310150ced4db6a0e87604d087",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# #NH#--nicehash#NH# --donate-level 1 --cuda-devices=#DEVICES# --cuda-launch=80x30 --cuda-bfactor=10 --cuda-bsleep=26 #ALGORITHMPARAMETERS#",
     "API": "XMRig",
