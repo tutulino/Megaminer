@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\NVIDIA-CcminerX16R\\z-enemy.exe",
 "ExtractionPath" : ".\\Bin\\NVIDIA-CcminerX16R\\",
-"Uri" : "https://github.com/tutulino/Software/releases/download/0/z-enemy-1.05a.zip",
+"Uri" : "https://github.com/tutulino/Software/releases/download/0/z-enemy-1.08-release.zip",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
 "API" : "Ccminer",
@@ -10,9 +10,7 @@
 "PrelaunchCommand":"",
 "Algorithms": [
                 {"x16r":"-a x16r"},
-                {"x16s":"-a x16s"},
-			    {"x17":"-a x17"}
-
+                {"x16s":"-a x16s"}
               ]
 }
  
