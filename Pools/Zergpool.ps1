@@ -146,8 +146,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
                     }
                     
-            $locations=[array]("US","EU")
-            foreach ($location in $locations)     {
+          #  $locations=[array]("US","EU")
+        # foreach ($location in $locations)     {
                     
                     $Result+=[PSCustomObject]@{
                                 Algorithm     = $zerg_Algorithm
@@ -159,7 +159,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Port          = $coin.port
                                 User          = $CoinsWallets.get_item($Currency)
                                 Pass          = "c=$Currency,mc=$zerg_symbol,ID=#WorkerName#"
-                                Location      = $location
+                                Location      = "US" #$location
                                 SSL           = $false
                                 Symbol        = $null
                                 AbbName       = $AbbName
@@ -174,7 +174,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Fee = $coin.Fees/100
                                 RewardType=$RewardType
                                 }
-                            }
+                          #  }
                 
                 }
 
