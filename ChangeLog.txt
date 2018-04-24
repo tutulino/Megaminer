@@ -665,3 +665,24 @@ This release add a new section in config.txt for Farm Monitor
 
 
 
+------------------------------------------------
+6.2.1
+
+---POOLS CHANGES:
+* Zergpool: Changed stratum servers to algo.zergpool.com
+
+
+---MINERS CHANGES:
+
+* Updated Claymore Neoscrypt to 1.2
+* Updated ccminerX16r to Enemy 1.08
+
+
+---BUG FIXES:
+
+* Duplicated algo in ccminerx16R
+* Wrong algo x17 on ccminerx16R
+
+
+
+

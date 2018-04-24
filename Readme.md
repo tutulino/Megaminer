@@ -124,7 +124,12 @@ ZPOOL -- Anonymous, autoexchange to selected coin in config.txt
 	- you can edit pools folders content to delete pools
 	- for advanced users, you can create miners or pools if are based on existing one.
 
-9. Monitor all your rigs from one machine using Farm Monitor
+9. Monitorize all your rigs from one machine using Farm Monitor
+	- set @@APIPORT=9999 (or any number) in each monitorized machine
+	- set a list of monitorized machines in  @@FARMRIGS variable (only on monitor machine)
+	- optional, set your mail cfg to get notifications when a rig goes offline
+
+
 
 
 ---- UPGRADE PROCEDURE ------------------------------------
