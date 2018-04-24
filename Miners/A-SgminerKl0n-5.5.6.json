@@ -1,0 +1,15 @@
+{
+    "Path": "sgminer-5.5.6-kl-windows\\sgminer.exe",
+    "Uri": "https://github.com/KL0nLutiy/sgminer-gm-x16r/releases/download/5.5.6-kl/sgminer-5.5.6-kl-windows.zip",
+    "SHA256": "7cc2a46e2d2c3abf2ed552964f4617779c323df8c29023593e2708dbf69a9ad8",
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "BenchmarkArg": "--benchmark",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Fee": 0.01,
+    "Algorithms": {
+        "X16r": "-k x16r -g 2 -w 64 -X 256",
+        "X16s": "-k x16s -g 2 -w 64 -X 256"
+    }
+}
