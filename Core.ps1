@@ -441,6 +441,20 @@ while ($Quit -eq $false) {
                 $AlgoNameDual = get_algo_unified_name (($AlgoTmp -split ("_"))[1])
                 $Algorithms = $AlgoName + $(if ($AlgoNameDual) {"_$AlgoNameDual"})
 
+                # Check memory constraints on algos
+                switch -wildcard ($AlgoLabel) {
+                    '16gb*' { if ($TypeGroup.MinMemory -lt 16384) {$SkipLabel = $true} }
+                    '8gb*' { if ($TypeGroup.MinMemory -lt 8192) {$SkipLabel = $true} }
+                    '4gb*' { if ($TypeGroup.MinMemory -lt 4096) {$SkipLabel = $true} }
+                    '3gb*' { if ($TypeGroup.MinMemory -lt 3072) {$SkipLabel = $true} }
+                    '2gb*' { if ($TypeGroup.MinMemory -lt 2048) {$SkipLabel = $true} }
+                    default {$SkipLabel = $false}
+                }
+                if ($SkipLabel) {
+                    Writelog ($MinerFile.BaseName + "/" + $Algorithms + "/" + $AlgoLabel + " skipped due to constraints") $LogFile $false
+                    Continue
+                }
+
                 if ($TypeGroup.Algorithms -and $Algorithms -notin $TypeGroup.Algorithms) {continue} #check config has this algo as minable
 
                 foreach ($Pool in ($Pools | Where-Object Algorithm -eq $AlgoName)) {

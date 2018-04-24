@@ -430,6 +430,7 @@ Function Get_Mining_Types () {
                 Type        = "NVIDIA"
                 Devices     = (get_comma_separated_string 0 $NumberNvidiaDevices)
                 Powerlimits = "0"
+                OCLDevices  = $OCLDevices | Where-Object Vendor -like '*NVIDIA*'
             }
         }
 
@@ -440,6 +441,7 @@ Function Get_Mining_Types () {
                 Type        = "AMD"
                 Devices     = (get_comma_separated_string 0 $NumberAmdDevices)
                 Powerlimits = "0"
+                OCLDevices  = $OCLDevices | Where-Object Vendor -like '*Advanced Micro Devices*'
             }
         }
 
@@ -490,6 +492,7 @@ Function Get_Mining_Types () {
             if ($_.PowerLimits.Count -eq 0 -or $_.Type -in @('AMD', 'Intel')) {$_.PowerLimits = [array](0) }
 
             $_ | Add-Member Algorithms ((get_config_variable ("Algorithms_" + $_.Type)) -split ',')
+            $_ | Add-Member MinMemory (($_.OCLDevices | Measure-Object -Property GlobalMemSize -Minimum | Select-Object -ExpandProperty Minimum) / 1024 / 1024)
             $Types += $_
         }
     }
