@@ -1,0 +1,17 @@
+{
+    "Path": "cast_xmr-vega.exe",
+    "Uri": "http://www.gandalph3000.com/download/cast_xmr-vega-win64_100.zip",
+    "SHA256": "fab141ce2b3e3b32636fedfc242e9b91edc21317e108fb361368570694dd338e",
+    "Type": "AMD",
+    "Arguments": "-S #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -G #DEVICES# -R --remoteport #APIPORT# --opencl #GPUPLATFORM# --forcecompute --fastjobswitch #NoNH#--nonicehash#NoNH# --ratewatchdog --memset --maxmem #ALGORITHMPARAMETERS#",
+    "API": "castXMR",
+    "APIPort": 4028,
+    "Fee": 0.015,
+    "Algorithms": {
+        "CryptoLight": "--algo=3",
+        "CryptoLightV7": "--algo=4",
+        "CryptoNightHeavy": "--algo=2",
+        "CryptoNightV7": "--algo=1",
+        "IPBC": "--algo=5"
+    }
+}
