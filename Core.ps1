@@ -443,8 +443,9 @@ while ($Quit -eq $false) {
 
                 # Check memory constraints on algos
                 switch -wildcard ($AlgoLabel) {
-                    '16gb*' { if ($TypeGroup.MinMemory -lt 16384) {$SkipLabel = $true} }
+                    '11gb*' { if ($TypeGroup.MinMemory -lt 11264) {$SkipLabel = $true} }
                     '8gb*' { if ($TypeGroup.MinMemory -lt 8192) {$SkipLabel = $true} }
+                    '6gb*' { if ($TypeGroup.MinMemory -lt 6144) {$SkipLabel = $true} }
                     '4gb*' { if ($TypeGroup.MinMemory -lt 4096) {$SkipLabel = $true} }
                     '3gb*' { if ($TypeGroup.MinMemory -lt 3072) {$SkipLabel = $true} }
                     '2gb*' { if ($TypeGroup.MinMemory -lt 2048) {$SkipLabel = $true} }
@@ -492,26 +493,18 @@ while ($Quit -eq $false) {
                             '#GroupName#'           = $TypeGroup.GroupName
                         }
                         if ($enableSSL) {
-                            $Params += @{
-                                '#SSL#(.*)#SSL#'     = '$1'
-                                '#NoSSL#(.*)#NoSSL#' = ''
-                            }
+                            $Params.'#SSL#(.*)#SSL#' = '$1'
+                            $Params.'#NoSSL#(.*)#NoSSL#' = ''
                         } else {
-                            $Params += @{
-                                '#SSL#(.*)#SSL#'     = ''
-                                '#NoSSL#(.*)#NoSSL#' = '$1'
-                            }
+                            $Params.'#SSL#(.*)#SSL#' = ''
+                            $Params.'#NoSSL#(.*)#NoSSL#' = '$1'
                         }
                         if ($Pool.PoolName -eq 'Nicehash') {
-                            $Params += @{
-                                '#NH#(.*)#NH#'     = '$1'
-                                '#NoNH#(.*)#NoNH#' = ''
-                            }
+                            $Params.'#NH#(.*)#NH#' = '$1'
+                            $Params.'#NoNH#(.*)#NoNH#' = ''
                         } else {
-                            $Params += @{
-                                '#NH#(.*)#NH#'     = ''
-                                '#NoNH#(.*)#NoNH#' = '$1'
-                            }
+                            $Params.'#NH#(.*)#NH#' = ''
+                            $Params.'#NoNH#(.*)#NoNH#' = '$1'
                         }
 
                         $Arguments = $Miner.Arguments
