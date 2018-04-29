@@ -1,0 +1,12 @@
+{
+    "Path": "zFastminer-v230.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/zFastminer-v230.zip",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# -q",
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Fee": 0.018,
+    "Algorithms": {
+        "Lyra2z": "-a lyra2z"
+    }
+}

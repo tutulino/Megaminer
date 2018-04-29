@@ -1,0 +1,16 @@
+{
+    "Path": "jce_cn_cpu_miner64.exe",
+    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.025.zip",
+    "Type": "CPU",
+    "Arguments": "-o #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #SSL#--ssl#SSL# #NH#--nicehash#NH# --auto #ALGORITHMPARAMETERS#",
+    "API": "wrapper",
+    "APIPort": 4048,
+    "Fee": 0.015,
+    "SSL": true,
+    "Algorithms": {
+        "CryptoLightV7": "--variation 4 --any",
+        "CryptoNightV7": "--variation 3 --any",
+        "CryptoNightHeavy": "--variation 5 --any",
+        "CryptoNightIPBC": "--variation 6 --any"
+    }
+}
