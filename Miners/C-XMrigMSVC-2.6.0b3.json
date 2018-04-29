@@ -8,8 +8,8 @@
     "APIPort": 4048,
     "Fee": 0.01,
     "Algorithms": {
-        "CryptoLight": "-a cryptonight-lite",
-        "CryptoNightV7": "-a cryptonight",
+        "CryptoLightV7": "-a cryptonight-lite --variant 1",
+        "CryptoNightV7": "-a cryptonight --variant 1",
         "CryptoNightHeavy": "-a cryptonight-heavy"
     }
 }

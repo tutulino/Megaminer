@@ -1,16 +1,17 @@
 {
-    "Path": "xmr-stak-win64\\xmr-stak.exe",
-    "Uri": "https://github.com/fireice-uk/xmr-stak/releases/download/2.4.3/xmr-stak-win64.zip",
-    "SHA256": "eb774f39ebc83522fb0d4e80d0a02aac35e2d6c1d859400f540df897a144bbe3",
+    "Path": "XMR-AEON-STAK-2.4.6-20180427-win64-1%fee\\xmr-stak.exe",
+    "Uri": "https://github.com/IndeedMiners/xmr-aeon-stak/releases/download/2.4.6/XMR-AEON-STAK-2.4.6-20180427-win64-1.fee.zip",
+    "SHA256": "2294d2af11bd03d45b1910009b8a7c449db276e0921b3ad770512fc9aa4f7437",
     "Type": "AMD",
     "Arguments": "--noNVIDIA --noCPU --noUAC --amd #GroupName#-#ALGORITHM#.txt --noAMDCache #NoSSL#-o#NoSSL# #SSL#-O#SSL# #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -r #WORKERNAME# -i #APIPORT# #NH#--use-nicehash#NH# #ALGORITHMPARAMETERS#",
     "API": "XMRig",
     "APIPort": 4028,
-    "Fee": 0.02,
+    "Fee": 0.01,
     "SSL": true,
     "Algorithms": {
         "CryptoLightV7": "--currency cryptonight_lite_v7",
         "CryptoNightV7": "--currency cryptonight_v7",
-        "CryptoNightHeavy": "--currency cryptonight_heavy"
+        "CryptoNightHeavy": "--currency cryptonight_heavy",
+        "CryptoNightIPBC": "--currency ipbc"
     }
 }
