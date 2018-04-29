@@ -957,6 +957,7 @@ while ($Quit -eq $false) {
             #something changes or some miner error
 
             if (
+                $false -and
                 $BestLast.IdF -eq $BestNow.IdF -and
                 $BestLast.Id -ne $BestNow.Id
             ) {
