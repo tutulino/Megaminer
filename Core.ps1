@@ -442,18 +442,18 @@ while ($Quit -eq $false) {
                 $Algorithms = $AlgoName + $(if ($AlgoNameDual) {"_$AlgoNameDual"})
 
                 # Check memory constraints on algos
-                switch -wildcard ($AlgoLabel) {
-                    '11gb*' { if ($TypeGroup.MinMemory -lt 11264) {$SkipLabel = $true} }
-                    '8gb*' { if ($TypeGroup.MinMemory -lt 8192) {$SkipLabel = $true} }
-                    '6gb*' { if ($TypeGroup.MinMemory -lt 6144) {$SkipLabel = $true} }
-                    '4gb*' { if ($TypeGroup.MinMemory -lt 4096) {$SkipLabel = $true} }
-                    '3gb*' { if ($TypeGroup.MinMemory -lt 3072) {$SkipLabel = $true} }
-                    '2gb*' { if ($TypeGroup.MinMemory -lt 2048) {$SkipLabel = $true} }
-                    default {$SkipLabel = $false}
+                if ($TypeGroup.MinMemory -gt 0) {
+                    if ($AlgoLabel -match '(?<mem>\d+)gb.*') {
+                        if ($TypeGroup.MinMemory -lt [int]$Matches.mem * 1024) {
+                            $SkipLabel = $true
+                        } else {
+                            $SkipLabel = $false
+                        }
                 }
                 if ($SkipLabel) {
                     Writelog ($MinerFile.BaseName + "/" + $Algorithms + "/" + $AlgoLabel + " skipped due to constraints") $LogFile $false
                     Continue
+                }
                 }
 
                 if ($TypeGroup.Algorithms -and $Algorithms -notin $TypeGroup.Algorithms) {continue} #check config has this algo as minable

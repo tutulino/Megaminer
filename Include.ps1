@@ -10,17 +10,17 @@ Add-Type -Path .\Includes\OpenCL\*.cs
 function set_Nvidia_Clocks ([int]$PowerLimitPercent, [string]$Devices) {
 
     $device = $Devices -split ','
-    $device |ForEach-Object {
+    $device | ForEach-Object {
 
-        $xpr = ".\bin\nvidia-smi.exe -i " + $_ + " --query-gpu=power.default_limit --format=csv,noheader"
-        $PowerDefaultLimit = [int]((invoke-expression $xpr) -replace 'W', '')
+        $xpr = ".\includes\nvidia-smi.exe -i " + $_ + " --query-gpu=power.default_limit --format=csv,noheader"
+        $PowerDefaultLimit = [int]((Invoke-Expression $xpr) -replace 'W', '')
 
         #powerlimit change must run in admin mode
-        $newProcess = New-Object System.Diagnostics.ProcessStartInfo ".\bin\nvidia-smi.exe"
+        $newProcess = New-Object System.Diagnostics.ProcessStartInfo ".\includes\nvidia-smi.exe"
         $newProcess.Verb = "runas"
         #$newProcess.UseShellExecute = $false
         $newProcess.Arguments = "-i " + $_ + " -pl " + [Math]::Floor([int]($PowerDefaultLimit -replace ' W', '') * ($PowerLimitPercent / 100))
-        [System.Diagnostics.Process]::Start($newProcess) | out-null
+        [System.Diagnostics.Process]::Start($newProcess) | Out-Null
     }
     Remove-Variable newprocess
 }
@@ -37,16 +37,16 @@ function set_Nvidia_Powerlimit ([int]$PowerLimitPercent, [string]$Devices) {
     $device = $Devices -split ','
     $device | ForEach-Object {
 
-        $xpr = ".\bin\nvidia-smi.exe -i " + $_ + " --query-gpu=power.default_limit --format=csv,noheader"
-        $PowerDefaultLimit = [int]((invoke-expression $xpr) -replace 'W', '')
+        $xpr = ".\includes\nvidia-smi.exe -i " + $_ + " --query-gpu=power.default_limit --format=csv,noheader"
+        $PowerDefaultLimit = [int]((Invoke-Expression $xpr) -replace 'W', '')
 
 
         #powerlimit change must run in admin mode
-        $newProcess = New-Object System.Diagnostics.ProcessStartInfo ".\bin\nvidia-smi.exe"
+        $newProcess = New-Object System.Diagnostics.ProcessStartInfo ".\includes\nvidia-smi.exe"
         $newProcess.Verb = "runas"
         #$newProcess.UseShellExecute = $false
         $newProcess.Arguments = "-i " + $_ + " -pl " + [Math]::Floor([int]($PowerDefaultLimit -replace ' W', '') * ($PowerLimitPercent / 100))
-        [System.Diagnostics.Process]::Start($newProcess) | out-null
+        [System.Diagnostics.Process]::Start($newProcess) | Out-Null
     }
     Remove-Variable newprocess
 }
@@ -216,7 +216,7 @@ function get_devices_information ($Types) {
     #NVIDIA
     if ($Types | Where-Object Type -eq 'NVIDIA') {
         $DeviceId = 0
-        Invoke-Expression ".\bin\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader" | ForEach-Object {
+        Invoke-Expression ".\includes\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader" | ForEach-Object {
             $SMIresultSplit = $_ -split (",")
             if ($SMIresultSplit.count -gt 10) {
                 #less is error or no NVIDIA gpu present
@@ -350,7 +350,7 @@ function print_devices_information ($Devices) {
             @{Label = "Mem"; Expression = {[string]$_.Utilization_Memory + "%"}; Align = 'right'},
             @{Label = "Temp"; Expression = {$_.Temperature}; Align = 'right'},
             @{Label = "Fan"; Expression = {[string]$_.FanSpeed + "%"}; Align = 'right'},
-            @{Label = "Power"; Expression = {[string]$_.Power_Draw + "W/" + [string]$_.Power_Limit + "W"}; Align = 'right'},
+            @{Label = "Power"; Expression = {[string]$_.Power_Draw + "W"}; Align = 'right'},
             @{Label = "PowLmt"; Expression = {[string]$_.Power_Limit_Percent + '%'}; Align = 'right'},
             @{Label = "Pstate"; Expression = {$_.pstate}; Align = 'right'},
             @{Label = "Clock"; Expression = {[string]$_.Clock + "Mhz"}; Align = 'right'},
@@ -1045,7 +1045,7 @@ function Expand_WebRequest {
                 "File hash doesn't match. Skipping miner." | Write-Host -ForegroundColor Red
             } else {
                 $Command = 'x "' + $FilePath + '" -o"' + $DestinationFolder + '" -y -spe'
-                Start-Process ".\bin\7z.exe" $Command -Wait
+                Start-Process ".\includes\7z.exe" $Command -Wait
             }
         }
     } finally {
@@ -1375,24 +1375,23 @@ function Get_Hashrates {
 
 
     if ($AlgoLabel -eq "") {$AlgoLabel = 'X'}
-    $Pattern = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.csv"
+    $Pattern = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate"
 
-    if (!(Test-Path -path $Pattern)) {
-        $PatternOld = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_HashRate.txt"
-        if (Test-Path -path $PatternOld) {
-            $Content = (Get-Content -path $PatternOld)
+    if (!(Test-Path -path "$Pattern.csv")) {
+        if (Test-Path -path "$Pattern.txt") {
+            $Content = (Get-Content -path "$Pattern.txt")
             try {$Content = $Content | ConvertFrom-Json} catch {
             } finally {
-                if ($Content) {$Content | ConvertTo-Csv | Set-Content -Path $Pattern}
-                Remove-Item -path $PatternOld
+                if ($Content) {$Content | ConvertTo-Csv | Set-Content -Path "$Pattern.csv"}
+                Remove-Item -path "$Pattern.txt"
             }
         }
     } else {
-        $Content = (Get-Content -path $Pattern)
+        $Content = (Get-Content -path "$Pattern.csv")
         try {$Content = $Content | ConvertFrom-Csv} catch {
             #if error from convert from json delete file
-            WriteLog ("Corrupted file $Pattern, deleting") $LogFile $true
-            Remove-Item -path $Pattern
+            WriteLog ("Corrupted file $Pattern.csv, deleting") $LogFile $true
+            Remove-Item -path "$Pattern.csv"
         }
     }
 
@@ -1450,17 +1449,16 @@ function Get_Stats {
     )
 
     if ($AlgoLabel -eq "") {$AlgoLabel = 'X'}
-    $Pattern = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_stats.json"
+    $Pattern = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_stats"
 
-    if (!(Test-Path -path $Pattern)) {
-        $PatternOld = $PSScriptRoot + "\Stats\" + $MinerName + "_" + $Algorithm + "_" + $GroupName + "_" + $AlgoLabel + "_PL" + $PowerLimit + "_stats.txt"
-        if (Test-Path -path $PatternOld) {Rename-Item -Path $PatternOld -NewName $Pattern}
+    if (!(Test-Path -path "$Pattern.json")) {
+        if (Test-Path -path "$Pattern.txt") {Rename-Item -Path "$Pattern.txt" -NewName "$Pattern.json"}
     } else {
-        $Content = (Get-Content -path $Pattern)
+        $Content = (Get-Content -path "$Pattern.json")
         try {$Content = $Content | ConvertFrom-Json} catch {
             #if error from convert from json delete file
-            writelog ("Corrupted file $Pattern, deleting") $LogFile $true
-            Remove-Item -path $Pattern
+            writelog ("Corrupted file $Pattern.json, deleting") $LogFile $true
+            Remove-Item -path "$Pattern.json"
         }
     }
     $Content
