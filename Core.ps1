@@ -20,6 +20,10 @@ param(
 
 . .\Include.ps1
 
+if ((get_config_variable "Afterburner") -eq "Enabled") {
+    . .\Includes\afterburner.ps1
+}
+
 ##Parameters for testing, must be commented on real use
 
 
@@ -957,8 +961,15 @@ while ($Quit -eq $false) {
                 $BestLast.Id -ne $BestNow.Id
             ) {
                 #Must launch other SubMiner
+                if ($config.Afterburner -eq 'Enabled' -and
+                    $ActiveMiners[$BestNow.IdF].DeviceGroup.Type -in @('AMD') -and
+                    $BestNow.PowerLimit -gt 0
+                ) {
+                    set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -Devices $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices
+                } else {
                 if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
                 if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
+                }
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = "Running"
@@ -1016,8 +1027,15 @@ while ($Quit -eq $false) {
                 }
 
                 #Start New
+                if ($config.Afterburner -eq 'Enabled' -and
+                    $ActiveMiners[$BestNow.IdF].DeviceGroup.Type -in @('AMD') -and
+                    $BestNow.PowerLimit -gt 0
+                ) {
+                    set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -Devices $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices
+                } else {
                 if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
                 if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
+                }
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
 
