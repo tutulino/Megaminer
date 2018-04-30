@@ -447,11 +447,10 @@ while ($Quit -eq $false) {
 
                 # Check memory constraints on algos
                 if ($TypeGroup.MinMemory -gt 0) {
+                    $SkipLabel = $false
                     if ($AlgoLabel -match '(?<mem>\d+)gb.*') {
                         if ($TypeGroup.MinMemory -lt [int]$Matches.mem * 1024) {
                             $SkipLabel = $true
-                        } else {
-                            $SkipLabel = $false
                         }
                 }
                 if ($SkipLabel) {
