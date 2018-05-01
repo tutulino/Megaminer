@@ -445,18 +445,16 @@ while ($Quit -eq $false) {
                 $AlgoNameDual = get_algo_unified_name (($AlgoTmp -split ("_"))[1])
                 $Algorithms = $AlgoName + $(if ($AlgoNameDual) {"_$AlgoNameDual"})
 
-                # Check memory constraints on algos
+                # Check memory constraints on miners
                 if ($TypeGroup.MinMemory -gt 0) {
                     $SkipLabel = $false
                     if ($AlgoLabel -match '(?<mem>\d+)gb.*') {
-                        if ($TypeGroup.MinMemory -lt [int]$Matches.mem * 1024) {
-                            $SkipLabel = $true
-                        }
-                }
-                if ($SkipLabel) {
-                    Writelog ($MinerFile.BaseName + "/" + $Algorithms + "/" + $AlgoLabel + " skipped due to constraints") $LogFile $false
-                    Continue
-                }
+                        if ($TypeGroup.MinMemory -lt [int]$Matches.mem * 1024) {$SkipLabel = $true}
+                    }
+                    if ($SkipLabel) {
+                        Writelog ($MinerFile.BaseName + "/" + $Algorithms + "/" + $AlgoLabel + " skipped due to constraints") $LogFile $false
+                        Continue
+                    }
                 }
 
                 if ($TypeGroup.Algorithms -and $Algorithms -notin $TypeGroup.Algorithms) {continue} #check config has this algo as minable
@@ -965,10 +963,10 @@ while ($Quit -eq $false) {
                     $ActiveMiners[$BestNow.IdF].DeviceGroup.Type -in @('AMD') -and
                     $BestNow.PowerLimit -gt 0
                 ) {
-                    set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -Devices $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices
+                    set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
                 } else {
-                if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
-                if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
+                    if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
+                    if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
                 }
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
@@ -1031,10 +1029,10 @@ while ($Quit -eq $false) {
                     $ActiveMiners[$BestNow.IdF].DeviceGroup.Type -in @('AMD') -and
                     $BestNow.PowerLimit -gt 0
                 ) {
-                    set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -Devices $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices
+                    set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
                 } else {
-                if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
-                if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
+                    if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
+                    if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
                 }
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true

@@ -178,27 +178,27 @@ namespace OpenCl
             get { return Cl.GetInfo<uint>(NativeMethods.clGetDeviceInfo, this.handle, CL_DEVICE_IMAGE_SUPPORT) != 0; }
         }
 
-//                    CL_DEVICE_IMAGE2D_MAX_HEIGHT    
+//                    CL_DEVICE_IMAGE2D_MAX_HEIGHT
 //                    Return type: size_t
 //
 //                Max height of 2D image in pixels. The minimum value is 8192 if CL_DEVICE_IMAGE_SUPPORT is CL_TRUE.
 //
-//                    CL_DEVICE_IMAGE2D_MAX_WIDTH 
+//                    CL_DEVICE_IMAGE2D_MAX_WIDTH
 //                    Return type: size_t
 //
 //                Max width of 2D image in pixels. The minimum value is 8192 if CL_DEVICE_IMAGE_SUPPORT is CL_TRUE.
 //
-//                    CL_DEVICE_IMAGE3D_MAX_DEPTH 
+//                    CL_DEVICE_IMAGE3D_MAX_DEPTH
 //                    Return type: size_t
 //
 //                Max depth of 3D image in pixels. The minimum value is 2048 if CL_DEVICE_IMAGE_SUPPORT is CL_TRUE.
 //
-//                    CL_DEVICE_IMAGE3D_MAX_HEIGHT    
+//                    CL_DEVICE_IMAGE3D_MAX_HEIGHT
 //                    Return type: size_t
 //
 //                Max height of 3D image in pixels. The minimum value is 2048 if CL_DEVICE_IMAGE_SUPPORT is CL_TRUE.
 //
-//                    CL_DEVICE_IMAGE3D_MAX_WIDTH 
+//                    CL_DEVICE_IMAGE3D_MAX_WIDTH
 //                    Return type: size_t
 //
 //                Max width of 3D image in pixels. The minimum value is 2048 if CL_DEVICE_IMAGE_SUPPORT is CL_TRUE.
@@ -303,7 +303,7 @@ namespace OpenCl
         public Platform Platform
         {
             get {
-                var handle = Cl.GetInfo<IntPtr>(NativeMethods.clGetDeviceInfo, this.handle, CL_DEVICE_NAME);
+                var handle = Cl.GetInfo<IntPtr>(NativeMethods.clGetDeviceInfo, this.handle, CL_DEVICE_PLATFORM);
                 return new Platform(handle);
             }
         }
@@ -343,7 +343,7 @@ namespace OpenCl
             get { return Cl.GetInfoString(NativeMethods.clGetDeviceInfo, this.handle, CL_DEVICE_PROFILE); }
         }
 //
-//                                                CL_DEVICE_PROFILING_TIMER_RESOLUTION    
+//                                                CL_DEVICE_PROFILING_TIMER_RESOLUTION
 //                                                Return type: size_t
 //
 //                                                Describes the resolution of device timer. This is measured in nanoseconds.
@@ -426,6 +426,11 @@ namespace OpenCl
                 res[i] = devices[i].handle;
             }
             return res;
+        }
+
+        internal static IntPtr[] ToIntPtr(Device device)
+        {
+            return new IntPtr[] { device.handle };
         }
     }
 }
