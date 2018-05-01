@@ -6,6 +6,6 @@
     "API": "Palgin",
     "APIPort": 4068,
     "Algorithms": {
-        "neoscrypt": ""
+        "Neoscrypt": ""
     }
 }
