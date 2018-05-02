@@ -481,11 +481,13 @@ Function Get_Mining_Types () {
             $_ | Add-Member Id $c
             $c++
 
-            $_ | Add-Member DevicesClayMode ($_.Devices -replace '10', 'A' -replace '11', 'B' -replace '12', 'C' -replace '13', 'D' -replace '14', 'E' -replace '15', 'F' -replace '16', 'G' -replace ',', '')
-            $_ | Add-Member DevicesETHMode ($_.Devices -replace ',', ' ')
-            $_ | Add-Member DevicesNsgMode ("-d " + $_.Devices -replace ',', ' -d ')
-            $_ | Add-Member DeviceArray ($_.Devices -split ',')
-            $_ | Add-Member DeviceCount ($_.Devices -split ',').count
+            $_ | Add-Member DeviceArray     ($_.Devices -split ',')                                         # @(0,1,2,10,11,12)
+
+            $_ | Add-Member DevicesClayMode (($_.DeviceArray | ForEach-Object {'{0:X}' -f $_}) -join '')    # 012ABC
+            $_ | Add-Member DevicesETHMode  ($_.DeviceArray -join ' ')                                      # 0 1 2 10 11 12
+            $_ | Add-Member DevicesNsgMode  (($_.DeviceArray | ForEach-Object { "-d " + $_}) -join ' ')     # -d 0 -d 1 -d 2 -d 10 -d 11 -d 12
+            $_ | Add-Member DeviceCount     ($_.DeviceArray.count)                                          # 6
+
             $_ | Add-Member Platform (Get_Gpu_Platform $_.Type)
             $_.PowerLimits = $_.PowerLimits -split ',' | ForEach-Object {[int]$_} | Sort-Object -Descending -Unique
 
@@ -906,7 +908,7 @@ function ConvertTo_Hash {
     $Return = switch ([math]::truncate([math]::log($Hash, [math]::Pow(1000, 1)))) {
 
         "-Infinity" {"0 h"}
-        0 {"{0:g4}  h" -f ($Hash / [math]::Pow(1000, 0))}
+        0 {"{0:g4} h" -f ($Hash / [math]::Pow(1000, 0))}
         1 {"{0:g4} kh" -f ($Hash / [math]::Pow(1000, 1))}
         2 {"{0:g4} mh" -f ($Hash / [math]::Pow(1000, 2))}
         3 {"{0:g4} gh" -f ($Hash / [math]::Pow(1000, 3))}
