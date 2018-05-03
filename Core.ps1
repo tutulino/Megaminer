@@ -954,19 +954,18 @@ while ($Quit -eq $false) {
             #something changes or some miner error
 
             if (
-                $false -and
+                $false -and ### Because not all miners live nicely with powerlimit changes during run
                 $BestLast.IdF -eq $BestNow.IdF -and
                 $BestLast.Id -ne $BestNow.Id
             ) {
                 #Must launch other SubMiner
-                if ($config.Afterburner -eq 'Enabled' -and
-                    $ActiveMiners[$BestNow.IdF].DeviceGroup.Type -in @('AMD') -and
-                    $BestNow.PowerLimit -gt 0
-                ) {
-                    set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
-                } else {
-                    if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
-                    if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
+                if ($BestNow.PowerLimit -gt 0) {
+                    if ($config.Afterburner -eq 'Enabled') {
+                        set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
+                    } else {
+                        if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA') {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
+                        if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD') {}
+                    }
                 }
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
@@ -1025,14 +1024,13 @@ while ($Quit -eq $false) {
                 }
 
                 #Start New
-                if ($config.Afterburner -eq 'Enabled' -and
-                    $ActiveMiners[$BestNow.IdF].DeviceGroup.Type -in @('AMD') -and
-                    $BestNow.PowerLimit -gt 0
-                ) {
-                    set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
-                } else {
-                    if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA' -and $BestNow.PowerLimit -gt 0) {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
-                    if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD' -and $BestNow.PowerLimit -gt 0) {}
+                if ($BestNow.PowerLimit -gt 0) {
+                    if ($config.Afterburner -eq 'Enabled') {
+                        set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
+                    } else {
+                        if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA') {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
+                        if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD') {}
+                    }
                 }
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
@@ -1162,7 +1160,7 @@ while ($Quit -eq $false) {
                 $_.RevenueLive = $_.SpeedLive * $ActiveMiners[$_.IdF].PoolPrice
                 $_.RevenueLiveDual = $_.SpeedLiveDual * $ActiveMiners[$_.IdF].PoolPriceDual
 
-                $_.PowerLive = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].DeviceGroup.GroupName) | Measure-Object -property power_draw -sum).sum
+                $_.PowerLive = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].DeviceGroup.GroupName) | Measure-Object -property PowerDraw -sum).sum
 
                 $_.ProfitsLive = (($_.RevenueLive * (1 - [double]$ActiveMiners[$_.IdF].PoolFee) + $_.RevenueLiveDual * (1 - [double]$ActiveMiners[$_.IdF].PoolFeeDual)) * $LocalBTCvalue)
                 $_.ProfitsLive -= ($ActiveMiners[$_.IdF].MinerFee * $_.ProfitsLive)
@@ -1186,7 +1184,7 @@ while ($Quit -eq $false) {
                         $_.SpeedReads += [PSCustomObject]@{
                             Speed                  = $_.SpeedLive
                             SpeedDual              = $_.SpeedLiveDual
-                            Activity               = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].DeviceGroup.GroupName) | Measure-Object -property utilization -average).average
+                            Activity               = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].DeviceGroup.GroupName) | Measure-Object -property Utilization -average).average
                             Power                  = $_.PowerLive
                             Date                   = (Get-Date).DateTime
                             Benchmarking           = $_.NeedBenchmark
@@ -1244,13 +1242,13 @@ while ($Quit -eq $false) {
 
             $ActivityAverages += [pscustomobject]@{
                 DeviceGroup     = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
-                Average         = ($GroupDevices | Measure-Object -property utilization -average).average
+                Average         = ($GroupDevices | Measure-Object -property Utilization -average).average
                 NumberOfDevices = $GroupDevices.count
             }
 
             if ($ActivityAverages.count -gt 20) {
                 $ActivityAverages = $ActivityAverages[($ActivityAverages.Count - 20)..($ActivityAverages.Count - 1)]
-                $ActivityAverage = ($ActivityAverages | Where-Object DeviceGroup -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName | Measure-Object -property average -maximum).maximum
+                $ActivityAverage = ($ActivityAverages | Where-Object DeviceGroup -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName | Measure-Object -property Average -maximum).maximum
                 $ActivityDeviceCount = ($ActivityAverages | Where-Object DeviceGroup -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName | Measure-Object -property NumberOfDevices -maximum).maximum
                 if ($DetailedLog) {WriteLog ("Last 20 reads maximum Device activity is $ActivityAverage for DeviceGroup $($ActiveMiners[$_.IdF].DeviceGroup.GroupName)") $LogFile $false}
             } else { $ActivityAverage = 100 } #only want watchdog works with at least 20 reads
