@@ -7,7 +7,7 @@
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "Tribus": "-k tribus --shaders 2304 --lookup-gap 4 -I 21",
+        "Tribus": "-k tribus -I 21 -w 64",
         "Veltor": "-k veltor -I 21"
     }
 }
