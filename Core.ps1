@@ -514,6 +514,10 @@ while ($Quit -eq $false) {
                             $ConfigFileArguments = replace_foreach_device (Get-Content $Miner.PatternConfigFile -raw) $TypeGroup.Devices
                             foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
                         }
+                        if ($Miner.PatternPoolsFile) {
+                            $PoolsFileArguments = Get-Content $Miner.PatternPoolsFile -raw
+                            foreach ($P in $Params.Keys) {$PoolsFileArguments = $PoolsFileArguments -replace $P, $Params.$P}
+                        }
 
                         #select correct price by mode
                         $Price = $Pool.$(if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"})
@@ -547,6 +551,9 @@ while ($Quit -eq $false) {
                             foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
                             if ($Miner.PatternConfigFile) {
                                 foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
+                            }
+                            if ($Miner.PatternPoolsFile) {
+                                foreach ($P in $Params.Keys) {$PoolsFileArguments = $PoolsFileArguments -replace $P, $Params.$P}
                             }
                         } else {
                             $PoolDual = $null
@@ -685,8 +692,10 @@ while ($Quit -eq $false) {
                             Coin                = $Pool.Info
                             CoinDual            = $PoolDual.Info
                             ConfigFileArguments = $ConfigFileArguments
+                            PoolsFileArguments  = $PoolsFileArguments
                             ExtractionPath      = $(".\Bin\" + $MinerFile.BaseName + "\")
-                            GenerateConfigFile  = $(if ($Miner.GenerateConfigFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $TypeGroup.GroupName})
+                            GenerateConfigFile  = $(if ($Miner.GenerateConfigFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $TypeGroup.GroupName -replace '#Algorithm#', $AlgoName})
+                            GeneratePoolsFile   = $(if ($Miner.GeneratePoolsFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GeneratePoolsFile -replace '#GroupName#', $TypeGroup.GroupName -replace '#Algorithm#', $AlgoName})
                             DeviceGroup         = $TypeGroup
                             Host                = $Pool.Host
                             Location            = $Pool.Location
@@ -825,7 +834,9 @@ while ($Quit -eq $false) {
                 Coin                = $Miner.Coin
                 CoinDual            = $Miner.CoinDual
                 ConfigFileArguments = $Miner.ConfigFileArguments
+                PoolsFileArguments  = $Miner.PoolsFileArguments
                 GenerateConfigFile  = $Miner.GenerateConfigFile
+                GeneratePoolsFile   = $Miner.GeneratePoolsFile
                 DeviceGroup         = $Miner.DeviceGroup
                 Host                = $Miner.Host
                 Id                  = $ActiveMiners.Count
@@ -1041,6 +1052,9 @@ while ($Quit -eq $false) {
                 if ($ActiveMiners[$BestNow.IdF].GenerateConfigFile) {
                     $ActiveMiners[$BestNow.IdF].ConfigFileArguments = $ActiveMiners[$BestNow.IdF].ConfigFileArguments -replace '#APIPort#', $ActiveMiners[$BestNow.IdF].Port
                     $ActiveMiners[$BestNow.IdF].ConfigFileArguments | Set-Content ($ActiveMiners[$BestNow.IdF].GenerateConfigFile)
+                }
+                if ($ActiveMiners[$BestNow.IdF].GeneratePoolsFile) {
+                    $ActiveMiners[$BestNow.IdF].PoolsFileArguments | Set-Content ($ActiveMiners[$BestNow.IdF].GeneratePoolsFile)
                 }
 
                 if ($ActiveMiners[$BestNow.IdF].PrelaunchCommand) {Start-Process -FilePath $ActiveMiners[$BestNow.IdF].PrelaunchCommand}            #run prelaunch command

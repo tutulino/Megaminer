@@ -23,6 +23,7 @@ NVIDIA miners are not 100% untested.
 	- Phoenix (AMD, NVIDIA)
 	- Avermore (AMD)
 	- Sgminer for Allium, C11, Dallar, X11Evo, X16r, X16s, X17, SHA256t, Skunk, Lyra2h, Hmq1725 (AMD)
+	- SRBMiner (AMD)
 	- XMR-Stak (AMD, NVIDIA, CPU)
 	- XMR-Stak-Aeon (AMD, NVIDIA, CPU)
 	- XMRig (AMD, NVIDIA, CPU)

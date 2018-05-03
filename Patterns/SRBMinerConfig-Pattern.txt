@@ -1,0 +1,37 @@
+{
+/* Type can be : normal, normalv7, lite, litev7, heavy, ipbc, artocash, alloy  */
+"cryptonight_type" : "#ALGORITHMPARAMETERS#",
+
+/* Intensity 0-> auto intensity, or value from 1-300  */
+"intensity" : 0,
+
+/* To use 2 threads per card set double_threads to true  */
+"double_threads" : true,
+
+/* Uncomment this if you want to set GPU target temperature  */
+/* Works only if ADL is working on your system */
+/*"target_temperature" : 0,*/
+
+/* Uncomment this if you want to set system shutdown temperature  */
+/* Works only if ADL is working on your system */
+/*"shutdown_temperature" : 90,*/
+
+/* Uncomment this if you don't want to use the built in watchdog, but you want a script to run on GPU fail */
+/* If you use the reboot-windows.bat it will restart your computer if a GPU fail occurs */
+/*"reboot_script" : "reboot-windows.bat",*/
+
+"api_enabled" : true,
+"api_port" : #ApiPort#,
+"api_rig_name" : "#WorkerName#",
+
+/* Advanced settings for each GPU manually */
+/* Put in devices that you want to use, if you for ex. don't want to use gpu 2, just don't insert it,like in this example */
+/* Id starts from 0 , not from 1 !! */
+/* To get a list of available devices with their id's, use --listdevices parameter */
+/* This is just an example, edit it and remove comment lines !! */
+
+"gpu_conf" :
+[
+#FOR_EACH_GPU#	{ "id" : #GPUID#, "intensity" : 0, "worksize" : 8, "threads" : 2},#NL##END_FOR_EACH_GPU#
+]
+}

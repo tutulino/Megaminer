@@ -889,6 +889,16 @@ function Get_Live_HashRate {
                     elseif ([double]$Data.hashrate_10s -gt 0) {$HashRate = [double]$Data.hashrate_10s}
                 }
             }
+
+            "SRB" {
+                $Request = Invoke_httpRequest $Server $Port "" 5
+                if ($Request) {
+                    $Data = $Request | ConvertFrom-Json
+                    if ([double]$Data.hashrate_total_5min -gt 0) {$HashRate = [double]$Data.hashrate_total_5min}
+                    elseif ([double]$Data.hashrate_total_now -gt 0) {$HashRate = [double]$Data.hashrate_total_now}
+                }
+            }
+
         } #end switch
 
         $HashRates = @()

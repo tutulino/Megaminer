@@ -1,0 +1,19 @@
+{
+    "Path": "SRBMiner-CN.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/SRBMiner-CN-V1-5-1.7z",
+    "Type": "AMD",
+    "GenerateConfigFile": "config-#GROUPNAME#-#ALGORITHM#.txt",
+    "PatternConfigFile": ".\\Patterns\\SRBMinerConfig-Pattern.txt",
+    "GeneratePoolsFile": "pools-#GROUPNAME#-#ALGORITHM#.txt",
+    "PatternPoolsFile": ".\\Patterns\\SRBMinerPools-Pattern.txt",
+    "Arguments": "--config config-#GROUPNAME#-#ALGORITHM#.txt --pools pools-#GROUPNAME#-#ALGORITHM#.txt",
+    "API": "SRB",
+    "APIPort": 4028,
+    "Fee": 0.0085,
+    "Algorithms": {
+        "CryptoLightV7": "liteV7",
+        "CryptoNightV7": "normalV7",
+        "CryptoNightHeavy": "heavy",
+        "CryptoNightIPBC": "ipbc"
+    }
+}

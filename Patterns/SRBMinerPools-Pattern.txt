@@ -1,0 +1,6 @@
+{
+"pools" :
+[
+	{"pool_use_tls" : #SSL#true#SSL##NoSSL#false#NoSSL#, "pool" : "#SERVER#:#PORT#", "wallet" : "#LOGIN#", "password" : "#PASSWORD#", "location" : "europe"},
+]
+}
