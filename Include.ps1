@@ -433,7 +433,7 @@ Function Get_Mining_Types () {
     if ($Types0) {$Types0 = $Types0 | ConvertFrom-Json}
 
     $OCLPlatforms = [OpenCl.Platform]::GetPlatformIDs()
-    $OCLDevices = @($OCLPlatforms | ForEach-Object { [OpenCl.Device]::GetDeviceIDs($_, "GPU") })
+    $OCLDevices = @($OCLPlatforms | ForEach-Object { [OpenCl.Device]::GetDeviceIDs($_, "ALL") } | Where-Object Type -eq 'Gpu')
 
     if (!$Types0) {
         #Autodetection on, must add types manually
