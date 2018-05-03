@@ -78,13 +78,13 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
 
-    if (
-        $Currency -notin @('BTC', 'LTC') -and
-        !($RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object { $_ -eq $Currency })
-    ) {
-        Write-Host "$Name $Currency not supported for payment"
-        Exit
-    }
+    # if (
+    #     $Currency -notin @('BTC', 'LTC') -and
+    #     !($RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object { $_ -eq $Currency })
+    # ) {
+    #     Write-Host "$Name $Currency not supported for payment"
+    #     Exit
+    # }
 
     if (!$CoinsWallets.$Currency) {
         Write-Host "$Name $Currency wallet not defined in config.ini"
