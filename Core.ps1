@@ -81,10 +81,10 @@ $culture.NumberFormat.NumberGroupSeparator = ","
 $ErrorActionPreference = "Continue"
 $Config = get_config
 
-$Release = "6.2"
+$Release = "1.0"
 WriteLog ("Release $Release") $LogFile $false
 
-if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = "MegaMiner"}
+if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = "Forager"}
 else {$Host.UI.RawUI.WindowTitle = "MM-" + ($GroupNames -join "/")}
 
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
@@ -192,10 +192,10 @@ if ($config.ApiPort -gt 0) {
     $APIprocess = Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -PassThru -WindowStyle Minimized
 
     #open firewall port
-    $command = 'New-NetFirewallRule -DisplayName "Megaminer" -Direction Inbound -Action Allow -Protocol TCP -LocalPort ' + [string]$config.ApiPort
+    $command = 'New-NetFirewallRule -DisplayName "Forager" -Direction Inbound -Action Allow -Protocol TCP -LocalPort ' + [string]$config.ApiPort
     Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -WindowStyle Minimized
 
-    $command = 'New-NetFirewallRule -DisplayName "Megaminer" -Direction Outbound -Action Allow -Protocol TCP -LocalPort ' + [string]$config.ApiPort
+    $command = 'New-NetFirewallRule -DisplayName "Forager" -Direction Outbound -Action Allow -Protocol TCP -LocalPort ' + [string]$config.ApiPort
     Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -WindowStyle Minimized
 }
 
@@ -1319,7 +1319,7 @@ while ($Quit -eq $false) {
         set_ConsolePosition 0 0
 
         #display header
-        Print_Horizontal_line "MegaMiner $Release"
+        Print_Horizontal_line "Forager $Release"
         Print_Horizontal_line
         "  (E)nd Interval  (P)rofits  (C)urrent  (H)istory  (W)allets  (S)tats  (Q)uit" | Out-Host
 

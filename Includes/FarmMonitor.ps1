@@ -60,7 +60,7 @@ while ($true) {
     try {set_WindowSize 185 60} catch {}
     Clear-Host
 
-    Print_Horizontal_line ("MEGAMINER FARM MONITOR (" + (get-date).tostring("g") + ")")
+    Print_Horizontal_line ("Forager FARM MONITOR (" + (get-date).tostring("g") + ")")
     "" | out-host
 
     $FarmRigs | ForEach-Object {

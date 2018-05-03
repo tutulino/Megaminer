@@ -2,7 +2,7 @@
 
     [Parameter()]
     [String] $SharedFile, #complete path
-    #[String] $SharedFile='C:\Users\admin\Desktop\Megaminer\ApiShared34474029.tmp',
+    #[String] $SharedFile='C:\Users\admin\Desktop\Forager\ApiShared34474029.tmp',
 
     [Parameter()]
     [Int] $Port = 9999,
@@ -21,7 +21,7 @@
     }
 
     
-    $Host.UI.RawUI.WindowTitle = "MM API Listener"
+    $Host.UI.RawUI.WindowTitle = "Forager API Listener"
 
     $listener = New-Object System.Net.HttpListener
     $prefix = "http://*:$Port/$Url"
@@ -30,7 +30,7 @@
  
     $listener.Start()
 
-    Write-Warning "Megaminer Api Listening on port $port......."
+    Write-Warning "Forager Api Listening on port $port......."
     Write-Warning "Don´t close this window while you want to use API."
 
     while ($true) {

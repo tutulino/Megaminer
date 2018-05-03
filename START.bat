@@ -2,7 +2,7 @@
 
 cd /d %~dp0
 
-set "command=& .\Megaminer.ps1"
+set "command=& .\Miner.ps1"
 
 pwsh -noexit -executionpolicy bypass -command "%command%"
 powershell -version 5.0 -noexit -executionpolicy bypass -command "%command%"

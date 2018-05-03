@@ -1,4 +1,4 @@
-This Megaminer fork is aimed at AMD + CPU usage without interfering with normal PC usage.
+Forager forked from Megaminer by tutulino, who forked it from MultiPoolMiner by aaronsauce.
 
 AMD miners tuned for RX480/580 with tight memory timings
 
@@ -10,7 +10,7 @@ New features from tutulino are merged manually after a review to ensure stabilit
 NVIDIA miners are not 100% untested.
 
 
-## Changes from tutulino's branch
+## Changes from Megaminer
 
 * Additional miners
 	- EthMiner (AMD, NVIDIA)
