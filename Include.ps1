@@ -235,7 +235,7 @@ function get_devices_information ($Types) {
                     AdapterId         = [int]$_.Index
                     Name              = $_.Device
                     Utilization       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?usage").Data
-                    UtilizationMem    = [int]($($CardData | Where-Object SrcName -match "^(GPU\d* )?memory usage").Data / $($CardData | Where-Object SrcName -match "^(GPU\d* )?memory usage").MaxLimit * 100)
+                    UtilizationMem    = [int]$($mem = $CardData | Where-Object SrcName -match "^(GPU\d* )?memory usage"; if ($mem.MaxLimit) {$mem.Data / $mem.MaxLimit * 100})
                     Clock             = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?core clock").Data
                     ClockMem          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?memory clock").Data
                     FanSpeed          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?fan speed").Data
