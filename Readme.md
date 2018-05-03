@@ -1,33 +1,35 @@
 This Megaminer fork is aimed at AMD + CPU usage without interfering with normal PC usage.
 
-AMD miners tuned for RX480/580 with low memory timings
+AMD miners tuned for RX480/580 with tight memory timings
 
 * Recommended drivers for AMD are latest Adrenalin edition (18.3.4 and newer)
-* MkxMiner ASM mode works only with Blockchain drivers
+* MkxMiner ASM mode works only with Blockchain drivers from August 2017
 
 New features from tutulino are merged manually after a review to ensure stability.
 
-NVidia miners are untested.
+NVIDIA miners are not 100% untested.
 
 
 ## Changes from tutulino's branch
 
-* Support SSL Mining on supported pools (MiningPoolHub, NiceHash, some coins on Suprnova)
 * Additional miners
-	- EthMiner (AMD, NVidia)
-	- lolMiner-Mnx (AMD, NVidia)
+	- EthMiner (AMD, NVIDIA)
+	- lolMiner-Mnx (AMD, NVIDIA)
 	- MkxMiner (AMD)
 	- NHeqminer (CPU)
-	- NsCudaMiner (NVidia)
+	- NsCudaMiner (NVIDIA)
 	- OptiminerZcash (AMD)
-	- OptiminerZero (AMD, NVidia)
-	- Phoenix (AMD, NVidia)
-	- SgminerAllium (AMD)
-	- SgminerC11 (AMD)
-	- SgminerKeccakC (AMD)
-	- XMR-Stak (AMD, NVidia, CPU)
-	- XMRig (AMD, NVidia, CPU)
-	- XmrMiner (AMD)
+	- OptiminerZero (AMD, NVIDIA)
+	- Phoenix (AMD, NVIDIA)
+	- Avermore (AMD)
+	- Sgminer for Allium, C11, Dallar, X11Evo, X16r, X16s, X17, SHA256t, Skunk, Lyra2h, Hmq1725 (AMD)
+	- XMR-Stak (AMD, NVIDIA, CPU)
+	- XMR-Stak-Aeon (AMD, NVIDIA, CPU)
+	- XMRig (AMD, NVIDIA, CPU)
+	- XRig (AMD)
+	- JCEMiner (CPU)
+* Support SSL Mining on supported pools (MiningPoolHub, NiceHash, some coins on Suprnova)
+* MSI Afterburner integration for monitoring AMD/NVIDIA/Intel CPU power consumption and PowerLimit support for AMD/NVIDIA
 * Faster benchmarking (Benchmark in config is now max benchmark time. Most algos hashrate stabilize and finish within 2-3mins)
 * Hashrate watchdog to detect underperforming miners
 * Miner optimizations for CPU and AMD
@@ -37,8 +39,8 @@ NVidia miners are untested.
 * Support reporting mining stats to multipoolminer.io/monitor
 * Allow mining specific Algo instead of coin in Manual mode
 * Profit display in mBTC instead of BTC with too many zeroes
-* Support profitability info for additional coins from WhatToMine pool (added by tutulino now)
-* Power usage approximation for AMD and CPU
+* Support profitability info for all coins on WhatToMine
+* Power usage approximation for AMD and CPU when Afterburner integration is off
 	- You will need to add TDP values for your hardware in _cpu-tdp.json_ or _amd-cards-tdp.json_ if they are not there
 * Support any fiat currency which is supported by CoinDesk for profit display
 * Allow dual mining any Ethash coin instead of ETH/ETC only
@@ -46,18 +48,21 @@ NVidia miners are untested.
 * Filter out non-paying algos on NiceHash
 * Allow decimal values in hashrate from algos with very low hashrate (i.e. EquihashZero)
 * Faster wallet display
-* Support SHA256 validation for miner downloads
+* Support SHA256 validation for miner file downloads
 * Fix algo divisors on YIIMP type pools
 * Additional pools
 	- AntMinePool
+	- BlockMasters
 	- Bilbotel.fr
 	- BlockMunch
 	- FairPool
 	- Mining Dutch
+	- NLPool
+	- PhiPhiPool
 	- Protopool
 	- Suprnova (up to date algos)
-	- Zergpool
-* Various small fixes, code optimizations and formatting changes
+	- ZergPool
+* Lots of small fixes, code optimizations and formatting changes
 
 ### Donations are welcome
 - BTC - 3FzmW9JMhgmRwipKkNnphxG73VPQMsYsN6
@@ -151,7 +156,7 @@ If there is a new miner version is recommended delete miner_algo_hashrate.txt fi
 
 -Can mine on Suprnova,Nicehash, MPH, Flypool or BlocksFactory pool without autochange or profit calculation, manual coin selection
 
--Fastest miner for each algo/coin preselected for Nvidia Pascal (08/01/2017) on all pools.
+-Fastest miner for each algo/coin preselected for NVIDIA Pascal (08/01/2017) on all pools.
 
 -Dual Mining between different pools (ex. Eth on MPH and lbry on Zpool)
 
@@ -167,13 +172,13 @@ If there is a new miner version is recommended delete miner_algo_hashrate.txt fi
 
 -Latest version of miners available
 
--GPU Info (AMD/Nvidia) (Power, fan, temperatures, efficiency...)
+-GPU Info (AMD/NVIDIA) (Power, fan, temperatures, efficiency...)
 
 -Pools Wallets actual and evolution info
 
 -Option to autochange based on 24h statistics (on supported pools)
 
--Option for associate command to launch before run to each miner (nvidia inspector for example to set overclock)
+-Option for associate command to launch before run to each miner (NVIDIA inspector for example to set overclock)
 
 -Miners and Pools fees are included in profit calculation
 
@@ -191,7 +196,7 @@ If there is a new miner version is recommended delete miner_algo_hashrate.txt fi
 
 ----- DISCLAIMER ---- ------------------------------------------
 
-Tested on nvidia pascal 10X0 and AMD RX580
+Tested on NVIDIA pascal 10X0 and AMD RX580
 
 Only for Windows
 
