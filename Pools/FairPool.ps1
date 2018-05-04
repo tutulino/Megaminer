@@ -65,11 +65,18 @@ if ($Querymode -eq "wallet") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
 
-    $Pools += [pscustomobject]@{"coin" = "Electroneum"; "algo" = "CryptoNight"; "symbol" = "ETN"; "server" = "mine.etn.fairpool.cloud"; "port" = 8888; "fee" = 0.01}
-    $Pools += [pscustomobject]@{"coin" = "EthereumClassic"; "algo" = "Ethash"; "symbol" = "ETC"; "server" = "mine.etc.fairpool.cloud"; "port" = 4444; "fee" = 0.01}
-    $Pools += [pscustomobject]@{"coin" = "Metaverse"; "algo" = "Ethash"; "symbol" = "ETP"; "server" = "mine.etp.fairpool.cloud"; "port" = 6666; "fee" = 0.01}
-    $Pools += [pscustomobject]@{"coin" = "PascalLite"; "algo" = "Pascal"; "symbol" = "PASL"; "server" = "mine.pasl.fairpool.cloud"; "port" = 4009; "fee" = 0.02}
-    $Pools += [pscustomobject]@{"coin" = "Sumokoin"; "algo" = "CryptoNightHeavy"; "symbol" = "SUMO"; "server" = "mine.sumo.fairpool.cloud"; "port" = 5555; "fee" = 0.01}
+    $Pools += [pscustomobject]@{"coin" = "Akroma"; "algo" = "Ethash"; "symbol" = "AKA"; "port" = 2222; "fee" = 0.01    }
+    $Pools += [pscustomobject]@{"coin" = "Dogethereum"; "algo" = "Ethash"; "symbol" = "DOGX"; "port" = 7788; "fee" = 0.01}
+    $Pools += [pscustomobject]@{"coin" = "Electroneum"; "algo" = "CryptoNight"; "symbol" = "ETN"; "port" = 8888; "fee" = 0.01}
+    $Pools += [pscustomobject]@{"coin" = "EthereumClassic"; "algo" = "Ethash"; "symbol" = "ETC"; "port" = 4444; "fee" = 0.01}
+    $Pools += [pscustomobject]@{"coin" = "Haven"; "algo" = "CryptoNightHeavy"; "symbol" = "XHV"; "port" = 5566; "fee" = 0.00}
+    $Pools += [pscustomobject]@{"coin" = "Loki"; "algo" = "CryptoNightHeavy"; "symbol" = "LOKI"; "port" = 5577; "fee" = 0.01}
+    $Pools += [pscustomobject]@{"coin" = "Metaverse"; "algo" = "Ethash"; "symbol" = "ETP"; "port" = 6666; "fee" = 0.01}
+    $Pools += [pscustomobject]@{"coin" = "Nekonium"; "algo" = "Ethash"; "symbol" = "NUKO"; "port" = 7777; "fee" = 0.01}
+    $Pools += [pscustomobject]@{"coin" = "PascalLite"; "algo" = "Pascal"; "symbol" = "PASL"; "port" = 4009; "fee" = 0.02}
+    $Pools += [pscustomobject]@{"coin" = "Pegascoin"; "algo" = "Ethash"; "symbol" = "PGC"; "port" = 1111; "fee" = 0.01}
+    $Pools += [pscustomobject]@{"coin" = "PURK"; "algo" = "Keccak"; "symbol" = "PURK"; "port" = 2244; "fee" = 0.01}
+    $Pools += [pscustomobject]@{"coin" = "Sumokoin"; "algo" = "CryptoNightHeavy"; "symbol" = "SUMO"; "port" = 5555; "fee" = 0.01}
 
     $Pools | ForEach-Object {
         if ($CoinsWallets.($_.symbol)) {
@@ -77,7 +84,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Algorithm             = $_.Algo
                 Info                  = $_.Coin
                 Protocol              = "stratum+tcp"
-                Host                  = $_.Server
+                Host                  = "mine." + $_.symbol + ".fairpool.cloud"
                 Port                  = $_.Port
                 User                  = $CoinsWallets.($_.symbol) + "+#WORKERNAME#"
                 Pass                  = "x"
