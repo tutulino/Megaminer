@@ -644,7 +644,7 @@ while ($Quit -eq $false) {
                             $Stats = [PSCustomObject]@{
                                 BestTimes        = 0
                                 BenchmarkedTimes = 0
-                                LastTimeActive   = [TimeSpan]0
+                                LastTimeActive   = [DateTime]0
                                 ActivatedTimes   = 0
                                 ActiveTime       = [TimeSpan]0
                                 FailedTimes      = 0
