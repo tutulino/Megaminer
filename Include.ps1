@@ -427,16 +427,16 @@ Function Get_Mining_Types () {
 
     if ($Filter -eq $null) {$Filter = @()} # to allow comparation after
 
-    $Types = @()
-
-    $Types0 = get_config_variable "GpuGroups"
-    if ($Types0) {$Types0 = $Types0 | ConvertFrom-Json}
-
     $OCLPlatforms = [OpenCl.Platform]::GetPlatformIDs()
     $OCLDevices = @($OCLPlatforms | ForEach-Object { [OpenCl.Device]::GetDeviceIDs($_, "ALL") } | Where-Object Type -eq 'Gpu')
 
-    if (!$Types0) {
-        #Autodetection on, must add types manually
+    $Types0 = get_config_variable "GpuGroups"
+
+    if ($Types0 -eq "") {
+        # Empty GpuGroups - don't autodetect, use cpu only
+        $Types0 = @()
+    } elseif ($Types0 -eq $null) {
+        # Autodetection on, must add types manually
         $Types0 = @()
 
         foreach ($Type in @('AMD', 'NVIDIA')) {
@@ -455,12 +455,16 @@ Function Get_Mining_Types () {
             }
         }
             }
+    } else {
+        # GpuGroups not empty - parse it
+        $Types0 = $Types0 | ConvertFrom-Json
         }
 
     #if cpu mining is enabled add a new group
     if (
-        ((get_config_variable "CPUMining") -eq 'ENABLED' -and !$Filter) -or
-        "CPU" -in $Filter
+        (!$Filter -and (get_config_variable "CPUMining") -eq 'ENABLED') -or
+        $Filter -contains "CPU" -or
+        $Types0.Length -eq 0
     ) {
         $Types0 += [PSCustomObject] @{
             GroupName   = "CPU"
@@ -470,6 +474,7 @@ Function Get_Mining_Types () {
         }
     }
 
+    $Types = @()
     $c = 0
     $Types0 | ForEach-Object {
         if (!$Filter -or (Compare-Object $_.GroupName $Filter -IncludeEqual -ExcludeDifferent)) {
