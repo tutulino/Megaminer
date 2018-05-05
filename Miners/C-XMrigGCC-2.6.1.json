@@ -1,0 +1,16 @@
+﻿{
+    "Path": "xmrig.exe",
+    "Uri": "https://github.com/xmrig/xmrig/releases/download/v2.6.1/xmrig-2.6.1-gcc-win64.zip",
+    "SHA256": "bfebc2f30b2d43dfc686b32fa23db5ef9a21e650d4f4286cf22931d25c005a78",
+    "Type": "CPU",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --api-port #APIPORT# #NH#--nicehash#NH# --donate-level 1 #ALGORITHMPARAMETERS#",
+    "API": "XMRig",
+    "APIPort": 4048,
+    "Fee": 0.01,
+    "Algorithms": {
+        "CryptoLightV7": "-a cryptonight-lite",
+        "CryptoNightV7": "-a cryptonight",
+        "CryptoNightHeavy": "-a cryptonight-heavy",
+        "CryptoNightIBPC": "-a cryptonight-lite --variant ipbc"
+    }
+}
