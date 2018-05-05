@@ -2,6 +2,7 @@ Bin/*
 Logs/*
 Stats/*
 Cache/*
+Downloads/*
 
 .vscode/
 Donation.ctr

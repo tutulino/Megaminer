@@ -1055,13 +1055,23 @@ function Expand_WebRequest {
 
     $DestinationFolder = $PSScriptRoot + $Path.Substring(1)
     $FileName = ([IO.FileInfo](Split-Path $Uri -Leaf)).name
-    $FilePath = $PSScriptRoot + '\' + $Filename
+    $CachePath = $PSScriptRoot + '\Downloads\'
+    $FilePath = $CachePath + $Filename
 
-    if (Test-Path $FileName) {Remove-Item $FileName}
+    if (!(Test-Path -Path $CachePath)) { New-Item -Path $CachePath -ItemType directory}
+
     try {
-        (New-Object System.Net.WebClient).DownloadFile($Uri, $FileName)
-        if (Test-Path $FileName) {
-            if ($SHA256 -and (Get-FileHash -Path $FileName -Algorithm SHA256).Hash -ne $SHA256) {
+        if (Test-Path $FilePath) {
+            if ($SHA256 -and (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash -ne $SHA256) {
+                "Existing file hash doesn't match. Will re-download." | Write-Host -ForegroundColor Red
+                Remove-Item $FilePath
+            }
+        }
+        if (!(Test-Path $FilePath)) {
+            (New-Object System.Net.WebClient).DownloadFile($Uri, $FilePath)
+        }
+        if (Test-Path $FilePath) {
+            if ($SHA256 -and (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash -ne $SHA256) {
                 "File hash doesn't match. Skipping miner." | Write-Host -ForegroundColor Red
             } else {
                 $Command = 'x "' + $FilePath + '" -o"' + $DestinationFolder + '" -y -spe'
@@ -1069,7 +1079,7 @@ function Expand_WebRequest {
             }
         }
     } finally {
-        if (Test-Path $FileName) {Remove-Item $FileName}
+        # if (Test-Path $FilePath) {Remove-Item $FilePath}
     }
 }
 
@@ -1536,8 +1546,8 @@ function Start_Downloader {
                 New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
                 (New-Object System.Net.WebClient).DownloadFile($URI, $Path)
                 if ($SHA256 -and (Get-FileHash -Path $Path -Algorithm SHA256).Hash -ne $SHA256) {
+                    "File hash doesn't match. Skipping miner." | Write-Host -ForegroundColor Red
                     Remove-Item $Path
-                    "File hash doesn't match. Skipping miner." | write-host -ForegroundColor Red
                 }
             } else {
                 $Message = "Downloading....$($URI)"
