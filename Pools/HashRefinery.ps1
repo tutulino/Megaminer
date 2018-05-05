@@ -82,8 +82,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Currency -notin @('BTC', 'LTC') -and
         !($RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object { $_ -eq $Currency })
     ) {
-        Write-Host "$Name $Currency not supported for payment"
-        Exit
+        Write-Host "$Name $Currency may not be supported for payment" -ForegroundColor Yellow
     }
 
     if (!$CoinsWallets.$Currency) {
