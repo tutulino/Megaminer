@@ -1,0 +1,12 @@
+{
+    "Path": "bin\\ethminer.exe",
+    "Uri": "https://github.com/ethereum-mining/ethminer/releases/download/v0.14.0rc9/ethminer-0.14.0rc9-Windows.zip",
+    "SHA256": "15CF031A77CADCD7722C27320CFBA49FE6F9261A03295056F0CB9DAE6E3A739A",
+    "Type": "AMD",
+    "Arguments": "-G -SP 2 -S #SERVER#:#PORT# -O #LOGIN#:#PASSWORD# --api-port #APIPORT# --opencl-devices #DEVICESETHMODE# --opencl-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "API": "Claymore",
+    "APIPort": 4028,
+    "Algorithms": {
+        "Ethash": ""
+    }
+}
