@@ -69,20 +69,21 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
 
     #Add main page coins
     $WtmUrl = 'https://whattomine.com/coins.json?' +
-    'eth=true&factor[eth_hr]=10&factor[eth_p]=0&' + #Ethash
-    'grof=true&factor[gro_hr]=10&factor[gro_p]=0&' + #Groestl
-    'x11gf=true&factor[x11g_hr]=10&factor[x11g_p]=0&' + #X11gost
+    'bk14=true&factor[bk14_hr]=10&factor[bk14_p]=0&' + #Decred
     'cn=true&factor[cn_hr]=10&factor[cn_p]=0&' + #CryptoNight
     'cn7=true&factor[cn7_hr]=10&factor[cn7_p]=0&' + #CryptoNightV7
     'eq=true&factor[eq_hr]=10&factor[eq_p]=0&' + #Equihash
-    'lre=true&factor[lrev2_hr]=10&factor[lrev2_p]=0&' + #Lyra2v2
-    'ns=true&factor[ns_hr]=10&factor[ns_p]=0&' + #NeoScrypt
-    'lbry=true&factor[lbry_hr]=10&factor[lbry_p]=0&' + #Lbry
-    'bk14=true&factor[bk14_hr]=10&factor[bk14_p]=0&' + #Decred
-    'pas=true&factor[pas_hr]=10&factor[pas_p]=0&' + #Pascal
-    'skh=true&factor[skh_hr]=10&factor[skh_p]=0&' + #Skunk
-    'n5=true&factor[n5_hr]=10&factor[n5_p]=0&' + #Nist5
+    'eth=true&factor[eth_hr]=10&factor[eth_p]=0&' + #Ethash
+    'grof=true&factor[gro_hr]=10&factor[gro_p]=0&' + #Groestl
     'l2z=true&factor[l2z_hr]=10&factor[l2z_p]=0&' + #Lyra2z
+    'lbry=true&factor[lbry_hr]=10&factor[lbry_p]=0&' + #Lbry
+    'lre=true&factor[lrev2_hr]=10&factor[lrev2_p]=0&' + #Lyra2v2
+    'n5=true&factor[n5_hr]=10&factor[n5_p]=0&' + #Nist5
+    'ns=true&factor[ns_hr]=10&factor[ns_p]=0&' + #NeoScrypt
+    'pas=true&factor[pas_hr]=10&factor[pas_p]=0&' + #Pascal
+    'phi=true&factor[phi_hr]=10&factor[phi_p]=0&' + #PHI
+    'skh=true&factor[skh_hr]=10&factor[skh_p]=0&' + #Skunk
+    'x11gf=true&factor[x11g_hr]=10&factor[x11g_p]=0&' + #X11gost
     'xn=true&factor[xn_hr]=10&factor[xn_p]=0' #Xevan
 
     $WTMResponse = Invoke_APIRequest -Url $WtmUrl -Retry 3 | Select-Object -ExpandProperty coins
