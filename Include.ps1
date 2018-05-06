@@ -248,17 +248,17 @@ function get_devices_information ($Types) {
             }
         }
     } else {
-    #NVIDIA
-    if ($Types | Where-Object Type -eq 'NVIDIA') {
-        $DeviceId = 0
-        Invoke-Expression ".\includes\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader" | ForEach-Object {
-            $SMIresultSplit = $_ -split (",")
-            if ($SMIresultSplit.count -gt 10) {
-                #less is error or no NVIDIA gpu present
+        #NVIDIA
+        if ($Types | Where-Object Type -eq 'NVIDIA') {
+            $DeviceId = 0
+            Invoke-Expression ".\includes\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader" | ForEach-Object {
+                $SMIresultSplit = $_ -split (",")
+                if ($SMIresultSplit.count -gt 10) {
+                    #less is error or no NVIDIA gpu present
 
-                $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object DeviceArray -contains $DeviceId).groupname
+                    $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object DeviceArray -contains $DeviceId).groupname
 
-                $Card = [pscustomObject]@{
+                    $Card = [pscustomObject]@{
                         Type              = 'NVIDIA'
                         Id                = $DeviceId
                         Group             = $Group
@@ -274,28 +274,28 @@ function get_devices_information ($Types) {
                         ClockMem          = if ($SMIresultSplit[9] -like "*Supported*") {$null} else {[int]($SMIresultSplit[9] -replace 'Mhz', '')}
                         PowerMaxLimit     = if ($SMIresultSplit[10] -like "*Supported*") {$null} else { [int]($SMIresultSplit[10] -replace 'W', '')}
                         PowerDefaultLimit = if ($SMIresultSplit[11] -like "*Supported*") {$null} else {[int]($SMIresultSplit[11] -replace 'W', '')}
+                    }
+                    if ($Card.Power_DefaultLimit -gt 0) { $Card | Add-Member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
+                    $Devices += $Card
+                    $DeviceId++
                 }
-                if ($Card.Power_DefaultLimit -gt 0) { $Card | Add-Member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
-                $Devices += $Card
-                $DeviceId++
             }
         }
-    }
 
 
-    #AMD
-    if ($Types | Where-Object Type -eq 'AMD') {
-        #ADL
-        $DeviceId = 0
+        #AMD
+        if ($Types | Where-Object Type -eq 'AMD') {
+            #ADL
+            $DeviceId = 0
 
             $AdlResult = Invoke-Expression ".\Includes\OverdriveN.exe" | Where-Object {$_ -notlike "*&???" -and $_ -ne "ADL2_OverdriveN_Capabilities_Get is failed"}
-        $AmdCardsTDP = Get-Content .\Includes\amd-cards-tdp.json | ConvertFrom-Json
+            $AmdCardsTDP = Get-Content .\Includes\amd-cards-tdp.json | ConvertFrom-Json
 
-        if ($AdlResult -ne $null) {
-            $AdlResult | ForEach-Object {
+            if ($AdlResult -ne $null) {
+                $AdlResult | ForEach-Object {
 
-                $AdlResultSplit = $_ -split (",")
-                $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object DeviceArray -contains $DeviceId).groupname
+                    $AdlResultSplit = $_ -split (",")
+                    $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object DeviceArray -contains $DeviceId).groupname
 
                     $Card = [pscustomObject]@{
                         Type              = 'AMD'
@@ -311,13 +311,13 @@ function get_devices_information ($Types) {
                         PowerDraw         = $AmdCardsTDP.$($AdlResultSplit[8].Trim()) * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100)
                         Name              = $AdlResultSplit[8].Trim()
                         UDID              = $AdlResultSplit[9].Trim()
-                }
+                    }
                     $Devices += $Card
-                $DeviceId++
-            }
+                    $DeviceId++
                 }
-        Clear-Variable AmdCardsTDP
-    }
+            }
+            Clear-Variable AmdCardsTDP
+        }
     }
 
     # CPU
@@ -347,32 +347,32 @@ function get_devices_information ($Types) {
             }
 
         } else {
-        $CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json
-        # Get-Counter is more accurate and is preferable, but currently not available in Poweshell 6
-        if (Get-Command "Get-Counter" -Type Cmdlet -errorAction SilentlyContinue) {
-            # Language independent version of Get-Counter '\Processor(_Total)\% Processor Time'
-            $CpuLoad = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue / 100
-        } else {
-            $Error.Remove($Error[$Error.Count - 1])
-            $CpuLoad = (Get-CimInstance -ClassName win32_processor | Measure-Object -Property LoadPercentage -Average | Select-Object -ExpandProperty Average) / 100
-        }
-
-        $CpuResult | ForEach-Object {
-                $Devices += [PSCustomObject]@{
-                Type        = 'CPU'
-                Id          = $_.DeviceID
-                    Group       = 'CPU'
-                Clock       = $_.MaxClockSpeed
-                Utilization = $_.LoadPercentage
-                CacheL3     = $_.L3CacheSize
-                Cores       = $_.NumberOfCores
-                Threads     = $_.NumberOfLogicalProcessors
-                    PowerDraw   = [int]($CpuTDP.($_.Name) * $CpuLoad)
-                Name        = $_.Name
+            $CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json
+            # Get-Counter is more accurate and is preferable, but currently not available in Poweshell 6
+            if (Get-Command "Get-Counter" -Type Cmdlet -errorAction SilentlyContinue) {
+                # Language independent version of Get-Counter '\Processor(_Total)\% Processor Time'
+                $CpuLoad = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue / 100
+            } else {
+                $Error.Remove($Error[$Error.Count - 1])
+                $CpuLoad = (Get-CimInstance -ClassName win32_processor | Measure-Object -Property LoadPercentage -Average | Select-Object -ExpandProperty Average) / 100
             }
+
+            $CpuResult | ForEach-Object {
+                $Devices += [PSCustomObject]@{
+                    Type        = 'CPU'
+                    Id          = $_.DeviceID
+                    Group       = 'CPU'
+                    Clock       = $_.MaxClockSpeed
+                    Utilization = $_.LoadPercentage
+                    CacheL3     = $_.L3CacheSize
+                    Cores       = $_.NumberOfCores
+                    Threads     = $_.NumberOfLogicalProcessors
+                    PowerDraw   = [int]($CpuTDP.($_.Name) * $CpuLoad)
+                    Name        = $_.Name
+                }
+            }
+            Clear-Variable CpuTDP
         }
-        Clear-Variable CpuTDP
-    }
     }
     $Devices
 }
@@ -451,14 +451,14 @@ Function Get_Mining_Types () {
                     GroupName   = $Type
                     Type        = $Type
                     Devices     = 0..$($Devices.Count - 1) -join ','
-                Powerlimits = "0"
+                    Powerlimits = "0"
+                }
             }
         }
-            }
     } else {
         # GpuGroups not empty - parse it
         $Types0 = $Types0 | ConvertFrom-Json
-        }
+    }
 
     #if cpu mining is enabled add a new group
     if (
@@ -486,13 +486,13 @@ Function Get_Mining_Types () {
             }
             if ($_.Devices) {
                 $_ | Add-Member OCLDevices @($OCLDevices | Where-Object Vendor -like $Pattern.($_.Type))[$_.Devices -split ',']
-                $_ | Add-Member MinMemory (($_.OCLDevices | Measure-Object -Property GlobalMemSize -Minimum | Select-Object -ExpandProperty Minimum) / 1024 / 1024)
+                $_ | Add-Member MinMemory (($_.OCLDevices | Measure-Object -Property GlobalMemSize -Minimum | Select-Object -ExpandProperty Minimum) / 1MB )
             }
 
             $_ | Add-Member Id $c
             $c++
 
-            $_ | Add-Member DeviceArray     @($_.Devices -split ',' | ForEach-Object {[int]$_})             # @(0,1,2,10,11,12)
+            $_ | Add-Member DeviceArray     @([int[]]($_.Devices -split ','))                               # @(0,1,2,10,11,12)
 
             $_ | Add-Member DevicesClayMode (($_.DeviceArray | ForEach-Object {'{0:X}' -f $_}) -join '')    # 012ABC
             $_ | Add-Member DevicesETHMode  ($_.DeviceArray -join ' ')                                      # 0 1 2 10 11 12
@@ -500,7 +500,7 @@ Function Get_Mining_Types () {
             $_ | Add-Member DeviceCount     ($_.DeviceArray.count)                                          # 6
 
             $_ | Add-Member Platform (Get_Gpu_Platform $_.Type)
-            $_.PowerLimits = $_.PowerLimits -split ',' | ForEach-Object {[int]$_} | Sort-Object -Descending -Unique
+            $_.PowerLimits = @([int[]]($_.PowerLimits -split ',') | Sort-Object -Descending -Unique)
 
             if (
                 $_.PowerLimits.Count -eq 0 -or
