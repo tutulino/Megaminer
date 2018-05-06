@@ -1,0 +1,15 @@
+{
+    "Path": "sgminer.exe",
+    "Uri": "https://github.com/yuzi-co/sgminer-kl-x16r/releases/download/1.0/sgminer-4ward-x16-1.0.7z",
+    "SHA256": "1046a8165cb1a86fa2f83a0cf78df8069315d88f81595774cbc644cf8dd08007",
+    "Type": "AMD",
+    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "BenchmarkArg": "--benchmark",
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Fee": 0.01,
+    "Algorithms": {
+        "X16r": "-k x16r -g 2 -w 64 -X 256",
+        "X16s": "-k x16s -g 2 -w 64 -X 256"
+    }
+}
