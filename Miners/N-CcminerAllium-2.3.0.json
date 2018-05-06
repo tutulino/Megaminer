@@ -1,0 +1,11 @@
+{
+    "Path": "ccminer-x64.exe",
+    "Uri": "https://github.com/Fedeparma74/Miners/releases/download/1.0/CcminerAllium-2.3.0.rar",
+    "Type": "NVIDIA",
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Allium": "-a allium"
+    }
+}
