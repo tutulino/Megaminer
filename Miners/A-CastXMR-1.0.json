@@ -11,6 +11,6 @@
         "CryptoLightV7": "--algo=4",
         "CryptoNightV7": "--algo=1",
         "CryptoNightHeavy": "--algo=2",
-        "CryptoNightIPBC": "--algo=5"
+        "CryptoLightIPBC": "--algo=5"
     }
 }

@@ -12,6 +12,6 @@
         "CryptoLightV7": "--currency cryptonight_lite_v7",
         "CryptoNightV7": "--currency cryptonight_v7",
         "CryptoNightHeavy": "--currency cryptonight_heavy",
-        "CryptoNightIPBC": "--currency ipbc"
+        "CryptoLightIPBC": "--currency ipbc"
     }
 }
