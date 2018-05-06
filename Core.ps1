@@ -20,10 +20,6 @@ param(
 
 . .\Include.ps1
 
-if ((get_config_variable "Afterburner") -eq "Enabled") {
-    . .\Includes\afterburner.ps1
-}
-
 ##Parameters for testing, must be commented on real use
 
 
@@ -200,6 +196,11 @@ if ($config.ApiPort -gt 0) {
 }
 
 $Quit = $false
+
+# Initialize MSI Afterburner
+if ((get_config_variable "Afterburner") -eq "Enabled") {
+    . .\Includes\afterburner.ps1
+}
 
 #-----------------------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------
@@ -971,7 +972,7 @@ while ($Quit -eq $false) {
             ) {
                 #Must launch other SubMiner
                 if ($BestNow.PowerLimit -gt 0) {
-                    if ($config.Afterburner -eq 'Enabled') {
+                    if ($abControl) {
                         set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
                     } else {
                         if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA') {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
@@ -1036,7 +1037,7 @@ while ($Quit -eq $false) {
 
                 #Start New
                 if ($BestNow.PowerLimit -gt 0) {
-                    if ($config.Afterburner -eq 'Enabled') {
+                    if ($abControl) {
                         set_ab_powerlimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
                     } else {
                         if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA') {set_Nvidia_PowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}

@@ -213,10 +213,10 @@ function get_devices_information ($Types) {
 
     $Devices = @()
 
-    if ((get_config_variable "Afterburner") -eq "Enabled") {
+    if ($abMonitor) {
 
         $abMonitor.ReloadAll()
-        $abControl.ReloadAll()
+        if ($abControl) {$abControl.ReloadAll()}
 
         foreach ($Type in @('AMD', 'NVIDIA', 'Intel')) {
             $DeviceId = 0
@@ -326,7 +326,7 @@ function get_devices_information ($Types) {
         $CpuResult = @(Get-CimInstance Win32_Processor)
 
         ### Not sure how Afterburner results look with more than 1 CPU
-        if ((get_config_variable "Afterburner") -eq "Enabled" -and $CpuResult.count -eq 1) {
+        if ($abMonitor -and $CpuResult.count -eq 1) {
             $abMonitor.ReloadAll()
             $CPUData = $abMonitor.Entries | Where-Object SrcName -like "CPU*"
 
@@ -505,7 +505,7 @@ Function Get_Mining_Types () {
             if (
                 $_.PowerLimits.Count -eq 0 -or
                 $_.Type -in @('Intel') -or
-                ($_.Type -in @('AMD') -and (get_config_variable "Afterburner") -ne 'Enabled')
+                ($_.Type -in @('AMD') -and !$abControl)
             ) {$_.PowerLimits = @(0)}
 
             $_ | Add-Member Algorithms ((get_config_variable ("Algorithms_" + $_.Type)) -split ',')
