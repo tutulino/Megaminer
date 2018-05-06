@@ -1,6 +1,7 @@
 {
     "Path": "hsrminer_neoscrypt.exe",
     "Uri": "https://github.com/palginpav/hsrminer/raw/master/Neoscrypt%20algo/Windows/hsrminer_neoscrypt.exe",
+    "SHA256": "8947d773886cce727a8e7be8d69e5e372163116cac4bd87568cb996f757d420a",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Palgin",

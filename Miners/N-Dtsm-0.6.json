@@ -1,6 +1,7 @@
 {
     "Path": "zm_0.6_win\\zm.exe",
     "Uri": "https://github.com/tutulino/Software/releases/download/0/zm_0.6_win.zip",
+    "SHA256": "e699244a46dc902b21d12921962fed7c55b5246f8d3a2d4c6ab197d688691600",
     "Type": "NVIDIA",
     "Arguments": "--server #SERVER# --port #PORT# --user #LOGIN# --pass #PASSWORD# --color --dev #DEVICESETHMODE# --telemetry=127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
     "API": "DTSM",

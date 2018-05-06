@@ -1,6 +1,7 @@
 {
     "Path": "ccminer-x64\\ccminer.exe",
     "Uri": "https://github.com/dallar-project/ccminer/files/1596594/ccminer-x64.zip",
+    "SHA256": "b1553f909753fb859bca0ce0bfb5200a34e678396f884419e914131940f78c30",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",

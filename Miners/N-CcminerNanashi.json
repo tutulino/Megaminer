@@ -1,6 +1,7 @@
 {
     "Path": "ccminer-2.2-mod-r2-CUDA9\\ccminer.exe",
     "Uri": "https://github.com/Nanashi-Meiyo-Meijin/ccminer/releases/download/v2.2-mod-r2/2.2-mod-r2-CUDA9.binary.zip",
+    "SHA256": "1e26461b31edf6a8d60373f05f62b9f3bb83b0107a41f2223856aaa1b2b7e6a0",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",

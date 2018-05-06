@@ -1,6 +1,7 @@
 {
     "Path": "ccminer-2.2-mod-r1\\ccminer.exe",
     "Uri": "https://github.com/scaras/ccminer-2.2-mod-r1/releases/download/2.2-r1/2.2-mod-r1.zip",
+    "SHA256": "7476651d229ef772be3ded962f9b19aeb4ad691c544b75c73df92bd826a0eb48",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",

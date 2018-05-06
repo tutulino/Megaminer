@@ -1,6 +1,7 @@
 {
     "Path": "excavator\\excavator.exe",
     "Uri": "https://github.com/nicehash/excavator/releases/download/v1.4.4a/excavator_v1.4.4a_NVIDIA_Win64.zip",
+    "SHA256": "8922df00ea62affc6039701885f10a59b3bbdc3b966beb4d4d8068201e914560",
     "Type": "NVIDIA",
     "GenerateConfigFile": "excavator\\#GROUPNAME#.json",
     "PatternConfigFile": ".\\Patterns\\excavatorPattern.txt",

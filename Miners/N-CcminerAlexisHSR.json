@@ -1,6 +1,7 @@
 {
     "Path": "ccminer-alexis.exe",
     "Uri": "http://ccminer.org/preview/ccminer-hsr-alexis-x86-cuda8.7z",
+    "SHA256": "446a01d6acb1bc3f1da7aa43bddb2b00a6ecf2aab617e3a9d170eee183e1aa07",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",

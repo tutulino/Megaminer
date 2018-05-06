@@ -1,6 +1,7 @@
 {
     "Path": "ccminer.exe",
     "Uri": "https://github.com/tutulino/Software/releases/download/0/ccminer-alexis78-ms2013-cuda7.5.zip",
+    "SHA256": "256d5d00a785c3c41c85456e7b614f6c62567fff331cef47582f88a072254163",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",

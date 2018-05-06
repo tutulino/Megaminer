@@ -1,6 +1,7 @@
 {
     "Path": "ccminer-phi-1.0\\ccminer.exe",
     "Uri": "https://github.com/216k155/ccminer-phi-anxmod/releases/download/ccminer%2Fphi-1.0/ccminer-phi-1.0.zip",
+    "SHA256": "c24103c03aabf1688c5c8a2b2b477c64612880f8e769d5c934b623fd01f84760",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",

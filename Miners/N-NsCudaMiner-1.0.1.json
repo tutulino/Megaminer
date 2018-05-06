@@ -1,6 +1,7 @@
 {
     "Path": "cudaminer-neoscrypt-win-1.0.1\\cudaminer-x64.exe",
     "Uri": "https://github.com/ghostlander/cudaminer-neoscrypt/releases/download/v1.0.1/cudaminer-neoscrypt-win-1.0.1.zip",
+    "SHA256": "272972c7ee9c9ba81daebce18ec710dc937c8eb5b00aa73f653bd7deafdf3cfe",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",

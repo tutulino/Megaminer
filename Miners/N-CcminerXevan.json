@@ -1,6 +1,7 @@
 {
     "Path": "ccminer.exe",
     "Uri": "https://github.com/krnlx/ccminer-xevan/releases/download/0.1/ccminer.exe",
+    "SHA256": "f8b2120127c88ec8d91f59305e6f1c5c18b2c614b0e68643701849a01874ff1d",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",

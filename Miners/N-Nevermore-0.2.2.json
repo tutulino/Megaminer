@@ -1,6 +1,7 @@
 {
     "Path": "nevermore-win64\\ccminer.exe",
     "Uri": "https://github.com/brian112358/nevermore-miner/releases/download/v0.2.2/nevermore-v0.2.2-win64.zip",
+    "SHA256": "c32c903d155057e2fbaa0511fedcadf7d73984f5ac2af858a5ac5411b1b9e69b",
     "Type": "NVIDIA",
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",
