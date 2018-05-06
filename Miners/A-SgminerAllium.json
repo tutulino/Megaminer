@@ -7,6 +7,6 @@
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "Allium": "-k allium --nfactor 11 -I 21 -w 64 -g 2"
+        "Allium": "-k allium --nfactor 11 -I 14 -w 64 -g 2"
     }
 }
