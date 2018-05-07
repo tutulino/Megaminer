@@ -218,7 +218,7 @@ function get_devices_information ($Types) {
         $abMonitor.ReloadAll()
         if ($abControl) {$abControl.ReloadAll()}
 
-        foreach ($Type in @('AMD', 'NVIDIA', 'Intel')) {
+        foreach ($Type in @('AMD', 'NVIDIA')) {
             $DeviceId = 0
             $Pattern = @{
                 AMD    = '*Radeon*'
@@ -227,7 +227,7 @@ function get_devices_information ($Types) {
             }
             @($abMonitor.GpuEntries | Where-Object Device -like $Pattern.$Type) | ForEach-Object {
                 $CardData = $abMonitor.Entries | Where-Object GPU -eq $_.Index
-                $Group = $($Types | Where-Object Type -eq $Type | Where-Object DeviceArray -contains $DeviceId).GroupName
+                $Group = $($Types | Where-Object Type -eq $Type | Where-Object DevicesArray -contains $DeviceId).GroupName
                 $Card = @{
                     Type              = $Type
                     Id                = $DeviceId
@@ -256,7 +256,7 @@ function get_devices_information ($Types) {
                 if ($SMIresultSplit.count -gt 10) {
                     #less is error or no NVIDIA gpu present
 
-                    $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object DeviceArray -contains $DeviceId).groupname
+                    $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object DevicesArray -contains $DeviceId).groupname
 
                     $Card = [pscustomObject]@{
                         Type              = 'NVIDIA'
@@ -295,7 +295,7 @@ function get_devices_information ($Types) {
                 $AdlResult | ForEach-Object {
 
                     $AdlResultSplit = $_ -split (",")
-                    $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object DeviceArray -contains $DeviceId).groupname
+                    $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object DevicesArray -contains $DeviceId).groupname
 
                     $Card = [pscustomObject]@{
                         Type              = 'AMD'
@@ -383,22 +383,20 @@ function get_devices_information ($Types) {
 
 function print_devices_information ($Devices) {
 
-    foreach ($T in @('NVIDIA', 'AMD', 'Intel')) {
-        $Devices | Where-Object Type -eq $T | Format-Table -Wrap  (
-            @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
-            @{Label = "Group"; Expression = {$_.Group}; Align = 'right'},
-            @{Label = "Name"; Expression = {$_.Name}},
-            @{Label = "Load"; Expression = {[string]$_.Utilization + "%"}; Align = 'right'},
-            @{Label = "Mem"; Expression = {[string]$_.UtilizationMem + "%"}; Align = 'right'},
-            @{Label = "Temp"; Expression = {$_.Temperature}; Align = 'right'},
-            @{Label = "Fan"; Expression = {[string]$_.FanSpeed + "%"}; Align = 'right'},
-            @{Label = "Power"; Expression = {[string]$_.PowerDraw + "W"}; Align = 'right'},
-            @{Label = "PwLim"; Expression = {[string]$_.PowerLimitPercent + '%'}; Align = 'right'},
-            @{Label = "Pstate"; Expression = {$_.pstate}; Align = 'right'},
-            @{Label = "Clock"; Expression = {[string]$_.Clock + "Mhz"}; Align = 'right'},
-            @{Label = "ClkMem"; Expression = {[string]$_.ClockMem + "Mhz"}; Align = 'right'}
-        ) -groupby Type | Out-Host
-    }
+    $Devices | Where-Object Type -ne 'CPU' | Sort-Object Type | Format-Table -Wrap  (
+        @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
+        @{Label = "Group"; Expression = {$_.Group}; Align = 'right'},
+        @{Label = "Name"; Expression = {$_.Name}},
+        @{Label = "Load"; Expression = {[string]$_.Utilization + "%"}; Align = 'right'},
+        @{Label = "Mem"; Expression = {[string]$_.UtilizationMem + "%"}; Align = 'right'},
+        @{Label = "Temp"; Expression = {$_.Temperature}; Align = 'right'},
+        @{Label = "Fan"; Expression = {[string]$_.FanSpeed + "%"}; Align = 'right'},
+        @{Label = "Power"; Expression = {[string]$_.PowerDraw + "W"}; Align = 'right'},
+        @{Label = "PwLim"; Expression = {[string]$_.PowerLimitPercent + '%'}; Align = 'right'},
+        @{Label = "Pstate"; Expression = {$_.pstate}; Align = 'right'},
+        @{Label = "Clock"; Expression = {[string]$_.Clock + "Mhz"}; Align = 'right'},
+        @{Label = "ClkMem"; Expression = {[string]$_.ClockMem + "Mhz"}; Align = 'right'}
+    ) -groupby Type | Out-Host
 
     $Devices | Where-Object Type -eq 'CPU' | Format-Table -Wrap  (
         @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
@@ -428,7 +426,22 @@ Function Get_Mining_Types () {
     if ($Filter -eq $null) {$Filter = @()} # to allow comparation after
 
     $OCLPlatforms = [OpenCl.Platform]::GetPlatformIDs()
-    $OCLDevices = @($OCLPlatforms | ForEach-Object { [OpenCl.Device]::GetDeviceIDs($_, "ALL") } | Where-Object Type -eq 'Gpu')
+    $PlatformID = 0
+    $OCLDevices = @($OCLPlatforms | ForEach-Object {
+            $Devs = [OpenCl.Device]::GetDeviceIDs($_, [OpenCl.DeviceType]::All)
+            $Devs | Add-Member PlatformID $PlatformID
+            $PlatformID++
+            $Devs
+        })
+
+    # # start fake
+    # $OCLDevices = @()
+    # $OCLDevices += [PSCustomObject]@{Name = 'Ellesmere'; Vendor = 'Advanced Micro Devices, Inc.'; GlobalMemSize = 8GB; PlatformID = 0; Type = 'Gpu'}
+    # $OCLDevices += [PSCustomObject]@{Name = 'Ellesmere'; Vendor = 'Advanced Micro Devices, Inc.'; GlobalMemSize = 8GB; PlatformID = 0; Type = 'Gpu'}
+    # $OCLDevices += [PSCustomObject]@{Name = 'Ellesmere'; Vendor = 'Advanced Micro Devices, Inc.'; GlobalMemSize = 4GB; PlatformID = 0; Type = 'Gpu'}
+    # $OCLDevices += [PSCustomObject]@{Name = 'GeForce 1060'; Vendor = 'NVIDIA Corporation'; GlobalMemSize = 3GB; PlatformID = 1; Type = 'Gpu'}
+    # $OCLDevices += [PSCustomObject]@{Name = 'GeForce 1060'; Vendor = 'NVIDIA Corporation'; GlobalMemSize = 3GB; PlatformID = 1; Type = 'Gpu'}
+    # # end fake
 
     $Types0 = get_config_variable "GpuGroups"
 
@@ -439,20 +452,38 @@ Function Get_Mining_Types () {
         # Autodetection on, must add types manually
         $Types0 = @()
 
-        foreach ($Type in @('AMD', 'NVIDIA')) {
-            $Pattern = @{
-                AMD    = '*Advanced Micro Devices*'
-                NVIDIA = '*NVIDIA*'
-                Intel  = '*Intel*'
-            }
-            $Devices = @($OCLDevices | Where-Object Vendor -like $Pattern.$Type)
-            if ($Devices) {
-                $Types0 += [PSCustomObject] @{
-                    GroupName   = $Type
-                    Type        = $Type
-                    Devices     = 0..$($Devices.Count - 1) -join ','
-                    Powerlimits = "0"
+        $OCLDevices | Where-Object Type -eq 'Gpu' | Group-Object -Property PlatformID | ForEach-Object {
+            $DeviceID = 0
+            $_.Group | ForEach-Object {
+
+                Switch ($_.Vendor) {
+                    "Advanced Micro Devices, Inc." {$Type = "AMD"}
+                    "NVIDIA Corporation" {$Type = "NVIDIA"}
+                    # "Intel(R) Corporation" {$Type = "INTEL"} #Nothing to be mined on Intel iGPU
+                    default {$Type = $false}
                 }
+
+                $Name_Norm = (Get-Culture).TextInfo.ToTitleCase(($_.Name)) -replace "[^A-Z0-9]"
+                $MemoryGB = [int]($_.GlobalMemSize / 1GB)
+                $PlatformID = $_.PlatformID
+
+                if ($Type) {
+                    if (($Types0 | Where-Object {$_.GroupName -eq ($Name_Norm + $MemoryGB) -and $_.Platform -eq $PlatformID}) -eq $null) {
+                        $Types0 += [PSCustomObject] @{
+                            GroupName   = $Name_Norm + $MemoryGB
+                            Type        = $Type
+                            Devices     = [string]$DeviceID
+                            Platform    = $PlatformID
+                            MemoryGB    = $MemoryGB
+                            PowerLimits = "0"
+                        }
+                    } else {
+                        $Types0 | Where-Object {$_.GroupName -eq ($Name_Norm + $MemoryGB) -and $_.Platform -eq $PlatformID} | ForEach-Object {
+                            $_.Devices += "," + $DeviceID
+                        }
+                    }
+                }
+                $DeviceID++
             }
         }
     } else {
@@ -466,40 +497,53 @@ Function Get_Mining_Types () {
         $Filter -contains "CPU" -or
         $Types0.Length -eq 0
     ) {
-        $Types0 += [PSCustomObject] @{
-            GroupName   = "CPU"
-            Type        = "CPU"
-            Devices     = $null
-            PowerLimits = "0"
+        $OCLDevices | Where-Object Type -eq 'Cpu' | Group-Object -Property PlatformID | Select-Object -First 1 | ForEach-Object {
+            $DeviceID = 0
+            $_.Group | ForEach-Object {
+
+                $MemoryGB = [int]($_.GlobalMemSize / 1GB)
+
+                if (($Types0 | Where-Object GroupName -eq 'CPU') -eq $null) {
+                    $Types0 += [PSCustomObject] @{
+                        GroupName   = 'CPU'
+                        Type        = 'CPU'
+                        Devices     = [string]$DeviceID
+                        MemoryGB    = $MemoryGB
+                        PowerLimits = "0"
+                    }
+                } else {
+                    $Types0 | Where-Object GroupName -eq 'CPU' | ForEach-Object {
+                        $_.Devices += "," + $DeviceID
+                    }
+                }
+                $DeviceID++
+            }
         }
     }
 
     $Types = @()
-    $c = 0
+    $TypeID = 0
     $Types0 | ForEach-Object {
         if (!$Filter -or (Compare-Object $_.GroupName $Filter -IncludeEqual -ExcludeDifferent)) {
 
-            $Pattern = @{
-                AMD    = '*Advanced Micro Devices*'
-                NVIDIA = '*NVIDIA*'
-                Intel  = '*Intel*'
+            $_ | Add-Member ID $TypeID
+            $TypeID++
+
+            $_ | Add-Member DevicesArray @([int[]]($_.Devices -split ','))                                  # @(0,1,2,10,11,12)
+            $_ | Add-Member DevicesClayMode (($_.DevicesArray | ForEach-Object {'{0:X}' -f $_}) -join '')   # 012ABC
+            $_ | Add-Member DevicesETHMode  ($_.DevicesArray -join ' ')                                     # 0 1 2 10 11 12
+            $_ | Add-Member DevicesNsgMode  (($_.DevicesArray | ForEach-Object { "-d " + $_}) -join ' ')    # -d 0 -d 1 -d 2 -d 10 -d 11 -d 12
+            $_ | Add-Member DevicesCount    ($_.DevicesArray.count)                                         # 6
+
+            switch ($_.Type) {
+                AMD { $Pattern = 'Advanced Micro Devices, Inc.' }
+                NVIDIA { $Pattern = 'NVIDIA Corporation' }
+                INTEL { $Pattern = 'Intel(R) Corporation' }
             }
-            if ($_.Devices) {
-                $_ | Add-Member OCLDevices @($OCLDevices | Where-Object Vendor -like $Pattern.($_.Type))[$_.Devices -split ',']
-                $_ | Add-Member MinMemory (($_.OCLDevices | Measure-Object -Property GlobalMemSize -Minimum | Select-Object -ExpandProperty Minimum) / 1MB )
-            }
+            $_ | Add-Member OCLDevices @($OCLDevices | Where-Object Vendor -eq $Pattern)[$_.DevicesArray]
+            if ($_.Platform -eq $null) {$_ | Add-Member Platform ($_.OCLDevices.PlatformID | Select-Object -First 1)}
+            if ($_.MemoryGB -eq $null) {$_ | Add-Member MemoryGB ([int](($_.OCLDevices | Measure-Object -Property GlobalMemSize -Minimum | Select-Object -ExpandProperty Minimum) / 1GB ))}
 
-            $_ | Add-Member Id $c
-            $c++
-
-            $_ | Add-Member DeviceArray     @([int[]]($_.Devices -split ','))                               # @(0,1,2,10,11,12)
-
-            $_ | Add-Member DevicesClayMode (($_.DeviceArray | ForEach-Object {'{0:X}' -f $_}) -join '')    # 012ABC
-            $_ | Add-Member DevicesETHMode  ($_.DeviceArray -join ' ')                                      # 0 1 2 10 11 12
-            $_ | Add-Member DevicesNsgMode  (($_.DeviceArray | ForEach-Object { "-d " + $_}) -join ' ')     # -d 0 -d 1 -d 2 -d 10 -d 11 -d 12
-            $_ | Add-Member DeviceCount     ($_.DeviceArray.count)                                          # 6
-
-            $_ | Add-Member Platform (Get_Gpu_Platform $_.Type)
             $_.PowerLimits = @([int[]]($_.PowerLimits -split ',') | Sort-Object -Descending -Unique)
 
             if (
@@ -1665,7 +1709,7 @@ function Check_DeviceGroups_Config ($types) {
             WriteLog ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config") $LogFile $false
             write-warning ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config")
             start-sleep 5
-        } elseif ($DetectedDevices.count -ne $_.DeviceCount) {
+        } elseif ($DetectedDevices.count -ne $_.DevicesCount) {
             WriteLog ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat") $LogFile $false
             write-warning ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat")
             start-sleep 5

@@ -38,7 +38,7 @@ function set_ab_powerlimit ([int]$PowerLimitPercent, $DeviceGroup) {
         throw "Failed to communicate with MSI Afterburner"
     }
 
-    if ($DeviceGroup.DeviceArray.Length -gt 0) {
+    if ($DeviceGroup.DevicesArray.Length -gt 0) {
 
         $PowerLimit = $PowerLimitPercent - 100
 
@@ -48,7 +48,7 @@ function set_ab_powerlimit ([int]$PowerLimitPercent, $DeviceGroup) {
             Intel  = '*Intel*'
         }
 
-        $Devices = @($abMonitor.GpuEntries | Where-Object Device -like $Pattern.$($DeviceGroup.Type) | Select-Object -ExpandProperty Index)[$DeviceGroup.DeviceArray]
+        $Devices = @($abMonitor.GpuEntries | Where-Object Device -like $Pattern.$($DeviceGroup.Type) | Select-Object -ExpandProperty Index)[$DeviceGroup.DevicesArray]
 
         foreach ($device in $Devices) {
             if ($abControl.GpuEntries[$device].PowerLimitCur -ne $PowerLimit) {

@@ -356,12 +356,12 @@ while ($Quit -eq $false) {
 
     $AllPools | Select-Object name -unique | ForEach-Object {WriteLog ("Pool " + $_.Name + " was responsive...") $LogFile $true}
 
-    WriteLog ("Detected " + [string]$AllPools.Count + " pools...") $LogFile $true
+    WriteLog ("Detected $($AllPools.Count) pools...") $LogFile $true
 
     #Filter by minworkers variable (only if there is any pool greater than minimum)
     $Pools = ($AllPools | Where-Object {$_.PoolWorkers -ge $Config.MinWorkers -or $_.PoolWorkers -eq $null})
     if ($Pools.Count -ge 1) {
-        WriteLog ([string]$Pools.Count + " pools left after min workers filter...") $LogFile $true
+        WriteLog ("$($Pools.Count) pools left after min workers filter...") $LogFile $true
     } else {
         $Pools = $AllPools
         WriteLog ("No pools with workers greater than minimum config, filter is discarded...") $LogFile $true
@@ -447,10 +447,10 @@ while ($Quit -eq $false) {
                 $Algorithms = $AlgoName + $(if ($AlgoNameDual) {"_$AlgoNameDual"})
 
                 # Check memory constraints on miners
-                if ($TypeGroup.MinMemory -gt 0) {
+                if ($TypeGroup.MemoryGB -gt 0) {
                     $SkipLabel = $false
                     if ($AlgoLabel -match '(?<mem>\d+)gb.*') {
-                        if ($TypeGroup.MinMemory -lt [int]$Matches.mem * 1024) {$SkipLabel = $true}
+                        if ($TypeGroup.MemoryGB -lt [int]$Matches.mem) {$SkipLabel = $true}
                     }
                     if ($SkipLabel) {
                         Writelog ($MinerFile.BaseName + "/" + $Algorithms + "/" + $AlgoLabel + " skipped due to constraints") $LogFile $false
@@ -1383,14 +1383,18 @@ while ($Quit -eq $false) {
 
         Print_Horizontal_line
 
-        $ScreenOut = $ActiveMiners.Subminers | Where-Object Best | Sort-Object {$ActiveMiners[$_.IdF].DeviceGroup.GroupName} | ForEach-Object {
+        $ScreenOut = $ActiveMiners.Subminers |
+            Where-Object Best | Sort-Object `
+        @{expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName -eq 'CPU'}; Ascending = $true},
+        @{expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}; Ascending = $true} |
+            ForEach-Object {
             [PSCustomObject]@{
                 GroupName   = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
-                MMPowLmt    = if ($_.PowerLimit -gt 0) {$_.PowerLimit} else {""}
+                PwLim       = if ($_.PowerLimit -gt 0) {$_.PowerLimit} else {""}
                 LocalSpeed  = "$(ConvertTo_Hash $_.SpeedLive)" + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"/$(ConvertTo_Hash $_.SpeedLiveDual)"})
-                mbtc_Day    = ((($_.RevenueLive + $_.RevenueLiveDual) * 1000).tostring("n5"))
-                Rev_Day     = ((($_.RevenueLive + $_.RevenueLiveDual) * $localBTCvalue ).tostring("n2"))
-                Profit_Day  = (($_.ProfitsLive).tostring("n2"))
+                mbtcDay     = ((($_.RevenueLive + $_.RevenueLiveDual) * 1000).tostring("n5"))
+                RevDay      = ((($_.RevenueLive + $_.RevenueLiveDual) * $localBTCvalue ).tostring("n2"))
+                ProfitDay   = (($_.ProfitsLive).tostring("n2"))
                 Algorithm   = $ActiveMiners[$_.IdF].Algorithms + $(if ($ActiveMiners[$_.IdF].AlgoLabel) {'|' + $ActiveMiners[$_.IdF].AlgoLabel}) + $_.BestBySwitch
                 Coin        = $ActiveMiners[$_.IdF].Symbol + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"_$($ActiveMiners[$_.IdF].SymbolDual)"})
                 Miner       = $ActiveMiners[$_.IdF].Name
@@ -1410,12 +1414,12 @@ while ($Quit -eq $false) {
             @{Label = "Coin"; Expression = {$_.Coin}},
             @{Label = "Miner"; Expression = {$_.Miner}},
             @{Label = "LocalSpeed"; Expression = {$_.LocalSpeed} ; Align = 'right'},
-            @{Label = "PwLim"; Expression = {$_.MMPowLmt} ; Align = 'right'},
+            @{Label = "PwLim"; Expression = {$_.PwLim} ; Align = 'right'},
             @{Label = "Watt"; Expression = {$_.Power} ; Align = 'right'},
             @{Label = "$LocalCurrency/W"; Expression = {$_.EfficiencyW}  ; Align = 'right'},
-            @{Label = "mBTC/Day"; Expression = {$_.mbtc_Day} ; Align = 'right'},
-            @{Label = "$LocalCurrency/Day"; Expression = {$_.Rev_Day} ; Align = 'right'},
-            @{Label = "Profit/Day"; Expression = {$_.Profit_Day} ; Align = 'right'},
+            @{Label = "mBTC/Day"; Expression = {$_.mbtcDay} ; Align = 'right'},
+            @{Label = "$LocalCurrency/Day"; Expression = {$_.RevDay} ; Align = 'right'},
+            @{Label = "Profit/Day"; Expression = {$_.ProfitDay} ; Align = 'right'},
             # @{Label = "Hash/W"; Expression = {$_.EfficiencyH} ; Align = 'right'},
             @{Label = "PoolSpeed"; Expression = {$_.PoolSpeed} ; Align = 'right'},
             @{Label = "Pool"; Expression = {$_.Pool} ; Align = 'right'},
@@ -1504,7 +1508,13 @@ while ($Quit -eq $false) {
             }
 
             #Display profits information
-            $ProfitMiners2 | Sort-Object @{expression = "GroupName"; Ascending = $true}, @{expression = "Status"; Descending = $true}, @{expression = "NeedBenchmark"; Descending = $true}, @{expression = "Profits"; Descending = $true} | Format-Table (
+            $ProfitMiners2 | Sort-Object `
+            @{expression = {$_.GroupName -eq 'CPU'}; Ascending = $true},
+            @{expression = "GroupName"; Ascending = $true},
+            @{expression = "Status"; Descending = $true},
+            @{expression = "NeedBenchmark"; Descending = $true},
+            @{expression = "Profits"; Descending = $true} |
+                Format-Table (
                 @{Label = "Algorithm"; Expression = {$_.Algorithms + $(if ($_.AlgoLabel) {"|$($_.AlgoLabel)"})}},
                 @{Label = "Coin"; Expression = {$_.Symbol + $(if ($_.AlgorithmDual) {"_$($_.SymbolDual)"})}},
                 @{Label = "Miner"; Expression = {$_.Name}},
@@ -1578,7 +1588,7 @@ while ($Quit -eq $false) {
                 $WalletsToCheck | ForEach-Object {
 
                     set_ConsolePosition 0 $YToWriteMessages
-                    "                                                                         " | Out-Host
+                    " " * 70 | Out-Host
                     set_ConsolePosition 0 $YToWriteMessages
 
                     if ($_.WalletMode -eq "WALLET") {WriteLog ("Checking " + $_.PoolName + " - " + $_.Symbol) $LogFile $true}
@@ -1651,8 +1661,10 @@ while ($Quit -eq $false) {
 
             #Display activated miners list
             $ActiveMiners.SubMiners |
-                Where-Object {$_.Stats.ActivatedTimes -gt 0} |
-                Sort-Object -Descending {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}, {$_.Stats.LastTimeActive} |
+                Where-Object {$_.Stats.ActivatedTimes -gt 0} | Sort-Object `
+            @{expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName -eq 'CPU'}; Ascending = $true},
+            @{expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}; Ascending = $true},
+            @{expression = {$_.Stats.LastTimeActive}; Descending = $true} |
                 Format-Table -Wrap -GroupBy @{Label = "Group"; Expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}} (
                 @{Label = "LastTimeActive"; Expression = {$($_.Stats.LastTimeActive).tostring("dd/MM/yy H:mm")}},
                 @{Label = "Command"; Expression = {"$($ActiveMiners[$_.IdF].Path.TrimStart((Convert-Path ".\Bin\"))) $($ActiveMiners[$_.IdF].Arguments)"}}
@@ -1676,7 +1688,10 @@ while ($Quit -eq $false) {
             #Display activated miners list
             $ActiveMiners.SubMiners |
                 Where-Object {$_.Stats.ActivatedTimes -gt 0} |
-                Sort-Object -Descending {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}, {$_.Stats.Activetime.TotalMinutes} |
+                Sort-Object `
+            @{expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName -eq 'CPU'}; Ascending = $true},
+            @{expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}; Ascending = $true},
+            @{expression = {$_.Stats.Activetime.TotalMinutes}; Descending = $true} |
                 Format-Table -Wrap -GroupBy @{Label = "Group"; Expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}}(
                 @{Label = "Algorithm"; Expression = {$ActiveMiners[$_.IdF].Algorithms + $(if ($ActiveMiners[$_.IdF].AlgoLabel) {"|$($ActiveMiners[$_.IdF].AlgoLabel)"})}},
                 @{Label = "Coin"; Expression = {$ActiveMiners[$_.IdF].Symbol + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"_$($ActiveMiners[$_.IdF].SymbolDual)"})}},
