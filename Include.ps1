@@ -420,7 +420,9 @@ function print_devices_information ($Devices) {
 Function Get_Mining_Types () {
     param(
         [Parameter(Mandatory = $false)]
-        [array]$Filter = $null
+        [array]$Filter = $null,
+        [Parameter(Mandatory = $false)]
+        [switch]$All = $false
     )
 
     if ($Filter -eq $null) {$Filter = @()} # to allow comparation after
@@ -445,10 +447,7 @@ Function Get_Mining_Types () {
 
     $Types0 = get_config_variable "GpuGroups"
 
-    if ($Types0 -eq "") {
-        # Empty GpuGroups - don't autodetect, use cpu only
-        $Types0 = @()
-    } elseif ($Types0 -eq $null) {
+    if ($Types0 -eq $null -or $All) {
         # Autodetection on, must add types manually
         $Types0 = @()
 
@@ -486,9 +485,12 @@ Function Get_Mining_Types () {
                 $DeviceID++
             }
         }
+    } elseif ($Types0 -eq "") {
+        # Empty GpuGroups - don't autodetect, use cpu only
+        [array]$Types0 = $null
     } else {
         # GpuGroups not empty - parse it
-        $Types0 = $Types0 | ConvertFrom-Json
+        [array]$Types0 = $Types0 | ConvertFrom-Json
     }
 
     #if cpu mining is enabled add a new group
