@@ -10,6 +10,7 @@
         "Bitcore": "-a bitcore",
         "Blake2s": "-a blake2s",
         "C11": "-a c11",
+        "CryptoLight": "-a cryptolight",
         "Equihash": "-a equihash",
         "HMQ1725": "-a hmq1725",
         "JHA": "-a jha",
