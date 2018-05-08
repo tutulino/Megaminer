@@ -1,7 +1,7 @@
 {
     "Path": "jce_cn_cpu_miner64.exe",
-    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.026.zip",
-    "SHA256": "9493fed630536e74f8e4f03ce173804c8cfc950d9923c0113e7e7afa4f3c7249",
+    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.027.zip",
+    "SHA256": "88bd0e3a277d05b3d6de5cc26e9d8afa80129bdc3bf870d897df8a95333f01b9",
     "Type": "CPU",
     "Arguments": "-o #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #SSL#--ssl#SSL# #NH#--nicehash#NH# --auto #ALGORITHMPARAMETERS#",
     "API": "wrapper",
