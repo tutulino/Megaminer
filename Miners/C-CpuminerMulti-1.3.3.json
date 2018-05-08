@@ -1,5 +1,5 @@
 ﻿{
-    "Path": "cpuminer-multi-1.3.3\\cpuminer-avx2.exe",
+    "Path": "cpuminer-multi-1.3.3\\cpuminer-$($f=$DeviceGroup.Features;$(if($f.avx2 -and $f.sha){'avx2-sha'}elseif($f.avx2){'avx2'}elseif($f.avx){'avx'}elseif($f.aes -and $f.sse42){'aes-sse42'}else{'sse2'})).exe",
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/cpuminer-multi-1.3.3.zip",
     "SHA256": "2c61b3d4f4474bbbe2d36ee2c8c491a1e8c59418d65c956ce8c16d5d52b85fba",
     "Type": "CPU",

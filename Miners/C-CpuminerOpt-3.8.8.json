@@ -1,5 +1,5 @@
 ﻿{
-    "Path": "cpuminer-opt-3.8.8-windows\\cpuminer-avx2.exe",
+    "Path": "cpuminer-opt-3.8.8-windows\\cpuminer-$($f=$DeviceGroup.Features;$(if($f.avx2 -and $f.sha){'avx2-sha'}elseif($f.avx2){'avx2'}elseif($f.avx){'avx'}elseif($f.aes -and $f.sse42){'aes-sse42'}else{'sse2'})).exe",
     "Uri": "https://github.com/JayDDee/cpuminer-opt/files/1939225/cpuminer-opt-3.8.8-windows.zip",
     "SHA256": "a58cc5d6d96cc67a6c6c2c218529a7c81d05cdf7b8093d6a7dea25efdf84f3e3",
     "Type": "CPU",

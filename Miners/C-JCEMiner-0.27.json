@@ -6,7 +6,7 @@
     "Arguments": "-o #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #SSL#--ssl#SSL# #NH#--nicehash#NH# --auto #ALGORITHMPARAMETERS#",
     "API": "wrapper",
     "APIPort": 4048,
-    "Fee": 0.015,
+    "Fee": "$(if($DeviceGroup.Features.aes){0.015}else{0.03})",
     "SSL": true,
     "Algorithms": {
         "CryptoLightV7": "--variation 4 --any",
