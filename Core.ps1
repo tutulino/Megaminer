@@ -477,6 +477,9 @@ while ($Quit -eq $false) {
                 foreach ($Pool in ($Pools | Where-Object Algorithm -eq $AlgoName)) {
                     #Search pools for that algo
 
+                    # If Miner limited to pools
+                    if ($Miner.Pools -and $ExecutionContext.InvokeCommand.ExpandString($Miner.Pools) -eq $false) {Continue}
+
                     if (!$AlgoNameDual -or ($Pools | Where-Object Algorithm -eq $AlgoNameDual)) {
 
                         #Set flag if both Miner and Pool support SSL
