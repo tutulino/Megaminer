@@ -1271,8 +1271,9 @@ while ($Quit -eq $false) {
             ## Hashrate Watchdog
             $WatchdogHashrateFail = $false
             if (
-                $Config.WatchdogHashrate -and
-                $_.HashRate -and
+                $Config.WatchdogHashrate -gt 0 -and
+                $ActiveMiners[$_.IdF].Algorithm -notin ($Config.WatchdogExcludeAlgos -split ',') -and
+                $_.HashRate -gt 0 -and
                 $_.SpeedReads.count -gt 20
             ) {
                 $AvgCurr = $_.SpeedReads[-10..-1] | Measure-Object -Average -Property Speed | Select-Object -ExpandProperty Average
@@ -1284,7 +1285,7 @@ while ($Quit -eq $false) {
                     # Remove failing SpeedReads from statistics to prevent average skewing
                     $_.SpeedReads = $_.SpeedReads[0..($_.SpeedReads.count - 10)]
                     $WatchdogHashrateFail = $true
-                    WriteLog ("Detected low hashrate " + $ActiveMiners[$_.IdF].Name + "/" + $ActiveMiners[$_.IdF].Algorithm + ": " + (ConvertTo_Hash $AvgCurr) + " vs " + (ConvertTo_Hash $_.HashRate)) $LogFile $false
+                    WriteLog ("Detected low hashrate $($ActiveMiners[$_.IdF].Name)/$($ActiveMiners[$_.IdF].Algorithm) : $(ConvertTo_Hash $AvgCurr) vs $(ConvertTo_Hash $_.HashRate)") $LogFile $false
                 }
             }
 
