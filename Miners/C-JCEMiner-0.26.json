@@ -1,7 +1,7 @@
 {
     "Path": "jce_cn_cpu_miner64.exe",
-    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.025.zip",
-    "SHA256": "e3b2e293254c699f3114acd051922a65182eb3d9f7abeaf9525e320278d5a743",
+    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.026.zip",
+    "SHA256": "9493fed630536e74f8e4f03ce173804c8cfc950d9923c0113e7e7afa4f3c7249",
     "Type": "CPU",
     "Arguments": "-o #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #SSL#--ssl#SSL# #NH#--nicehash#NH# --auto #ALGORITHMPARAMETERS#",
     "API": "wrapper",
@@ -12,6 +12,7 @@
         "CryptoLightV7": "--variation 4 --any",
         "CryptoNightV7": "--variation 3 --any",
         "CryptoNightHeavy": "--variation 5 --any",
-        "CryptoLightIPBC": "--variation 6 --any"
+        "CryptoLightIPBC": "--variation 6 --any",
+        "CryptoNightXTL": "--variation 7 --any"
     }
 }
