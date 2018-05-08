@@ -236,13 +236,13 @@ while ($Quit -eq $false) {
     }
 
     #get mining types
-    $Types = Get_Mining_Types -filter $GroupNames
+    $DeviceGroups = Get_Mining_Types -filter $GroupNames
 
-    WriteLog ( get_devices_information $Types | ConvertTo-Json) $LogFile $false
-    WriteLog ( $Types | ConvertTo-Json) $LogFile $false
-    if ($FirstTotalExecution) {Check_DeviceGroups_Config $types}
+    WriteLog ( get_devices_information $DeviceGroups | ConvertTo-Json) $LogFile $false
+    WriteLog ( $DeviceGroups | ConvertTo-Json) $LogFile $false
+    if ($FirstTotalExecution) {Check_DeviceGroups_Config $DeviceGroups}
 
-    $NumberTypesGroups = ($Types | Measure-Object).count
+    $NumberTypesGroups = ($DeviceGroups | Measure-Object).count
     if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [Math]::Floor(30 / $NumberTypesGroups) - 5} #screen adjust to number of groups
     if ($FirstTotalExecution) {$ProfitsScreenLimit = $InitialProfitsScreenLimit}
 
@@ -385,9 +385,9 @@ while ($Quit -eq $false) {
     WriteLog ("Select top pool for each algo in config and check availability...") $LogFile $true
     $PoolsFiltered = $Pools | Group-Object -Property Algorithm | ForEach-Object {
         $NeedPool = $false
-        foreach ($TypeGroup in $Types) {
+        foreach ($DeviceGroup in $DeviceGroups) {
             ## Is pool algorithm defined in config?
-            $AlgoList = $TypeGroup.Algorithms | ForEach-Object {$_ -split '_'} | Select-Object -Unique
+            $AlgoList = $DeviceGroup.Algorithms | ForEach-Object {$_ -split '_'} | Select-Object -Unique
             if (!$AlgoList -or $_.Name -in $AlgoList) {$NeedPool = $true}
         }
         if ($NeedPool) {
@@ -428,7 +428,7 @@ while ($Quit -eq $false) {
     $MinersFolderContent = (Get-ChildItem "Miners" -Filter "*.json")
 
     WriteLog ("Files in miner folder: " + [string]($MinersFolderContent.count)) $LogFile $false
-    WriteLog ("Number of device groups: " + $types.count) $LogFile $false
+    WriteLog ("Number of device groups: " + $DeviceGroups.count) $LogFile $false
 
     foreach ($MinerFile in $MinersFolderContent) {
         try { $Miner = $MinerFile | Get-Content | ConvertFrom-Json }
@@ -437,17 +437,17 @@ while ($Quit -eq $false) {
             Exit
         }
 
-        foreach ($TypeGroup in $types) {
+        foreach ($DeviceGroup in $DeviceGroups) {
             #generate a line for each device group that has algorithm as valid
-            if ($Miner.Type -ne $TypeGroup.type) {
-                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is NOT valid for " + $TypeGroup.GroupName + "...ignoring") $LogFile $false }
+            if ($Miner.Type -ne $DeviceGroup.type) {
+                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is NOT valid for " + $DeviceGroup.GroupName + "...ignoring") $LogFile $false }
                 continue
-            } elseif ($Config.("ExcludeMiners_" + $TypeGroup.GroupName) -and ($Config.("ExcludeMiners_" + $TypeGroup.GroupName).split(',') | Where-Object {$MinerFile.BaseName -like $_})) {
-                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is Excluded for " + $TypeGroup.GroupName + "...ignoring") $LogFile $false }
+            } elseif ($Config.("ExcludeMiners_" + $DeviceGroup.GroupName) -and ($Config.("ExcludeMiners_" + $DeviceGroup.GroupName).split(',') | Where-Object {$MinerFile.BaseName -like $_})) {
+                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is Excluded for " + $DeviceGroup.GroupName + "...ignoring") $LogFile $false }
                 continue
             } else {
                 #check group and miner types are the same
-                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is valid for " + $TypeGroup.GroupName) $LogFile $false }
+                if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is valid for " + $DeviceGroup.GroupName) $LogFile $false }
             }
 
 
@@ -461,10 +461,10 @@ while ($Quit -eq $false) {
                 $Algorithms = $AlgoName + $(if ($AlgoNameDual) {"_$AlgoNameDual"})
 
                 # Check memory constraints on miners
-                if ($TypeGroup.MemoryGB -gt 0) {
+                if ($DeviceGroup.MemoryGB -gt 0) {
                     $SkipLabel = $false
                     if ($AlgoLabel -match '(?<mem>\d+)gb.*') {
-                        if ($TypeGroup.MemoryGB -lt [int]$Matches.mem) {$SkipLabel = $true}
+                        if ($DeviceGroup.MemoryGB -lt [int]$Matches.mem) {$SkipLabel = $true}
                     }
                     if ($SkipLabel) {
                         Writelog ($MinerFile.BaseName + "/" + $Algorithms + "/" + $AlgoLabel + " skipped due to constraints") $LogFile $false
@@ -472,7 +472,7 @@ while ($Quit -eq $false) {
                     }
                 }
 
-                if ($TypeGroup.Algorithms -and $Algorithms -notin $TypeGroup.Algorithms) {continue} #check config has this algo as minable
+                if ($DeviceGroup.Algorithms -and $Algorithms -notin $DeviceGroup.Algorithms) {continue} #check config has this algo as minable
 
                 foreach ($Pool in ($Pools | Where-Object Algorithm -eq $AlgoName)) {
                     #Search pools for that algo
@@ -487,9 +487,9 @@ while ($Quit -eq $false) {
 
                         #Replace wildcards patterns
                         if ($Pool.PoolName -eq 'Nicehash') {
-                            $WorkerName2 = $WorkerName + $TypeGroup.GroupName #Nicehash requires alphanumeric WorkerNames
+                            $WorkerName2 = $WorkerName + $DeviceGroup.GroupName #Nicehash requires alphanumeric WorkerNames
                         } else {
-                            $WorkerName2 = $WorkerName + '_' + $TypeGroup.GroupName
+                            $WorkerName2 = $WorkerName + '_' + $DeviceGroup.GroupName
                         }
                         $PoolUser = $Pool.User -replace '#WorkerName#', $WorkerName2
                         $PoolPass = $Pool.Pass -replace '#WorkerName#', $WorkerName2
@@ -500,16 +500,16 @@ while ($Quit -eq $false) {
                             '#Port#'                = $(if ($enableSSL) {$Pool.PortSSL} else {$Pool.Port})
                             '#Login#'               = $PoolUser
                             '#Password#'            = $PoolPass
-                            '#GPUPlatform#'         = $TypeGroup.Platform
+                            '#GPUPlatform#'         = $DeviceGroup.Platform
                             '#Algorithm#'           = $AlgoName
                             '#AlgorithmParameters#' = $Algo.Value
                             '#WorkerName#'          = $WorkerName2
-                            '#Devices#'             = $TypeGroup.Devices
-                            '#DevicesClayMode#'     = $TypeGroup.DevicesClayMode
-                            '#DevicesETHMode#'      = $TypeGroup.DevicesETHMode
-                            '#DevicesNsgMode#'      = $TypeGroup.DevicesNsgMode
+                            '#Devices#'             = $DeviceGroup.Devices
+                            '#DevicesClayMode#'     = $DeviceGroup.DevicesClayMode
+                            '#DevicesETHMode#'      = $DeviceGroup.DevicesETHMode
+                            '#DevicesNsgMode#'      = $DeviceGroup.DevicesNsgMode
                             '#EthStMode#'           = $Pool.EthStMode
-                            '#GroupName#'           = $TypeGroup.GroupName
+                            '#GroupName#'           = $DeviceGroup.GroupName
                         }
                         if ($enableSSL) {
                             $Params.'#SSL#(.*)#SSL#' = '$1'
@@ -529,7 +529,7 @@ while ($Quit -eq $false) {
                         $Arguments = $Miner.Arguments
                         foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
                         if ($Miner.PatternConfigFile) {
-                            $ConfigFileArguments = replace_foreach_device (Get-Content $Miner.PatternConfigFile -raw) $TypeGroup.Devices
+                            $ConfigFileArguments = replace_foreach_device (Get-Content $Miner.PatternConfigFile -raw) $DeviceGroup.Devices
                             foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
                         }
                         if ($Miner.PatternPoolsFile) {
@@ -583,10 +583,10 @@ while ($Quit -eq $false) {
                         ## SubMiner are variations of miner that not need to relaunch
                         ## Creates a "SubMiner" object for each PL
                         $SubMiners = @()
-                        foreach ($PowerLimit in ($TypeGroup.PowerLimits)) {
+                        foreach ($PowerLimit in ($DeviceGroup.PowerLimits)) {
                             ## always exists as least a power limit 0
 
-                            #WriteLog ("$MinerFile $AlgoName "+$TypeGroup.GroupName+" "+$Pool.Info+" $PowerLimit") $LogFile $true
+                            #WriteLog ("$MinerFile $AlgoName "+$DeviceGroup.GroupName+" "+$Pool.Info+" $PowerLimit") $LogFile $true
 
                             ## look in ActiveMiners collection if we found that miner to conserve some properties and not read files
                             $FoundMiner = $ActiveMiners | Where-Object {
@@ -597,7 +597,7 @@ while ($Quit -eq $false) {
                                 $_.AlgorithmDual -eq $AlgoNameDual -and
                                 $_.PoolAbbName -eq $Pool.AbbName -and
                                 $_.PoolAbbNameDual -eq $PoolDual.AbbName -and
-                                $_.DeviceGroup.Id -eq $TypeGroup.Id -and
+                                $_.DeviceGroup.Id -eq $DeviceGroup.Id -and
                                 $_.AlgoLabel -eq $AlgoLabel }
 
                             $FoundSubMiner = $FoundMiner.SubMiners | Where-Object {$_.PowerLimit -eq $PowerLimit}
@@ -606,7 +606,7 @@ while ($Quit -eq $false) {
                                 [array]$Hrs = (Get_HashRates `
                                         -Algorithm $Algorithms `
                                         -MinerName $MinerFile.BaseName `
-                                        -GroupName $TypeGroup.GroupName `
+                                        -GroupName $DeviceGroup.GroupName `
                                         -PowerLimit $PowerLimit `
                                         -AlgoLabel $AlgoLabel)
                             } else {
@@ -647,7 +647,7 @@ while ($Quit -eq $false) {
                                 $StatsHistory = Get_Stats `
                                     -Algorithm $Algorithms `
                                     -MinerName $MinerFile.BaseName `
-                                    -GroupName $TypeGroup.GroupName `
+                                    -GroupName $DeviceGroup.GroupName `
                                     -PowerLimit $PowerLimit `
                                     -AlgoLabel $AlgoLabel
                             } else {
@@ -706,9 +706,9 @@ while ($Quit -eq $false) {
                             ConfigFileArguments = $ExecutionContext.InvokeCommand.ExpandString($ConfigFileArguments)
                             PoolsFileArguments  = $ExecutionContext.InvokeCommand.ExpandString($PoolsFileArguments)
                             ExtractionPath      = $(".\Bin\" + $MinerFile.BaseName + "\")
-                            GenerateConfigFile  = $(if ($Miner.GenerateConfigFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $TypeGroup.GroupName -replace '#Algorithm#', $AlgoName})
-                            GeneratePoolsFile   = $(if ($Miner.GeneratePoolsFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GeneratePoolsFile -replace '#GroupName#', $TypeGroup.GroupName -replace '#Algorithm#', $AlgoName})
-                            DeviceGroup         = $TypeGroup
+                            GenerateConfigFile  = $(if ($Miner.GenerateConfigFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $DeviceGroup.GroupName -replace '#Algorithm#', $AlgoName})
+                            GeneratePoolsFile   = $(if ($Miner.GeneratePoolsFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GeneratePoolsFile -replace '#GroupName#', $DeviceGroup.GroupName -replace '#Algorithm#', $AlgoName})
+                            DeviceGroup         = $DeviceGroup
                             Host                = $Pool.Host
                             Location            = $Pool.Location
                             MinerFee            = $(if ($enableSSL -and $Miner.FeeSSL) { [double]$Miner.FeeSSL } elseif ($Miner.Fee) { [double]$Miner.Fee })
@@ -716,8 +716,8 @@ while ($Quit -eq $false) {
                             Path                = $(".\Bin\" + $MinerFile.BaseName + "\" + $Miner.Path)
                             PoolAbbName         = $Pool.AbbName
                             PoolAbbNameDual     = $PoolDual.AbbName
-                            PoolFee             = $(if ($Pool.Fee) {[double]$Pool.Fee})
-                            PoolFeeDual         = $(if ($PoolDual.Fee) {[double]$PoolDual.Fee})
+                            PoolFee             = [double]$Pool.Fee
+                            PoolFeeDual         = [double]$PoolDual.Fee
                             PoolName            = $Pool.PoolName
                             PoolNameDual        = $PoolDual.PoolName
                             PoolPrice           = $(if ($MiningMode -eq 'Automatic24h') {[double]$Pool.Price24h} else {[double]$Pool.Price})
@@ -725,7 +725,7 @@ while ($Quit -eq $false) {
                             PoolRewardType      = $Pool.RewardType
                             PoolWorkers         = $Pool.PoolWorkers
                             PoolWorkersDual     = $PoolDual.PoolWorkers
-                            Port                = $(if (($Types | Where-Object type -eq $TypeGroup.type).Count -le 1 -and $DelayCloseMiners -eq 0 -and $config.ForceDynamicPorts -ne "Enabled") { $Miner.ApiPort })
+                            Port                = $(if (($DeviceGroups | Where-Object type -eq $DeviceGroup.type).Count -le 1 -and $DelayCloseMiners -eq 0 -and $config.ForceDynamicPorts -ne "Enabled") { $Miner.ApiPort })
                             PrelaunchCommand    = $Miner.PrelaunchCommand
                             SubMiners           = $SubMiners
                             SHA256              = $Miner.SHA256
@@ -912,10 +912,10 @@ while ($Quit -eq $false) {
 
     #For each type, select most profitable miner, not benchmarked has priority, new miner is only lauched if new profit is greater than old by percenttoswitch
     #This section changes SubMiner
-    foreach ($Type in $Types) {
+    foreach ($DeviceGroup in $DeviceGroups) {
 
         #look for last round best
-        $Candidates = $ActiveMiners | Where-Object {$_.DeviceGroup.Id -eq $Type.Id}
+        $Candidates = $ActiveMiners | Where-Object {$_.DeviceGroup.Id -eq $DeviceGroup.Id}
         $BestLast = $Candidates.SubMiners | Where-Object {$_.Status -in @("Running", "PendingCancellation")}
         if ($BestLast -ne $null) {
             $ProfitLast = $BestLast.Profits
@@ -926,7 +926,7 @@ while ($Quit -eq $false) {
                 "$(if ($ActiveMiners[$BestLast.IdF].CoinDual) { '_' + $ActiveMiners[$BestLast.IdF].CoinDual}) " +
                 "with Power Limit $($BestLast.PowerLimit) " +
                 "(id $($BestLast.IdF)-$($BestLast.Id)) " +
-                "for group $($Type.GroupName)")
+                "for group $($DeviceGroup.GroupName)")
         } else {
             $ProfitLast = 0
         }
@@ -940,7 +940,7 @@ while ($Quit -eq $false) {
         }
 
         #look for best for next round
-        $Candidates = $ActiveMiners | Where-Object {$_.DeviceGroup.Id -eq $Type.Id -and $_.IsValid -and $_.Username}
+        $Candidates = $ActiveMiners | Where-Object {$_.DeviceGroup.Id -eq $DeviceGroup.Id -and $_.IsValid -and $_.Username}
 
         ## Select top miner that need Benchmark, or if running in Manual mode, or highest Profit above zero.
         $BestNow = $Candidates.SubMiners |
@@ -949,7 +949,7 @@ while ($Quit -eq $false) {
             Sort-Object -Descending NeedBenchmark, Profits, @{Expression = {$ActiveMiners[$_.IdF].Algorithm}; Ascending = $true}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
 
-        if ($BestNow -eq $null) {WriteLog ("No detected any valid candidate for device group " + $Type.GroupName) $LogFile $true; continue}
+        if ($BestNow -eq $null) {WriteLog ("No detected any valid candidate for device group " + $DeviceGroup.GroupName) $LogFile $true; continue}
 
         $BestNowLogMsg = $(
             "$($ActiveMiners[$BestNow.IdF].Name)/" +
@@ -958,7 +958,7 @@ while ($Quit -eq $false) {
             "$(if ($ActiveMiners[$BestNow.IdF].CoinDual) { '_' + $ActiveMiners[$BestNow.IdF].CoinDual}) " +
             "with Power Limit $($BestNow.PowerLimit) " +
             "(id $($BestNow.IdF)-$($BestNow.Id))"
-            "for group $($Type.GroupName)")
+            "for group $($DeviceGroup.GroupName)")
         $ProfitNow = $BestNow.Profits
 
         if ($BestNow.NeedBenchmark -eq $false) {
@@ -1164,7 +1164,7 @@ while ($Quit -eq $false) {
 
         $ExitLoop = $false
 
-        $Devices = get_devices_information $Types
+        $Devices = get_devices_information $DeviceGroups
 
         #############################################################
 
@@ -1511,9 +1511,9 @@ while ($Quit -eq $false) {
 
 
             $ProfitMiners2 = @()
-            foreach ($TypeId in $types.Id) {
+            foreach ($DeviceGroupId in $DeviceGroups.Id) {
                 $inserted = 1
-                $ProfitMiners | Where-Object {$_.DeviceGroup.Id -eq $TypeId} | Sort-Object -Descending GroupName, NeedBenchmark, Profits | ForEach-Object {
+                $ProfitMiners | Where-Object {$_.DeviceGroup.Id -eq $DeviceGroupId} | Sort-Object -Descending GroupName, NeedBenchmark, Profits | ForEach-Object {
                     if ($inserted -le $ProfitsScreenLimit) {$ProfitMiners2 += $_; $inserted++} #this can be done with Select-Object -first but then memory leak happens, ¿why?
                 }
             }
