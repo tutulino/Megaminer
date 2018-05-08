@@ -637,11 +637,8 @@ while ($Quit -eq $false) {
                             $SubMinerRevenueDual = [double]($HashRateValueDual * $PriceDual)
 
                             #apply fee to revenues
-                            if ($enableSSL -and $Miner.FeeSSL) {
-                                $SubMinerRevenue *= (1 - [double]$Miner.FeeSSL)
-                            } elseif ($Miner.Fee) {
-                                $SubMinerRevenue *= (1 - [double]$Miner.Fee)
-                            }
+                            $MinerFee = [decimal]$ExecutionContext.InvokeCommand.ExpandString($Miner.Fee)
+                            $SubMinerRevenue *= (1 - $MinerFee)
 
                             if (!$FoundSubMiner) {
                                 $StatsHistory = Get_Stats `
@@ -711,7 +708,7 @@ while ($Quit -eq $false) {
                             DeviceGroup         = $DeviceGroup
                             Host                = $Pool.Host
                             Location            = $Pool.Location
-                            MinerFee            = $(if ($enableSSL -and $Miner.FeeSSL) { [double]$Miner.FeeSSL } elseif ($Miner.Fee) { [double]$Miner.Fee })
+                            MinerFee            = $MinerFee
                             Name                = $MinerFile.BaseName
                             Path                = $(".\Bin\" + $MinerFile.BaseName + "\" + $Miner.Path)
                             PoolAbbName         = $Pool.AbbName
@@ -1536,8 +1533,8 @@ while ($Quit -eq $false) {
                 @{Label = "mBTC/Day"; Expression = {if ($_.SubMiner.Revenue) {((($_.SubMiner.Revenue + $_.SubMiner.RevenueDual) * 1000).tostring("n5"))} else {$null}} ; Align = 'right'},
                 @{Label = $LocalCurrency + "/Day"; Expression = {if ($_.SubMiner.Revenue) {((($_.SubMiner.Revenue + $_.SubMiner.RevenueDual) * [double]$localBTCvalue).tostring("n2"))} else {$null}} ; Align = 'right'},
                 @{Label = "Profit/Day"; Expression = {if ($_.SubMiner.Profits) {($_.SubMiner.Profits).tostring("n2") + " $LocalCurrency"} else {$null}}; Align = 'right'},
-                @{Label = "PoolFee"; Expression = {if ($_.PoolFee -ne $null) {"{0:p2}" -f $_.PoolFee}}; Align = 'right'},
-                @{Label = "MinerFee"; Expression = {if ($_.MinerFee -ne $null) {"{0:p2}" -f $_.MinerFee}}; Align = 'right'},
+                @{Label = "PoolFee"; Expression = {if ($_.PoolFee -gt 0) {"{0:p2}" -f $_.PoolFee}}; Align = 'right'},
+                @{Label = "MinerFee"; Expression = {if ($_.MinerFee -gt 0) {"{0:p2}" -f $_.MinerFee}}; Align = 'right'},
                 @{Label = "Pool"; Expression = {$_.PoolAbbName + $(if ($_.AlgorithmDual) {"/$($_.PoolAbbNameDual)"})}},
                 @{Label = "Loc."; Expression = {$_.Location}}
 

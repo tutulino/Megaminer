@@ -6,8 +6,7 @@
     "Arguments": "-zpool #PROTOCOL#://#SERVER#:#PORT# -zwal #LOGIN# -zpsw #PASSWORD# -allpools 1 -wd 1 -r -1 -logfile #GROUPNAME#_log.txt -di #DEVICESCLAYMODE# -mport -#APIPORT# #ALGORITHMPARAMETERS#",
     "API": "Claymore",
     "APIPort": 4028,
-    "Fee": 0.025,
-    "FeeSSL": 0.02,
+    "Fee": "$(if ($enableSSL){0.02}else{0.025})",
     "SSL": true,
     "Algorithms": {
         "Equihash": ""

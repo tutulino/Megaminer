@@ -6,7 +6,7 @@
     "Arguments": "-epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -wd 1 -r -1 -logfile #GROUPNAME#_log.txt -logsmaxsize 10 -mode 1 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
     "API": "Claymore",
     "APIPort": 4068,
-    "Fee": 0.01,
+    "Fee": "$(if ($DeviceGroup.MemoryGB -gt 3){0.01}else{0})",
     "SSL": true,
     "Algorithms": {
         "Ethash": ""
