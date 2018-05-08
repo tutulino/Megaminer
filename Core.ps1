@@ -643,12 +643,6 @@ while ($Quit -eq $false) {
                                 $SubMinerRevenue *= (1 - [double]$Miner.Fee)
                             }
 
-                            if ($enableDualSSL -and $Miner.FeeSSL) {
-                                $SubMinerRevenueDual *= (1 - [double]$Miner.FeeSSL)
-                            } elseif ($Miner.Fee) {
-                                $SubMinerRevenueDual *= (1 - [double]$Miner.Fee)
-                            }
-
                             if (!$FoundSubMiner) {
                                 $StatsHistory = Get_Stats `
                                     -Algorithm $Algorithms `
@@ -1194,8 +1188,7 @@ while ($Quit -eq $false) {
 
                 $_.PowerLive = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].DeviceGroup.GroupName) | Measure-Object -property PowerDraw -sum).sum
 
-                $_.ProfitsLive = (($_.RevenueLive * (1 - [double]$ActiveMiners[$_.IdF].PoolFee) + $_.RevenueLiveDual * (1 - [double]$ActiveMiners[$_.IdF].PoolFeeDual)) * $LocalBTCvalue)
-                $_.ProfitsLive -= ($ActiveMiners[$_.IdF].MinerFee * $_.ProfitsLive)
+                $_.ProfitsLive = ($_.RevenueLive * (1 - $ActiveMiners[$_.IdF].MinerFee) + $_.RevenueLiveDual) * $LocalBTCvalue
                 $_.ProfitsLive -= ($ElectricityCostValue * ($_.PowerLive * 24) / 1000)
 
                 $_.TimeSinceStartInterval = (Get-Date) - $_.Stats.LastTimeActive
