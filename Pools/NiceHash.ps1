@@ -87,9 +87,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
 
     $Locations = @{
-        US   = 'USA'
-        EU   = 'EU'
-        Asia = 'HK'
+        US   = 'usa'
+        EU   = 'eu'
+        Asia = 'hk'
     }
 
     $Request | Where-Object {$_.paying -gt 0} | ForEach-Object {
