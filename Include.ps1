@@ -891,8 +891,6 @@ function Get_Live_HashRate {
                 $wrpath = ".\Wrapper_$Port.txt"
                 $HashRate = if (test-path -path $wrpath ) {
                     Get-Content  $wrpath
-                    $HashRate = ($HashRate -split ',')[0]
-                    $HashRate = ($HashRate -split '.')[0]
                 } else {$hashrate = 0}
             }
 
