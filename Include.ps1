@@ -512,6 +512,7 @@ Function Get_Mining_Types () {
                         Devices     = [string]$DeviceID
                         MemoryGB    = $MemoryGB
                         PowerLimits = "0"
+                        Features    = $($feat = @{}; switch -regex ((Invoke-Expression ".\Includes\CHKCPU32.exe /x") -split "</\w+>") {"^\s*<_?(\w+)>1" {$feat.($matches[1]) = $true}}; $feat)
                     }
                 } else {
                     $Types0 | Where-Object GroupName -eq 'CPU' | ForEach-Object {

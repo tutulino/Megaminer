@@ -710,7 +710,7 @@ while ($Quit -eq $false) {
                             Location            = $Pool.Location
                             MinerFee            = $MinerFee
                             Name                = $MinerFile.BaseName
-                            Path                = $(".\Bin\" + $MinerFile.BaseName + "\" + $Miner.Path)
+                            Path                = $(".\Bin\" + $MinerFile.BaseName + "\" + $ExecutionContext.InvokeCommand.ExpandString($Miner.Path))
                             PoolAbbName         = $Pool.AbbName
                             PoolAbbNameDual     = $PoolDual.AbbName
                             PoolFee             = [double]$Pool.Fee
