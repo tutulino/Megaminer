@@ -77,10 +77,11 @@ $culture.NumberFormat.NumberGroupSeparator = ","
 $ErrorActionPreference = "Continue"
 $Config = get_config
 
-$Release = "1.0"
+$Application = "Forager"
+$Release = "1.1"
 WriteLog ("Release $Release") $LogFile $false
 
-if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = "Forager"}
+if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = $Application}
 else {$Host.UI.RawUI.WindowTitle = "MM-" + ($GroupNames -join "/")}
 
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
@@ -188,10 +189,10 @@ if ($config.ApiPort -gt 0) {
     $APIprocess = Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -PassThru -WindowStyle Minimized
 
     #open firewall port
-    $command = 'New-NetFirewallRule -DisplayName "Forager" -Direction Inbound -Action Allow -Protocol TCP -LocalPort ' + [string]$config.ApiPort
+    $command = "New-NetFirewallRule -DisplayName `"$Application`" -Direction Inbound -Action Allow -Protocol TCP -LocalPort $($config.ApiPort)"
     Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -WindowStyle Minimized
 
-    $command = 'New-NetFirewallRule -DisplayName "Forager" -Direction Outbound -Action Allow -Protocol TCP -LocalPort ' + [string]$config.ApiPort
+    $command = "New-NetFirewallRule -DisplayName `"$Application`" -Direction Outbound -Action Allow -Protocol TCP -LocalPort $($config.ApiPort)"
     Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -WindowStyle Minimized
 }
 
@@ -220,6 +221,19 @@ while ($Quit -eq $false) {
     if ($DetailedLog) {WriteLog ($Config | ConvertTo-Json) $LogFile $false}
 
     Clear-Host; $RepaintScreen = $true
+
+    # Check for updates
+    try {
+        $Request = Invoke-RestMethod -Uri "https://api.github.com/repos/yuzi-co/$Application/releases/latest" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+        $RemoteVersion = ($Request.tag_name -replace '^v')
+        $Uri = $Request.assets | Where-Object Name -eq "$($Application)-$($RemoteVersion).7z" | Select-Object -ExpandProperty browser_download_url
+
+        if ($RemoteVersion -ne $Release) {
+            Write-Host "$Application is out of date. There is an updated version available at $URI"
+        }
+    } catch {
+        Write-Host "Failed to get $Application updates."
+    }
 
     #get mining types
     $Types = Get_Mining_Types -filter $GroupNames
@@ -1321,7 +1335,7 @@ while ($Quit -eq $false) {
         set_ConsolePosition 0 0
 
         #display header
-        Print_Horizontal_line "Forager $Release"
+        Print_Horizontal_line "$Application $Release"
         Print_Horizontal_line
         "  (E)nd Interval  (P)rofits  (C)urrent  (H)istory  (W)allets  (S)tats  (Q)uit" | Out-Host
 
