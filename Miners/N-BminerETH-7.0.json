@@ -1,0 +1,13 @@
+{
+    "Path": "bminer-lite-v7.0.0-9c7291b\\bminer.exe",
+    "Uri": "https://www.bminercontent.com/releases/bminer-lite-v7.0.0-9c7291b-amd64.zip",
+    "SHA256": "61526d3bdd6054b5d09b06069aed2e17e8facd842db105d750bc073af0d834db",
+    "Type": "NVIDIA",
+    "Arguments": "-uri ethash://#LOGIN#.#WORKERNAME#@#SERVER#:#PORT# -devices #DEVICES# -watchdog -api 127.0.0.1:#APIPORT# #ALGORITHMPARAMETERS# ",
+    "API": "BMINER",
+    "APIPort": 4068,
+    "Fee": 0.02,
+    "Algorithms": {
+        "Ethash": ""
+    }
+}
