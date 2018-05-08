@@ -702,12 +702,12 @@ while ($Quit -eq $false) {
                             AlgorithmDual       = $AlgoNameDual
                             Algorithms          = $Algorithms
                             API                 = $Miner.API
-                            Arguments           = $Arguments
+                            Arguments           = $ExecutionContext.InvokeCommand.ExpandString($Arguments)
                             BenchmarkArg        = $Miner.BenchmarkArg
                             Coin                = $Pool.Info
                             CoinDual            = $PoolDual.Info
-                            ConfigFileArguments = $ConfigFileArguments
-                            PoolsFileArguments  = $PoolsFileArguments
+                            ConfigFileArguments = $ExecutionContext.InvokeCommand.ExpandString($ConfigFileArguments)
+                            PoolsFileArguments  = $ExecutionContext.InvokeCommand.ExpandString($PoolsFileArguments)
                             ExtractionPath      = $(".\Bin\" + $MinerFile.BaseName + "\")
                             GenerateConfigFile  = $(if ($Miner.GenerateConfigFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $TypeGroup.GroupName -replace '#Algorithm#', $AlgoName})
                             GeneratePoolsFile   = $(if ($Miner.GeneratePoolsFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GeneratePoolsFile -replace '#GroupName#', $TypeGroup.GroupName -replace '#Algorithm#', $AlgoName})
