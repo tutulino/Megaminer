@@ -1,7 +1,7 @@
 {
     "Path": "SRBMiner-CN.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/1/SRBMiner-CN-V1-5-1.7z",
-    "SHA256": "42d0a177b8720d3cf05a866cea8e11d5f7ea9d992802624190e1d66cef8d8e99",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.5/SRBMiner-CN-V1-5-2.7z",
+    "SHA256": "a33385ba153e1e7a6bd03bdb0febb1b3fa9dcdb930c3458ee9cfc8efc9040f50",
     "Type": "AMD",
     "GenerateConfigFile": "config-#GROUPNAME#-#ALGORITHM#.txt",
     "PatternConfigFile": ".\\Patterns\\SRBMinerConfig-Pattern.txt",
@@ -15,6 +15,8 @@
         "CryptoLightV7": "liteV7",
         "CryptoNightV7": "normalV7",
         "CryptoNightHeavy": "heavy",
-        "CryptoLightIPBC": "ipbc"
+        "CryptoLightIPBC": "ipbc",
+        "CryptoNightArto": "artocash",
+        "CryptoNightAlloy": "alloy"
     }
 }
