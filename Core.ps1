@@ -79,8 +79,8 @@ $ErrorActionPreference = "Continue"
 $Config = get_config
 
 $Application = "Forager"
-$Release = "1.1"
-WriteLog ("Release $Release") $LogFile $false
+$Release = "1.2"
+WriteLog ("$Application v$Release") $LogFile $false
 
 if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = $Application}
 else {$Host.UI.RawUI.WindowTitle = "MM-" + ($GroupNames -join "/")}
@@ -223,8 +223,8 @@ while ($Quit -eq $false) {
         $RemoteVersion = ($Request.tag_name -replace '^v')
         $Uri = $Request.assets | Where-Object Name -eq "$($Application)-$($RemoteVersion).7z" | Select-Object -ExpandProperty browser_download_url
 
-        if ($RemoteVersion -ne $Release) {
-            Write-Host "$Application is out of date. There is an updated version available at $URI"
+        if ($RemoteVersion -gt $Release) {
+            Write-Host "$Application is out of date. There is an updated version available at $URI" -ForegroundColor Yellow
         }
     } catch {
         Write-Host "Failed to get $Application updates."
