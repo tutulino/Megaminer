@@ -9,7 +9,7 @@
 
     [Parameter()]
     [String] $Url = "",
-    
+
     [Parameter()]
     [System.Net.AuthenticationSchemes] $Auth = [System.Net.AuthenticationSchemes]::IntegratedWindowsAuthentication
     )
@@ -20,14 +20,13 @@
         $Url += "/"
     }
 
-    
     $Host.UI.RawUI.WindowTitle = "Forager API Listener"
 
     $listener = New-Object System.Net.HttpListener
     $prefix = "http://*:$Port/$Url"
     $listener.Prefixes.Add($prefix)
-    $listener.AuthenticationSchemes = $Auth 
- 
+    $listener.AuthenticationSchemes = $Auth
+
     $listener.Start()
 
     Write-Warning "Forager Api Listening on port $port......."
@@ -36,22 +35,20 @@
     while ($true) {
         $statusCode = 200
         $context = $listener.GetContext()
-        
+
         Write-Warning "Received request $(get-date)"
-        
-       
+
         $request = $context.Request
         $command = $request.QueryString.Item("command")
         if ($command -eq "exit") {
             Write-Warning  "Received command to exit listener"
             break
         }
-       
-        
+
         try{$commandOutput = get-content -path $SharedFile -raw } catch{$commandOutput=""}
 
-        if ($commandOutput -ne $null -and $commandOutput -ne "") {    
-            $A=(get-date) 
+        if ($commandOutput -ne $null -and $commandOutput -ne "") {
+            $A=(get-date)
             $B=([datetime]($commandOutput |convertfrom-json).RefreshDate)
             $Ago = $A - $B
             if ($Ago.TotalSeconds -gt 20) {$commandOutput=""}  #check info refresh date
@@ -68,17 +65,15 @@
         if (!$commandOutput) {$commandOutput = [string]::Empty}
         $buffer = [System.Text.Encoding]::utf8.GetBytes($commandOutput)
 
-        
         $response.ContentLength64 = $buffer.Length
         $output = $response.OutputStream
-        
+
         try {
             $output.Write($buffer,0,$buffer.Length)
             $output.Close()
         } catch{}
-     
+
     }
 
 $listener.Stop()
 stop-process -Id $PID
-

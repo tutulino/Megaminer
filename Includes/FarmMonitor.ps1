@@ -1,6 +1,5 @@
 . .\Include.ps1
 
-
 $config = get_config
 $FarmRigs = $config.FarmRigs |ConvertFrom-Json
 $smtp = $config.Smtpserver |ConvertFrom-Json
@@ -21,7 +20,6 @@ if ($config.NotificationMail -ne $null -and $config.NotificationMail -ne "") {
     }
 
 }
-
 
 $Host.UI.RawUI.WindowTitle = "MM Farm Monitor"
 
@@ -73,9 +71,7 @@ while ($true) {
 
             "Mode: " + $_.LastContent.params.MiningMode + "       Pool/s: " + ($_.LastContent.params.pools -join ",") + "         Release: " + $_.LastContent.Release |out-host
 
-
             $_.Workername = $_.LastContent.config.workername
-
 
             $_.LastContent.Activeminers | Format-Table (
                 @{Label = "GroupName"; Expression = {$_.GroupName}},
@@ -118,7 +114,6 @@ while ($true) {
                 } else {
                     Send-MailMessage  -To $config.NotificationMail -From $smtp.user  -Subject  $mailmsg -smtp ($smtp.url) -Port ($smtp.port) -Credential $creds
                 }
-
 
             }
 

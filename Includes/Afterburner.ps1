@@ -27,7 +27,6 @@ try {
     Start-Sleep -Seconds 5
 }
 
-
 function set_ab_powerlimit ([int]$PowerLimitPercent, $DeviceGroup) {
 
     try {

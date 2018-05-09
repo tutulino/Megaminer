@@ -19,7 +19,6 @@ $Location = 'EU'
 $RewardType = "PPS"
 $Result = @()
 
-
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
         Disclaimer               = "No registration, No autoexchange, need wallet for each coin on config.ini"
@@ -32,7 +31,6 @@ if ($Querymode -eq "info") {
         RewardType               = $RewardType
     }
 }
-
 
 if ($Querymode -eq "speed") {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
@@ -53,7 +51,6 @@ if ($Querymode -eq "speed") {
     }
 }
 
-
 if ($Querymode -eq "wallet") {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/wallet?address=" + $Info.user) -Retry 3
 
@@ -66,7 +63,6 @@ if ($Querymode -eq "wallet") {
         Remove-Variable Request
     }
 }
-
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/status") -Retry 3
@@ -81,7 +77,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $RequestCurrencies.$_.hashrate -gt 0 -and
         $RequestCurrencies.$_.workers -gt 0
     } | ForEach-Object {
-
 
         $Coin = $RequestCurrencies.$_
         $Pool_Algo = get_algo_unified_name ($Coin.algo -split '-')[0]
@@ -126,7 +121,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     Remove-Variable Request
     Remove-Variable RequestCurrencies
 }
-
 
 $Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

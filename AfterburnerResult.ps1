@@ -3,4 +3,3 @@
 $abMonitor.Header | Format-List
 $abMonitor.Entries | Format-Table
 $abMonitor.GpuEntries | Format-List
-

@@ -19,7 +19,6 @@ param(
 
 if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY ONE POOL CAN BE SELECTED ON MANUAL MODE}
 
-
 #--------------Load config.ini file
 
 $Currency = get_config_variable "CURRENCY"
@@ -65,15 +64,11 @@ $Modes += [pscustomobject]@{"Option" = 2; "Mode" = 'Mine Manual'; "Explanation" 
 if ($FarmRigs) {$Modes += [pscustomobject]@{"Option" = 3; "Mode" = 'Farm Monitoring'; "Explanation" = 'I want to see my rigs state'}}
 $Modes | Format-Table Option, Mode, Explanation  | Out-Host
 
-
 If ($MiningMode -eq "") {
     $SelectedOption = Read-Host -Prompt 'SELECT ONE OPTION:'
     $MiningMode = $Modes[$SelectedOption].Mode
     write-host SELECTED OPTION::$MiningMode
 } else { write-host SELECTED BY PARAMETER OPTION::$MiningMode }
-
-
-
 
 if ($MiningMode -ne "FARM MONITORING") {
     #-----------------Ask user for pool/s to use, if a pool is indicated in parameters no prompt
@@ -90,22 +85,18 @@ if ($MiningMode -ne "FARM MONITORING") {
         $_.Option = $counter
         $counter++}
 
-
     if ($MiningMode -ne "Manual") {
         $Pools += [pscustomobject]@{"Disclaimer" = ""; "ActiveOnManualMode" = $false; "ActiveOnAutomaticMode" = $true; "ActiveOnAutomatic24hMode" = $true; "name" = 'ALL POOLS'; "option" = 99}
     }
-
 
     #Clear-Host
     Print_Horizontal_line ""
     Print_Horizontal_line "SELECT POOL/S  TO MINE"
     Print_Horizontal_line ""
 
-
     $Pools | Where-Object name -ne "Donationpool" | Format-Table Option, name, rewardtype, disclaimer | Out-Host
 
     If (($PoolsName -eq "") -or ($PoolsName -eq $null)) {
-
 
         if ($MiningMode -eq "manual") {
             $SelectedOption = Read-Host -Prompt 'SELECT ONE OPTION:'
@@ -137,10 +128,7 @@ if ($MiningMode -ne "FARM MONITORING") {
         write-host SELECTED BY PARAMETER ::$PoolsName
     }
 
-
-
     #-----------------Ask user for coins----------------------------------------------------
-
 
     if ($MiningMode -eq "manual") {
 
@@ -210,7 +198,6 @@ if ($MiningMode -ne "FARM MONITORING") {
                     $PriceCMC = [decimal]($CMCResponse | Where-Object Symbol -eq $Coin.Symbol | ForEach-Object {if ($(get_coin_unified_name $_.Id) -eq $Coin.Info) {$_.price_btc} })
                     $PriceBTX = [decimal]($BTXResponse | Where-Object MarketName -eq ('BTC-' + $Coin.Symbol) | Select-Object -ExpandProperty Last)
                     $PriceCRY = [decimal]($CRYResponse | Where-Object Label -eq ($Coin.Symbol + '/BTC') | Select-Object -ExpandProperty LastPrice)
-
 
                     if ($PriceCMC -gt 0) {
                         $Coin.BTCPrice = $PriceCMC
@@ -292,7 +279,6 @@ if ($MiningMode -ne "FARM MONITORING") {
             write-host SELECTED BY PARAMETER :: $CoinsName
         }
     }
-
 
     #-----------------Launch Command
     $command = "./core.ps1 -MiningMode $MiningMode -PoolsName $PoolsName"

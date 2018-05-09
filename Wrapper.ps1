@@ -17,7 +17,6 @@ Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
 
 0 | Set-Content ".\Wrapper_$Id.txt"
 
-
 $PowerShell = [PowerShell]::Create()
 if ($WorkingDirectory -ne "") {$PowerShell.AddScript("Set-Location '$WorkingDirectory'") | Out-Null}
 $Command = ". '$FilePath'"
@@ -27,14 +26,11 @@ $Result = $PowerShell.BeginInvoke()
 
 Write-Host "Wrapper Started" -BackgroundColor Yellow -ForegroundColor Black
 
-
-
 do {
     Start-Sleep 1
 
     $PowerShell.Streams.Verbose.ReadAll() | ForEach-Object {
         $Line = $_
-
 
         if ($Line -like "*total speed:*" -or
             $Line -like "*accepted:*" -or
@@ -43,7 +39,7 @@ do {
             $line -like ">*Rej*" -or
             $line -like "*overall*" -or
             $line -like "*Average*" -or
-            $line -like "*Total:*" 
+            $line -like "*Total:*"
         ) {
             $Line = $Line  `
                 -replace "\smh/s", "mh/s" `

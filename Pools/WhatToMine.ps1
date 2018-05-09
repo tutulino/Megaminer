@@ -4,15 +4,12 @@ THIS IS A ADVANCED POOL, NOT FOR NOOB.
 THIS IS A VIRTUAL POOL, STATISTICS ARE TAKEN FROM WHATTOMINE AND RECALCULATED WITH YOUR BENCHMARKS HASHRATE, YOU CAN SET DESTINATION POOL YOU WANT FOR EACH COIN, BUT REMEMBER YOU MUST HAVE AND ACOUNT IF DESTINATION POOL IS NOT ANONYMOUS POOL
 #>
 
-
-
 param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
     [pscustomobject]$Info
 )
-
 
 # . .\..\Include.ps1
 
@@ -23,7 +20,6 @@ $ActiveOnAutomatic24hMode = $true
 $WalletMode = "MIXED"
 $RewardType = "PPS"
 $Result = @()
-
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
@@ -38,7 +34,6 @@ if ($Querymode -eq "info") {
     }
 }
 
-
 if (($Querymode -eq "speed") ) {
     if ($PoolRealName -ne $null) {
         $Info.PoolName = $PoolRealName
@@ -46,14 +41,12 @@ if (($Querymode -eq "speed") ) {
     }
 }
 
-
 if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
     if ($PoolRealName -ne $null) {
         $Info.PoolName = $PoolRealName
         $Result = Get_Pools -Querymode $info.WalletMode -PoolsFilterList $Info.PoolName -Info $Info | select-object Pool, currency, balance
     }
 }
-
 
 if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
 
@@ -112,7 +105,6 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
         }
         Remove-Variable WTMResponse
     }
-
 
     #join pools and coins
     ForEach ($HPool in $HPools) {

@@ -29,7 +29,6 @@ if ($Querymode -eq "info") {
     }
 }
 
-
 if ($Querymode -eq "SPEED") {
     $Request = Invoke_APIRequest -Url $("https://api.nanopool.org/v1/" + $Info.symbol.tolower() + "/history/" + $Info.user) -Retry 1
     if ($Request) {
@@ -41,7 +40,6 @@ if ($Querymode -eq "SPEED") {
     }
 }
 
-
 if ($Querymode -eq "WALLET") {
     $Request = Invoke_APIRequest -Url $("https://api.nanopool.org/v1/" + $Info.symbol.tolower() + "/balance/" + $Info.user) -Retry 3
     if ($Request) {
@@ -52,7 +50,6 @@ if ($Querymode -eq "WALLET") {
         }
     }
 }
-
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 

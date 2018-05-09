@@ -5,7 +5,6 @@ param(
     [pscustomobject]$Info
 )
 
-
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $false
@@ -13,7 +12,6 @@ $AbbName = 'FAIR'
 $WalletMode = "WALLET"
 $RewardType = "PPS"
 $Result = @()
-
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
@@ -26,7 +24,6 @@ if ($Querymode -eq "info") {
         RewardType            = $RewardType
     }
 }
-
 
 if ($Querymode -eq "speed") {
     $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".fairpool.cloud/api/stats?login=" + ($Info.user -split "\+")[0]) -Retry 1
@@ -42,7 +39,6 @@ if ($Querymode -eq "speed") {
         Remove-Variable Request
     }
 }
-
 
 if ($Querymode -eq "wallet") {
     $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".fairpool.cloud/api/stats?login=" + ($Info.User -split "\+")[0]) -Retry 3
@@ -60,7 +56,6 @@ if ($Querymode -eq "wallet") {
         Remove-Variable Request
     }
 }
-
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
@@ -104,7 +99,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
     Remove-Variable Pools
 }
-
 
 $Result | ConvertTo-Json | Set-Content $info.SharedFile
 Remove-Variable Result

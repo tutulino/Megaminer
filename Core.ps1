@@ -22,7 +22,6 @@ param(
 
 ##Parameters for testing, must be commented on real use
 
-
 # $MiningMode='Automatic'
 # $MiningMode='Manual'
 
@@ -56,10 +55,12 @@ Import-Module "$env:Windir\System32\WindowsPowerShell\v1.0\Modules\Defender\Defe
 
 #Start log file
 
-$logname = ".\Logs\$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
-Start-Transcript $logname   #for start log msg
+$LogPath = '.\Logs\'
+if (!(Test-Path -Path $LogPath)) { New-Item -Path $LogPath -ItemType directory | Out-Null }
+$LogName = $LogPath + "$(Get-Date -Format "yyyy-MM-dd_HH-mm-ss").txt"
+Start-Transcript $LogName   #for start log msg
 Stop-Transcript
-$LogFile = [System.IO.StreamWriter]::new( $logname, $true )
+$LogFile = [System.IO.StreamWriter]::new( $LogName, $true )
 $LogFile.AutoFlush = $true
 
 clear_files
@@ -151,7 +152,6 @@ if ($MiningMode -eq 'Manual' -and $Algorithm) {
     EXIT
 }
 
-
 #parameters backup
 
 $ParamAlgorithmBCK = $Algorithm
@@ -159,15 +159,11 @@ $ParamPoolsNameBCK = $PoolsName
 $ParamCoinsNameBCK = $CoinsName
 $ParamMiningModeBCK = $MiningMode
 
-
-
 try {set_WindowSize 180 50} catch {}
 
 $IntervalStartAt = (Get-Date) #first initialization, must be outside loop
 
-
 ErrorsToLog $LogFile
-
 
 $Msg = "Starting Parameters: "
 $Msg += " //Algorithm: " + [string]($Algorithm -join ",")
@@ -212,7 +208,6 @@ if ((get_config_variable "Afterburner") -eq "Enabled") {
 #-----------------------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------
-
 
 while ($Quit -eq $false) {
 
@@ -325,7 +320,6 @@ while ($Quit -eq $false) {
     $UserName = $Config.UserName
     $WorkerName = $Config.WorkerName
 
-
     $MinerWindowStyle = $Config.MinerWindowStyle
     if ([string]::IsNullOrEmpty($MinerWindowStyle)) {$MinerWindowStyle = 'Minimized'}
 
@@ -334,7 +328,6 @@ while ($Quit -eq $false) {
     if (!$MinerStatusKey -and $CoinsWallets.BTC) {$MinerStatusKey = $CoinsWallets.BTC}
 
     ErrorsToLog $LogFile
-
 
     #get actual hour electricity cost
     ($Config.ElectricityCost | ConvertFrom-Json) | ForEach-Object {
@@ -421,7 +414,6 @@ while ($Quit -eq $false) {
         WriteLog "Coindesk API not responding, no local coin conversion..." $LogFile $true
     }
 
-
     #Load information about the Miner asociated to each Coin-Algo-Miner
     $Miners = @()
 
@@ -449,7 +441,6 @@ while ($Quit -eq $false) {
                 #check group and miner types are the same
                 if ($DetailedLog) {Writelog ([string]$MinerFile.pschildname + " is valid for " + $DeviceGroup.GroupName) $LogFile $false }
             }
-
 
             foreach ($Algo in $Miner.Algorithms.PSObject.Properties) {
 
@@ -578,7 +569,6 @@ while ($Quit -eq $false) {
                             $PoolUserDual = $null
                             $PriceDual = 0
                         }
-
 
                         ## SubMiner are variations of miner that not need to relaunch
                         ## Creates a "SubMiner" object for each PL
@@ -744,7 +734,6 @@ while ($Quit -eq $false) {
         } # end if types
     } #end foreach miner
 
-
     WriteLog ("Miners/Pools combinations detected: " + [string]($Miners.Count) + "...") $LogFile $true
 
     #Launch download of miners
@@ -763,7 +752,6 @@ while ($Quit -eq $false) {
     #Paint no miners message
     $Miners = $Miners | Where-Object {Test-Path $_.Path}
     if ($Miners.Count -eq 0) {WriteLog "NO MINERS!" $LogFile $true; EXIT}
-
 
     #Update the active miners list which is alive for all execution time
     foreach ($ActiveMiner in ($ActiveMiners | Sort-Object [int]id)) {
@@ -814,7 +802,6 @@ while ($Quit -eq $false) {
         }
     }
 
-
     ##Add new miners to list
     foreach ($Miner in $Miners) {
 
@@ -828,7 +815,6 @@ while ($Quit -eq $false) {
             $_.PoolAbbNameDual -eq $Miner.PoolAbbNameDual -and
             $_.DeviceGroup.Id -eq $Miner.DeviceGroup.Id -and
             $_.AlgoLabel -eq $Miner.AlgoLabel}
-
 
         if (!$ActiveMiner) {
             $Miner.SubMiners | Add-Member IdF $ActiveMiners.Count
@@ -1143,8 +1129,6 @@ while ($Quit -eq $false) {
 
     while ($Host.UI.RawUI.KeyAvailable) {$Host.UI.RawUI.FlushInputBuffer()} #keyb buffer flush
 
-
-
     #---------------------------------------------------------------------------
     #---------------------------------------------------------------------------
     #---------------------------------------------------------------------------
@@ -1335,8 +1319,6 @@ while ($Quit -eq $false) {
         #display donation message
         if ($DonationInterval) {" THIS INTERVAL YOU ARE DONATING, YOU CAN INCREASE OR DECREASE DONATION ON config.ini, THANK YOU FOR YOUR SUPPORT !!!!"}
 
-
-
         #write speed
         if ($DetailedLog) {WriteLog ($ActiveMiners | Where-Object Best | Select-Object id, process.Id, GroupName, name, poolabbname, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, location, port, arguments | ConvertTo-Json) $LogFile $false}
 
@@ -1459,10 +1441,8 @@ while ($Quit -eq $false) {
         Remove-Variable XToWrite
         Remove-Variable YToWrite
 
-
         #############################################################
         Print_Horizontal_line $Screen.ToUpper()
-
 
         #display profits screen
         if ($Screen -eq "Profits" -and $RepaintScreen) {
@@ -1470,7 +1450,6 @@ while ($Quit -eq $false) {
             set_ConsolePosition ($Host.UI.RawUI.WindowSize.Width - 37) $YToWriteMessages
             "(B)est Miners/All  (T)op " + [string]$InitialProfitsScreenLimit + "/All" | Out-Host
             set_ConsolePosition 0 $YToWriteData
-
 
             $ProfitMiners = @()
             if ($ShowBestMinersOnly) {
@@ -1505,7 +1484,6 @@ while ($Quit -eq $false) {
                     $ProfitMiners += $ProfitMiner
                 }
             }
-
 
             $ProfitMiners2 = @()
             foreach ($DeviceGroupId in $DeviceGroups.Id) {
@@ -1551,7 +1529,6 @@ while ($Quit -eq $false) {
             # Display devices info
             print_devices_information $Devices
         }
-
 
         #############################################################
 
@@ -1658,7 +1635,6 @@ while ($Quit -eq $false) {
             }
         }
 
-
         #############################################################
         if ($Screen -eq "History" -and $RepaintScreen) {
 
@@ -1690,7 +1666,6 @@ while ($Quit -eq $false) {
 
             "Running Mode: $MiningMode" | Out-Host
 
-
             set_ConsolePosition 0 $YToWriteData
 
             #Display activated miners list
@@ -1714,15 +1689,11 @@ while ($Quit -eq $false) {
             ) | Out-Host
         }
 
-
-
         $FirstLoopExecution = $false
 
         #Loop for reading key and wait
 
         $KeyPressed = Timed_ReadKb 3 ('P', 'C', 'H', 'E', 'W', 'U', 'T', 'B', 'S', 'X', 'Q')
-
-
 
         switch ($KeyPressed) {
             'P' {$Screen = 'PROFITS'}
@@ -1758,7 +1729,6 @@ while ($Quit -eq $false) {
         ErrorsToLog $LogFile
     }
 
-
     Remove-Variable miners
     Remove-Variable pools
     Get-Job -State Completed | Remove-Job
@@ -1771,8 +1741,6 @@ while ($Quit -eq $false) {
 #-------------------------------------------end of always running loop--------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------
-
-
 
 WriteLog "Exiting MM...." $LogFile $true
 $LogFile.close()

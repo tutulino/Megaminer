@@ -36,7 +36,6 @@ if ($Querymode -eq "info") {
     }
 }
 
-
 if ($Querymode -eq "speed") {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
 
@@ -56,7 +55,6 @@ if ($Querymode -eq "speed") {
     }
 }
 
-
 if ($Querymode -eq "wallet") {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/wallet?address=" + $Info.user) -Retry 3
 
@@ -69,7 +67,6 @@ if ($Querymode -eq "wallet") {
         Remove-Variable Request
     }
 }
-
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/status") -Retry 3
@@ -143,7 +140,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     Remove-Variable Request
     Remove-Variable RequestCurrencies
 }
-
 
 $Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

@@ -16,7 +16,6 @@ $WalletMode = "WALLET"
 $RewardType = "PPS"
 $Result = @()
 
-
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
         Disclaimer               = "No registration, Autoexchange to BTC always"
@@ -29,7 +28,6 @@ if ($Querymode -eq "info") {
         RewardType               = $RewardType
     }
 }
-
 
 if ($Querymode -eq "speed") {
     $Info.user = $Info.user.split('.')[0]
@@ -54,7 +52,6 @@ if ($Querymode -eq "speed") {
     }
 }
 
-
 if ($Querymode -eq "wallet") {
     $Info.user = ($Info.user -split '\.')[0]
     $Request = Invoke_APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider&addr=" + $Info.user) -Retry 3 |
@@ -69,7 +66,6 @@ if ($Querymode -eq "wallet") {
         Remove-Variable Request
     }
 }
-
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
@@ -132,7 +128,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
     Remove-Variable Request
 }
-
 
 $Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

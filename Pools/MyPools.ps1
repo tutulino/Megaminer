@@ -5,7 +5,6 @@ param(
     [pscustomobject]$Info
 )
 
-
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $false
@@ -13,7 +12,6 @@ $AbbName = 'MY'
 $WalletMode = "NONE"
 $RewardType = "PPLS"
 $Result = @()
-
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
@@ -27,7 +25,6 @@ if ($Querymode -eq "info") {
     }
 }
 
-
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
 
@@ -39,7 +36,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Pools += [pscustomobject]@{"coin" = "Cryply"; "algo" = "YescryptR16"; "symbol" = "CRP"; "server" = "cryply.luckypool.org"; "port" = 9997; "fee" = 0; "User" = "$Username.#Workername#"}
     $Pools += [pscustomobject]@{"coin" = "HexxCoin"; "algo" = "Lyra2z330"; "symbol" = "HXX"; "server" = "hxx-pool1.chainsilo.com"; "port" = 3033; "fee" = 0.03; "User" = "$Username.#Workername#"}
-
 
     $Pools | ForEach-Object {
         $Result += [PSCustomObject]@{
@@ -64,7 +60,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
     Remove-Variable Pools
 }
-
 
 $Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable result

@@ -16,7 +16,6 @@ $WalletMode = "APIKEY"
 $RewardType = "PPLS"
 $Result = @()
 
-
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
         Disclaimer               = "Registration required, set username/workername in config.ini file"
@@ -28,7 +27,6 @@ if ($Querymode -eq "info") {
         RewardType               = $RewardType
     }
 }
-
 
 if ($Querymode -eq "APIKEY") {
 
@@ -49,7 +47,6 @@ if ($Querymode -eq "APIKEY") {
     }
 }
 
-
 if ($Querymode -eq "SPEED") {
 
     $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey + "&$(Get-Date -Format "yyyy-MM-dd_HH-mm")") -Retry 1 |
@@ -69,7 +66,6 @@ if ($Querymode -eq "SPEED") {
         Remove-Variable Request
     }
 }
-
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
@@ -139,7 +135,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
     Remove-Variable MiningPoolHub_Request
 }
-
 
 $Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result

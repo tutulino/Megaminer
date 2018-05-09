@@ -14,7 +14,6 @@ $WalletMode = "APIKEY"
 $RewardType = "PPLS"
 $Result = @()
 
-
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
         Disclaimer               = "Must register and set wallet for each coin on web"
@@ -28,7 +27,6 @@ if ($Querymode -eq "info") {
     }
 }
 
-
 if ($Querymode -eq "APIKEY") {
     $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".suprnova.cc/index.php?page=api&action=getuserbalance&api_key=" + $Info.ApiKey + "&id=") -Retry 3 |
         Select-Object -ExpandProperty getuserbalance | Select-Object -ExpandProperty data
@@ -41,7 +39,6 @@ if ($Querymode -eq "APIKEY") {
         }
     }
 }
-
 
 if ($Querymode -eq "speed") {
     $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".suprnova.cc/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey) -Retry 1 |
@@ -58,7 +55,6 @@ if ($Querymode -eq "speed") {
         }
     }
 }
-
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 

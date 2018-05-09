@@ -19,7 +19,6 @@ $Location = 'US'
 $RewardType = "PPS"
 $Result = @()
 
-
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
         Disclaimer               = "Autoexchange to BTC wallet, no registration required"
@@ -32,7 +31,6 @@ if ($Querymode -eq "info") {
         RewardType               = $RewardType
     }
 }
-
 
 if ($Querymode -eq "speed") {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
@@ -53,7 +51,6 @@ if ($Querymode -eq "speed") {
     }
 }
 
-
 if ($Querymode -eq "wallet") {
     $Request = Invoke_APIRequest -Url $($ApiUrl + "/wallet?address=" + $Info.user) -Retry 3
 
@@ -66,7 +63,6 @@ if ($Querymode -eq "wallet") {
         Remove-Variable Request
     }
 }
-
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
@@ -131,7 +127,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
     Remove-Variable Request
 }
-
 
 $Result | ConvertTo-Json | Set-Content $Info.SharedFile
 Remove-Variable Result
