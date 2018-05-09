@@ -1,12 +1,15 @@
 [
-	{"time":1,"commands":[
-		{"id":1,"method":"algorithm.add","params":["#ALGORITHMPARAMETERS#","$('nhmp.' + ('#SERVER#').Split('.')[1] + '.nicehash.com:3200')","#LOGIN#:#PASSWORD#"]}
+	{"time":0,"commands":[
+		{"id":1,"method":"subscribe","params":["$('nhmp.' + ('#SERVER#').Split('.')[1] + '.nicehash.com:3200')","#LOGIN#:#PASSWORD#"]}
 	]},
+	{"time":1,"commands":[
+		{"id":1,"method":"algorithm.add","params":["#ALGORITHMPARAMETERS#"]}
+    ]},
 	{"time":2,"commands":[
-		#FOR_EACH_GPU# {"id":1,"method":"worker.add","params":["0","#GPUID#"]},#END_FOR_EACH_GPU##REMOVE_LAST_CHARACTER#
+		#FOR_EACH_GPU# {"id":1,"method":"worker.add","params":["#ALGORITHMPARAMETERS#","#GPUID#"]},#END_FOR_EACH_GPU##REMOVE_LAST_CHARACTER#
 	]},
 	{"time":10,"loop":10,"commands":[
 		{"id":1,"method":"worker.print.speed","params":["0"]},
-		{"id":1,"method":"algorithm.print.speeds","params":["0"]}
+		{"id":1,"method":"algorithm.print.speeds","params":[]}
 	]}
 ]
