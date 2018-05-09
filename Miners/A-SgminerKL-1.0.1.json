@@ -1,7 +1,7 @@
 {
-    "Path": "sgminer-kl-1.0.0-windows\\sgminer.exe",
-    "Uri": "https://github.com/KL0nLutiy/sgminer-kl/releases/download/kl-1.0.0/sgminer-kl-1.0.0-windows.zip",
-    "SHA256": "70a551fc0112a91d074ce5b7da6509eb245773fe0a847a9ef9376a9ff3f46779",
+    "Path": "sgminer-kl-1.0.1-windows\\sgminer.exe",
+    "Uri": "https://github.com/KL0nLutiy/sgminer-kl/releases/download/kl-1.0.1/sgminer-kl-1.0.1-windows.zip",
+    "SHA256": "05d1a0487239e5a2f975ffa0668a0bf5a83eb3f1fcf17278f182bef8b87ab0cf",
     "Type": "AMD",
     "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
     "BenchmarkArg": "--benchmark",
@@ -11,6 +11,7 @@
     "Algorithms": {
         "X16r": "-k x16r -g 2 -w 64 -X 256",
         "X16s": "-k x16s -g 2 -w 64 -X 256",
-        "X17": "-k x17 -g 2 -w 64 -X 256"
+        "X17": "-k x17 -g 2 -w 64 -X 256",
+		"Xevan": "-k xevan -g 2 -w 64 -X 256"
     }
 }
