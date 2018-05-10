@@ -12,6 +12,6 @@
         "X16r": "-k x16r -g 2 -w 64 -X 256",
         "X16s": "-k x16s -g 2 -w 64 -X 256",
         "X17": "-k x17 -g 2 -w 64 -X 256",
-		"Xevan": "-k xevan -g 2 -w 64 -X 256"
+        "Xevan": "-k xevan -g 2 -w 64 -X 256"
     }
 }

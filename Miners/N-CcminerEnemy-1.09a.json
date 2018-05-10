@@ -9,10 +9,10 @@
     "Algorithms": {
         "Bitcore": "-a bitcore",
         "PHI": "-a phi",
-		"Vitality": "-a vit",
+        "Vitalium": "-a vit",
         "X16r": "-a x16r",
         "X16s": "-a x16s",
-		"X17": "-a x17",
-		"Xevan": "-a xevan"
+        "X17": "-a x17",
+        "Xevan": "-a xevan"
     }
 }
