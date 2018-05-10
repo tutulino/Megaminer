@@ -21,19 +21,19 @@ if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY 
 
 #--------------Load config.ini file
 
-$Currency = get_config_variable "CURRENCY"
-$Location = get_config_variable "LOCATION"
-$FarmRigs = get_config_variable "FARMRIGS"
-$LocalCurrency = get_config_variable "LOCALCURRENCY"
+$Currency = Get-ConfigVariable "Currency"
+$Location = Get-ConfigVariable "Location"
+$FarmRigs = Get-ConfigVariable "FarmRigs"
+$LocalCurrency = Get-ConfigVariable "LocalCurrency"
 if ($LocalCurrency.length -eq 0) {
     #for old config.ini compatibility
-    switch ($location) {
-        'Europe' {$LocalCurrency = "EUR"}
-        'EU' {$LocalCurrency = "EUR"}
-        'US' {$LocalCurrency = "USD"}
-        'ASIA' {$LocalCurrency = "USD"}
-        'GB' {$LocalCurrency = "GBP"}
-        default {$LocalCurrency = "USD"}
+    $LocalCurrency = switch ($location) {
+        'Europe' {"EUR"}
+        'EU' {"EUR"}
+        'US' {"USD"}
+        'ASIA' {"USD"}
+        'GB' {"GBP"}
+        default {"USD"}
     }
 }
 
@@ -45,23 +45,24 @@ switch -regex -file config.ini {
         $CoinsWallets[$name] = $value.Trim()
     }
 }
-$UserName = get_config_variable "USERNAME"
+$UserName = Get-ConfigVariable "UserName"
 
 $SelectedOption = ""
 
 #-----------------Ask user for mode to mining AUTO/MANUAL to use, if a pool is indicated in parameters no prompt
 
 Clear-Host
-Print_Horizontal_line ""
-Print_Horizontal_line "SELECT OPTION"
-Print_Horizontal_line ""
+Print-HorizontalLine ""
+Print-HorizontalLine "SELECT OPTION"
+Print-HorizontalLine ""
 
 $Modes = @()
-$Modes += [pscustomobject]@{"Option" = 0; "Mode" = 'Mine Automatic'; "Explanation" = 'Not necesary choose coin to mine, program choose more profitable coin based on pool´s current statistics'}
-$Modes += [pscustomobject]@{"Option" = 1; "Mode" = 'Mine Automatic24h'; "Explanation" = 'Same as Automatic mode but based on pools/WTM reported last 24h profit'}
-$Modes += [pscustomobject]@{"Option" = 2; "Mode" = 'Mine Manual'; "Explanation" = 'You select coin to mine'}
+$Modes += [PSCustomObject]@{"Option" = 0; "Mode" = 'Mine Automatic'; "Explanation" = 'Not necesary choose coin to mine, program choose more profitable coin based on pool´s current statistics'}
+$Modes += [PSCustomObject]@{"Option" = 1; "Mode" = 'Mine Automatic24h'; "Explanation" = 'Same as Automatic mode but based on pools/WTM reported last 24h profit'}
+$Modes += [PSCustomObject]@{"Option" = 2; "Mode" = 'Mine Manual'; "Explanation" = 'You select coin to mine'}
 
-if ($FarmRigs) {$Modes += [pscustomobject]@{"Option" = 3; "Mode" = 'Farm Monitoring'; "Explanation" = 'I want to see my rigs state'}}
+if ($FarmRigs) {$Modes += [PSCustomObject]@{"Option" = 3; "Mode" = 'Farm Monitoring'; "Explanation" = 'I want to see my rigs state'}
+}
 $Modes | Format-Table Option, Mode, Explanation  | Out-Host
 
 If ($MiningMode -eq "") {
@@ -74,9 +75,9 @@ if ($MiningMode -ne "FARM MONITORING") {
     #-----------------Ask user for pool/s to use, if a pool is indicated in parameters no prompt
 
     switch ($MiningMode) {
-        "Mine Automatic" {$MiningMode = 'Automatic'; $Pools = Get_Pools -Querymode "Info" | Where-Object ActiveOnAutomaticMode -eq $true | Sort-Object name }
-        "Mine Automatic24h" {$MiningMode = 'Automatic24h'; $Pools = Get_Pools -Querymode "Info" | Where-Object ActiveOnAutomatic24hMode -eq $true | Sort-Object name }
-        "Mine Manual" {$MiningMode = 'Manual'; $Pools = Get_Pools -Querymode "Info" | Where-Object ActiveOnManualMode -eq $true | Sort-Object name }
+        "Mine Automatic" {$MiningMode = 'Automatic'; $Pools = Get-Pools -Querymode "Info" | Where-Object ActiveOnAutomaticMode -eq $true | Sort-Object name }
+        "Mine Automatic24h" {$MiningMode = 'Automatic24h'; $Pools = Get-Pools -Querymode "Info" | Where-Object ActiveOnAutomatic24hMode -eq $true | Sort-Object name }
+        "Mine Manual" {$MiningMode = 'Manual'; $Pools = Get-Pools -Querymode "Info" | Where-Object ActiveOnManualMode -eq $true | Sort-Object name }
     }
 
     $Pools | Add-Member Option "0"
@@ -86,13 +87,13 @@ if ($MiningMode -ne "FARM MONITORING") {
         $counter++}
 
     if ($MiningMode -ne "Manual") {
-        $Pools += [pscustomobject]@{"Disclaimer" = ""; "ActiveOnManualMode" = $false; "ActiveOnAutomaticMode" = $true; "ActiveOnAutomatic24hMode" = $true; "name" = 'ALL POOLS'; "option" = 99}
+        $Pools += [PSCustomObject]@{"Disclaimer" = ""; "ActiveOnManualMode" = $false; "ActiveOnAutomaticMode" = $true; "ActiveOnAutomatic24hMode" = $true; "name" = 'ALL POOLS'; "option" = 99}
     }
 
     #Clear-Host
-    Print_Horizontal_line ""
-    Print_Horizontal_line "SELECT POOL/S  TO MINE"
-    Print_Horizontal_line ""
+    Print-HorizontalLine ""
+    Print-HorizontalLine "SELECT POOL/S  TO MINE"
+    Print-HorizontalLine ""
 
     $Pools | Where-Object name -ne "Donationpool" | Format-Table Option, name, rewardtype, disclaimer | Out-Host
 
@@ -135,7 +136,7 @@ if ($MiningMode -ne "FARM MONITORING") {
         If ($CoinsName -eq "") {
 
             #Load coins from pools
-            $CoinsPool = Get_Pools -Querymode "Menu" -PoolsFilterList $PoolsName -location $Location | Select-Object Info, Symbol, Algorithm, Workers, PoolHashRate, Blocks_24h, Price -unique | Sort-Object info
+            $CoinsPool = Get-Pools -Querymode "Menu" -PoolsFilterList $PoolsName -location $Location | Select-Object Info, Symbol, Algorithm, Workers, PoolHashRate, Blocks_24h, Price -unique | Sort-Object info
 
             $CoinsPool | Add-Member Option "0"
             $CoinsPool | Add-Member YourHashRate ([Double]0.0)
@@ -153,7 +154,7 @@ if ($MiningMode -ne "FARM MONITORING") {
                 foreach ($Coin in $CoinsPool) {
                     $Coin.Option = $Counter
                     $counter++
-                    $Coin.YourHashRate = (Get_Best_Hashrate_Algo $Coin.Algorithm).hashrate
+                    $Coin.YourHashRate = (Get-BestHashRateAlgo $Coin.Algorithm).HashRate
                     $Coin.BtcProfit = $Coin.price * $Coin.YourHashRate
                     $Coin.LocalProfit = $CDKResponse.$LocalCurrency.rate_float * [double]$Coin.BtcProfit
                 }
@@ -184,18 +185,18 @@ if ($MiningMode -ne "FARM MONITORING") {
                 'xn=true&factor[xn_hr]=10&factor[xn_p]=0' #Xevan
 
                 'Calling WhatToMine API' | Write-Host
-                $WTMResponse = try { Invoke_APIRequest -Url $WtmUrl -Retry 3 | Select-Object -ExpandProperty coins } catch { $null; Write-Host "Not responding" }
+                $WTMResponse = try { Invoke-APIRequest -Url $WtmUrl -Retry 3 | Select-Object -ExpandProperty coins } catch { $null; Write-Host "Not responding" }
             }
 
             $Counter = 0
             foreach ($Coin in $CoinsPool) {
                 $Coin.Option = $Counter
                 $counter++
-                $Coin.YourHashRate = (Get_Best_Hashrate_Algo $Coin.Algorithm).hashrate
+                $Coin.YourHashRate = (Get-BestHashRateAlgo $Coin.Algorithm).HashRate
 
                 if ($ManualMiningApiUse -eq $true -and ![string]::IsNullOrEmpty($Coin.Symbol)) {
 
-                    $PriceCMC = [decimal]($CMCResponse | Where-Object Symbol -eq $Coin.Symbol | ForEach-Object {if ($(get_coin_unified_name $_.Id) -eq $Coin.Info) {$_.price_btc} })
+                    $PriceCMC = [decimal]($CMCResponse | Where-Object Symbol -eq $Coin.Symbol | ForEach-Object {if ($(Get-CoinUnifiedName $_.Id) -eq $Coin.Info) {$_.price_btc} })
                     $PriceBTX = [decimal]($BTXResponse | Where-Object MarketName -eq ('BTC-' + $Coin.Symbol) | Select-Object -ExpandProperty Last)
                     $PriceCRY = [decimal]($CRYResponse | Where-Object Label -eq ($Coin.Symbol + '/BTC') | Select-Object -ExpandProperty LastPrice)
 
@@ -213,7 +214,7 @@ if ($MiningMode -ne "FARM MONITORING") {
 
                     #Data from WTM
                     if ($WTMResponse -ne $null) {
-                        $WtmCoin = $WTMResponse.PSObject.Properties.Value | Where-Object tag -eq $Coin.Symbol | ForEach-Object {if ($(get_algo_unified_name $_.algorithm) -eq $Coin.Algorithm) {$_}}
+                        $WtmCoin = $WTMResponse.PSObject.Properties.Value | Where-Object tag -eq $Coin.Symbol | ForEach-Object {if ($(Get-AlgoUnifiedName $_.algorithm) -eq $Coin.Algorithm) {$_}}
                         if ($WtmCoin -ne $null) {
 
                             $WTMFactor = switch ($Coin.Algorithm) {
@@ -259,7 +260,7 @@ if ($MiningMode -ne "FARM MONITORING") {
                 @{Label = "Name"; Expression = {$_.Info}; Align = 'left'} ,
                 @{Label = "Symbol"; Expression = {$_.symbol}; Align = 'left'},
                 @{Label = "Algorithm"; Expression = {$_.algorithm}; Align = 'left'},
-                @{Label = "HashRate"; Expression = {(ConvertTo_Hash ($_.YourHashRate)) + "/s"}; Align = 'right'},
+                @{Label = "HashRate"; Expression = {(ConvertTo-Hash ($_.YourHashRate)) + "/s"}; Align = 'right'},
                 @{Label = "BTCPrice"; Expression = {if ($_.BTCPrice -gt 0) {[math]::Round($_.BTCPrice, 6).ToString("n6")}}; Align = 'right'},
                 @{Label = $LocalCurrency + "Price"; Expression = { [math]::Round($_.LocalPrice, 2)}; Align = 'right'},
                 @{Label = "Reward"; Expression = {if ($_.Reward -gt 0 ) {[math]::Round($_.Reward, 3)}}; Align = 'right'},

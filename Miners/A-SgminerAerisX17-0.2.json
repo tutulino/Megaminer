@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/sgminer-x17-aeris-v0.2_windows.zip",
     "SHA256": "854d75e2904b33cd33f9f806db8f2228aaf96671837ac5901db161c021c8e984",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
     "API": "Xgminer",
     "APIPort": 4028,
     "Fee": 0.02,

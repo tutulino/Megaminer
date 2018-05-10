@@ -11,7 +11,7 @@ $MinerReport = ConvertTo-Json @($ActiveMiners.SubMiners | Where-Object Status -e
 
         $Type = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
 
-        [pscustomobject]@{
+        [PSCustomObject]@{
             Name           = $ActiveMiners[$_.IdF].Name
             # Path           = Resolve-Path -Relative $_.Path
             Path           = $ActiveMiners[$_.IdF].Symbol + $(
@@ -26,11 +26,11 @@ $MinerReport = ConvertTo-Json @($ActiveMiners.SubMiners | Where-Object Status -e
             Pool           = $ActiveMiners[$_.IdF].PoolAbbName + $(
                 if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + $ActiveMiners[$_.IdF].PoolAbbNameDual}
             )
-            CurrentSpeed   = (ConvertTo_Hash $_.SpeedLive) + '/s' + $(
-                if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + (ConvertTo_Hash $_.SpeedLiveDual) + '/s'}
+            CurrentSpeed   = (ConvertTo-Hash $_.SpeedLive) + '/s' + $(
+                if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + (ConvertTo-Hash $_.SpeedLiveDual) + '/s'}
             ) -replace ",", "."
-            EstimatedSpeed = (ConvertTo_Hash $_.Hashrate) + '/s' + $(
-                if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + (ConvertTo_Hash $_.HashrateDual) + '/s'}
+            EstimatedSpeed = (ConvertTo-Hash $_.HashRate) + '/s' + $(
+                if (![string]::IsNullOrEmpty($ActiveMiners[$_.IdF].AlgorithmDual)) {'|' + (ConvertTo-Hash $_.HashRateDual) + '/s'}
             ) -replace ",", "."
             PID            = $ActiveMiners[$_.IdF].Process.Id
             StatusMiner    = $(if ($_.NeedBenchmark) {"Benchmarking($([string](($ActiveMiners | Where-Object {$_.DeviceGroup.GroupName -eq $Type}).count)))"} else {$_.Status})
@@ -38,6 +38,6 @@ $MinerReport = ConvertTo-Json @($ActiveMiners.SubMiners | Where-Object Status -e
         }
     })
 try {
-    Invoke-RestMethod -Uri $MinerStatusURL -Method Post -Body @{address = $Key; workername = $WorkerName; miners = $MinerReport; profit = $Profit} | Out-Null
+    Invoke-RestMethod -Uri $MinerStatusURL -Method Post -Body @{address = $Key; WorkerName = $WorkerName; miners = $MinerReport; profit = $Profit} | Out-Null
 } catch {}
 # $MinerReport | Set-Content report.txt

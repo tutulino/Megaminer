@@ -2,7 +2,7 @@
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
-    [pscustomobject]$Info
+    [PSCustomObject]$Info
 )
 
 #. .\..\Include.ps1
@@ -33,18 +33,18 @@ if ($Querymode -eq "info") {
 }
 
 if ($Querymode -eq "speed") {
-    # $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
+    # $Request = Invoke-APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
 
     # if ($Request) {
     #     $Result = $Request.Miners | ForEach-Object {
     #         [PSCustomObject]@{
     #             PoolName   = $Name
     #             Version    = $_.version
-    #             Algorithm  = get_algo_unified_name $_.Algo
+    #             Algorithm  = Get-AlgoUnifiedName $_.Algo
     #             WorkerName = (($_.password -split 'ID=')[1] -split ',')[0]
     #             Diff       = $_.difficulty
     #             Rejected   = $_.rejected
-    #             Hashrate   = $_.accepted
+    #             HashRate   = $_.accepted
     #         }
     #     }
     #     Remove-Variable Request
@@ -52,7 +52,7 @@ if ($Querymode -eq "speed") {
 }
 
 if ($Querymode -eq "wallet") {
-    $Request = Invoke_APIRequest -Url $($ApiUrl + "/wallet/" + $Info.user) -Retry 3
+    $Request = Invoke-APIRequest -Url $($ApiUrl + "/wallet/" + $Info.user) -Retry 3
 
     if ($Request) {
         $Result = [PSCustomObject]@{
@@ -71,22 +71,22 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Exit
     }
 
-    $Request = Invoke_APIRequest -Url $($ApiUrl + "/status") -Retry 3
+    $Request = Invoke-APIRequest -Url $($ApiUrl + "/status") -Retry 3
     if (!$Request) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
     }
 
-    $Currency = if ([string]::IsNullOrEmpty($(get_config_variable "CURRENCY_$Name"))) { get_config_variable "CURRENCY" } else { get_config_variable "CURRENCY_$Name" }
+    $Currency = if ([string]::IsNullOrEmpty($(Get-ConfigVariable "CURRENCY_$Name"))) { Get-ConfigVariable "CURRENCY" } else { Get-ConfigVariable "CURRENCY_$Name" }
 
     $Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
         $Request.$_.actual_last24h -gt 0 -and
-        $Request.$_.hashrate -gt 0 -and
+        $Request.$_.HashRate -gt 0 -and
         $Request.$_.workers -gt 0
     } | ForEach-Object {
 
         $Algo = $Request.$_
-        $Pool_Algo = get_algo_unified_name $Algo.name
+        $Pool_Algo = Get-AlgoUnifiedName $Algo.name
 
         $Divisor = 1000000
 
@@ -115,12 +115,12 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Pass                  = "c=BTC,ID=#WorkerName#"
             Location              = $Location
             SSL                   = $false
-            Symbol                = get_coin_symbol -Coin $Pool_Algo
+            Symbol                = Get-CoinSymbol -Coin $Pool_Algo
             AbbName               = $AbbName
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
             PoolWorkers           = $Algo.workers
-            PoolHashRate          = $Algo.hashrate
+            PoolHashRate          = $Algo.HashRate
             WalletMode            = $WalletMode
             WalletSymbol          = $Currency
             PoolName              = $Name

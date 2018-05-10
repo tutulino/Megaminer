@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/zFastminer-v230.zip",
     "SHA256": "c4979ce0f7dc143186d3348365df564e56d056b3f02d903c93a84433185985f9",
     "Type": "NVIDIA",
-    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# -q",
+    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# -d #Devices# #AlgorithmParameters# -q",
     "API": "Ccminer",
     "APIPort": 4068,
     "Fee": 0.018,

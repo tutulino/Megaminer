@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/PhoenixMiner_2.9e.zip",
 	"SHA256": "9817c89623025cf392a4e800a41cff96a87eee02e241d9f08d62dc43e0975e96",
     "Type": "NVIDIA",
-    "Arguments": "-pool #PROTOCOL#://#SERVER#:#PORT# -wal #LOGIN# -pass #PASSWORD# -esm #ETHSTMODE# -mi 12 -wd 1 -r -1 -logfile #GROUPNAME#_log.txt -logsmaxsize 10 -di #DEVICESCLAYMODE# -cdmport #APIPORT# -cdm 1 -nvidia #ALGORITHMPARAMETERS#",
+    "Arguments": "-pool #Protocol#://#Server#:#Port# -wal #Login# -pass #Password# -esm #EthStMode# -mi 12 -wd 1 -r -1 -logfile #GroupName#_log.txt -logsmaxsize 10 -di #DevicesClayMode# -cdmport #APIPort# -cdm 1 -nvidia #AlgorithmParameters#",
     "API": "Claymore",
     "APIPort": 4068,
     "Fee": 0.0065,

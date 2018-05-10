@@ -3,7 +3,7 @@
     "Uri": "https://github.com/ocminer/suprminer/releases/download/1.6/suprminer-1.6.7z",
     "SHA256": "18228f4ae3857cde703c501d6c829959b20e634067a070fd13bd46b4f53a5a76",
     "Type": "NVIDIA",
-    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -b #APIPort# -d #Devices# #AlgorithmParameters# ",
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {

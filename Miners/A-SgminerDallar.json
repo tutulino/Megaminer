@@ -3,7 +3,7 @@
     "Uri": "https://github.com/dallar-project/sgminer/releases/download/d1.0/sgminer-x86.zip",
     "SHA256": "a7b4917eb0b13bdb90c401034170a5d92837b5aff111da3ac3dc3da60326faee",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {

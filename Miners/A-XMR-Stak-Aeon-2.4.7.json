@@ -3,7 +3,7 @@
     "Uri": "https://github.com/IndeedMiners/xmr-aeon-stak/releases/download/2.4.7/XMR-AEON-STAK-2.4.7-20180504-win64-1.fee.zip",
     "SHA256": "e848d5cbc3a3092d3f880287ae3372a549c6fb1f37405fad575eaae353794047",
     "Type": "AMD",
-    "Arguments": "--noNVIDIA --noCPU --noUAC --amd #GroupName#-#ALGORITHM#.txt --noAMDCache #NoSSL#-o#NoSSL# #SSL#-O#SSL# #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -r #WORKERNAME# -i #APIPORT# #NH#--use-nicehash#NH# #ALGORITHMPARAMETERS#",
+    "Arguments": "--noNVIDIA --noCPU --noUAC --amd #GroupName#-#Algorithm#.txt --noAMDCache #NoSSL#-o#NoSSL# #SSL#-O#SSL# #Server#:#Port# -u #Login# -p #Password# -r #WorkerName# -i #APIPort# #NH#--use-nicehash#NH# #AlgorithmParameters#",
     "API": "XMRig",
     "APIPort": 4028,
     "Fee": 0.01,

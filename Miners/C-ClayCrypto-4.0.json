@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/Claymore.CryptoNote.CPU.Miner.v4.0.-.POOL.zip",
     "SHA256": "bac333efff44a22fa8de51c5ae743169d72702c9ff30d88aa5671cba7579feb6",
     "Type": "CPU",
-    "Arguments": "-mport -#APIPORT# -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# #ALGORITHMPARAMETERS#",
+    "Arguments": "-mport -#APIPort# -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# #AlgorithmParameters#",
     "API": "Claymore",
     "APIPort": 4048,
     "SSL": true,

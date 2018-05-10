@@ -13,7 +13,7 @@ try {
     $abMonitor = New-Object MSI.Afterburner.HardwareMonitor
 } catch {
     Write-Host $_.Exception.Message -ForegroundColor Yellow
-    WriteLog "Failed to create MSI Afterburner Monitor object. Falling back to standard monitoring" $LogFile $true
+    Write-Log "Failed to create MSI Afterburner Monitor object. Falling back to standard monitoring" $LogFile $true
     $abMonitor = $false
     Start-Sleep -Seconds 5
 }
@@ -22,12 +22,12 @@ try {
     $abControl = New-Object MSI.Afterburner.ControlMemory
 } catch {
     Write-Host $_.Exception.Message -ForegroundColor Yellow
-    WriteLog "Failed to create MSI Afterburner Control object. PowerLimits will not be available" $LogFile $true
+    Write-Log "Failed to create MSI Afterburner Control object. PowerLimits will not be available" $LogFile $true
     $abControl = $false
     Start-Sleep -Seconds 5
 }
 
-function set_ab_powerlimit ([int]$PowerLimitPercent, $DeviceGroup) {
+function Set-AfterburnerPowerLimit ([int]$PowerLimitPercent, $DeviceGroup) {
 
     try {
         $abMonitor.ReloadAll()
@@ -63,7 +63,7 @@ function set_ab_powerlimit ([int]$PowerLimitPercent, $DeviceGroup) {
     }
 }
 
-function get_ab_devices ($Type) {
+function Get-AfterburnerDevices ($Type) {
     try {
         $abControl.ReloadAll()
     } catch {

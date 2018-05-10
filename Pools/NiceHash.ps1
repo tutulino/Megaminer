@@ -2,7 +2,7 @@
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
-    [pscustomobject]$Info
+    [PSCustomObject]$Info
 )
 
 #. .\..\Include.ps1
@@ -31,7 +31,7 @@ if ($Querymode -eq "info") {
 
 if ($Querymode -eq "speed") {
     $Info.user = $Info.user.split('.')[0]
-    $Request = Invoke_APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider.workers&addr=" + $Info.user) -Retry 1
+    $Request = Invoke-APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider.workers&addr=" + $Info.user) -Retry 1
 
     if ($Request.Result.Workers) {
         $Request.Result.Workers | ForEach-Object {
@@ -45,7 +45,7 @@ if ($Querymode -eq "speed") {
                 PoolName   = $name
                 WorkerName = $_[0]
                 Rejected   = $_[4]
-                Hashrate   = [double]$_[1].a * $Multiplier
+                HashRate   = [double]$_[1].a * $Multiplier
             }
         }
         Remove-Variable Request
@@ -54,7 +54,7 @@ if ($Querymode -eq "speed") {
 
 if ($Querymode -eq "wallet") {
     $Info.user = ($Info.user -split '\.')[0]
-    $Request = Invoke_APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider&addr=" + $Info.user) -Retry 3 |
+    $Request = Invoke-APIRequest -Url $("https://api.nicehash.com/api?method=stats.provider&addr=" + $Info.user) -Retry 3 |
         Select-Object -ExpandProperty result | Select-Object -ExpandProperty stats
 
     if ($Request) {
@@ -74,7 +74,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Exit
     }
 
-    $Request = Invoke_APIRequest -Url "https://api.nicehash.com/api?method=simplemultialgo.info" -Retry 3 |
+    $Request = Invoke-APIRequest -Url "https://api.nicehash.com/api?method=simplemultialgo.info" -Retry 3 |
         Select-Object -expand result | Select-Object -expand simplemultialgo
 
     if (!$Request) {
@@ -90,7 +90,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Request | Where-Object {$_.paying -gt 0} | ForEach-Object {
 
-        $Algo = get_algo_unified_name ($_.name)
+        $Algo = Get-AlgoUnifiedName ($_.name)
 
         $Divisor = 1000000000
 
@@ -109,11 +109,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 HostSSL               = $_.name + "." + $Locations.$location + ".nicehash.com"
                 Port                  = $_.port
                 PortSSL               = $_.port + 30000
-                User                  = $(if ($CoinsWallets.BTC_NICE) {$CoinsWallets.BTC_NICE} else {$CoinsWallets.BTC}) + '.' + "#Workername#"
+                User                  = $(if ($CoinsWallets.BTC_NICE) {$CoinsWallets.BTC_NICE} else {$CoinsWallets.BTC}) + '.' + "#WorkerName#"
                 Pass                  = "x"
                 Location              = $Location
                 SSL                   = $enableSSL
-                Symbol                = get_coin_symbol -Coin $Algo
+                Symbol                = Get-CoinSymbol -Coin $Algo
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode

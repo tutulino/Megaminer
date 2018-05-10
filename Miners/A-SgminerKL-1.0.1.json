@@ -3,7 +3,7 @@
     "Uri": "https://github.com/KL0nLutiy/sgminer-kl/releases/download/kl-1.0.1/sgminer-kl-1.0.1-windows.zip",
     "SHA256": "05d1a0487239e5a2f975ffa0668a0bf5a83eb3f1fcf17278f182bef8b87ab0cf",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
     "BenchmarkArg": "--benchmark",
     "API": "Xgminer",
     "APIPort": 4028,

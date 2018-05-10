@@ -3,7 +3,7 @@
     "Uri": "https://github.com/Optiminer/OptiminerZero/raw/master/optiminer-zero-1.1.0.zip",
     "SHA256": "12d3d1ada1b06d6f118fc727278a91bf87d0219e78de9b3de428946d6b7f2041",
     "Type": "AMD",
-    "Arguments": "-m #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #DEVICESNSGMODE# #ALGORITHMPARAMETERS#",
+    "Arguments": "-m #APIPort# -s #Server#:#Port# -u #Login# -p #Password# -c #GPUPlatform# #DevicesNsgMode# #AlgorithmParameters#",
     "API": "optiminer",
     "APIPort": 4028,
     "Algorithms": {

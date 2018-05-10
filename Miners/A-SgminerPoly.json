@@ -3,7 +3,7 @@
     "Uri": "https://github.com/polytimos/release/raw/master/sgminer-polytimos.zip",
     "SHA256": "04818d662a75ae393944c3e69a735fa33b66ca83e3f78db3415a37b7dc9dd449",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {

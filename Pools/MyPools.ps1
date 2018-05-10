@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
-    [pscustomobject]$Info
+    [PSCustomObject]$Info
 )
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
@@ -28,14 +28,13 @@ if ($Querymode -eq "info") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
 
-    $Pools += [pscustomobject]@{"coin" = "Aeon"; "algo" = "CryptoLight"; "symbol" = "AEON"; "server" = "mine.aeon-pool.com"; "port" = 5555; "fee" = 0.01; "User" = $CoinsWallets.AEON}
-    # $Pools += [pscustomobject]@{"coin" = "HPPcoin"; "algo" = "Lyra2h"; "symbol" = "HPP"; "server" = "pool.hppcoin.com"; "port" = 3008; "fee" = 0; "User" = "$Username.#Workername#"}
-    $Pools += [pscustomobject]@{"coin" = "HPPcoin"; "algo" = "Lyra2h"; "symbol" = "HPP"; "server" = "sg-mine.idcray.com"; "port" = 10111; "fee" = 0.01; "User" = "$Username.#Workername#"}
-    # $Pools += [pscustomobject]@{"coin" = "HPPcoin"; "algo" = "Lyra2h"; "symbol" = "HPP"; "server" = "hpp-mine.idcray.com"; "port" = 10111; "fee" = 0.01; "User" = "$Username.#Workername#"}
-    $Pools += [pscustomobject]@{"coin" = "Dallar"; "algo" = "Throestl"; "symbol" = "DAL"; "server" = "pool.dallar.org"; "port" = 3032; "fee" = 0.01; "User" = $CoinsWallets.DAL}
-
-    $Pools += [pscustomobject]@{"coin" = "Cryply"; "algo" = "YescryptR16"; "symbol" = "CRP"; "server" = "cryply.luckypool.org"; "port" = 9997; "fee" = 0; "User" = "$Username.#Workername#"}
-    $Pools += [pscustomobject]@{"coin" = "HexxCoin"; "algo" = "Lyra2z330"; "symbol" = "HXX"; "server" = "hxx-pool1.chainsilo.com"; "port" = 3033; "fee" = 0.03; "User" = "$Username.#Workername#"}
+      $Pools += [PSCustomObject]@{coin = "Aeon"; algo = "CryptoLight"; symbol = "AEON"; server = "mine.aeon-pool.com"; port = 5555; fee = 0.01; user = $CoinsWallets.AEON}
+    # $Pools += [PSCustomObject]@{coin = "HPPcoin"; algo = "Lyra2h"; symbol = "HPP"; server = "pool.hppcoin.com"; port = 3008; fee = 0; user = "$UserName.#WorkerName#"}
+      $Pools += [PSCustomObject]@{coin = "HPPcoin"; algo = "Lyra2h"; symbol = "HPP"; server = "sg-mine.idcray.com"; port = 10111; fee = 0.01; user = "$UserName.#WorkerName#"}
+    # $Pools += [PSCustomObject]@{coin = "HPPcoin"; algo = "Lyra2h"; symbol = "HPP"; "server" = "hpp-mine.idcray.com"; port = 10111; fee = 0.01; user = "$UserName.#WorkerName#"}
+      $Pools += [PSCustomObject]@{coin = "Dallar"; algo = "Throestl"; symbol = "DAL"; server = "pool.dallar.org"; port = 3032; fee = 0.01; user = $CoinsWallets.DAL}
+      $Pools += [PSCustomObject]@{coin = "Cryply"; algo = "YescryptR16"; symbol = "CRP"; server = "cryply.luckypool.org"; port = 9997; fee = 0; user = "$UserName.#WorkerName#"}
+      $Pools += [PSCustomObject]@{coin = "HexxCoin"; algo = "Lyra2z330"; symbol = "HXX"; server = "hxx-pool1.chainsilo.com"; port = 3033; fee = 0.03; user = "$UserName.#WorkerName#"}
 
     $Pools | ForEach-Object {
         $Result += [PSCustomObject]@{

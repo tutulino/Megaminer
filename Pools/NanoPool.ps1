@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory = $false)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
-    [pscustomobject]$Info
+    [PSCustomObject]$Info
 )
 
 #. .\Include.ps1
@@ -30,18 +30,18 @@ if ($Querymode -eq "info") {
 }
 
 if ($Querymode -eq "SPEED") {
-    $Request = Invoke_APIRequest -Url $("https://api.nanopool.org/v1/" + $Info.symbol.tolower() + "/history/" + $Info.user) -Retry 1
+    $Request = Invoke-APIRequest -Url $("https://api.nanopool.org/v1/" + $Info.symbol.tolower() + "/history/" + $Info.user) -Retry 1
     if ($Request) {
         $Result = [PSCustomObject]@{
             PoolName   = $name
-            Workername = $Info.WorkerName
-            Hashrate   = ($Request.data)[0].hashrate
+            WorkerName = $Info.WorkerName
+            HashRate   = ($Request.data)[0].HashRate
         }
     }
 }
 
 if ($Querymode -eq "WALLET") {
-    $Request = Invoke_APIRequest -Url $("https://api.nanopool.org/v1/" + $Info.symbol.tolower() + "/balance/" + $Info.user) -Retry 3
+    $Request = Invoke-APIRequest -Url $("https://api.nanopool.org/v1/" + $Info.symbol.tolower() + "/balance/" + $Info.user) -Retry 3
     if ($Request) {
         $Result = [PSCustomObject]@{
             Pool     = $name
@@ -54,22 +54,22 @@ if ($Querymode -eq "WALLET") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $PrePools = @()
-    $PrePools += [pscustomobject]@{"coin" = "EthereumClassic"; "algo" = "Ethash"; "symbol" = "ETC"; "port" = 19999; "Fee" = 0.01; "Divisor" = 1000000; "protocol" = "stratum+tcp"};
-    $PrePools += [pscustomobject]@{"coin" = "Ethereum"; "algo" = "Ethash"; "symbol" = "ETH"; "port" = 9999; "Fee" = 0.01; "Divisor" = 1000000; "protocol" = "stratum+tcp"};
-    $PrePools += [pscustomobject]@{"coin" = "Zcash"; "algo" = "Equihash"; "symbol" = "ZEC"; "port" = 6666; "Fee" = 0.01; "Divisor" = 1; "protocol" = "stratum+ssl"};
-    $PrePools += [pscustomobject]@{"coin" = "Monero"; "algo" = "CryptoNightV7"; "symbol" = "XMR"; "port" = 14444; "Fee" = 0.01; "Divisor" = 1; "protocol" = "stratum+ssl"};
-    $PrePools += [pscustomobject]@{"coin" = "Electroneum"; "algo" = "CryptoNight"; "symbol" = "ETN"; "port" = 13333; "Fee" = 0.02; "Divisor" = 1; "protocol" = "stratum+ssl"};
+    $PrePools += [PSCustomObject]@{coin = "EthereumClassic"; algo = "Ethash"; symbol = "ETC"; port = 19999; fee = 0.01; divisor = 1000000; protocol = "stratum+tcp"};
+    $PrePools += [PSCustomObject]@{coin = "Ethereum"; algo = "Ethash"; symbol = "ETH"; port = 9999; fee = 0.01; divisor = 1000000; protocol = "stratum+tcp"};
+    $PrePools += [PSCustomObject]@{coin = "Zcash"; algo = "Equihash"; symbol = "ZEC"; port = 6666; fee = 0.01; divisor = 1; protocol = "stratum+ssl"};
+    $PrePools += [PSCustomObject]@{coin = "Monero"; algo = "CryptoNightV7"; symbol = "XMR"; port = 14444; fee = 0.01; divisor = 1; protocol = "stratum+ssl"};
+    $PrePools += [PSCustomObject]@{coin = "Electroneum"; algo = "CryptoNight"; symbol = "ETN"; port = 13333; fee = 0.02; divisor = 1; protocol = "stratum+ssl"};
 
     $Pools = @() #generate a pool for each location and add API data
     $PrePools | ForEach-Object {
-        $RequestW = Invoke_APIRequest -Url $("https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/pool/activeworkers") -Retry 1
-        $RequestP = Invoke_APIRequest -Url $("https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/approximated_earnings/1") -Retry 1 |
+        $RequestW = Invoke-APIRequest -Url $("https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/pool/activeworkers") -Retry 1
+        $RequestP = Invoke-APIRequest -Url $("https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/approximated_earnings/1") -Retry 1 |
             Select-Object -ExpandProperty data | Select-Object -ExpandProperty day
 
         $Locations = @()
-        $Locations += [PSCustomObject]@{Location = "EU"; server = $_.Symbol + "-eu1.nanopool.org"}
-        $Locations += [PSCustomObject]@{Location = "US"; server = $_.Symbol + "-us-east1.nanopool.org"}
-        $Locations += [PSCustomObject]@{Location = "ASIA"; server = $_.Symbol + "-asia1.nanopool.org"}
+        $Locations += [PSCustomObject]@{location = "EU"; server = $_.Symbol + "-eu1.nanopool.org"}
+        $Locations += [PSCustomObject]@{location = "US"; server = $_.Symbol + "-us-east1.nanopool.org"}
+        $Locations += [PSCustomObject]@{location = "ASIA"; server = $_.Symbol + "-asia1.nanopool.org"}
 
         ForEach ($loc in $locations) {
             $Result += [PSCustomObject]@{

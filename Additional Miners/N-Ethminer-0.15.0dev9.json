@@ -3,7 +3,7 @@
     "Uri": "https://github.com/ethereum-mining/ethminer/releases/download/v0.15.0.dev9/ethminer-0.15.0.dev9-Windows.zip",
     "SHA256": "537d5a8a1000412b8ccd095e2e033d82ec1ddc3cf2238e848b8bf8a725ea200a",
     "Type": "NVIDIA",
-    "Arguments": "-U -SP 2 -S #SERVER#:#PORT# -O #LOGIN#:#PASSWORD# --api-port #APIPORT# --cuda-devices #DEVICESETHMODE# #ALGORITHMPARAMETERS#",
+    "Arguments": "-U -SP 2 -S #Server#:#Port# -O #Login#:#Password# --api-port #APIPort# --cuda-devices #DevicesETHMode# #AlgorithmParameters#",
     "API": "Claymore",
     "APIPort": 4068,
     "Algorithms": {

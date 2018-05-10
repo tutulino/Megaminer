@@ -3,7 +3,7 @@
     "Uri": "https://github.com/djm34/ccminer-msvc2015/releases/download/v0.3.0/ccminer.rar",
     "SHA256": "b19fa7fcfa6f81620fd82068ba5f0da7dfac4d9fa885d09d9430cab4fbf509f1",
     "Type": "NVIDIA",
-    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# -d #Devices# #AlgorithmParameters# ",
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {

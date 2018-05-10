@@ -3,7 +3,7 @@
     "Uri": "http://ccminer.org/preview/ccminer-2.2-skunk.7z",
     "SHA256": "718befa20018d2a5cf016e75f7732e2505413d186e506edfd84521ccb0140127",
     "Type": "NVIDIA",
-    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# -d #Devices# #AlgorithmParameters# ",
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {

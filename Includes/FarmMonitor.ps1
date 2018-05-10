@@ -1,8 +1,8 @@
 . .\Include.ps1
 
-$config = get_config
-$FarmRigs = $config.FarmRigs |ConvertFrom-Json
-$smtp = $config.Smtpserver |ConvertFrom-Json
+$config = Get-Config
+$FarmRigs = $config.FarmRigs | ConvertFrom-Json
+$smtp = $config.Smtp#Port# |ConvertFrom-Json
 
 #Look for SMTP Password, propmpt and store if not available
 
@@ -14,23 +14,23 @@ if ($config.NotificationMail -ne $null -and $config.NotificationMail -ne "") {
     } else {
 
         $PlainPass = Read-Host -Prompt 'TYPE YOUR SMTP SERVER ACCOUNT PASSWORD:'
-        $EncPass = Convertto-SecureString $PlainPass -AsPlainText -Force
-        ConvertFrom-SecureString $EncPass | set-content -path ".\smtp.ctr"
-        Remove-variable PlainPass #for security pass is not stored unencrypted in memory
+        $EncPass = ConvertTo-SecureString $PlainPass -AsPlainText -Force
+        ConvertFrom-SecureString $EncPass | Set-Content -path ".\smtp.ctr"
+        Remove-Variable PlainPass #for security pass is not stored unencrypted in memory
     }
 
 }
 
-$Host.UI.RawUI.WindowTitle = "MM Farm Monitor"
+$Host.UI.RawUI.WindowTitle = "Forager Farm Monitor"
 
 $FarmRigs | ForEach-Object {
-    $_ | add-member LastContent $null
-    $_ | add-member State $null
-    $_ | add-member LastState $null
-    $_ | add-member LastTime $null
-    $_ | add-member ChangeStateTime (get-date)
-    $_ | add-member PendingNotify $false
-    $_ | add-member Workername ""
+    $_ | Add-Member LastContent $null
+    $_ | Add-Member State $null
+    $_ | Add-Member LastState $null
+    $_ | Add-Member LastTime $null
+    $_ | Add-Member ChangeStateTime (Get-Date)
+    $_ | Add-Member PendingNotify $false
+    $_ | Add-Member WorkerName ""
 }
 
 while ($true) {
@@ -38,9 +38,9 @@ while ($true) {
     $Requests = @()
     ForEach ($rig in $FarmRigs) {
         $uri = "http://" + $rig.IpOrLanName + ':' + $rig.ApiPort
-        $rig.LastTime = get-date
+        $rig.LastTime = Get-Date
         if ($rig.LastState -ne $rig.State -and $rig.LastState -ne $null) {
-            $rig.ChangeStateTime = get-date
+            $rig.ChangeStateTime = Get-Date
             if ($rig.PendingNotify)
             {$rig.PendingNotify = $false} #state changes before last change was notified, must anulate notify
             else
@@ -55,23 +55,23 @@ while ($true) {
             $rig.State = "ERROR"
         }
     }
-    try {set_WindowSize 185 60} catch {}
+    try {Set-WindowSize 185 60} catch {}
     Clear-Host
 
-    Print_Horizontal_line ("Forager FARM MONITOR (" + (get-date).tostring("g") + ")")
-    "" | out-host
+    Print-HorizontalLine ("Forager FARM MONITOR (" + (Get-Date).tostring("g") + ")")
+    "" | Out-Host
 
     $FarmRigs | ForEach-Object {
 
-        Print_Horizontal_line ($_.IpOrLanName + " (" + $_.LastContent.config.workername + ")")
+        Print-HorizontalLine ($_.IpOrLanName + " (" + $_.LastContent.config.WorkerName + ")")
 
-        if ($_.ChangeStateTime -ne $null) {$ChangeStateElapsed = ((get-date) - [datetime]$_.ChangeStateTime).minutes} else {$ChangeStateElapsed = 0} #calculates time since state change
+        if ($_.ChangeStateTime -ne $null) {$ChangeStateElapsed = ((Get-Date) - [datetime]$_.ChangeStateTime).minutes} else {$ChangeStateElapsed = 0} #calculates time since state change
 
         if ($_.State -eq "OK") {
 
-            "Mode: " + $_.LastContent.params.MiningMode + "       Pool/s: " + ($_.LastContent.params.pools -join ",") + "         Release: " + $_.LastContent.Release |out-host
+            "Mode: " + $_.LastContent.params.MiningMode + "       Pool/s: " + ($_.LastContent.params.pools -join ",") + "         Release: " + $_.LastContent.Release |Out-Host
 
-            $_.Workername = $_.LastContent.config.workername
+            $_.WorkerName = $_.LastContent.config.WorkerName
 
             $_.LastContent.Activeminers | Format-Table (
                 @{Label = "GroupName"; Expression = {$_.GroupName}},
@@ -87,11 +87,11 @@ while ($true) {
                 @{Label = "Efficiency"; Expression = {$_.EfficiencyH} ; Align = 'right'},
                 @{Label = "Efficiency"; Expression = {$_.EfficiencyW}  ; Align = 'right'},
                 @{Label = "Pool"; Expression = {$_.Pool}}
-            ) | out-host
+            ) | Out-Host
         } else {
-            "" | out-host
+            "" | Out-Host
             write-warning "NOT RESPONDING FOR $ChangeStateElapsed MINUTES...."
-            "" | out-host
+            "" | Out-Host
         }
 
         if ($ChangeStateElapsed -gt 4) {
@@ -103,7 +103,7 @@ while ($true) {
 
                 $_.PendingNotify = $false
 
-                $mailmsg = $_.IpOrLanName + "(" + $_.workername + ") is "
+                $mailmsg = $_.IpOrLanName + "(" + $_.WorkerName + ") is "
 
                 if ($_.State -eq 'OK') {$mailmsg += "ONLINE"} else {$mailmsg += "OFFLINE"}
 
@@ -114,13 +114,9 @@ while ($true) {
                 } else {
                     Send-MailMessage  -To $config.NotificationMail -From $smtp.user  -Subject  $mailmsg -smtp ($smtp.url) -Port ($smtp.port) -Credential $creds
                 }
-
             }
-
         }
-
     }
 
-    start-sleep $Config.RefreshInterval
-
+    Start-Sleep -Seconds $Config.RefreshInterval
 }

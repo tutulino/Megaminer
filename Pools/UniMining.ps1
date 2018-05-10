@@ -2,7 +2,7 @@
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
-    [pscustomobject]$Info
+    [PSCustomObject]$Info
 )
 
 #. .\..\Include.ps1
@@ -33,18 +33,18 @@ if ($Querymode -eq "info") {
 }
 
 if ($Querymode -eq "speed") {
-    $Request = Invoke_APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
+    $Request = Invoke-APIRequest -Url $($ApiUrl + "/walletEx?address=" + $Info.user) -Retry 1
 
     if ($Request) {
         $Result = $Request.Miners | ForEach-Object {
             [PSCustomObject]@{
                 PoolName   = $Name
                 Version    = $_.version
-                Algorithm  = get_algo_unified_name $_.Algo
+                Algorithm  = Get-AlgoUnifiedName $_.Algo
                 WorkerName = (($_.password -split 'ID=')[1] -split ',')[0]
                 Diff       = $_.difficulty
                 Rejected   = $_.rejected
-                Hashrate   = $_.accepted
+                HashRate   = $_.accepted
             }
         }
         Remove-Variable Request
@@ -52,7 +52,7 @@ if ($Querymode -eq "speed") {
 }
 
 if ($Querymode -eq "wallet") {
-    $Request = Invoke_APIRequest -Url $($ApiUrl + "/wallet?address=" + $Info.user) -Retry 3
+    $Request = Invoke-APIRequest -Url $($ApiUrl + "/wallet?address=" + $Info.user) -Retry 3
 
     if ($Request) {
         $Result = [PSCustomObject]@{
@@ -65,8 +65,8 @@ if ($Querymode -eq "wallet") {
 }
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
-    $Request = Invoke_APIRequest -Url $($ApiUrl + "/status") -Retry 3
-    $RequestCurrencies = Invoke_APIRequest -Url $($ApiUrl + "/currencies") -Retry 3
+    $Request = Invoke-APIRequest -Url $($ApiUrl + "/status") -Retry 3
+    $RequestCurrencies = Invoke-APIRequest -Url $($ApiUrl + "/currencies") -Retry 3
     if (!$Request -or !$RequestCurrencies) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
@@ -74,13 +74,13 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
         $RequestCurrencies.$_.'24h_blocks' -gt 0 -and
-        $RequestCurrencies.$_.hashrate -gt 0 -and
+        $RequestCurrencies.$_.HashRate -gt 0 -and
         $RequestCurrencies.$_.workers -gt 0
     } | ForEach-Object {
 
         $Coin = $RequestCurrencies.$_
-        $Pool_Algo = get_algo_unified_name $Coin.algo
-        $Pool_Coin = get_coin_unified_name $Coin.name
+        $Pool_Algo = Get-AlgoUnifiedName $Coin.algo
+        $Pool_Coin = Get-CoinUnifiedName $Coin.name
         $Pool_Symbol = $_
 
         $Divisor = 1000000
@@ -91,7 +91,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "sha256" {$Divisor *= 1000}
         }
 
-        if ($Pool_Symbol -eq 'XVG' -and $Pool_Algo -eq 'Blake2s') {$Server = "xvg.eu1.unimining.net"} else {$Server = $MineUrl}
+        if ($Pool_Symbol -eq 'XVG' -and $Pool_Algo -eq 'Blake2s') {$#Port# = "xvg.eu1.unimining.net"} else {$#Port# = $MineUrl}
 
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
@@ -99,7 +99,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Price                 = [decimal]$Coin.estimate / $Divisor
             Price24h              = [decimal]$Coin.'24h_btc' / $Divisor
             Protocol              = "stratum+tcp"
-            Host                  = $Server
+            Host                  = $#Port#
             Port                  = $Coin.port
             User                  = $CoinsWallets.$Pool_Symbol
             Pass                  = "c=$Pool_Symbol,ID=#WorkerName#"
@@ -110,7 +110,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
             PoolWorkers           = $Coin.workers
-            PoolHashRate          = $Coin.hashrate
+            PoolHashRate          = $Coin.HashRate
             WalletMode            = $WalletMode
             Walletsymbol          = $Pool_Symbol
             PoolName              = $Name

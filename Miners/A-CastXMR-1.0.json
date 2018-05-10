@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/cast_xmr-vega-win64_100.zip",
     "SHA256": "fab141ce2b3e3b32636fedfc242e9b91edc21317e108fb361368570694dd338e",
     "Type": "AMD",
-    "Arguments": "-S #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -G #DEVICES# -R --remoteport #APIPORT# --opencl #GPUPLATFORM# --forcecompute --fastjobswitch #NoNH#--nonicehash#NoNH# --ratewatchdog --memset --maxmem #ALGORITHMPARAMETERS#",
+    "Arguments": "-S #Server#:#Port# -u #Login# -p #Password# -G #Devices# -R --remoteport #APIPort# --opencl #GPUPlatform# --forcecompute --fastjobswitch #NoNH#--nonicehash#NoNH# --ratewatchdog --memset --maxmem #AlgorithmParameters#",
     "API": "castXMR",
     "APIPort": 4028,
     "Fee": 0.015,

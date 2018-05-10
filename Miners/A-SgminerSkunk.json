@@ -3,7 +3,7 @@
     "Uri": "https://github.com/signatumd/releases/raw/master/sigt-miner.zip",
     "SHA256": "eb91b571e1e7781f5cf632a8998b2f8ef5595528ef95586ded0264773ac1d9c1",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {

@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/ClaymoreDual11.7_fix.7z",
     "SHA256": "55da8009d3f61e9c47216795bb369f9293668af59eebd205c0e93a91d97bc43f",
     "Type": "AMD",
-    "Arguments": "-epool #PROTOCOL#://#SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -dpool #PROTOCOLDUAL#://#SERVERDUAL#:#PORTDUAL# -dwal #LOGINDUAL# -dpsw #PASSWORDDUAL# -wd 1 -r -1 -logfile #GROUPNAME#_log.txt -logsmaxsize 10 -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 1 #ALGORITHMPARAMETERS#",
+    "Arguments": "-epool #Protocol#://#Server#:#Port# -ewal #Login# -epsw #Password# -esm #EthStMode# -allpools 1 -dpool #ProtocolDual#://#ServerDual#:#PortDual# -dwal #LoginDual# -dpsw #PasswordDual# -wd 1 -r -1 -logfile #GroupName#_log.txt -logsmaxsize 10 -di #DevicesClayMode# -mport -#APIPort# -platform 1 #AlgorithmParameters#",
     "API": "Claymore",
     "APIPort": 4028,
     "Fee": "$(if ($DeviceGroup.MemoryGB -gt 3){0.015}else{0})",

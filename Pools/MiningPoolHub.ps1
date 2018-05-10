@@ -2,7 +2,7 @@
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
-    [pscustomobject]$Info
+    [PSCustomObject]$Info
 )
 
 #. .\Include.ps1
@@ -18,7 +18,7 @@ $Result = @()
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "Registration required, set username/workername in config.ini file"
+        Disclaimer               = "Registration required, set UserName/WorkerName in config.ini file"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
@@ -30,7 +30,7 @@ if ($Querymode -eq "info") {
 
 if ($Querymode -eq "APIKEY") {
 
-    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $Info.ApiKey + "&id=" + "&$(Get-Date -Format "yyyy-MM-dd_HH-mm")") -Retry 3 |
+    $Request = Invoke-APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $Info.ApiKey + "&id=" + "&$(Get-Date -Format "yyyy-MM-dd_HH-mm")") -Retry 3 |
         Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
 
     if ($Request) {
@@ -49,17 +49,17 @@ if ($Querymode -eq "APIKEY") {
 
 if ($Querymode -eq "SPEED") {
 
-    $Request = Invoke_APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey + "&$(Get-Date -Format "yyyy-MM-dd_HH-mm")") -Retry 1 |
+    $Request = Invoke-APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey + "&$(Get-Date -Format "yyyy-MM-dd_HH-mm")") -Retry 1 |
         Select-Object -ExpandProperty getuserworkers | Select-Object -ExpandProperty data
 
     if ($Request) {
         $Result = $Request | ForEach-Object {
-            if ($_.hashrate -gt 0) {
+            if ($_.HashRate -gt 0) {
                 [PSCustomObject]@{
                     PoolName   = $name
                     Diff       = $_.difficulty
-                    Workername = $_.username.split('.')[1]
-                    Hashrate   = $_.hashrate
+                    WorkerName = $_.UserName.split('.')[1]
+                    HashRate   = $_.HashRate
                 }
             }
         }
@@ -70,11 +70,11 @@ if ($Querymode -eq "SPEED") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$UserName) {
-        Write-Host "$Name USERNAME not defined in config.ini"
+        Write-Host "$Name UserName not defined in config.ini"
         Exit
     }
 
-    $MiningPoolHub_Request = Invoke_APIRequest -Url "https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics&$(Get-Date -Format "yyyy-MM-dd_HH-mm")" -Retry 3
+    $MiningPoolHub_Request = Invoke-APIRequest -Url "https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics&$(Get-Date -Format "yyyy-MM-dd_HH-mm")" -Retry 3
 
     if (!$MiningPoolHub_Request) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
@@ -85,8 +85,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0} | ForEach-Object {
 
-        $MiningPoolHub_Algorithm = get_algo_unified_name $_.algo
-        $MiningPoolHub_Coin = get_coin_unified_name $_.coin_name
+        $MiningPoolHub_Algorithm = Get-AlgoUnifiedName $_.algo
+        $MiningPoolHub_Coin = Get-CoinUnifiedName $_.coin_name
 
         $MiningPoolHub_OriginalCoin = $_.coin_name
 
@@ -126,7 +126,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Pass                  = "x"
                 Location              = $Location
                 SSL                   = $enableSSL
-                Symbol                = get_coin_symbol -Coin $MiningPoolHub_Coin
+                Symbol                = Get-CoinSymbol -Coin $MiningPoolHub_Coin
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode

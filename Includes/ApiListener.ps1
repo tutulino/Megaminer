@@ -36,7 +36,7 @@
         $statusCode = 200
         $context = $listener.GetContext()
 
-        Write-Warning "Received request $(get-date)"
+        Write-Warning "Received request $(Get-Date)"
 
         $request = $context.Request
         $command = $request.QueryString.Item("command")
@@ -48,7 +48,7 @@
         try{$commandOutput = get-content -path $SharedFile -raw } catch{$commandOutput=""}
 
         if ($commandOutput -ne $null -and $commandOutput -ne "") {
-            $A=(get-date)
+            $A=(Get-Date)
             $B=([datetime]($commandOutput |convertfrom-json).RefreshDate)
             $Ago = $A - $B
             if ($Ago.TotalSeconds -gt 20) {$commandOutput=""}  #check info refresh date

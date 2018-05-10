@@ -1,14 +1,14 @@
 <#
 THIS IS A ADVANCED POOL, NOT FOR NOOB.
 
-THIS IS A VIRTUAL POOL, STATISTICS ARE TAKEN FROM WHATTOMINE AND RECALCULATED WITH YOUR BENCHMARKS HASHRATE, YOU CAN SET DESTINATION POOL YOU WANT FOR EACH COIN, BUT REMEMBER YOU MUST HAVE AND ACOUNT IF DESTINATION POOL IS NOT ANONYMOUS POOL
+THIS IS A VIRTUAL POOL, STATISTICS ARE TAKEN FROM WHATTOMINE AND RECALCULATED WITH YOUR BENCHMARKS HashRate, YOU CAN SET DESTINATION POOL YOU WANT FOR EACH COIN, BUT REMEMBER YOU MUST HAVE AND ACOUNT IF DESTINATION POOL IS NOT ANONYMOUS POOL
 #>
 
 param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
-    [pscustomobject]$Info
+    [PSCustomObject]$Info
 )
 
 # . .\..\Include.ps1
@@ -37,25 +37,25 @@ if ($Querymode -eq "info") {
 if (($Querymode -eq "speed") ) {
     if ($PoolRealName -ne $null) {
         $Info.PoolName = $PoolRealName
-        $Result = Get_Pools -Querymode "speed" -PoolsFilterList $Info.PoolName -Info $Info
+        $Result = Get-Pools -Querymode "speed" -PoolsFilterList $Info.PoolName -Info $Info
     }
 }
 
 if (($Querymode -eq "wallet") -or ($Querymode -eq "APIKEY")) {
     if ($PoolRealName -ne $null) {
         $Info.PoolName = $PoolRealName
-        $Result = Get_Pools -Querymode $info.WalletMode -PoolsFilterList $Info.PoolName -Info $Info | select-object Pool, currency, balance
+        $Result = Get-Pools -Querymode $info.WalletMode -PoolsFilterList $Info.PoolName -Info $Info | select-object Pool, currency, balance
     }
 }
 
 if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
 
     #Look for pools
-    $ConfigOrder = (get_config_variable "WHATTOMINEPOOLORDER") -split ','
+    $ConfigOrder = (Get-ConfigVariable "WHATTOMINEPOOLORDER") -split ','
     $HPools = foreach ($PoolToSearch in $ConfigOrder) {
-        $HPoolsTmp = Get_Pools -Querymode "core" -PoolsFilterList $PoolToSearch -location $Info.Location
+        $HPoolsTmp = Get-Pools -Querymode "core" -PoolsFilterList $PoolToSearch -location $Info.Location
         #Filter by minworkes variable (must be here for not selecting now a pool and after that discarded on core.ps1 filter)
-        $HPoolsTmp | Where-Object {$_.Poolworkers -ge (get_config_variable "MINWORKERS") -or $_.Poolworkers -eq $null}
+        $HPoolsTmp | Where-Object {$_.Poolworkers -ge (Get-ConfigVariable "MINWORKERS") -or $_.Poolworkers -eq $null}
     }
 
     #Common Data from WTM
@@ -79,7 +79,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     'x11gf=true&factor[x11g_hr]=10&factor[x11g_p]=0&' + #X11gost
     'xn=true&factor[xn_hr]=10&factor[xn_p]=0' #Xevan
 
-    $WTMResponse = Invoke_APIRequest -Url $WtmUrl -Retry 3 | Select-Object -ExpandProperty coins
+    $WTMResponse = Invoke-APIRequest -Url $WtmUrl -Retry 3 | Select-Object -ExpandProperty coins
     if (!$WTMResponse) {
         Write-Host $Name 'API NOT RESPONDING...ABORTING'
         Exit
@@ -87,20 +87,20 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     $WTMCoins = $WTMResponse.PSObject.Properties.Name | ForEach-Object {
         #convert response to collection
         $res = $WTMResponse.($_)
-        $res | Add-Member name (get_coin_unified_name $_)
-        $res.Algorithm = get_algo_unified_name ($res.Algorithm)
+        $res | Add-Member name (Get-CoinUnifiedName $_)
+        $res.Algorithm = Get-AlgoUnifiedName ($res.Algorithm)
         $res
     }
     Remove-Variable WTMResponse
 
     #Add secondary page coins
-    $WTMResponse = Invoke_APIRequest -Url 'https://whattomine.com/calculators.json' -Retry 3 | Select-Object -ExpandProperty coins
+    $WTMResponse = Invoke-APIRequest -Url 'https://whattomine.com/calculators.json' -Retry 3 | Select-Object -ExpandProperty coins
     if ($WTMResponse) {
         $WTMSecondaryCoins = $WTMResponse.PSObject.Properties.Name | ForEach-Object {
             #convert response to collection
             $res = $WTMResponse.($_)
-            $res | Add-Member name (get_coin_unified_name $_)
-            $res.Algorithm = get_algo_unified_name ($res.Algorithm)
+            $res | Add-Member name (Get-CoinUnifiedName $_)
+            $res.Algorithm = Get-AlgoUnifiedName ($res.Algorithm)
             if ($res.Status -eq "Active") {$res}
         }
         Remove-Variable WTMResponse
@@ -109,8 +109,8 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     #join pools and coins
     ForEach ($HPool in $HPools) {
 
-        $HPool.Algorithm = get_algo_unified_name $HPool.Algorithm
-        $HPool.Info = get_coin_unified_name $HPool.Info
+        $HPool.Algorithm = Get-AlgoUnifiedName $HPool.Algorithm
+        $HPool.Info = Get-CoinUnifiedName $HPool.Info
 
         #we must add units for each algo, this value must be filled if we want a coin to be selected
         $WTMFactor = switch ($HPool.Algorithm) {
@@ -151,12 +151,12 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
                     $_.Algorithm -eq $HPool.Algorithm
                 }
                 if ($WtmSecCoin) {
-                    $WtmCoin = Invoke_APIRequest -Url ('https://whattomine.com/coins/' + $WtmSecCoin.Id + '.json?hr=10&p=0&fee=0.0&cost=0.0&hcost=0.0') -Retry 3
+                    $WtmCoin = Invoke-APIRequest -Url ('https://whattomine.com/coins/' + $WtmSecCoin.Id + '.json?hr=10&p=0&fee=0.0&cost=0.0&hcost=0.0') -Retry 3
                     if ($WtmCoin) {
                         if (![decimal]$WtmCoin.btc_revenue) {
                             if (!$CMCResponse) {
                                 'Calling CoinMarketCap API' | Write-Host
-                                $CMCResponse = Invoke_APIRequest -Url "https://api.coinmarketcap.com/v1/ticker/?limit=0" -MaxAge 60 -Retry 1
+                                $CMCResponse = Invoke-APIRequest -Url "https://api.coinmarketcap.com/v1/ticker/?limit=0" -MaxAge 60 -Retry 1
                             }
                             $CMCPrice = [decimal]($CMCResponse | Where-Object Symbol -eq $WtmCoin.tag | Select-Object -First 1 -ExpandProperty price_btc)
                             $WtmCoin.btc_revenue = $CMCPrice * [decimal]$WtmCoin.estimated_rewards

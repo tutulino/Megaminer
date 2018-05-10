@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/optiminer-zero-1.2.0.7z",
     "SHA256": "a35174b556a22c656744b3f740b516c0585f6da2851e55000f0306311273ddf1",
     "Type": "AMD",
-    "Arguments": "-m #APIPORT# -s #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -c #GPUPLATFORM# #DEVICESNSGMODE# #ALGORITHMPARAMETERS#",
+    "Arguments": "-m #APIPort# -s #Server#:#Port# -u #Login# -p #Password# -c #GPUPlatform# #DevicesNsgMode# #AlgorithmParameters#",
     "API": "optiminer",
     "APIPort": 4028,
     "Algorithms": {

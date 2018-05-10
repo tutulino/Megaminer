@@ -3,7 +3,7 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/Claymore.CryptoNote.AMD.GPU.Miner.v11.3.-.POOL.-.Catalyst.15.12-18.x.zip",
     "SHA256": "cb4e2eff8ccfa2ec5a2e8dbec014da7ca8353d2a3367026fd7c4c9ca36a650e4",
     "Type": "AMD",
-    "Arguments": "-xpool #PROTOCOL#://#SERVER#:#PORT# -xwal #LOGIN# -xpsw #PASSWORD# -wd 1 -r -1 -logfile #GROUPNAME#_log.txt -di #DEVICESCLAYMODE# -mport -#APIPORT# #ALGORITHMPARAMETERS#",
+    "Arguments": "-xpool #Protocol#://#Server#:#Port# -xwal #Login# -xpsw #Password# -wd 1 -r -1 -logfile #GroupName#_log.txt -di #DevicesClayMode# -mport -#APIPort# #AlgorithmParameters#",
     "API": "Claymore",
     "APIPort": 4028,
     "SSL": true,

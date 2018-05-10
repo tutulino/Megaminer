@@ -1,6 +1,6 @@
 Add-Type -Path .\Includes\OpenCL\*.cs
 
-function set_Nvidia_Clocks ([int]$PowerLimitPercent, [string]$Devices) {
+function Set-NvidiaClocks ([int]$PowerLimitPercent, [string]$Devices) {
 
     $device = $Devices -split ','
     $device | ForEach-Object {
@@ -18,7 +18,7 @@ function set_Nvidia_Clocks ([int]$PowerLimitPercent, [string]$Devices) {
     Remove-Variable newprocess
 }
 
-function set_Nvidia_Powerlimit ([int]$PowerLimitPercent, [string]$Devices) {
+function Set-NvidiaPowerLimit ([int]$PowerLimitPercent, [string]$Devices) {
 
     $device = $Devices -split ','
     $device | ForEach-Object {
@@ -36,7 +36,7 @@ function set_Nvidia_Powerlimit ([int]$PowerLimitPercent, [string]$Devices) {
     Remove-Variable newprocess
 }
 
-function Get_ComputerStats {
+function Get-ComputerStats {
     [cmdletbinding()]
     $avg = Get-CimInstance win32_processor | Measure-Object -property LoadPercentage -Average | ForEach-Object {$_.Average}
     $mem = Get-CimInstance win32_operatingsystem | ForEach-Object {"{0:N2}" -f ((($_.TotalVisibleMemorySize - $_.FreePhysicalMemory) * 100) / $_.TotalVisibleMemorySize)}
@@ -51,19 +51,19 @@ function Get_ComputerStats {
     "AverageCpu = $avg % | MemoryUsage = $mem % | VirtualMemoryUsage = $memV % | PercentCFree = $free % | Processes = $nprocs | Connections = $Conns"
 }
 
-function ErrorsTolog ($LogFile) {
+function Send-ErrorsToLog ($LogFile) {
 
     for ($i = 0; $i -lt $error.count; $i++) {
         if ($error[$i].InnerException.Paramname -ne "scopeId") {
             # errors in debug
             $Msg = "###### ERROR ##### " + [string]($error[$i]) + ' ' + $error[$i].ScriptStackTrace
-            WriteLog $msg $LogFile
+            Write-Log $msg $LogFile
         }
     }
     $error.clear()
 }
 
-function replace_foreach_device {
+function Replace-ForEachDevice {
     param(
         [Parameter(Mandatory = $true)]
         [string]$ConfigFileArguments,
@@ -96,18 +96,18 @@ function replace_foreach_device {
     $ConfigFileArguments
 }
 
-function get_next_free_port {
+function Get-NextFreePort {
     param(
         [Parameter(Mandatory = $true)]
         [int]$LastUsedPort
     )
 
     if ($LastUsedPort -lt 2000) {$FreePort = 2001} else {$FreePort = $LastUsedPort + 1} #not allow use of <2000 ports
-    while (Query_TCPPort -Server 127.0.0.1 -Port $FreePort -timeout 100) {$FreePort = $LastUsedPort + 1}
+    while (Query-TCPPort -Server 127.0.0.1 -Port $FreePort -timeout 100) {$FreePort = $LastUsedPort + 1}
     $FreePort
 }
 
-function Query_TCPPort {
+function Query-TCPPort {
     param([string]$Server, [int]$Port, [int]$Timeout)
 
     $Connection = New-Object System.Net.Sockets.TCPClient
@@ -125,7 +125,7 @@ function Query_TCPPort {
     }
 }
 
-function Kill_Process {
+function Kill-Process {
     param(
         [Parameter(Mandatory = $true)]
         $Process
@@ -152,7 +152,7 @@ function Kill_Process {
     Remove-Variable sw
 }
 
-function get_devices_information ($Types) {
+function Get-DevicesInformation ($Types) {
     [cmdletbinding()]
 
     $Devices = @()
@@ -202,7 +202,7 @@ function get_devices_information ($Types) {
 
                     $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object DevicesArray -contains $DeviceId).groupname
 
-                    $Card = [pscustomObject]@{
+                    $Card = [PSCustomObject]@{
                         Type              = 'NVIDIA'
                         Id                = $DeviceId
                         Group             = $Group
@@ -240,7 +240,7 @@ function get_devices_information ($Types) {
                     $AdlResultSplit = $_ -split (",")
                     $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object DevicesArray -contains $DeviceId).groupname
 
-                    $Card = [pscustomObject]@{
+                    $Card = [PSCustomObject]@{
                         Type              = 'AMD'
                         Id                = $DeviceId
                         Group             = $Group
@@ -319,7 +319,7 @@ function get_devices_information ($Types) {
     $Devices
 }
 
-function print_devices_information ($Devices) {
+function Print-DevicesInformation ($Devices) {
 
     $Devices | Where-Object Type -ne 'CPU' | Sort-Object Type | Format-Table -Wrap (
         @{Label = "Id"; Expression = {$_.Id}; Align = 'right'},
@@ -350,7 +350,7 @@ function print_devices_information ($Devices) {
     ) -groupby Type | Out-Host
 }
 
-Function Get_Mining_Types () {
+Function Get-MiningTypes () {
     param(
         [Parameter(Mandatory = $false)]
         [array]$Filter = $null,
@@ -378,7 +378,7 @@ Function Get_Mining_Types () {
     # $OCLDevices += [PSCustomObject]@{Name = 'GeForce 1060'; Vendor = 'NVIDIA Corporation'; GlobalMemSize = 3GB; PlatformID = 1; Type = 'Gpu'}
     # # end fake
 
-    $Types0 = get_config_variable "GpuGroups"
+    $Types0 = Get-ConfigVariable "GpuGroups"
 
     if ($Types0 -eq $null -or $All) {
         # Autodetection on, must add types manually
@@ -428,7 +428,7 @@ Function Get_Mining_Types () {
 
     #if cpu mining is enabled add a new group
     if (
-        (!$Filter -and (get_config_variable "CPUMining") -eq 'ENABLED') -or
+        (!$Filter -and (Get-ConfigVariable "CPUMining") -eq 'ENABLED') -or
         $Filter -contains "CPU" -or
         $Types0.Length -eq 0
     ) {
@@ -488,24 +488,24 @@ Function Get_Mining_Types () {
                 ($_.Type -in @('AMD') -and !$abControl)
             ) {$_.PowerLimits = @(0)}
 
-            $_ | Add-Member Algorithms ((get_config_variable ("Algorithms_" + $_.Type)) -split ',')
+            $_ | Add-Member Algorithms ((Get-ConfigVariable ("Algorithms_" + $_.Type)) -split ',')
             $Types += $_
         }
     }
     $Types #return
 }
 
-Function WriteLog ($Message, $LogFile, $SendToScreen) {
+Function Write-Log ($Message, $LogFile, $SendToScreen) {
 
     if (![string]::IsNullOrWhitespace($message)) {
-        $M = [string](get-date) + "...... " + $Message
+        $M = [string](Get-Date) + "...... " + $Message
         $LogFile.WriteLine($M)
 
         if ($SendToScreen) { $Message | Write-Host -ForegroundColor Green }
     }
 }
 
-Function Timed_ReadKb {
+Function Read-KeyboardTimed {
     param(
         [Parameter(Mandatory = $true)]
         [int]$SecondsToWait,
@@ -528,7 +528,7 @@ Function Timed_ReadKb {
     $KeyPressed
 }
 
-function Get_Gpu_Platform {
+function Get-GpuPlatform {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Type
@@ -540,7 +540,7 @@ function Get_Gpu_Platform {
     }
 }
 
-function Clear_Screen_Zone {
+function Clear-ScreenZone {
     param(
         [Parameter(Mandatory = $true)]
         [int]$startY,
@@ -550,14 +550,14 @@ function Clear_Screen_Zone {
 
     $BlankLine = " " * $Host.UI.RawUI.WindowSize.Width
 
-    Set_ConsolePosition 0 $start
+    Set-ConsolePosition 0 $start
 
     for ($i = $startY; $i -le $endY; $i++) {
         $BlankLine | write-host
     }
 }
 
-function Invoke_TcpRequest {
+function Invoke-TCPRequest {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Server = "localhost",
@@ -590,7 +590,7 @@ function Invoke_TcpRequest {
     $response
 }
 
-function Invoke_httpRequest {
+function Invoke-HTTPRequest {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Server = "localhost",
@@ -609,7 +609,7 @@ function Invoke_httpRequest {
     $response
 }
 
-function Invoke_APIRequest {
+function Invoke-APIRequest {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Url = "http://localhost/",
@@ -648,7 +648,7 @@ function Invoke_APIRequest {
     $Response
 }
 
-function Get_Live_HashRate {
+function Get-LiveHashRate {
     param(
         [Parameter(Mandatory = $true)]
         [String]$API,
@@ -665,7 +665,7 @@ function Get_Live_HashRate {
         switch ($API) {
 
             "Dtsm" {
-                $Request = Invoke_TcpRequest $server $port "empty" 5
+                $Request = Invoke-TCPRequest $Server $port "empty" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json | Select-Object -ExpandProperty result
                     $HashRate = [double](($Data.sol_ps) | Measure-Object -Sum).Sum
@@ -674,31 +674,28 @@ function Get_Live_HashRate {
 
             "xgminer" {
                 $Message = @{command = "summary"; parameter = ""} | ConvertTo-Json -Compress
-                $Request = Invoke_TcpRequest $server $port $Message 5
+                $Request = Invoke-TCPRequest $Server $port $Message 5
 
                 if ($Request) {
                     $Data = $Request.Substring($Request.IndexOf("{"), $Request.LastIndexOf("}") - $Request.IndexOf("{") + 1) -replace " ", "_" | ConvertFrom-Json
 
-                    $HashRate = if ($Data.SUMMARY.HS_5s) {[double]$Data.SUMMARY.HS_5s}
-                    elseif ($Data.SUMMARY.KHS_5s) {[double]$Data.SUMMARY.KHS_5s * [math]::Pow(1000, 1)}
-                    elseif ($Data.SUMMARY.MHS_5s) {[double]$Data.SUMMARY.MHS_5s * [math]::Pow(1000, 2)}
-                    elseif ($Data.SUMMARY.GHS_5s) {[double]$Data.SUMMARY.GHS_5s * [math]::Pow(1000, 3)}
-                    elseif ($Data.SUMMARY.THS_5s) {[double]$Data.SUMMARY.THS_5s * [math]::Pow(1000, 4)}
-                    elseif ($Data.SUMMARY.PHS_5s) {[double]$Data.SUMMARY.PHS_5s * [math]::Pow(1000, 5)}
-
-                    if ($HashRate -eq $null) {
-                        $HashRate = if ($Data.SUMMARY.HS_av) {[double]$Data.SUMMARY.HS_av}
-                        elseif ($Data.SUMMARY.KHS_av) {[double]$Data.SUMMARY.KHS_av * [math]::Pow(1000, 1)}
-                        elseif ($Data.SUMMARY.MHS_av) {[double]$Data.SUMMARY.MHS_av * [math]::Pow(1000, 2)}
-                        elseif ($Data.SUMMARY.GHS_av) {[double]$Data.SUMMARY.GHS_av * [math]::Pow(1000, 3)}
-                        elseif ($Data.SUMMARY.THS_av) {[double]$Data.SUMMARY.THS_av * [math]::Pow(1000, 4)}
-                        elseif ($Data.SUMMARY.PHS_av) {[double]$Data.SUMMARY.PHS_av * [math]::Pow(1000, 5)}
-                    }
+                    $HashRate = [double]$Data.SUMMARY.HS_5s
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.KHS_5s * [math]::Pow(1000, 1)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.MHS_5s * [math]::Pow(1000, 2)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.GHS_5s * [math]::Pow(1000, 3)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.THS_5s * [math]::Pow(1000, 4)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.PHS_5s * [math]::Pow(1000, 5)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.HS_av}
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.KHS_av * [math]::Pow(1000, 1)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.MHS_av * [math]::Pow(1000, 2)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.GHS_av * [math]::Pow(1000, 3)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.THS_av * [math]::Pow(1000, 4)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.SUMMARY.PHS_av * [math]::Pow(1000, 5)}
                 }
             }
 
             "palgin" {
-                $Request = Invoke_TcpRequest $server $port "summary" 5
+                $Request = Invoke-TCPRequest $Server $port "summary" 5
                 if ($Request) {
                     $Data = $Request -split ";"
                     $HashRate = [double]($Data[5] -split '=')[1] * 1000
@@ -706,30 +703,30 @@ function Get_Live_HashRate {
             }
 
             "ccminer" {
-                $Request = Invoke_TcpRequest $server $port "summary" 5
+                $Request = Invoke-TCPRequest $Server $port "summary" 5
                 if ($Request) {
                     $Data = $Request -split ";" | ConvertFrom-StringData
-                    $HashRate = if ($Data.HS) {[double]$Data.HS}
-                    elseif ($Data.KHS) {[double]$Data.KHS * [math]::Pow(1000, 1)}
-                    elseif ($Data.MHS) {[double]$Data.MHS * [math]::Pow(1000, 2)}
-                    elseif ($Data.GHS) {[double]$Data.GHS * [math]::Pow(1000, 3)}
-                    elseif ($Data.THS) {[double]$Data.THS * [math]::Pow(1000, 4)}
-                    elseif ($Data.PHS) {[double]$Data.PHS * [math]::Pow(1000, 5)}
+                    $HashRate = [double]$Data.HS
+                    if (-not $HashRate) {$HashRate = [double]$Data.KHS * [math]::Pow(1000, 1)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.MHS * [math]::Pow(1000, 2)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.GHS * [math]::Pow(1000, 3)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.THS * [math]::Pow(1000, 4)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.PHS * [math]::Pow(1000, 5)}
                 }
             }
 
             "nicehashequihash" {
-                $Request = Invoke_TcpRequest $server $port "status" 5
+                $Request = Invoke-TCPRequest $Server $port "status" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = $Data.result.speed_hps
-                    if ($HashRate -eq $null) {$HashRate = $Data.result.speed_sps}
+                    $HashRate = [double]$Data.result.speed_hps
+                    if (-not $HashRate) {$HashRate = $Data.result.speed_sps}
                 }
             }
 
             "excavator" {
                 $Message = @{id = 1; method = "algorithm.list"; params = @()} | ConvertTo-Json -Compress
-                $Request = Invoke_TcpRequest $server $port $message 5
+                $Request = Invoke-TCPRequest $Server $port $message 5
                 if ($Request) {
                     $Data = ($Request | ConvertFrom-Json).Algorithms
                     $HashRate = [double](($Data.workers.speed) | Measure-Object -Sum).Sum
@@ -739,7 +736,7 @@ function Get_Live_HashRate {
 
             "ewbf" {
                 $Message = @{id = 1; method = "getstat"} | ConvertTo-Json -Compress
-                $Request = Invoke_TcpRequest $server $port $message 5
+                $Request = Invoke-TCPRequest $Server $port $message 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [double](($Data.result.speed_sps) | Measure-Object -Sum).Sum
@@ -747,8 +744,8 @@ function Get_Live_HashRate {
             }
 
             "Claymore" {
-                $Message = '{"id":0,"jsonrpc":"2.0","method":"miner_getstat1"}'
-                $Request = Invoke_TcpRequest -Server $Server -Port $Port -Request $Message -Timeout 5
+                $Message = @{id = 0; jsonrpc = "2.0"; method = "miner_getstat1"} | ConvertTo-Json -Compress
+                $Request = Invoke-TCPRequest -Server $Server -Port $Port -Request $Message -Timeout 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
                     $Miner = $Data.result[0]
@@ -768,7 +765,7 @@ function Get_Live_HashRate {
             }
 
             "prospector" {
-                $Request = Invoke_httpRequest $Server 42000 "/api/v0/hashrates" 5
+                $Request = Invoke-HTTPRequest $Server 42000 "/api/v0/HashRates" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [double]($Data.rate | Measure-Object -Sum).sum
@@ -778,13 +775,11 @@ function Get_Live_HashRate {
             "wrapper" {
                 $HashRate = ""
                 $wrpath = ".\Wrapper_$Port.txt"
-                $HashRate = if (test-path -path $wrpath ) {
-                    Get-Content $wrpath
-                } else {$hashrate = 0}
+                $HashRate = [double]$(if (Test-Path -path $wrpath) {Get-Content $wrpath}else {0})
             }
 
             "castXMR" {
-                $Request = Invoke_httpRequest $Server $Port "" 5
+                $Request = Invoke-HTTPRequest $Server $Port "" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [double]($Data.devices.hash_rate | Measure-Object -Sum).Sum / 1000
@@ -792,63 +787,65 @@ function Get_Live_HashRate {
             }
 
             "XMrig" {
-                $Request = Invoke_httpRequest $Server $Port "/api.json" 5
+                $Request = Invoke-HTTPRequest $Server $Port "/api.json" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [double]$Data.hashrate.total[0]
+                    $HashRate = [double]$Data.HashRate.total[0]
                 }
             }
 
             "Bminer" {
-                $Request = Invoke_httpRequest $Server $Port "/api/status" 5
+                $Request = Invoke-HTTPRequest $Server $Port "/api/status" 5
                 if ($Request) {
                     $Data = $Request.content | ConvertFrom-Json
-                    $HashRate = 0
-                    $Data.miners | Get-Member -MemberType NoteProperty | ForEach-Object {
-                        $HashRate += $Data.miners.($_.name).solver.solution_rate
-                    }
+                    $HashRate = ($Data.miners | Get-Member -MemberType NoteProperty | ForEach-Object {$Data.miners.($_.name).solver.solution_rate} | Measure-Object -Sum).Sum
                 }
             }
 
             "optiminer" {
-                $Request = Invoke_httpRequest $Server $Port "" 5
+                $Request = Invoke-HTTPRequest $Server $Port "" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [double]($Data.solution_rate.Total."60s" | Measure-Object -Sum).sum
-                    if ($HashRate -eq 0) { $HashRate = [double]($Data.solution_rate.Total."5s" | Measure-Object -Sum).sum }
+                    if (-not $HashRate) { $HashRate = [double]($Data.solution_rate.Total."5s" | Measure-Object -Sum).sum }
                 }
             }
 
             "Xrig" {
-                $Request = Invoke_httpRequest $Server $Port "" 5
+                $Request = Invoke-HTTPRequest $Server $Port "" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    if ([double]$Data.hashrate_15m -gt 0) {$HashRate = [double]$Data.hashrate_15m}
-                    elseif ([double]$Data.hashrate_60s -gt 0) {$HashRate = [double]$Data.hashrate_60s}
-                    elseif ([double]$Data.hashrate_10s -gt 0) {$HashRate = [double]$Data.hashrate_10s}
+                    $HashRate = [double]$Data.HashRate_15m
+                    if (-not $HashRate) {$HashRate = [double]$Data.HashRate_60s}
+                    if (-not $HashRate) {$HashRate = [double]$Data.HashRate_10s}
                 }
             }
 
             "SRB" {
-                $Request = Invoke_httpRequest $Server $Port "" 5
+                $Request = Invoke-HTTPRequest $Server $Port "" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    if ([double]$Data.hashrate_total_5min -gt 0) {$HashRate = [double]$Data.hashrate_total_5min}
-                    elseif ([double]$Data.hashrate_total_now -gt 0) {$HashRate = [double]$Data.hashrate_total_now}
+                    $HashRate = [double]$Data.HashRate_total_5min
+                    if (-not $HashRate) {$HashRate = [double]$Data.HashRate_total_now}
+                }
+            }
+
+            "JCE" {
+                $Request = Invoke-HTTPRequest $Server $Port "" 5
+                if ($Request) {
+                    $Data = $Request | ConvertFrom-Json
+                    $HashRate = [double]$Data.HashRate.total
                 }
             }
 
         } #end switch
 
-        $HashRates = @()
-        $HashRates += [double]$HashRate
-        $HashRates += [double]$HashRate_Dual
-
+        $HashRates = [double[]]([double]$HashRate, [double]$HashRate_Dual)
         $HashRates
     } catch {}
 }
 
-function ConvertTo_Hash {
+function ConvertTo-Hash {
     param(
         [Parameter(Mandatory = $true)]
         [double]$Hash
@@ -867,7 +864,7 @@ function ConvertTo_Hash {
     $Return
 }
 
-function Start_SubProcess {
+function Start-SubProcess {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
@@ -960,7 +957,7 @@ function Start_SubProcess {
     if ($Process) {$Process.PriorityClass = $PriorityNames.$Priority}
 }
 
-function Expand_WebRequest {
+function Expand-WebRequest {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Uri,
@@ -1000,7 +997,7 @@ function Expand_WebRequest {
     }
 }
 
-function Get_Pools {
+function Get-Pools {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Querymode = 'core',
@@ -1016,7 +1013,7 @@ function Get_Pools {
         [Parameter(Mandatory = $false)]
         [array]$AlgoFilterList,
         [Parameter(Mandatory = $false)]
-        [pscustomobject]$Info
+        [PSCustomObject]$Info
     )
     #in detail mode returns a line for each pool/algo/coin combination, in info mode returns a line for pool
 
@@ -1026,7 +1023,7 @@ function Get_Pools {
 
     $ChildItems = @()
 
-    if ($info -eq $null) { $Info = [pscustomobject]@{}
+    if ($info -eq $null) { $Info = [PSCustomObject]@{}
     }
 
     if (($info | Get-Member -MemberType NoteProperty | Where-Object name -eq location) -eq $null) {$info | Add-Member Location $Location}
@@ -1092,7 +1089,7 @@ function Get_Pools {
     $Return
 }
 
-function get_config {
+function Get-Config {
 
     $Result = @{}
     switch -regex -file config.ini {
@@ -1104,17 +1101,17 @@ function get_config {
     $Result # Return Value
 }
 
-Function get_config_variable {
+Function Get-ConfigVariable {
     param(
         [Parameter(Mandatory = $true)]
         [string]$VarName
     )
 
-    $Result = (get_config).$VarName
+    $Result = (Get-Config).$VarName
     $Result # Return Value
 }
 
-function Get_Best_Hashrate_Algo {
+function Get-BestHashRateAlgo {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Algorithm
@@ -1122,26 +1119,26 @@ function Get_Best_Hashrate_Algo {
 
     $Pattern = "*_" + $Algorithm + "_*_HashRate.csv"
 
-    $Besthashrate = 0
+    $BestHashRate = 0
 
     Get-ChildItem ($PSScriptRoot + "\Stats") -Filter $Pattern -File | ForEach-Object {
         $Content = ($_ | Get-Content | ConvertFrom-Csv )
         $Hrs = 0
         if ($Content -ne $null) {$Hrs = $($Content | Where-Object TimeSinceStartInterval -gt 60 | Measure-Object -property Speed -average).Average}
 
-        if ($Hrs -gt $Besthashrate) {
-            $Besthashrate = $Hrs
+        if ($Hrs -gt $BestHashRate) {
+            $BestHashRate = $Hrs
             $Miner = ($_.pschildname -split '_')[0]
         }
-        $Return = [pscustomobject]@{
-            Hashrate = $Besthashrate
+        $Return = [PSCustomObject]@{
+            HashRate = $BestHashRate
             Miner    = $Miner
         }
     }
     $Return
 }
 
-function Get_Algo_Divisor {
+function Get-AlgoDivisor {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Algo
@@ -1149,7 +1146,7 @@ function Get_Algo_Divisor {
 
     $Divisor = 1000000000
 
-    switch (get_algo_unified_name $Algo) {
+    switch (Get-AlgoUnifiedName $Algo) {
         "blake2s" {$Divisor *= 1000}
         "blakecoin" {$Divisor *= 1000}
         "decred" {$Divisor *= 1000}
@@ -1161,7 +1158,7 @@ function Get_Algo_Divisor {
     $Divisor
 }
 
-function set_ConsolePosition ([int]$x, [int]$y) {
+function Set-ConsolePosition ([int]$x, [int]$y) {
     # Get current cursor position and store away
     $position = $host.ui.rawui.cursorposition
     # Store new X Co-ordinate away
@@ -1172,7 +1169,7 @@ function set_ConsolePosition ([int]$x, [int]$y) {
     remove-variable position
 }
 
-function Get_ConsolePosition ([ref]$x, [ref]$y) {
+function Get-ConsolePosition ([ref]$x, [ref]$y) {
 
     $position = $host.UI.RawUI.CursorPosition
     $x.value = $position.x
@@ -1180,7 +1177,7 @@ function Get_ConsolePosition ([ref]$x, [ref]$y) {
     remove-variable position
 }
 
-function Print_Horizontal_line ([string]$Title) {
+function Print-HorizontalLine ([string]$Title) {
 
     $Width = $Host.UI.RawUI.WindowSize.Width
     if ([string]::IsNullOrEmpty($Title)) {$str = "-" * $Width}
@@ -1191,7 +1188,7 @@ function Print_Horizontal_line ([string]$Title) {
     $str | Out-Host
 }
 
-function set_WindowSize ([int]$Width, [int]$Height) {
+function Set-WindowSize ([int]$Width, [int]$Height) {
     #zero not change this axis
 
     $pshost = Get-Host
@@ -1212,7 +1209,7 @@ function set_WindowSize ([int]$Width, [int]$Height) {
     $Host.UI.RawUI.WindowSize = $WSize
 }
 
-function get_algo_unified_name ([string]$Algo) {
+function Get-AlgoUnifiedName ([string]$Algo) {
 
     if (![string]::IsNullOrEmpty($Algo)) {
         $Algos = Get-Content -Path ".\Includes\algorithms.json" | ConvertFrom-Json
@@ -1221,7 +1218,7 @@ function get_algo_unified_name ([string]$Algo) {
     }
 }
 
-function get_coin_unified_name ([string]$Coin) {
+function Get-CoinUnifiedName ([string]$Coin) {
 
     if ($Coin) {
         switch -wildcard ($Coin.Trim()) {
@@ -1240,7 +1237,7 @@ function get_coin_unified_name ([string]$Coin) {
     }
 }
 
-function Get_Hashrates {
+function Get-HashRates {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Algorithm,
@@ -1270,7 +1267,7 @@ function Get_Hashrates {
         $Content = (Get-Content -path "$Pattern.csv")
         try {$Content = $Content | ConvertFrom-Csv} catch {
             #if error from convert from json delete file
-            WriteLog ("Corrupted file $Pattern.csv, deleting") $LogFile $true
+            Write-Log ("Corrupted file $Pattern.csv, deleting") $LogFile $true
             Remove-Item -path "$Pattern.csv"
         }
     }
@@ -1279,7 +1276,7 @@ function Get_Hashrates {
     $Content
 }
 
-function Set_Hashrates {
+function Set-HashRates {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Algorithm,
@@ -1290,7 +1287,7 @@ function Set_Hashrates {
         [Parameter(Mandatory = $false)]
         [String]$AlgoLabel,
         [Parameter(Mandatory = $true)]
-        [pscustomobject]$Value,
+        [PSCustomObject]$Value,
         [Parameter(Mandatory = $true)]
         [String]$Powerlimit
     )
@@ -1302,7 +1299,7 @@ function Set_Hashrates {
     $Value | ConvertTo-Csv | Set-Content -Path $Path
 }
 
-function Get_Stats {
+function Get-Stats {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Algorithm,
@@ -1325,14 +1322,14 @@ function Get_Stats {
         $Content = (Get-Content -path "$Pattern.json")
         try {$Content = $Content | ConvertFrom-Json} catch {
             #if error from convert from json delete file
-            writelog ("Corrupted file $Pattern.json, deleting") $LogFile $true
+            Write-Log ("Corrupted file $Pattern.json, deleting") $LogFile $true
             Remove-Item -path "$Pattern.json"
         }
     }
     $Content
 }
 
-function Set_Stats {
+function Set-Stats {
     param(
         [Parameter(Mandatory = $true)]
         [String]$Algorithm,
@@ -1343,7 +1340,7 @@ function Set_Stats {
         [Parameter(Mandatory = $false)]
         [String]$AlgoLabel,
         [Parameter(Mandatory = $true)]
-        [pscustomobject]$value,
+        [PSCustomObject]$value,
         [Parameter(Mandatory = $true)]
         [String]$Powerlimit
     )
@@ -1355,7 +1352,7 @@ function Set_Stats {
     $Value | ConvertTo-Json | Set-Content -Path $Path
 }
 
-function Start_Downloader {
+function Start-Downloader {
     param(
         [Parameter(Mandatory = $true)]
         [String]$URI,
@@ -1379,13 +1376,13 @@ function Start_Downloader {
             } else {
                 $Message = "Downloading....$($URI)"
                 Write-Host -BackgroundColor green -ForegroundColor Black $Message
-                WriteLog $Message $LogFile
-                Expand_WebRequest $URI $ExtractionPath -ErrorAction Stop -SHA256 $SHA256
+                Write-Log $Message $LogFile
+                Expand-WebRequest $URI $ExtractionPath -ErrorAction Stop -SHA256 $SHA256
             }
         } catch {
             $Message = "Cannot download $URI"
             Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
-            WriteLog $Message $LogFile
+            Write-Log $Message $LogFile
 
             if ($Path_Old) {
                 if (Test-Path (Split-Path $Path_New)) {(Split-Path $Path_New) | Remove-Item -Recurse -Force}
@@ -1393,13 +1390,13 @@ function Start_Downloader {
             } else {
                 $Message = "Cannot find $($Path) distributed at $($URI). "
                 Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
-                WriteLog $Message $LogFile
+                Write-Log $Message $LogFile
             }
         }
     }
 }
 
-function Clear_Files {
+function Clear-Files {
 
     $Now = Get-Date
     $Days = "3"
@@ -1427,7 +1424,7 @@ function Clear_Files {
     $Files | ForEach-Object {Remove-Item $_.fullname}
 }
 
-function get_coin_symbol ([string]$Coin) {
+function Get-CoinSymbol ([string]$Coin) {
 
     switch -wildcard ($Coin) {
         "adzcoin" { "ADZ" }
@@ -1468,17 +1465,17 @@ function get_coin_symbol ([string]$Coin) {
     }
 }
 
-function Check_DeviceGroups_Config ($types) {
-    $Devices = get_devices_information $types
+function Check-DeviceGroupsConfig ($types) {
+    $Devices = Get-DevicesInformation $types
     $types | ForEach-Object {
         $DetectedDevices = @()
         $DetectedDevices += $Devices | Where-Object group -eq $_.GroupName
         if ($DetectedDevices.count -eq 0) {
-            WriteLog ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config") $LogFile $false
+            Write-Log ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config") $LogFile $false
             write-warning ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config")
             start-sleep 5
         } elseif ($DetectedDevices.count -ne $_.DevicesCount) {
-            WriteLog ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat") $LogFile $false
+            Write-Log ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat") $LogFile $false
             write-warning ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat")
             start-sleep 5
         }

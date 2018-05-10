@@ -3,7 +3,7 @@
     "Uri": "https://github.com/pompobit/sgminer/releases/download/5.6.2/sgminer_evo_windows.zip",
     "SHA256": "5d3cf284608d91427564bce72a7040f37992fda19a4a66b09b8dedf2155cb9f0",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
+    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {

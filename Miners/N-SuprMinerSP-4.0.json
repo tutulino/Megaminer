@@ -3,7 +3,7 @@
     "Uri": "https://github.com/sp-hash/suprminer/releases/download/spmod-git4/raven_spmodgit4.7z",
     "SHA256": "572abcdbc4bf8a3526f472313e8a613a9d6073a6494b7727c07326da0908c814",
     "Type": "NVIDIA",
-    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -b #APIPort# -d #Devices# #AlgorithmParameters# ",
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {
