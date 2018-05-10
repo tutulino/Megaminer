@@ -111,6 +111,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "SHA256t" {$Divisor *= 1000}
             "X11" {$Divisor *= 1000}
             "Yescrypt" {$Divisor /= 1000}
+            "YescryptR16" {$Divisor /= 1000}
         }
 
         $Result += [PSCustomObject]@{
