@@ -1,7 +1,7 @@
 {
-    "Path": "raven_spmodgit4\\ccminer.exe",
-    "Uri": "https://github.com/sp-hash/suprminer/releases/download/spmod-git4/raven_spmodgit4.7z",
-    "SHA256": "572abcdbc4bf8a3526f472313e8a613a9d6073a6494b7727c07326da0908c814",
+    "Path": "raven_spmodgit4_fix\\ccminer.exe",
+    "Uri": "https://github.com/sp-hash/suprminer/releases/download/spmod-git4a/raven_spmodgit4_fix.7z",
+    "SHA256": "f02472803ba9abcf5f7fa2cf0e8cdf56bad54c78c78dc8be07dd5e6b04266cf8",
     "Type": "NVIDIA",
     "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -b #APIPort# -d #Devices# #AlgorithmParameters# ",
     "API": "Ccminer",
