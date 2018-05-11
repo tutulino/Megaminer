@@ -280,7 +280,7 @@ function Get-DevicesInformation ($Types) {
                     Group       = 'CPU'
                     Clock       = [int]$($CPUData | Where-Object SrcName -eq 'CPU clock').Data
                     Utilization = [int]$($CPUData | Where-Object SrcName -eq 'CPU usage').Data
-                    CacheL3     = $_.L3CacheSize
+                    CacheL3     = [int]($_.L3CacheSize / 1024)
                     Cores       = $_.NumberOfCores
                     Threads     = $_.NumberOfLogicalProcessors
                     PowerDraw   = [int]$($CPUData | Where-Object SrcName -eq 'CPU power').Data
@@ -306,7 +306,7 @@ function Get-DevicesInformation ($Types) {
                     Group       = 'CPU'
                     Clock       = $_.MaxClockSpeed
                     Utilization = $_.LoadPercentage
-                    CacheL3     = $_.L3CacheSize
+                    CacheL3     = [int]($_.L3CacheSize / 1024)
                     Cores       = $_.NumberOfCores
                     Threads     = $_.NumberOfLogicalProcessors
                     PowerDraw   = [int]($CpuTDP.($_.Name) * $CpuLoad)
@@ -342,7 +342,7 @@ function Print-DevicesInformation ($Devices) {
         @{Label = "Name"; Expression = {$_.Name}},
         @{Label = "Cores"; Expression = {$_.Cores}},
         @{Label = "Threads"; Expression = {$_.Threads}},
-        @{Label = "CacheL3"; Expression = {[string]$_.CacheL3 + "kb"}; Align = 'right'},
+        @{Label = "CacheL3"; Expression = {[string]$_.CacheL3 + "MB"}; Align = 'right'},
         @{Label = "Clock"; Expression = {[string]$_.Clock + "Mhz"}; Align = 'right'},
         @{Label = "Load"; Expression = {[string]$_.Utilization + "%"}; Align = 'right'},
         @{Label = "Temp"; Expression = {$_.Temperature}; Align = 'right'},
@@ -445,7 +445,7 @@ Function Get-MiningTypes () {
                         Devices     = [string]$DeviceID
                         MemoryGB    = $MemoryGB
                         PowerLimits = "0"
-                        Features    = $($feat = @{}; switch -regex ((Invoke-Expression ".\Includes\CHKCPU32.exe /x") -split "</\w+>") {"^\s*<_?(\w+)>1" {$feat.($matches[1]) = $true}}; $feat)
+                        Features    = $($feat = @{}; switch -regex ((Invoke-Expression ".\Includes\CHKCPU32.exe /x") -split "</\w+>") {"^\s*<_?(\w+)>(\d+).*" {$feat.($matches[1]) = [int]$matches[2]}}; $feat)
                     }
                 } else {
                     $Types0 | Where-Object GroupName -eq 'CPU' | ForEach-Object {
