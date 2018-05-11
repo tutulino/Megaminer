@@ -432,28 +432,25 @@ Function Get-MiningTypes () {
         $Filter -contains "CPU" -or
         $Types0.Length -eq 0
     ) {
-        $OCLDevices | Where-Object Type -eq 'Cpu' | Group-Object -Property PlatformID | Select-Object -First 1 | ForEach-Object {
+        $CpuResult = @(Get-CimInstance Win32_Processor)
+        $SysResult = @(Get-CimInstance Win32_ComputerSystem)
+        $CpuResult | ForEach-Object {
             $DeviceID = 0
-            $_.Group | ForEach-Object {
-
-                $MemoryGB = [int]($_.GlobalMemSize / 1GB)
-
-                if (($Types0 | Where-Object GroupName -eq 'CPU') -eq $null) {
-                    $Types0 += [PSCustomObject] @{
-                        GroupName   = 'CPU'
-                        Type        = 'CPU'
-                        Devices     = [string]$DeviceID
-                        MemoryGB    = $MemoryGB
-                        PowerLimits = "0"
-                        Features    = $($feat = @{}; switch -regex ((Invoke-Expression ".\Includes\CHKCPU32.exe /x") -split "</\w+>") {"^\s*<_?(\w+)>(\d+).*" {$feat.($matches[1]) = [int]$matches[2]}}; $feat)
-                    }
-                } else {
-                    $Types0 | Where-Object GroupName -eq 'CPU' | ForEach-Object {
-                        $_.Devices += "," + $DeviceID
-                    }
+            if (($Types0 | Where-Object GroupName -eq 'CPU') -eq $null) {
+                $Types0 += [PSCustomObject]@{
+                    GroupName   = 'CPU'
+                    Type        = 'CPU'
+                    Devices     = [string]$DeviceID
+                    MemoryGB    = [int]($SysResult.TotalPhysicalMemory / 1GB)
+                    PowerLimits = "0"
+                    Features    = $($feat = @{}; switch -regex ((Invoke-Expression ".\Includes\CHKCPU32.exe /x") -split "</\w+>") {"^\s*<_?(\w+)>(\d+).*" {$feat.($matches[1]) = [int]$matches[2]}}; $feat)
                 }
-                $DeviceID++
+            } else {
+                $Types0 | Where-Object GroupName -eq 'CPU' | ForEach-Object {
+                    $_.Devices += "," + $DeviceID
+                }
             }
+            $DeviceID++
         }
     }
 
@@ -475,8 +472,9 @@ Function Get-MiningTypes () {
                 AMD { $Pattern = 'Advanced Micro Devices, Inc.' }
                 NVIDIA { $Pattern = 'NVIDIA Corporation' }
                 INTEL { $Pattern = 'Intel(R) Corporation' }
+                CPU { $Pattern = '' }
             }
-            $_ | Add-Member OCLDevices @($OCLDevices | Where-Object Vendor -eq $Pattern)[$_.DevicesArray]
+            $_ | Add-Member OCLDevices @($OCLDevices | Where-Object {$_.Vendor -eq $Pattern -and $_.Type -eq 'Gpu'})[$_.DevicesArray]
             if ($_.Platform -eq $null) {$_ | Add-Member Platform ($_.OCLDevices.PlatformID | Select-Object -First 1)}
             if ($_.MemoryGB -eq $null) {$_ | Add-Member MemoryGB ([int](($_.OCLDevices | Measure-Object -Property GlobalMemSize -Minimum | Select-Object -ExpandProperty Minimum) / 1GB ))}
 
@@ -526,18 +524,6 @@ Function Read-KeyboardTimed {
         Start-Sleep -Milliseconds 30
     }
     $KeyPressed
-}
-
-function Get-GpuPlatform {
-    param(
-        [Parameter(Mandatory = $true)]
-        [String]$Type
-    )
-    switch ($Type) {
-        "AMD" { $([array]::IndexOf(([OpenCl.Platform]::GetPlatformIDs() | Select-Object -ExpandProperty Vendor), 'Advanced Micro Devices, Inc.')) }
-        "Intel" { $([array]::IndexOf(([OpenCl.Platform]::GetPlatformIDs() | Select-Object -ExpandProperty Vendor), 'Intel(R) Corporation')) }
-        Default { 0 }
-    }
 }
 
 function Clear-ScreenZone {
