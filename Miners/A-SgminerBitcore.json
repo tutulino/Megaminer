@@ -7,6 +7,6 @@
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "Bitcore": "-k timetravel10 -g 2 -I 21"
+        "Bitcore": "-k timetravel10 -g 2 -w 64 -X 64"
     }
 }

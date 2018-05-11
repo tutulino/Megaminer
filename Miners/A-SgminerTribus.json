@@ -7,7 +7,7 @@
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "Tribus": "-k tribus -I 21 -w 64",
+        "Tribus": "-k tribus -g 2 -w 64 -X 256",
         "Veltor": "-k veltor -I 21"
     }
 }

@@ -7,6 +7,6 @@
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "PHI": "-k phi -I 20"
+        "PHI": "-k phi -g 2 -w 256 -X 256"
     }
 }

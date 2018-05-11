@@ -7,6 +7,6 @@
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "Throestl": "-k dallar -g 4 -w 64 -I 22"
+        "Throestl": "-k dallar -g 2 -w 256 -X 256"
     }
 }

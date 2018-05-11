@@ -7,6 +7,6 @@
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "HSR": "-k hsr -I 20"
+        "HSR": "-k hsr -g 2 -w 64 -X 64"
     }
 }
