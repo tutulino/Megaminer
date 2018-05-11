@@ -7,7 +7,7 @@
     "API": "Ccminer",
     "APIPort": 4068,
     "Fee": 0.018,
-    "Pools": "$(if ($Pool.AbbName -in @('MPH')){$true}else{$false})",
+    "Pools": "$(if ($Pool.AbbName -in @('MPH') -and $DeviceGroup.DevicesCount -ge 2){$true}else{$false})",
     "Algorithms": {
         "Lyra2z": "-a lyra2z"
     }
