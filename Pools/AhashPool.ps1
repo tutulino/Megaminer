@@ -93,9 +93,13 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "Blakecoin" {$Divisor *= 1000}
             "Decred" {$Divisor *= 1000}
             "Equihash" {$Divisor /= 1000}
+            "Keccak" {$Divisor *= 1000}
+            "Lbry" {$Divisor *= 1000}
+            "MyriadGroestl" {$Divisor *= 1000}
             "Quark" {$Divisor *= 1000}
             "Qubit" {$Divisor *= 1000}
             "Scrypt" {$Divisor *= 1000}
+            "Skein" {$Divisor *= 1000}
             "X11" {$Divisor *= 1000}
             "Yescrypt" {$Divisor /= 1000}
         }
