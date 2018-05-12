@@ -1,10 +1,10 @@
 {
     "Path": "jce_cn_cpu_miner$(if($DeviceGroup.Features.'64bit'){'64'}else{'32'}).exe",
-    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.027b.zip",
-    "SHA256": "897a50c6c92c2bac54159b5ffd3c7ef0e8681c5058e64d9cefa2c04247fa6e98",
+    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.027c.zip",
+    "SHA256": "6750a43495cb4f8c8ff1b4d35022459e991a73861919d53bdbdb19879090f4c6",
     "Type": "CPU",
-    "Arguments": "-o #Server#:#Port# -u #Login# -p #Password# #SSL#--ssl#SSL# #NH#--nicehash#NH# --auto --mport #APIPort# #AlgorithmParameters#",
-    "API": "JCE",
+    "Arguments": "-o #Server#:#Port# -u #Login# -p #Password# #SSL#--ssl#SSL# #NH#--nicehash#NH# --auto --mport #APIPort# --stakjson #AlgorithmParameters#",
+    "API": "XMRig",
     "APIPort": 4048,
     "Fee": "$(if($DeviceGroup.Features.aes -and $DeviceGroup.Features.'64bit'){0.015}else{0.03})",
     "SSL": true,
@@ -13,6 +13,7 @@
         "CryptoNightV7": "--variation 3 --any",
         "CryptoNightHeavy": "--variation 5 --any",
         "CryptoLightIPBC": "--variation 6 --any",
-        "CryptoNightXTL": "--variation 7 --any"
+        "CryptoNightXTL": "--variation 7 --any",
+        "CryptoNightAlloy": "--variation 8 --any"
     }
 }
