@@ -75,11 +75,11 @@ while ($true) {
 
             $_.LastContent.Activeminers | Format-Table (
                 @{Label = "GroupName"; Expression = {$_.GroupName}},
-                @{Label = "MMPowLmt"; Expression = {$_.MMPowLmt} ; Align = 'right'},
+                @{Label = "PwLim"; Expression = {$_.PwLim} ; Align = 'right'},
                 @{Label = "LocalSpeed"; Expression = {$_.LocalSpeed} ; Align = 'right'},
-                @{Label = "mbtc/Day"; Expression = {$_.mbtc_Day} ; Align = 'right'},
-                @{Label = "Rev/Day"; Expression = {$_.Rev_Day} ; Align = 'right'},
-                @{Label = "Profit/Day"; Expression = {$_.Profit_Day} ; Align = 'right'},
+                @{Label = "mBTC/Day"; Expression = {$_.mbtcDay} ; Align = 'right'},
+                @{Label = "Rev/Day"; Expression = {$_.RevDay} ; Align = 'right'},
+                @{Label = "Profit/Day"; Expression = {$_.ProfitDay} ; Align = 'right'},
                 @{Label = "Algorithm"; Expression = {$_.Algorithm}},
                 @{Label = "Coin"; Expression = {$_.Coin}},
                 @{Label = "Miner"; Expression = {$_.Miner}},
