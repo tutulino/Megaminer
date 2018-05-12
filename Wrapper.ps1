@@ -13,8 +13,6 @@
 
 Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
 
-. .\Include.ps1
-
 0 | Set-Content ".\Wrapper_$Id.txt"
 
 $PowerShell = [PowerShell]::Create()
@@ -27,7 +25,7 @@ $Result = $PowerShell.BeginInvoke()
 Write-Host "Wrapper Started" -BackgroundColor Yellow -ForegroundColor Black
 
 do {
-    Start-Sleep 1
+    Start-Sleep -Seconds 1
 
     $PowerShell.Streams.Verbose.ReadAll() | ForEach-Object {
         $Line = $_
@@ -35,11 +33,11 @@ do {
         if ($Line -like "*total speed:*" -or
             $Line -like "*accepted:*" -or
             $Line -like "*Mining on #*" -or
-            $line -like "*diff*yes!*" -or
-            $line -like ">*Rej*" -or
-            $line -like "*overall*" -or
-            $line -like "*Average*" -or
-            $line -like "*Total:*"
+            $Line -like "*diff*yes!*" -or
+            $Line -like ">*Rej*" -or
+            $Line -like "*overall*" -or
+            $Line -like "*Average*" -or
+            $Line -like "*Total:*"
         ) {
             $Line = $Line  `
                 -replace "\smh/s", "mh/s" `
@@ -51,26 +49,20 @@ do {
                 -replace "\ssol/s", "h/s" `
                 -replace "\sHash/s", "h/s"
 
-            $Words = $Line -split " "
-            $Word = $words -like "*/s*" | Select-Object -Last 1
-            $HashRate = [Decimal]($Word `
-                    -replace ",", "" `
-                    -replace "mh/s", "" `
-                    -replace "kh/s", "" `
-                    -replace "gh/s", "" `
-                    -replace "th/s", "" `
-                    -replace "ph/s", "" `
-                    -replace "h/s", "" )
+            $Word = $Line -split " " -like "*/s*" -replace ",", "" | Select-Object -Last 1
 
-            switch  -wildcard ($Word) {
-                "*kh/s*" {$HashRate *= [Math]::Pow(1000, 1)}
-                "*mh/s*" {$HashRate *= [Math]::Pow(1000, 2)}
-                "*gh/s*" {$HashRate *= [Math]::Pow(1000, 3)}
-                "*th/s*" {$HashRate *= [Math]::Pow(1000, 4)}
-                "*ph/s*" {$HashRate *= [Math]::Pow(1000, 5)}
+            if ($Word -match "([0-9.]+)([kmgtp]?h)/s") {
+                $HashRate = [decimal]$Matches[1] * $(switch ($Matches[2]) {
+                        'kh' { [Math]::Pow(1000, 1) }
+                        'mh' { [Math]::Pow(1000, 2) }
+                        'gh' { [Math]::Pow(1000, 3) }
+                        'th' { [Math]::Pow(1000, 4) }
+                        'ph' { [Math]::Pow(1000, 5) }
+                        Default { 1 }
+                    })
             }
 
-            $HashRate -replace ',','.' | Set-Content ".\Wrapper_$Id.txt"
+            $HashRate -replace ',', '.' | Set-Content ".\Wrapper_$Id.txt"
         }
         $Line
     }
