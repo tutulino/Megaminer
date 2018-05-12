@@ -83,7 +83,7 @@ $Release = "1.2"
 Write-Log ("$Application v$Release") $LogFile $false
 
 if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = $Application}
-else {$Host.UI.RawUI.WindowTitle = "MM-" + ($GroupNames -join "/")}
+else {$Host.UI.RawUI.WindowTitle = "Forager-" + ($GroupNames -join "/")}
 
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
 $env:GPU_FORCE_64BIT_PTR = 0 #For AMD
@@ -187,10 +187,10 @@ if ($config.ApiPort -gt 0) {
     $APIprocess = Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -PassThru -WindowStyle Minimized
 
     #open firewall port
-    $command = "New-NetFirewallRule -DisplayName `"$Application`" -Direction Inbound -Action Allow -Protocol TCP -LocalPort $($config.ApiPort)"
+    $command = "New-NetFirewallRule -DisplayName '$Application' -Direction Inbound -Action Allow -Protocol TCP -LocalPort $($config.ApiPort)"
     Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -WindowStyle Minimized
 
-    $command = "New-NetFirewallRule -DisplayName `"$Application`" -Direction Outbound -Action Allow -Protocol TCP -LocalPort $($config.ApiPort)"
+    $command = "New-NetFirewallRule -DisplayName '$Application' -Direction Outbound -Action Allow -Protocol TCP -LocalPort $($config.ApiPort)"
     Start-Process -FilePath "powershell.exe" -ArgumentList $command -Verb RunAs -WindowStyle Minimized
 }
 
@@ -237,7 +237,7 @@ while ($Quit -eq $false) {
 
     Write-Log (Get-DevicesInformation $DeviceGroups | ConvertTo-Json) $LogFile $false
     Write-Log ($DeviceGroups | ConvertTo-Json) $LogFile $false
-    if ($FirstTotalExecution) {Check-DeviceGroupsConfig $DeviceGroups}
+    if ($FirstTotalExecution) {Test-DeviceGroupsConfig $DeviceGroups}
 
     $NumberTypesGroups = ($DeviceGroups | Measure-Object).count
     if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [Math]::Floor(30 / $NumberTypesGroups) - 5} #screen adjust to number of groups
@@ -394,7 +394,7 @@ while ($Quit -eq $false) {
             @{Expression = "LocationPriority"; Ascending = $true} | ForEach-Object {
                 if ($NeedPool) {
                     ## test tcp connection to pool
-                    if (Query-TCPPort -Server $_.Host -Port $_.Port -Timeout 100) {
+                    if (Test-TCPPort -Server $_.Host -Port $_.Port -Timeout 100) {
                         $NeedPool = $false
                         $_  ## return result
                     } else {
@@ -679,7 +679,7 @@ while ($Quit -eq $false) {
                                     RevenueLiveDual        = 0
                                     SpeedLive              = 0
                                     SpeedLiveDual          = 0
-                                    SpeedReads             = if ($Hrs -ne $null) {[array]$Hrs} else {@()}
+                                    SpeedReads             = if ($null -ne $Hrs) {[array]$Hrs} else {@()}
                                     Status                 = 'Idle'
                                     Stats                  = $Stats
                                     StatsHistory           = $StatsHistory
@@ -909,7 +909,7 @@ while ($Quit -eq $false) {
         #look for last round best
         $Candidates = $ActiveMiners | Where-Object {$_.DeviceGroup.Id -eq $DeviceGroup.Id}
         $BestLast = $Candidates.SubMiners | Where-Object {$_.Status -in @("Running", "PendingCancellation")}
-        if ($BestLast -ne $null) {
+        if ($null -ne $BestLast) {
             $ProfitLast = $BestLast.Profits
             $BestLastLogMsg = $(
                 "$($ActiveMiners[$BestLast.IdF].Name)/" +
@@ -941,7 +941,7 @@ while ($Quit -eq $false) {
             Sort-Object -Descending NeedBenchmark, Profits, @{Expression = {$ActiveMiners[$_.IdF].Algorithm}; Ascending = $true}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
 
-        if ($BestNow -eq $null) {Write-Log ("No detected any valid candidate for device group " + $DeviceGroup.GroupName) $LogFile $true; Continue}
+        if ($null -eq $BestNow) {Write-Log ("No detected any valid candidate for device group " + $DeviceGroup.GroupName) $LogFile $true; Continue}
 
         $BestNowLogMsg = $(
             "$($ActiveMiners[$BestNow.IdF].Name)/" +
@@ -1005,19 +1005,19 @@ while ($Quit -eq $false) {
                 $ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))) -or
                 $BestNow.NeedBenchmark -or
                 $BestLast.Status -in @("Running", "PendingCancellation", "Cancelled") -or
-                $BestLast -eq $null -or
+                $null -eq $BestLast -or
                 $DonationInterval
             ) {
                 #Must launch other miner and stop actual
 
                 #Stop old
-                if ($BestLast -ne $null) {
+                if ($null -ne $BestLast) {
 
                     Write-Log ("Killing in $DelayCloseMiners seconds $BestLastLogMsg with system process id $($ActiveMiners[$BestLast.IdF].Process.Id)") $LogFile
 
                     if ($Bestnow.NeedBenchmark -or $DelayCloseMiners -eq 0 -or $BestLast.Status -eq 'PendingCancellation') {
                         #inmediate kill
-                        Kill-Process $ActiveMiners[$BestLast.IdF].Process
+                        Exit-Process $ActiveMiners[$BestLast.IdF].Process
                     } else {
                         #delayed kill
                         $Code = {
@@ -1050,7 +1050,7 @@ while ($Quit -eq $false) {
 
                 $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
 
-                if ($ActiveMiners[$BestNow.IdF].Port -eq $null) { $ActiveMiners[$BestNow.IdF].Port = Get-NextFreePort (Get-Random -minimum 2000 -maximum 48000)}
+                if ($null -eq $ActiveMiners[$BestNow.IdF].Port) { $ActiveMiners[$BestNow.IdF].Port = Get-NextFreePort (Get-Random -minimum 2000 -maximum 48000)}
                 $ActiveMiners[$BestNow.IdF].Arguments = $ActiveMiners[$BestNow.IdF].Arguments -replace '#APIPort#', $ActiveMiners[$BestNow.IdF].Port
 
                 if ($ActiveMiners[$BestNow.IdF].GenerateConfigFile) {
@@ -1475,10 +1475,10 @@ while ($Quit -eq $false) {
                         $_.Algorithm -eq $ActiveMiners[$SubMiner.IdF].Algorithm -and
                         $_.AlgorithmDual -eq $ActiveMiners[$SubMiner.IdF].AlgorithmDual }
                     $ExistsBest = $Candidates.SubMiners | Where-Object {$_.Profits -gt $SubMiner.Profits}
-                    if ($ExistsBest -eq $null -and $SubMiner.Profits -eq 0) {
+                    if ($null -eq $ExistsBest -and 0 -eq $SubMiner.Profits) {
                         $ExistsBest = $Candidates | Where-Object {$_.HashRate -gt $SubMiner.HashRate}
                     }
-                    if ($ExistsBest -eq $null -or $SubMiner.NeedBenchmark -eq $true) {
+                    if ($null -eq $ExistsBest -or $true -eq $SubMiner.NeedBenchmark) {
                         $ProfitMiner = $ActiveMiners[$SubMiner.IdF] | Select-Object * -ExcludeProperty SubMiners
                         $ProfitMiner | Add-Member SubMiner $SubMiner
                         $ProfitMiner | Add-Member GroupName $ProfitMiner.DeviceGroup.GroupName #needed for groupby
@@ -1549,7 +1549,7 @@ while ($Quit -eq $false) {
 
         if ($Screen -eq "Wallets" -or $FirstTotalExecution) {
 
-            if ($WalletsUpdate -eq $null) {
+            if ($null -eq $WalletsUpdate) {
                 #wallets only refresh for manual request
 
                 $WalletsUpdate = Get-Date
@@ -1757,10 +1757,10 @@ while ($Quit -eq $false) {
 #-----------------------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------
 
-Write-Log "Exiting MM...." $LogFile $true
+Write-Log "Exiting Forager...." $LogFile $true
 $LogFile.close()
 Clear-Files
-$ActiveMiners | Where-Object Process -ne $null | ForEach-Object {try {Kill-Process $_.Process} catch {}}
-try {Invoke-WebRequest ("http://localhost:" + [string]$config.ApiPort + "?command=Exit") -timeoutsec 1 -UseDefaultCredentials} catch {}
+$ActiveMiners | Where-Object Process -ne $null | ForEach-Object {try {Exit-Process $_.Process} catch {}}
+try {Invoke-WebRequest ("http://localhost:$($config.ApiPort)/?command=Exit") -timeoutsec 1 -UseDefaultCredentials} catch {}
 
 Stop-Process -Id $PID

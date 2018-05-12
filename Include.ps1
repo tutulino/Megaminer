@@ -1,36 +1,22 @@
 Add-Type -Path .\Includes\OpenCL\*.cs
 
-function Set-NvidiaClocks ([int]$PowerLimitPercent, [string]$Devices) {
-
-    $device = $Devices -split ','
-    $device | ForEach-Object {
-
-        $xpr = ".\includes\nvidia-smi.exe -i " + $_ + " --query-gpu=power.default_limit --format=csv,noheader"
-        $PowerDefaultLimit = [int]((Invoke-Expression $xpr) -replace 'W', '')
-
-        #powerlimit change must run in admin mode
-        $newProcess = New-Object System.Diagnostics.ProcessStartInfo ".\includes\nvidia-smi.exe"
-        $newProcess.Verb = "runas"
-        #$newProcess.UseShellExecute = $false
-        $newProcess.Arguments = "-i " + $_ + " -pl " + [Math]::Floor([int]($PowerDefaultLimit -replace ' W', '') * ($PowerLimitPercent / 100))
-        [System.Diagnostics.Process]::Start($newProcess) | Out-Null
-    }
-    Remove-Variable newprocess
-}
-
 function Set-NvidiaPowerLimit ([int]$PowerLimitPercent, [string]$Devices) {
 
-    $device = $Devices -split ','
-    $device | ForEach-Object {
+    foreach ($Device in @($Devices -split ',')) {
 
-        $xpr = ".\includes\nvidia-smi.exe -i " + $_ + " --query-gpu=power.default_limit --format=csv,noheader"
-        $PowerDefaultLimit = [int]((Invoke-Expression $xpr) -replace 'W', '')
+        $Command = '.\includes\nvidia-smi.exe'
+        $Arguments = @(
+            '-i ' + $Device
+            '--query-gpu=power.default_limit'
+            '--format=csv,noheader'
+        )
+        $PowerDefaultLimit = [int]((& $Command $Arguments) -replace 'W', '')
 
         #powerlimit change must run in admin mode
         $newProcess = New-Object System.Diagnostics.ProcessStartInfo ".\includes\nvidia-smi.exe"
         $newProcess.Verb = "runas"
         #$newProcess.UseShellExecute = $false
-        $newProcess.Arguments = "-i " + $_ + " -pl " + [Math]::Floor([int]($PowerDefaultLimit -replace ' W', '') * ($PowerLimitPercent / 100))
+        $newProcess.Arguments = "-i " + $Device + " -pl " + [Math]::Floor([int]($PowerDefaultLimit -replace ' W', '') * ($PowerLimitPercent / 100))
         [System.Diagnostics.Process]::Start($newProcess) | Out-Null
     }
     Remove-Variable newprocess
@@ -75,18 +61,18 @@ function Replace-ForEachDevice {
     $ConfigFileArguments = $ConfigFileArguments -replace [Environment]::NewLine, "#NL#" #replace carriage return for Select-string search (only search in each line)
 
     $Match = $ConfigFileArguments | Select-String -Pattern "#FOR_EACH_GPU#.*?#END_FOR_EACH_GPU#"
-    if ($Match -ne $null) {
+    if ($null -ne $Match) {
 
         $Match.Matches | ForEach-Object {
             $Base = $_.value -replace "#FOR_EACH_GPU#", "" -replace "#END_FOR_EACH_GPU#", ""
             $Final = ""
             $Devices -split ',' | ForEach-Object {$Final += ($base -replace "#GPUID#", $_)}
-            $ConfigFileArguments = $ConfigFileArguments.Substring(0, $_.index) + $final + $ConfigFileArguments.Substring($_.index + $_.Length, $ConfigFileArguments.Length - ($_.index + $_.Length))
+            $ConfigFileArguments = $ConfigFileArguments.Substring(0, $_.index) + $Final + $ConfigFileArguments.Substring($_.index + $_.Length, $ConfigFileArguments.Length - ($_.index + $_.Length))
         }
     }
 
     $Match = $ConfigFileArguments | Select-String -Pattern "#REMOVE_LAST_CHARACTER#"
-    if ($Match -ne $null) {
+    if ($null -ne $Match) {
         $Match.Matches | ForEach-Object {
             $ConfigFileArguments = $ConfigFileArguments.Substring(0, $_.index - 1) + $ConfigFileArguments.Substring($_.index + $_.Length, $ConfigFileArguments.Length - ($_.index + $_.Length))
         }
@@ -103,11 +89,11 @@ function Get-NextFreePort {
     )
 
     if ($LastUsedPort -lt 2000) {$FreePort = 2001} else {$FreePort = $LastUsedPort + 1} #not allow use of <2000 ports
-    while (Query-TCPPort -Server 127.0.0.1 -Port $FreePort -timeout 100) {$FreePort = $LastUsedPort + 1}
+    while (Test-TCPPort -Server 127.0.0.1 -Port $FreePort -timeout 100) {$FreePort = $LastUsedPort + 1}
     $FreePort
 }
 
-function Query-TCPPort {
+function Test-TCPPort {
     param([string]$Server, [int]$Port, [int]$Timeout)
 
     $Connection = New-Object System.Net.Sockets.TCPClient
@@ -125,7 +111,7 @@ function Query-TCPPort {
     }
 }
 
-function Kill-Process {
+function Exit-Process {
     param(
         [Parameter(Mandatory = $true)]
         $Process
@@ -195,7 +181,24 @@ function Get-DevicesInformation ($Types) {
         #NVIDIA
         if ($Types | Where-Object Type -eq 'NVIDIA') {
             $DeviceId = 0
-            Invoke-Expression ".\includes\nvidia-smi.exe --query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit --format=csv,noheader" | ForEach-Object {
+            $Command = '.\includes\nvidia-smi.exe'
+            $Arguments = @(
+                '--query-gpu=gpu_name,'
+                'utilization.gpu,'
+                'utilization.memory,'
+                'temperature.gpu,'
+                'power.draw,'
+                'power.limit,'
+                'fan.speed,'
+                'pstate,'
+                'clocks.current.graphics,'
+                'clocks.current.memory,'
+                'power.max_limit,'
+                'power.default_limit'
+                '--format=csv,'
+                'noheader'
+            )
+            & $Command $Arguments  | ForEach-Object {
                 $SMIresultSplit = $_ -split (",")
                 if ($SMIresultSplit.count -gt 10) {
                     #less is error or no NVIDIA gpu present
@@ -231,10 +234,11 @@ function Get-DevicesInformation ($Types) {
             #ADL
             $DeviceId = 0
 
-            $AdlResult = Invoke-Expression ".\Includes\OverdriveN.exe" | Where-Object {$_ -notlike "*&???" -and $_ -ne "ADL2_OverdriveN_Capabilities_Get is failed"}
+            $Command = ".\Includes\OverdriveN.exe"
+            $AdlResult = & $Command | Where-Object {$_ -notlike "*&???" -and $_ -ne "ADL2_OverdriveN_Capabilities_Get is failed"}
             $AmdCardsTDP = Get-Content .\Includes\amd-cards-tdp.json | ConvertFrom-Json
 
-            if ($AdlResult -ne $null) {
+            if ($null -ne $AdlResult) {
                 $AdlResult | ForEach-Object {
 
                     $AdlResultSplit = $_ -split (",")
@@ -358,7 +362,7 @@ Function Get-MiningTypes () {
         [switch]$All = $false
     )
 
-    if ($Filter -eq $null) {$Filter = @()} # to allow comparation after
+    if ($null -eq $Filter) {$Filter = @()} # to allow comparation after
 
     $OCLPlatforms = [OpenCl.Platform]::GetPlatformIDs()
     $PlatformID = 0
@@ -380,7 +384,7 @@ Function Get-MiningTypes () {
 
     $Types0 = Get-ConfigVariable "GpuGroups"
 
-    if ($Types0 -eq $null -or $All) {
+    if ($null -eq $Types0 -or $All) {
         # Autodetection on, must add types manually
         $Types0 = @()
 
@@ -400,7 +404,7 @@ Function Get-MiningTypes () {
                 $PlatformID = $_.PlatformID
 
                 if ($Type) {
-                    if (($Types0 | Where-Object {$_.GroupName -eq ($Name_Norm + $MemoryGB) -and $_.Platform -eq $PlatformID}) -eq $null) {
+                    if ($null -eq ($Types0 | Where-Object {$_.GroupName -eq ($Name_Norm + $MemoryGB) -and $_.Platform -eq $PlatformID})) {
                         $Types0 += [PSCustomObject] @{
                             GroupName   = $Name_Norm + $MemoryGB
                             Type        = $Type
@@ -418,7 +422,7 @@ Function Get-MiningTypes () {
                 $DeviceID++
             }
         }
-    } elseif ($Types0 -eq "") {
+    } elseif ("" -eq $Types0) {
         # Empty GpuGroups - don't autodetect, use cpu only
         [array]$Types0 = $null
     } else {
@@ -436,14 +440,14 @@ Function Get-MiningTypes () {
         $SysResult = @(Get-CimInstance Win32_ComputerSystem)
         $CpuResult | ForEach-Object {
             $DeviceID = 0
-            if (($Types0 | Where-Object GroupName -eq 'CPU') -eq $null) {
+            if ($null -eq ($Types0 | Where-Object GroupName -eq 'CPU')) {
                 $Types0 += [PSCustomObject]@{
                     GroupName   = 'CPU'
                     Type        = 'CPU'
                     Devices     = [string]$DeviceID
                     MemoryGB    = [int]($SysResult.TotalPhysicalMemory / 1GB)
                     PowerLimits = "0"
-                    Features    = $($feat = @{}; switch -regex ((Invoke-Expression ".\Includes\CHKCPU32.exe /x") -split "</\w+>") {"^\s*<_?(\w+)>(\d+).*" {$feat.($matches[1]) = [int]$matches[2]}}; $feat)
+                    Features    = $($feat = @{}; switch -regex ((& .\Includes\CHKCPU32.exe /x) -split "</\w+>") {"^\s*<_?(\w+)>(\d+).*" {$feat.($matches[1]) = [int]$matches[2]}}; $feat)
                 }
             } else {
                 $Types0 | Where-Object GroupName -eq 'CPU' | ForEach-Object {
@@ -475,8 +479,8 @@ Function Get-MiningTypes () {
                 CPU { $Pattern = '' }
             }
             $_ | Add-Member OCLDevices @($OCLDevices | Where-Object {$_.Vendor -eq $Pattern -and $_.Type -eq 'Gpu'})[$_.DevicesArray]
-            if ($_.Platform -eq $null) {$_ | Add-Member Platform ($_.OCLDevices.PlatformID | Select-Object -First 1)}
-            if ($_.MemoryGB -eq $null) {$_ | Add-Member MemoryGB ([int](($_.OCLDevices | Measure-Object -Property GlobalMemSize -Minimum | Select-Object -ExpandProperty Minimum) / 1GB ))}
+            if ($null -eq $_.Platform) {$_ | Add-Member Platform ($_.OCLDevices.PlatformID | Select-Object -First 1)}
+            if ($null -eq $_.MemoryGB) {$_ | Add-Member MemoryGB ([int](($_.OCLDevices | Measure-Object -Property GlobalMemSize -Minimum | Select-Object -ExpandProperty Minimum) / 1GB ))}
 
             $_.PowerLimits = @([int[]]($_.PowerLimits -split ',') | Sort-Object -Descending -Unique)
 
@@ -881,17 +885,19 @@ function Start-SubProcess {
 
             . .\Includes\CreateProcess.ps1
             $ControllerProcess = Get-Process -Id $ControllerProcessID
-            if ($ControllerProcess -eq $null) {return}
+            if ($null -eq $ControllerProcess) {return}
 
-            $Process = Invoke-CreateProcess `
-                -Binary $FilePath `
-                -Arguments $ArgumentList `
-                -CreationFlags CREATE_NEW_CONSOLE `
-                -ShowWindow $ShowWindow `
-                -StartF STARTF_USESHOWWINDOW `
-                -Priority $Priority `
-                -WorkingDirectory $WorkingDirectory
-            if ($Process -eq $null) {
+            $ProcessParams = @{
+                Binary           = $FilePath
+                Arguments        = $ArgumentList
+                CreationFlags    = [CreationFlags]::CREATE_NEW_CONSOLE
+                ShowWindow       = $ShowWindow
+                StartF           = [STARTF]::STARTF_USESHOWWINDOW
+                Priority         = $Priority
+                WorkingDirectory = $WorkingDirectory
+            }
+            $Process = Invoke-CreateProcess @ProcessParams
+            if ($null -eq $Process) {
                 [PSCustomObject]@{ProcessId = $null}
                 return
             }
@@ -909,7 +915,7 @@ function Start-SubProcess {
             param($ControllerProcessID, $FilePath, $ArgumentList, $WorkingDirectory, $MinerWindowStyle)
 
             $ControllerProcess = Get-Process -Id $ControllerProcessID
-            if ($ControllerProcess -eq $null) {return}
+            if ($null -eq $ControllerProcess) {return}
 
             $ProcessParam = @{}
             $ProcessParam.Add("FilePath", $FilePath)
@@ -917,7 +923,7 @@ function Start-SubProcess {
             if ($ArgumentList -ne "") {$ProcessParam.Add("ArgumentList", $ArgumentList)}
             if ($WorkingDirectory -ne "") {$ProcessParam.Add("WorkingDirectory", $WorkingDirectory)}
             $Process = Start-Process @ProcessParam -PassThru
-            if ($Process -eq $null) {
+            if ($null -eq $Process) {
                 [PSCustomObject]@{ProcessId = $null}
                 return
             }
@@ -934,7 +940,7 @@ function Start-SubProcess {
     }
 
     do {Start-Sleep 1; $JobOutput = Receive-Job $Job}
-    while ($JobOutput -eq $null)
+    while ($null -eq $JobOutput)
 
     $Process = Get-Process | Where-Object Id -EQ $JobOutput.ProcessId
     $Process.Handle | Out-Null
@@ -1009,21 +1015,21 @@ function Get-Pools {
 
     $ChildItems = @()
 
-    if ($info -eq $null) { $Info = [PSCustomObject]@{}
+    if ($null -eq $Info) { $Info = [PSCustomObject]@{}
     }
 
-    if (($info | Get-Member -MemberType NoteProperty | Where-Object name -eq location) -eq $null) {$info | Add-Member Location $Location}
+    if ($null -eq ($Info | Get-Member -MemberType NoteProperty | Where-Object name -eq location)) {$Info | Add-Member Location $Location}
 
-    $info | Add-Member SharedFile [string]$null
+    $Info | Add-Member SharedFile [string]$null
 
     $PoolsFolderContent | ForEach-Object {
 
         $Basename = $_.BaseName
         $SharedFile = $PSScriptRoot + "\" + $Basename + [string](Get-Random -minimum 0 -maximum 9999999) + ".tmp"
-        $info.SharedFile = $SharedFile
+        $Info.SharedFile = $SharedFile
 
         if (Test-Path $SharedFile) {Remove-Item $SharedFile}
-        &$_.FullName -Querymode $Querymode -Info $Info
+        & $_.FullName -Querymode $Querymode -Info $Info
         if (Test-Path $SharedFile) {
             $Content = Get-Content $SharedFile | ConvertFrom-Json
             Remove-Item $SharedFile
@@ -1110,7 +1116,7 @@ function Get-BestHashRateAlgo {
     Get-ChildItem ($PSScriptRoot + "\Stats") -Filter $Pattern -File | ForEach-Object {
         $Content = ($_ | Get-Content | ConvertFrom-Csv )
         $Hrs = 0
-        if ($Content -ne $null) {$Hrs = $($Content | Where-Object TimeSinceStartInterval -gt 60 | Measure-Object -property Speed -average).Average}
+        if ($null -ne $Content) {$Hrs = $($Content | Where-Object TimeSinceStartInterval -gt 60 | Measure-Object -property Speed -average).Average}
 
         if ($Hrs -gt $BestHashRate) {
             $BestHashRate = $Hrs
@@ -1122,26 +1128,6 @@ function Get-BestHashRateAlgo {
         }
     }
     $Return
-}
-
-function Get-AlgoDivisor {
-    param(
-        [Parameter(Mandatory = $true)]
-        [String]$Algo
-    )
-
-    $Divisor = 1000000000
-
-    switch (Get-AlgoUnifiedName $Algo) {
-        "blake2s" {$Divisor *= 1000}
-        "blakecoin" {$Divisor *= 1000}
-        "decred" {$Divisor *= 1000}
-        "equihash" {$Divisor /= 1000}
-        "keccakc" {$Divisor *= 1000}
-        "skein" {$Divisor *= 1000}
-        "yescrypt" {$Divisor /= 1000}
-    }
-    $Divisor
 }
 
 function Set-ConsolePosition ([int]$x, [int]$y) {
@@ -1199,7 +1185,7 @@ function Get-AlgoUnifiedName ([string]$Algo) {
 
     if (![string]::IsNullOrEmpty($Algo)) {
         $Algos = Get-Content -Path ".\Includes\algorithms.json" | ConvertFrom-Json
-        if ($Algos.($Algo.Trim()) -ne $null) { $Algos.($Algo.Trim()) }
+        if ($null -ne $Algos.($Algo.Trim())) { $Algos.($Algo.Trim()) }
         else { $Algo.Trim() }
     }
 }
@@ -1258,7 +1244,7 @@ function Get-HashRates {
         }
     }
 
-    if ($Content -eq $null) {$Content = @()}
+    if ($null -eq $Content) {$Content = @()}
     $Content
 }
 
@@ -1451,7 +1437,7 @@ function Get-CoinSymbol ([string]$Coin) {
     }
 }
 
-function Check-DeviceGroupsConfig ($types) {
+function Test-DeviceGroupsConfig ($types) {
     $Devices = Get-DevicesInformation $types
     $types | ForEach-Object {
         $DetectedDevices = @()
