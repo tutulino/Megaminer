@@ -610,11 +610,10 @@ function Invoke-APIRequest {
     $CachePath = '.\Cache\'
     $CacheFile = $CachePath + [System.Web.HttpUtility]::UrlEncode($Url) + '.json'
 
+    if (!(Test-Path -Path $CachePath)) { New-Item -Path $CachePath -ItemType directory -Force | Out-Null }
     if (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes(-3)) {
         $Response = Get-Content -Path $CacheFile | ConvertFrom-Json
     } else {
-        if (!(Test-Path -Path $CachePath)) { New-Item -Path $CachePath -ItemType directory | Out-Null }
-
         while ($Retry -gt 0) {
             try {
                 $Retry--
@@ -626,7 +625,7 @@ function Invoke-APIRequest {
             }
         }
         if ($Response) {
-            if ($CacheFile.Length -lt 260) {$Response | ConvertTo-Json -Depth 100 | Set-Content -Path $CacheFile}
+            if ($CacheFile.Length -lt 250) {$Response | ConvertTo-Json -Depth 100 | Set-Content -Path $CacheFile}
         } elseif (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes( - $MaxAge)) {
             $Response = Get-Content -Path $CacheFile | ConvertFrom-Json
         }
