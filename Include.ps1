@@ -242,6 +242,20 @@ function Get-DevicesInformation ($Types) {
                     $AdlResultSplit = $_ -split (",")
                     $Group = ($Types | Where-Object type -eq 'AMD' | Where-Object DevicesArray -contains $DeviceId).groupname
 
+                    $CardName = $($AdlResultSplit[8] `
+                            -replace 'ASUS' `
+                            -replace 'AMD' `
+                            -replace '\(?TM\)?' `
+                            -replace 'Series' `
+                            -replace 'Graphics' `
+                            -replace "\s+", ' '
+                    ).Trim()
+
+                    $CardName = $CardName -replace '.*Radeon.*([4-5]\d0).*', 'Radeon RX $1'     # RX 400/500 series
+                    $CardName = $CardName -replace '.*\s(Vega).*(56|64).*', 'Radeon Vega $2'    # Vega series
+                    $CardName = $CardName -replace '.*\s(R\d)\s(\w+).*', 'Radeon $1 $2'         # R3/R5/R7/R9 series
+                    $CardName = $CardName -replace '.*\s(HD)\s?(\w+).*', 'Radeon HD $2'         # HD series
+
                     $Card = [PSCustomObject]@{
                         Type              = 'AMD'
                         Id                = $DeviceId
@@ -254,7 +268,7 @@ function Get-DevicesInformation ($Types) {
                         Temperature       = [int]$AdlResultSplit[6] / 1000
                         PowerLimitPercent = 100 + [int]$AdlResultSplit[7]
                         PowerDraw         = $AmdCardsTDP.$($AdlResultSplit[8].Trim()) * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100)
-                        Name              = $AdlResultSplit[8].Trim()
+                        Name              = $CardName
                         UDID              = $AdlResultSplit[9].Trim()
                     }
                     $Devices += $Card
