@@ -298,14 +298,14 @@ function Get-DevicesInformation ($Types) {
             if (-not $CpuUtilization) {$CpuUtilization = $_.LoadPercentage}
             if (-not $CpuPowerDraw) {
                 if (-not $CpuTDP) {$CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json}
-                $CpuPowerDraw = $CpuTDP.($_.Name) * $CpuUtilization / 100
+                $CpuPowerDraw = $CpuTDP.($_.Name.Trim()) * $CpuUtilization / 100
             }
             if (-not $CpuClock) {$CpuClock = $_.MaxClockSpeed}
             $Devices += [PSCustomObject]@{
                 Type        = 'CPU'
                 Group       = 'CPU'
                 Id          = $_.DeviceID
-                Name        = $_.Name
+                Name        = $_.Name.Trim()
                 Cores       = $_.NumberOfCores
                 Threads     = $_.NumberOfLogicalProcessors
                 CacheL3     = [int]($_.L3CacheSize / 1024)
