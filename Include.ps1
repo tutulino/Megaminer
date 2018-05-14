@@ -396,7 +396,7 @@ Function Get-MiningTypes () {
                 }
 
                 $MemoryGB = [int]($_.GlobalMemSize / 1GB)
-                if (Get-ConfigVariable "GpuGroupByType" -eq "Enabled") {
+                if ((Get-ConfigVariable "GpuGroupByType") -eq "Enabled") {
                     $Name_Norm = $Type
                 } else {
                 $Name_Norm = (Get-Culture).TextInfo.ToTitleCase(($_.Name)) -replace "[^A-Z0-9]"
