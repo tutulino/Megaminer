@@ -181,20 +181,8 @@ function Get-DevicesInformation ($Types) {
             $DeviceId = 0
             $Command = '.\includes\nvidia-smi.exe'
             $Arguments = @(
-                '--query-gpu=gpu_name,'
-                'utilization.gpu,'
-                'utilization.memory,'
-                'temperature.gpu,'
-                'power.draw,'
-                'power.limit,'
-                'fan.speed,'
-                'pstate,'
-                'clocks.current.graphics,'
-                'clocks.current.memory,'
-                'power.max_limit,'
-                'power.default_limit'
-                '--format=csv,'
-                'noheader'
+                '--query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit'
+                '--format=csv,noheader'
             )
             & $Command $Arguments  | ForEach-Object {
                 $SMIresultSplit = $_ -split (",")
