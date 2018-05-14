@@ -395,14 +395,20 @@ Function Get-MiningTypes () {
                     default {$Type = $false}
                 }
 
-                $Name_Norm = (Get-Culture).TextInfo.ToTitleCase(($_.Name)) -replace "[^A-Z0-9]"
                 $MemoryGB = [int]($_.GlobalMemSize / 1GB)
+                if (Get-ConfigVariable "GpuGroupByType" -eq "Enabled") {
+                    $Name_Norm = $Type
+                } else {
+                $Name_Norm = (Get-Culture).TextInfo.ToTitleCase(($_.Name)) -replace "[^A-Z0-9]"
+                    $Name_Norm += $MemoryGB
+                }
+
                 $PlatformID = $_.PlatformID
 
                 if ($Type) {
-                    if ($null -eq ($Types0 | Where-Object {$_.GroupName -eq ($Name_Norm + $MemoryGB) -and $_.Platform -eq $PlatformID})) {
+                    if ($null -eq ($Types0 | Where-Object {$_.GroupName -eq $Name_Norm -and $_.Platform -eq $PlatformID})) {
                         $Types0 += [PSCustomObject] @{
-                            GroupName   = $Name_Norm + $MemoryGB
+                            GroupName   = $Name_Norm
                             Type        = $Type
                             Devices     = [string]$DeviceID
                             Platform    = $PlatformID
@@ -410,7 +416,7 @@ Function Get-MiningTypes () {
                             PowerLimits = "0"
                         }
                     } else {
-                        $Types0 | Where-Object {$_.GroupName -eq ($Name_Norm + $MemoryGB) -and $_.Platform -eq $PlatformID} | ForEach-Object {
+                        $Types0 | Where-Object {$_.GroupName -eq $Name_Norm -and $_.Platform -eq $PlatformID} | ForEach-Object {
                             $_.Devices += "," + $DeviceID
                         }
                     }
