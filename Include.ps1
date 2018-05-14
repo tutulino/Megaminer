@@ -272,47 +272,44 @@ function Get-DevicesInformation ($Types) {
 
         ### Not sure how Afterburner results look with more than 1 CPU
         if ($abMonitor) {
-            $CpuClock = $($abMonitor.Entries | Where-Object SrcName -eq 'CPU clock').Data
-            $CpuUtilization = $($abMonitor.Entries | Where-Object SrcName -eq 'CPU usage').Data
-            $CpuPowerDraw = $($abMonitor.Entries | Where-Object SrcName -eq 'CPU power').Data
-            $CpuTemperature = $($abMonitor.Entries | Where-Object SrcName -match "^(CPU\d* )temperature" | Measure-Object -Property Data -Maximum).Maximum
-        } else {
-            $CpuClock = $null
-            $CpuUtilization = $null
-            $CpuPowerDraw = $null
-            $CpuTemperature = $null
-        }
-
-        if (-not $CpuUtilization) {
-            # Get-Counter is more accurate and is preferable, but currently not available in Poweshell 6
-            if (Get-Command "Get-Counter" -Type Cmdlet -errorAction SilentlyContinue) {
-                # Language independent version of Get-Counter '\Processor(_Total)\% Processor Time'
-                $CpuUtilization = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue
-            } else {
-                $Error.Remove($Error[$Error.Count - 1])
-                $CpuUtilization = $null
+            $CpuData = @{
+                Clock       = $($abMonitor.Entries | Where-Object SrcName -match '^(CPU\d* )clock' | Measure-Object -Property Data -Maximum).Maximum
+                Utilization = $($abMonitor.Entries | Where-Object SrcName -match '^(CPU\d* )usage'| Measure-Object -Property Data -Average).Average
+                PowerDraw   = $($abMonitor.Entries | Where-Object SrcName -eq 'CPU power').Data
+                Temperature = $($abMonitor.Entries | Where-Object SrcName -match "^(CPU\d* )temperature" | Measure-Object -Property Data -Maximum).Maximum
             }
+        } else {
+            $CpuData = @{}
         }
 
         $CpuResult | ForEach-Object {
-            if (-not $CpuUtilization) {$CpuUtilization = $_.LoadPercentage}
-            if (-not $CpuPowerDraw) {
-                if (-not $CpuTDP) {$CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json}
-                $CpuPowerDraw = $CpuTDP.($_.Name.Trim()) * $CpuUtilization / 100
+            if (-not $CpuData.Utilization) {
+                # Get-Counter is more accurate and is preferable, but currently not available in Poweshell 6
+                if (Get-Command "Get-Counter" -Type Cmdlet -errorAction SilentlyContinue) {
+                    # Language independent version of Get-Counter '\Processor(_Total)\% Processor Time'
+                    $CpuData.Utilization = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue
+                } else {
+                    $Error.Remove($Error[$Error.Count - 1])
+                    $CpuData.Utilization = $_.LoadPercentage
+                }
             }
-            if (-not $CpuClock) {$CpuClock = $_.MaxClockSpeed}
+            if (-not $CpuData.PowerDraw) {
+                if (-not $CpuTDP) {$CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json}
+                $CpuData.PowerDraw = $CpuTDP.($_.Name.Trim()) * $CpuData.Utilization / 100
+            }
+            if (-not $CpuData.Clock) {$CpuData.Clock = $_.MaxClockSpeed}
             $Devices += [PSCustomObject]@{
                 Type        = 'CPU'
                 Group       = 'CPU'
-                Id          = $_.DeviceID
+                Id          = [int]($_.DeviceID -replace "[^0-9]")
                 Name        = $_.Name.Trim()
-                Cores       = $_.NumberOfCores
-                Threads     = $_.NumberOfLogicalProcessors
+                Cores       = [int]$_.NumberOfCores
+                Threads     = [int]$_.NumberOfLogicalProcessors
                 CacheL3     = [int]($_.L3CacheSize / 1024)
-                Clock       = [int]$CpuClock
-                Utilization = [int]$CpuUtilization
-                PowerDraw   = [int]$CpuPowerDraw
-                Temperature = [int]$CpuTemperature
+                Clock       = [int]$CpuData.Clock
+                Utilization = [int]$CpuData.Utilization
+                PowerDraw   = [int]$CpuData.PowerDraw
+                Temperature = [int]$CpuData.Temperature
             }
         }
     }
@@ -399,7 +396,7 @@ Function Get-MiningTypes () {
                 if ((Get-ConfigVariable "GpuGroupByType") -eq "Enabled") {
                     $Name_Norm = $Type
                 } else {
-                $Name_Norm = (Get-Culture).TextInfo.ToTitleCase(($_.Name)) -replace "[^A-Z0-9]"
+                    $Name_Norm = (Get-Culture).TextInfo.ToTitleCase(($_.Name)) -replace "[^A-Z0-9]"
                     $Name_Norm += $MemoryGB
                 }
 
