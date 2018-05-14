@@ -142,12 +142,10 @@ function Get-DevicesInformation ($Types) {
     [cmdletbinding()]
 
     $Devices = @()
+    if ($abMonitor) {$abMonitor.ReloadAll()}
+    if ($abControl) {$abControl.ReloadAll()}
 
     if ($abMonitor) {
-
-        $abMonitor.ReloadAll()
-        if ($abControl) {$abControl.ReloadAll()}
-
         foreach ($Type in @('AMD', 'NVIDIA')) {
             $DeviceId = 0
             $Pattern = @{
@@ -273,51 +271,49 @@ function Get-DevicesInformation ($Types) {
         $CpuResult = @(Get-CimInstance Win32_Processor)
 
         ### Not sure how Afterburner results look with more than 1 CPU
-        if ($abMonitor -and $CpuResult.count -eq 1) {
-            $abMonitor.ReloadAll()
-            $CPUData = $abMonitor.Entries | Where-Object SrcName -like "CPU*"
-
-            $CpuResult | ForEach-Object {
-                $Devices += [PSCustomObject]@{
-                    Type        = 'CPU'
-                    Id          = $_.DeviceID
-                    Group       = 'CPU'
-                    Clock       = [int]$($CPUData | Where-Object SrcName -eq 'CPU clock').Data
-                    Utilization = [int]$($CPUData | Where-Object SrcName -eq 'CPU usage').Data
-                    CacheL3     = [int]($_.L3CacheSize / 1024)
-                    Cores       = $_.NumberOfCores
-                    Threads     = $_.NumberOfLogicalProcessors
-                    PowerDraw   = [int]$($CPUData | Where-Object SrcName -eq 'CPU power').Data
-                    Temperature = [int]$($CPUData | Where-Object SrcName -eq 'CPU temperature').Data
-                    Name        = $_.Name
-                }
-            }
+        if ($abMonitor) {
+            $CpuClock = $($abMonitor.Entries | Where-Object SrcName -eq 'CPU clock').Data
+            $CpuUtilization = $($abMonitor.Entries | Where-Object SrcName -eq 'CPU usage').Data
+            $CpuPowerDraw = $($abMonitor.Entries | Where-Object SrcName -eq 'CPU power').Data
+            $CpuTemperature = $($abMonitor.Entries | Where-Object SrcName -match "^(CPU\d* )temperature" | Measure-Object -Property Data -Maximum).Maximum
         } else {
-            $CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json
+            $CpuClock = $null
+            $CpuUtilization = $null
+            $CpuPowerDraw = $null
+            $CpuTemperature = $null
+        }
+
+        if (-not $CpuUtilization) {
             # Get-Counter is more accurate and is preferable, but currently not available in Poweshell 6
             if (Get-Command "Get-Counter" -Type Cmdlet -errorAction SilentlyContinue) {
                 # Language independent version of Get-Counter '\Processor(_Total)\% Processor Time'
-                $CpuLoad = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue / 100
+                $CpuUtilization = (Get-Counter -Counter '\238(_Total)\6').CounterSamples.CookedValue
             } else {
                 $Error.Remove($Error[$Error.Count - 1])
-                $CpuLoad = (Get-CimInstance -ClassName win32_processor | Measure-Object -Property LoadPercentage -Average | Select-Object -ExpandProperty Average) / 100
+                $CpuUtilization = $null
             }
+        }
 
-            $CpuResult | ForEach-Object {
-                $Devices += [PSCustomObject]@{
-                    Type        = 'CPU'
-                    Id          = $_.DeviceID
-                    Group       = 'CPU'
-                    Clock       = $_.MaxClockSpeed
-                    Utilization = $_.LoadPercentage
-                    CacheL3     = [int]($_.L3CacheSize / 1024)
-                    Cores       = $_.NumberOfCores
-                    Threads     = $_.NumberOfLogicalProcessors
-                    PowerDraw   = [int]($CpuTDP.($_.Name) * $CpuLoad)
-                    Name        = $_.Name
-                }
+        $CpuResult | ForEach-Object {
+            if (-not $CpuUtilization) {$CpuUtilization = $_.LoadPercentage}
+            if (-not $CpuPowerDraw) {
+                if (-not $CpuTDP) {$CpuTDP = Get-Content ".\Includes\cpu-tdp.json" | ConvertFrom-Json}
+                $CpuPowerDraw = $CpuTDP.($_.Name) * $CpuUtilization / 100
             }
-            Clear-Variable CpuTDP
+            if (-not $CpuClock) {$CpuClock = $_.MaxClockSpeed}
+            $Devices += [PSCustomObject]@{
+                Type        = 'CPU'
+                Group       = 'CPU'
+                Id          = $_.DeviceID
+                Name        = $_.Name
+                Cores       = $_.NumberOfCores
+                Threads     = $_.NumberOfLogicalProcessors
+                CacheL3     = [int]($_.L3CacheSize / 1024)
+                Clock       = [int]$CpuClock
+                Utilization = [int]$CpuUtilization
+                PowerDraw   = [int]$CpuPowerDraw
+                Temperature = [int]$CpuTemperature
+            }
         }
     }
     $Devices
