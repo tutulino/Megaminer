@@ -67,6 +67,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "AchieveCoin"; algo = "Equihash"; symbol = "ACH"; server = "ach.suprnova.cc"; port = 4242; location = "US"};
     $Pools += [PSCustomObject]@{coin = "BitcoinGold"; algo = "Equihash"; symbol = "BTG"; server = "btg.suprnova.cc"; port = 8816; location = "US"};
     $Pools += [PSCustomObject]@{coin = "BitcoinPrivate"; algo = "Equihash"; symbol = "BTCP"; server = "btcp.suprnova.cc"; port = 6822; location = "US"};
+    $Pools += [PSCustomObject]@{coin = "BitcoinInterest"; algo = "Equihash"; symbol = "BCI"; server = "bci.suprnova.cc"; port = 8166; location = "US"; portSSL = 8168};
     $Pools += [PSCustomObject]@{coin = "BitcoinZ"; algo = "Equihash"; symbol = "BTCZ"; server = "btcz.suprnova.cc"; port = 5586; location = "US"};
     $Pools += [PSCustomObject]@{coin = "BitCore"; algo = "Bitcore"; symbol = "BTX"; server = "btx.suprnova.cc"; port = 3629; location = "US"};
     $Pools += [PSCustomObject]@{coin = "BitSend"; algo = "Xevan"; symbol = "BSD"; server = "bsd.suprnova.cc"; port = 8686; location = "US"};
