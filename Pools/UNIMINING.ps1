@@ -141,7 +141,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
         $retries=1
                 do {
                         try {
-                            $Request = Invoke-WebRequest "http://pool.unimining.net/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 5 
+                            $Request = Invoke-WebRequest "http://pool.unimining.net/api/currencies"  -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36" -UseBasicParsing -timeout 20
                             $Request = $Request | ConvertFrom-Json 
                              #$Zpool_Request=get-content "..\zpool_request.json" | ConvertFrom-Json
 
@@ -177,8 +177,15 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Price         = [Double]$coin.estimate / $Divisor
                                 Price24h      = [Double]$coin."24h_btc" / $Divisor
                                 Protocol      = "stratum+tcp"
-                                Host          = "pool.unimining.net"
-                                Port          = $coin.port
+                                Host          = if ($Uni_Simbol -eq 'XVG' -and $Uni_Algorithm -eq 'Blake2s') 
+                                                    {"xvg.eu1.unimining.net"} 
+                                                else  
+                                                    {"pool.unimining.net"}
+                                Port          = switch ($Uni_Simbol) {
+                                                        "RVN"{3638}
+                                                        "MTN"{3637}
+                                                        default {$coin.port}
+                                                        }
                                 User          = $CoinsWallets.get_item($Uni_Simbol)
                                 Pass          = "c=$Uni_symbol,ID=#WorkerName#"
                                 Location      = 'US'
