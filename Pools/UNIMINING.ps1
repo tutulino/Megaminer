@@ -184,6 +184,18 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 Port          = switch ($Uni_Simbol) {
                                                         "RVN"{3638}
                                                         "MTN"{3637}
+                                                        "SGL"{4241}
+                                                        "DSR"{4234}	
+                                                        "DIN"{4245}
+                                                        "GOA"{4240}	
+                                                        "FTC"{4246}	
+                                                        "TZC"{4237}	
+                                                        "CBS"{4244}	
+                                                        "CRC"{4238}	 
+                                                        "RAP"{4242}
+                                                        "INN"{4235}	
+                                                        "GBX"{4236}
+                                                        "LBC"{3334}
                                                         default {$coin.port}
                                                         }
                                 User          = $CoinsWallets.get_item($Uni_Simbol)

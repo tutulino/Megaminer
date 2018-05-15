@@ -694,7 +694,7 @@ This release add a new section in config.txt for Farm Monitor
 
 
 ---BUG FIXES:
-* X16r and Blake2s not working for Unimining.net port
+* X16r,Blake2s and Neoscrypt not working for Unimining.net
 * Nicehash not using europe location
 
 
