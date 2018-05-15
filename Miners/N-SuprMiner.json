@@ -1,0 +1,13 @@
+{
+    "Path": ".\\Bin\\N-ccminerSUP\\raven_spmodgit4\\ccminer.exe",
+    "ExtractionPath" : ".\\Bin\\N-ccminerSUP\\",
+    "Uri": "https://github.com/sp-hash/suprminer/releases/download/spmod-git4/raven_spmodgit4.7z",
+    "Types" : ["NVIDIA"],
+    "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+    "API": "Ccminer",
+    "APIPort": 2323,
+    "Algorithms": {
+        "X16r": "-a x16r",
+        "X16s": "-a x16s"
+    }
+}
