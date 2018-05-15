@@ -690,7 +690,14 @@ This release add a new section in config.txt for Farm Monitor
 
 ---FEATURES CHANGES:
 * Added Automatic EThLargementPill for Nvidia hashrate booster for 1080/1080ti
-* updated nvdia-smi (needed for nvidia cards identification) to 397.64 release
+* Updated nvdia-smi (needed for nvidia cards identification) to 397.64 release
+* Added hamsi,bmw,whirpool and echo Algos for AMD
+
+
+
+---MINERS CHANGES:
+
+* Updated SgminerAver to 1.4 Release
 
 
 ---BUG FIXES:
