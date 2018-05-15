@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\AMD-sgminerAver\\avermore-windows\\sgminer.exe",
 "ExtractionPath" : ".\\Bin\\AMD-sgminerAver\\",
-"Uri" : "https://github.com/brian112358/avermore-miner/releases/download/v1.1/avermore-v1.1-windows.zip",
+"Uri" : "https://github.com/brian112358/avermore-miner/releases/download/v1.4/avermore-v1.4-windows.zip",
 "Types" : ["AMD"],
 "Arguments" : "--api-listen -o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# --device #DEVICES# --api-port #APIPORT# --gpu-platform #GPUPLATFORM# #ALGORITHMPARAMETERS#",
 "API" : "Xgminer",
@@ -10,7 +10,15 @@
 "PrelaunchCommand":"",
 "Fee":0.01,
 "Algorithms": [
-            {"x16s":"-k x16s"}
+          {"x16s":"-k x16s"},
+          {"whirlpool":"-k whirlpool"},
+          {"Skein":"-k Skein"},
+          {"Keccak":"-k Keccak"},
+          {"Blake":"-k Blake"},
+          {"bmw":"-k bmw"},
+          {"Hamsi":"-k Hamsi"},
+          {"echo":"-k echo"}
+          
               ]
 
 }

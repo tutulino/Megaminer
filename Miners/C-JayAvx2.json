@@ -1,7 +1,7 @@
 {
-"Path" : ".\\Bin\\CPU-Jaydee\\cpuminer-opt-3.8.7.2-windows\\cpuminer-avx2.exe",
+"Path" : ".\\Bin\\CPU-Jaydee\\cpuminer-opt-3.8.8.1-windows\\cpuminer-avx2.exe",
 "ExtractionPath" : ".\\Bin\\CPU-Jaydee\\",
-"Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1899884/cpuminer-opt-3.8.7.2-windows.zip",
+"Uri" : "https://github.com/JayDDee/cpuminer-opt/files/1996977/cpuminer-opt-3.8.8.1-windows.zip",
 "Types" : ["CPU"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# #ALGORITHMPARAMETERS#",
 "API" : "ccminer",
@@ -9,6 +9,7 @@
 "Dualmining":false,
 "PrelaunchCommand":"",
 "Algorithms": [
+              {"cryptonightv7":"-a cryptonightv7"},
               {"cryptonight":"-a cryptonight"},
               {"lyra2z":"-a lyra2z"},
               {"hmq1725":"-a hmq1725"},
@@ -23,7 +24,9 @@
               {"blakecoin":"-a blakecoin"},  
               {"neoscrypt":"-a neoscrypt"},
               {"tribus":"-a tribus"},
-              {"x16s":"-a x16s"}
+              {"x16s":"-a x16s"},
+              {"x16s":"-a x16r"}
+              
               ]
 
 }
