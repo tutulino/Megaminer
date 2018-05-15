@@ -1,0 +1,20 @@
+{
+    "Path": "ccminerAlexis78-v1.1\\ccminer.exe",
+    "Uri": "https://github.com/nemosminer/ccminerAlexis78/releases/download/Alexis78-v1.1/ccminerAlexis78-v1.1.7z",
+    "SHA256": "fa46d4a8f4c5ac5a2737c6415cac4c67d010e180058f7542060900cadd779a06",
+    "Type": "NVIDIA",
+    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# -d #Devices# #AlgorithmParameters# ",
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Blake2s": "-a blake2s",
+        "C11": "-a c11 -i 21",
+        "HSR": "-a hsr",
+        "Keccak": "-a keccak -m 2 -i 29",
+        "KeccakC": "-a keccakc -i 29",
+        "Lyra2v2": "-a lyra2v2 -N 1",
+        "Veltor": "-a veltor -i 23",
+        "X11evo": "-a x11evo -N 1 -i 21 ",
+        "X17": "-a x17 -i 20"
+    }
+}
