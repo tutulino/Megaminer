@@ -231,14 +231,30 @@ if ($config.ApiPort -gt 0) {
 
 #enable EthlargementPill
 
-if (($config.EthlargementPill) -eq "ENABLED")
+if (($config.EthlargementPill) -like "REV*")
     {
     writelog "Starting ETHlargementPill " $logfile $false
-    $EthPill = Start-Process -FilePath "OhGodAnETHlargementPill-r2.exe" -passthru
+    $arg="-"+$config.EthlargementPill
+    $EthPill = Start-Process -FilePath "OhGodAnETHlargementPill-r2.exe"  -passthru  -Verb RunAs -ArgumentList $arg
     } 
 
 
-    
+
+# Check for updates
+     try {
+        $Request = Invoke-RestMethod -Uri "https://api.github.com/repos/tutulino/Megaminer/releases/latest" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+        $RemoteVersion = ($Request.tag_name -replace '^v')
+        
+
+        if ($RemoteVersion -gt $Release) {
+            writelog "THERE IS A NEW MEGAMINER RELEASE AVAILABLE, PLEASE DOWNLOAD" $logfile $false
+            Write-Host "THERE IS A NEW MEGAMINER RELEASE AVAILABLE, PLEASE DOWNLOAD" -ForegroundColor Yellow
+            start-sleep 5
+        }
+    } catch {
+        writelog  "Failed to get $Application updates." $logfile $false
+    }
+
 
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
