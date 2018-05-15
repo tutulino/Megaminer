@@ -164,7 +164,7 @@
 
 @@ALGORITHMS_NVIDIA=bitcore,blakecoin,c11,cryptonight,Equihash,Ethash,Ethash_Blake2b,Ethash_Blake14r,Ethash_Keccak,Ethash_blake2s,Ethash_pascal,Ethash_Lbry,groestl,hsr,jha,Keccak,keccakc,lbry,lyra2v2,lyra2z,Myriad-Groestl,Neoscrypt,nist5,pascal,phi,polytimos,sib,skein,skunk,timetravel,tribus,veltor,whirpool,x11evo,x11gost,x14,x16r,x17,xevan,yescrypt,X12,x16s,cryptonightv7
 @@ALGORITHMS_AMD=bitcore,blake,cryptonight,darkcoin-mod,equihash,Ethash,Ethash_Blake2b,Ethash_Blake14r,Ethash_Keccak,Ethash_blake2s,Ethash_pascal,Ethash_Lbry,Groestl,hsr,Keccak,lyra2v2,lyra2z,Myriad-groestl,neoscrypt,Pascal,phi,skein,tribus,vanilla,veltor,x11gost,xevan,yescrypt,x16r,x16s,cryptonightv7
-@@ALGORITHMS_CPU=bitcore,blakecoin,cryptonight,hmq1725,jha,keccak,keccakc,lyra2v2,lyra2z,m7m,neoscrypt,nist5,phi,polytimos,timetravel,tribus,veltor,cryptonightv7,x16s
+@@ALGORITHMS_CPU=bitcore,blakecoin,cryptonight,hmq1725,jha,keccak,keccakc,lyra2v2,lyra2z,m7m,neoscrypt,nist5,phi,polytimos,timetravel,tribus,veltor,cryptonightv7,x16s,x16r
 
  
 
@@ -174,10 +174,13 @@
 @@FORCEDYNAMICPORTS=DISABLED
 
 
---Enable ETHlargementPill (ENABLED/DISABLED)
+--Enable ETHlargementPill (REVB/REVA/DISABLED)
 --ETHlargementPill is a hashrate booster for Nvidia 1080 and 1080ti in some algos, enable if you have one of this models, disable if not
+--The default is revB, but older GPUs (which tend to be 1080s) only take the revA well, that why it's needed to be specified
 
-@@ETHLARGEMENTPILL=ENABLED
+@@ETHLARGEMENTPILL=DISABLED
+
+
 
 
 
