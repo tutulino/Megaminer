@@ -58,7 +58,7 @@ if ($Querymode -eq "info"){
         $Result=@()
     
         if ($Request.Result.Workers -ne $null -and $Request.Result.Workers -ne ""){
-$A= $Request.Result.Workers
+
                 $Request.Result.Workers |ForEach-Object {
                                 $Result += [PSCustomObject]@{
                                         PoolName =$name
@@ -129,7 +129,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         $Locations=@()
         $Locations += [PSCustomObject]@{NhLocation ='USA';MMlocation='US'}
-        $Locations += [PSCustomObject]@{NhLocation ='EU';MMlocation='EUROPE'}
+        $Locations += [PSCustomObject]@{NhLocation ='EU';MMlocation='EU'}
 
         $Request | ForEach-Object {
 

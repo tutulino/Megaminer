@@ -129,7 +129,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
         $Locations=@()
         $Locations += [PSCustomObject]@{NhLocation ='USA';MMlocation='US'}
-        $Locations += [PSCustomObject]@{NhLocation ='EU';MMlocation='EUROPE'}
+        $Locations += [PSCustomObject]@{NhLocation ='EU';MMlocation='EU'}
 
         $Request | ForEach-Object {
 
