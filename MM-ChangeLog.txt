@@ -676,6 +676,7 @@ This release add a new section in config.txt for Farm Monitor
 
 * Updated Claymore Neoscrypt to 1.2
 * Updated ccminerX16r to Enemy 1.08
+* Added new miners X16s and x16r for AMD
 
 
 ---BUG FIXES:
@@ -684,5 +685,36 @@ This release add a new section in config.txt for Farm Monitor
 * Wrong algo x17 on ccminerx16R
 
 
+------------------------------------------------
+6.3
+
+---FEATURES CHANGES:
+* Added Automatic EThLargementPill for Nvidia hashrate booster for 1080/1080ti
+* New message at start if new Megaminer release available
+* Updated nvdia-smi (needed for nvidia cards identification) to 397.64 release
+* Added hamsi,bmw,whirpool and echo Algos for AMD
+* Added allium algo for NVIDIA
+* Added x16r for CPU
+
+
+
+---MINERS CHANGES:
+
+* Updated AMD SgminerAver to 1.4 Release
+* Updated CPU cpuminer Jayddee to 3.8.8.1
+* Updated CPU xmrig to 2.6.2
+* Added NVDIA SuprminerSP 4a
+* Added NVDIA Ccminer for Allium
+
+
+---BUG FIXES:
+* X16r,Blake2s and Neoscrypt not working for Unimining.net
+* Nicehash not using europe location
+
+
+
+--RELEASE NOTES
+If you want to reuse your old config.txt file, and you want to use new EthLargementPill feature you must add this section @@ETHLARGEMENTPILL=ENABLED
+If you use new ETHlargementpill feature you must delete ETHASH 
 
 

@@ -91,7 +91,24 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             "sha256" {$Divisor *= 1000}
         }
 
-        if ($Pool_Symbol -eq 'XVG' -and $Pool_Algo -eq 'Blake2s') {$#Port# = "xvg.eu1.unimining.net"} else {$#Port# = $MineUrl}
+        if ($Pool_Symbol -eq 'XVG' -and $Pool_Algo -eq 'Blake2s') {$Server = "xvg.eu1.unimining.net"} else {$Server = $MineUrl}
+        $Port = switch ($Pool_Symbol) {
+            "RVN" {3638}
+            "MTN" {3637}
+            "SGL" {4241}
+            "DSR" {4234}
+            "DIN" {4245}
+            "GOA" {4240}
+            "FTC" {4246}
+            "TZC" {4237}
+            "CBS" {4244}
+            "CRC" {4238}
+            "RAP" {4242}
+            "INN" {4235}
+            "GBX" {4236}
+            "LBC" {3334}
+            default {$Coin.port}
+        }
 
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
@@ -99,8 +116,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             Price                 = [decimal]$Coin.estimate / $Divisor
             Price24h              = [decimal]$Coin.'24h_btc' / $Divisor
             Protocol              = "stratum+tcp"
-            Host                  = $#Port#
-            Port                  = $Coin.port
+            Host                  = $Server
+            Port                  = $Port
             User                  = $CoinsWallets.$Pool_Symbol
             Pass                  = "c=$Pool_Symbol,ID=#WorkerName#"
             Location              = $Location
