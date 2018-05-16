@@ -60,18 +60,18 @@ function Replace-ForEachDevice {
     #search string to replace
     $ConfigFileArguments = $ConfigFileArguments -replace [Environment]::NewLine, "#NL#" #replace carriage return for Select-string search (only search in each line)
 
-    $Match = $ConfigFileArguments | Select-String -Pattern "#FOR_EACH_GPU#.*?#END_FOR_EACH_GPU#"
+    $Match = $ConfigFileArguments | Select-String -Pattern "#ForEachDevice#.*?#EndForEachDevice#"
     if ($null -ne $Match) {
 
         $Match.Matches | ForEach-Object {
-            $Base = $_.value -replace "#FOR_EACH_GPU#", "" -replace "#END_FOR_EACH_GPU#", ""
+            $Base = $_.value -replace "#ForEachDevice#" -replace "#EndForEachDevice#"
             $Final = ""
-            $Devices -split ',' | ForEach-Object {$Final += ($base -replace "#GPUID#", $_)}
+            $Devices -split ',' | ForEach-Object {$Final += ($base -replace "#DeviceID#", $_)}
             $ConfigFileArguments = $ConfigFileArguments.Substring(0, $_.index) + $Final + $ConfigFileArguments.Substring($_.index + $_.Length, $ConfigFileArguments.Length - ($_.index + $_.Length))
         }
     }
 
-    $Match = $ConfigFileArguments | Select-String -Pattern "#REMOVE_LAST_CHARACTER#"
+    $Match = $ConfigFileArguments | Select-String -Pattern "#RemoveLastCharacter#"
     if ($null -ne $Match) {
         $Match.Matches | ForEach-Object {
             $ConfigFileArguments = $ConfigFileArguments.Substring(0, $_.index - 1) + $ConfigFileArguments.Substring($_.index + $_.Length, $ConfigFileArguments.Length - ($_.index + $_.Length))
@@ -437,25 +437,19 @@ Function Get-MiningTypes () {
         $Filter -contains "CPU" -or
         $Types0.Length -eq 0
     ) {
-        $CpuResult = @(Get-CimInstance Win32_Processor)
         $SysResult = @(Get-CimInstance Win32_ComputerSystem)
-        $CpuResult | ForEach-Object {
-            $DeviceID = 0
-            if ($null -eq ($Types0 | Where-Object GroupName -eq 'CPU')) {
-                $Types0 += [PSCustomObject]@{
-                    GroupName   = 'CPU'
-                    Type        = 'CPU'
-                    Devices     = [string]$DeviceID
-                    MemoryGB    = [int]($SysResult.TotalPhysicalMemory / 1GB)
-                    PowerLimits = "0"
-                    Features    = $($feat = @{}; switch -regex ((& .\Includes\CHKCPU32.exe /x) -split "</\w+>") {"^\s*<_?(\w+)>(\d+).*" {$feat.($matches[1]) = [int]$matches[2]}}; $feat)
-                }
-            } else {
-                $Types0 | Where-Object GroupName -eq 'CPU' | ForEach-Object {
-                    $_.Devices += "," + $DeviceID
-                }
-            }
-            $DeviceID++
+        $Features = $($feat = @{}; switch -regex ((& .\Includes\CHKCPU32.exe /x) -split "</\w+>") {"^\s*<_?(\w+)>(\d+).*" {$feat.($matches[1]) = [int]$matches[2]}}; $feat)
+        $RealCores = [int[]](0..($Features.Threads - 1))
+        if ($Features.Threads -gt $Features.Cores) {
+            $RealCores = $RealCores | Where-Object {-not ($_ % 2)}
+        }
+        $Types0 += [PSCustomObject]@{
+            GroupName   = 'CPU'
+            Type        = 'CPU'
+            Devices     = $RealCores -join ','
+            MemoryGB    = [int]($SysResult.TotalPhysicalMemory / 1GB)
+            PowerLimits = "0"
+            Features    = $Features
         }
     }
 
@@ -1300,6 +1294,26 @@ function Get-Stats {
     }
     $Content
 }
+function Get-AllStats {
+    $Stats = @()
+    if (-not (Test-Path "Stats")) {New-Item "Stats" -ItemType "directory" | Out-Null}
+    Get-ChildItem "Stats" -Filter "*_stats.json" | Foreach-Object {
+        $Name = $_.BaseName
+        $_ | Get-Content | ConvertFrom-Json | ForEach-Object {
+            $Values = $Name -split '_'
+            $Stats += @{
+                MinerName  = $Values[0]
+                Algorithm  = $Values[1]
+                GroupName  = $Values[2]
+                AlgoLabel  = $Values[3]
+                PowerLimit = ($Values[4] -split 'PL')[-1]
+                Stats      = $_
+            }
+        }
+    }
+    Return $Stats
+}
+
 
 function Set-Stats {
     param(
@@ -1437,11 +1451,11 @@ function Get-CoinSymbol ([string]$Coin) {
     }
 }
 
-function Test-DeviceGroupsConfig ($types) {
-    $Devices = Get-DevicesInformation $types
-    $types | ForEach-Object {
+function Test-DeviceGroupsConfig ($Types) {
+    $Devices = Get-DevicesInformation $Types
+    $Types | Where-Object Type -ne 'CPU'  | ForEach-Object {
         $DetectedDevices = @()
-        $DetectedDevices += $Devices | Where-Object group -eq $_.GroupName
+        $DetectedDevices += $Devices | Where-Object Group -eq $_.GroupName
         if ($DetectedDevices.count -eq 0) {
             Write-Log ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config") $LogFile $false
             write-warning ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config")

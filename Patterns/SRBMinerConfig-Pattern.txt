@@ -1,6 +1,6 @@
 {
 /* Type can be : normal, normalv7, lite, litev7, heavy, ipbc, artocash, alloy  */
-"cryptonight_type" : "#ALGORITHMPARAMETERS#",
+"cryptonight_type" : "#AlgorithmParameters#",
 
 /* Intensity 0-> auto intensity, or value from 1-300  */
 "intensity" : 0,
@@ -32,6 +32,6 @@
 
 "gpu_conf" :
 [
-#FOR_EACH_GPU#	{ "id" : #GPUID#, "intensity" : 0, "worksize" : 8, "threads" : 2},#NL##END_FOR_EACH_GPU#
+#ForEachDevice#	{ "id" : #DeviceID#, "intensity" : 0, "worksize" : 8, "threads" : 2},#NL##EndForEachDevice#
 ]
 }

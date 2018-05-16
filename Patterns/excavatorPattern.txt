@@ -1,9 +1,9 @@
 [
 	{"time":1,"commands":[
-		{"id":1,"method":"algorithm.add","params":["#ALGORITHMPARAMETERS#","$([Net.DNS]::Resolve('#SERVER#').AddressList.IPAddressToString | Select-Object -First 1):#PORT#","#LOGIN#:#PASSWORD#"]}
+		{"id":1,"method":"algorithm.add","params":["#AlgorithmParameters#","$([Net.DNS]::Resolve('#Server#').AddressList.IPAddressToString | Select-Object -First 1):#Port#","#Login#:#Password#"]}
 	]},
 	{"time":2,"commands":[
-		#FOR_EACH_GPU# {"id":1,"method":"worker.add","params":["0","#GPUID#"]},#END_FOR_EACH_GPU##REMOVE_LAST_CHARACTER#
+#ForEachDevice##NL#		{"id":1,"method":"worker.add","params":["0","#DeviceID#"]},#EndForEachDevice##RemoveLastCharacter#
 	]},
 	{"time":10,"loop":10,"commands":[
 		{"id":1,"method":"worker.print.speed","params":["0"]},

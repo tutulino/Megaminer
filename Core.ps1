@@ -523,11 +523,12 @@ while ($Quit -eq $false) {
 
                         $Arguments = $Miner.Arguments
                         foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
-                        if ($Miner.PatternConfigFile) {
-                            $ConfigFileArguments = Replace-ForEachDevice (Get-Content $Miner.PatternConfigFile -raw) $DeviceGroup.Devices
+                        $PatternConfigFile = $Miner.PatternConfigFile -replace '#Algorithm#', $AlgoName
+                        if ($PatternConfigFile -and (Test-Path -Path $PatternConfigFile)) {
+                            $ConfigFileArguments = Replace-ForEachDevice (Get-Content $PatternConfigFile -raw) -Devices $DeviceGroup.Devices
                             foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
                         }
-                        if ($Miner.PatternPoolsFile) {
+                        if ($Miner.PatternPoolsFile -and (Test-Path -Path $Miner.PatternPoolsFile)) {
                             $PoolsFileArguments = Get-Content $Miner.PatternPoolsFile -raw
                             foreach ($P in $Params.Keys) {$PoolsFileArguments = $PoolsFileArguments -replace $P, $Params.$P}
                         }
@@ -562,10 +563,10 @@ while ($Quit -eq $false) {
                                 '#WorkerName#'    = $WorkerName3
                             }
                             foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
-                            if ($Miner.PatternConfigFile) {
+                            if ($PatternConfigFile -and (Test-Path -Path $PatternConfigFile)) {
                                 foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
                             }
-                            if ($Miner.PatternPoolsFile) {
+                            if ($Miner.PatternPoolsFile -and (Test-Path -Path $Miner.PatternPoolsFile)) {
                                 foreach ($P in $Params.Keys) {$PoolsFileArguments = $PoolsFileArguments -replace $P, $Params.$P}
                             }
                         } else {
@@ -701,7 +702,7 @@ while ($Quit -eq $false) {
                             ConfigFileArguments = $ExecutionContext.InvokeCommand.ExpandString($ConfigFileArguments)
                             PoolsFileArguments  = $ExecutionContext.InvokeCommand.ExpandString($PoolsFileArguments)
                             ExtractionPath      = $(".\Bin\" + $MinerFile.BaseName + "\")
-                            GenerateConfigFile  = $(if ($Miner.GenerateConfigFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $DeviceGroup.GroupName -replace '#Algorithm#', $AlgoName})
+                            GenerateConfigFile  = $(if ($PatternConfigFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $DeviceGroup.GroupName -replace '#Algorithm#', $AlgoName})
                             GeneratePoolsFile   = $(if ($Miner.GeneratePoolsFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GeneratePoolsFile -replace '#GroupName#', $DeviceGroup.GroupName -replace '#Algorithm#', $AlgoName})
                             DeviceGroup         = $DeviceGroup
                             Host                = $Pool.Host

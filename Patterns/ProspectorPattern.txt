@@ -1,12 +1,12 @@
 [general]
-gpu-coin = "#ALGORITHMPARAMETERS#"
+gpu-coin = "#AlgorithmParameters#"
 
-[pools.#ALGORITHMPARAMETERS#]
-url = "#PROTOCOL#://#SERVER#:#PORT#"
-username = "#LOGIN#"
-password = "#PASSWORD#"
+[pools.#AlgorithmParameters#]
+url = "#Protocol#://#Server#:#Port#"
+username = "#Login#"
+password = "#Password#"
 
-#FOR_EACH_GPU#[gpus.#GpuPlatform#-#GpuId#]#NL#enabled = true#NL##END_FOR_EACH_GPU#
+#ForEachDevice#[gpus.#GpuPlatform#-#DeviceID#]#NL#enabled = true#NL##EndForEachDevice#
 
 [cpu]
 enabled = false
