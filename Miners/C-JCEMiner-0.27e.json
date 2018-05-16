@@ -1,0 +1,19 @@
+{
+    "Path": "jce_cn_cpu_miner$(if($DeviceGroup.Features.'64bit'){'64'}else{'32'}).exe",
+    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.027e.zip",
+    "SHA256": "3799fbc599686b1d1016d1e4fc3ed90ab8645b1daf72e2fa6bf8a39cbfdde9fe",
+    "Type": "CPU",
+    "Arguments": "-o #Server#:#Port# -u #Login# -p #Password# #SSL#--ssl#SSL# #NH#--nicehash#NH# --mport #APIPort# --stakjson --low #AlgorithmParameters#",
+    "API": "XMRig",
+    "APIPort": 4048,
+    "Fee": "$(if($DeviceGroup.Features.aes -and $DeviceGroup.Features.'64bit'){0.015}else{0.03})",
+    "SSL": true,
+    "Algorithms": {
+        "CryptoLightV7": "--variation 4 --any --auto",
+        "CryptoNightV7": "--variation 3 --any --auto",
+        "CryptoNightHeavy": "--variation 5 --any --auto",
+        "CryptoLightIPBC": "--variation 6 --any --auto",
+        "CryptoNightXTL": "--variation 7 --any --auto",
+        "CryptoNightAlloy": "--variation 8 --any --auto"
+    }
+}
