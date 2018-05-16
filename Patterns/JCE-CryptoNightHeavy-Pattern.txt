@@ -1,0 +1,4 @@
+"cpu_threads_conf" :
+[
+#ForEachDevice#     { "cpu_architecture" : "auto", "affine_to_cpu" : #DeviceID#, "use_cache" : true, "multi_hash": 6 },#NL##EndForEachDevice#
+]
