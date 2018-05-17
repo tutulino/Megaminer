@@ -529,7 +529,7 @@ while ($Quit -eq $false) {
                             $Params.'#NoNH#(.*)#NoNH#' = '$1'
                         }
 
-                        $Arguments = $Miner.Arguments
+                        $Arguments = $Miner.Arguments -join " "
                         foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
                         $PatternConfigFile = $Miner.PatternConfigFile -replace '#Algorithm#', $AlgoName
                         if ($PatternConfigFile -and (Test-Path -Path $PatternConfigFile)) {
