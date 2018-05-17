@@ -1,0 +1,29 @@
+{
+    "Path": "SRBMiner-CN.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.5/SRBMiner-CN-V1-5-4.7z",
+    "SHA256": "0049613945fb7657fbe1a9f71e36663c0ce640ffcce9371ed69064d27b3830e5",
+    "Type": "AMD",
+    "GenerateConfigFile": "config-#GroupName#-#Algorithm#.txt",
+    "PatternConfigFile": ".\\Patterns\\SRBMinerConfig-Pattern.txt",
+    "Arguments": [
+        "--config config-#GroupName#-#Algorithm#.txt",
+        "--cpool #Server#:#Port#",
+        "--cwallet #Login#",
+        "--cpassword #Password#",
+        "#SSL#--ctls true#SSL#",
+        "#NH#--cnicehash true#NH#"
+    ],
+    "API": "SRB",
+    "APIPort": 4028,
+    "Fee": 0.0085,
+    "SSL": true,
+    "Algorithms": {
+        "CryptoLightV7": "liteV7",
+        "CryptoNightV7": "normalV7",
+        "CryptoNightHeavy": "heavy",
+        "CryptoLightIPBC": "ipbc",
+        "CryptoNightArto": "artocash",
+        "CryptoNightAlloy": "alloy",
+        "CryptoNightMkt": "marketcash"
+    }
+}
