@@ -3,7 +3,16 @@
     "Uri": "https://github.com/Fedeparma74/Miners/releases/download/1.0/CcminerAllium-2.3.0.rar",
     "SHA256": "bf72fe87564323c0b2648ea5360ac3f19d5a4556208b938014cad5a0fb619851",
     "Type": "NVIDIA",
-    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# -d #Devices# #AlgorithmParameters# ",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-d #Devices#",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {

@@ -3,7 +3,15 @@
     "Uri": "https://github.com/JayDDee/cpuminer-opt/files/1996977/cpuminer-opt-3.8.8.1-windows.zip",
     "SHA256": "a7a600770cd79c44ad8896a178d9d8915b994e51ce3c6d3aba539e486154d981",
     "Type": "CPU",
-    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# #AlgorithmParameters#",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "#BenchmarkArg": "--benchmark",
     "API": "Ccminer",
     "APIPort": 4048,

@@ -3,16 +3,25 @@
     "Uri": "https://github.com/Fedeparma74/Miners/releases/download/1.0/z-enemy.109a-release.zip",
     "SHA256": "2540c3608d2aa231c5fd5955ea6d26bd5c13216eaf8efeafd0359971944e7237",
     "Type": "NVIDIA",
-    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# -d #Devices# -i 20 #AlgorithmParameters# ",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-d #Devices#",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {
-        "Bitcore": "-a bitcore",
-        "PHI": "-a phi",
-        "Vitalium": "-a vit",
-        "X16r": "-a x16r",
-        "X16s": "-a x16s",
-        "X17": "-a x17",
-        "Xevan": "-a xevan"
+        "Bitcore": "-a bitcore -i 20",
+        "PHI": "-a phi -i 20",
+        "Vitalium": "-a vit -i 20",
+        "X16r": "-a x16r -i 20",
+        "X16s": "-a x16s -i 20",
+        "X17": "-a x17 -i 20",
+        "Xevan": "-a xevan -i 20"
     }
 }

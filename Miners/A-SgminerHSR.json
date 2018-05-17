@@ -3,7 +3,16 @@
     "Uri": "https://github.com/Partiolainen/sgminer-gm/releases/download/5.5.5-part/sgminer-5.5.5-part-hsr.win.x64.zip",
     "SHA256": "25b686e9dccfc088a31bfea80cf536553dfc8620af2a17a0200b51253d728316",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "--gpu-platform #GPUPlatform#",
+        "--device #Devices#",
+        "--api-listen",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {

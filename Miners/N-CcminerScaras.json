@@ -3,7 +3,16 @@
     "Uri": "https://github.com/scaras/ccminer-2.2-mod-r1/releases/download/2.2-r1/2.2-mod-r1.zip",
     "SHA256": "7476651d229ef772be3ded962f9b19aeb4ad691c544b75c73df92bd826a0eb48",
     "Type": "NVIDIA",
-    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# -d #Devices# #AlgorithmParameters# ",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-d #Devices#",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {

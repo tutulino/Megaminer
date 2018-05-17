@@ -3,7 +3,16 @@
     "Uri": "https://github.com/nemosminer/ccminerAlexis78/releases/download/Alexis78-v1.1/ccminerAlexis78-v1.1.7z",
     "SHA256": "fa46d4a8f4c5ac5a2737c6415cac4c67d010e180058f7542060900cadd779a06",
     "Type": "NVIDIA",
-    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# -d #Devices# #AlgorithmParameters# ",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-d #Devices#",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {

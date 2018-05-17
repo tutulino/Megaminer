@@ -3,7 +3,18 @@
     "Uri": "https://github.com/ghostlander/nsgminer/releases/download/nsgminer-v0.9.4/nsgminer-win64-0.9.4.zip",
     "SHA256": "22537fa2fc092e3088711d3ea44c87fac775b67cce0568279ad36ef9eff6b5b4",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# #DevicesNsgMode# --api-port #APIPort# --gpu-platform #GPUPlatform#  --no-adl --remove-disabled  #AlgorithmParameters#",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "--gpu-platform #GPUPlatform#",
+        "#DevicesNsgMode#",
+        "--no-adl",
+        "--remove-disabled",
+        "--api-listen",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {

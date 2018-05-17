@@ -3,7 +3,15 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/mkxminer310.zip",
     "SHA256": "319bbb417675bc055067eec53e0f2590972d658c070ed9cd27da2747dd131d23",
     "Type": "AMD",
-    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -d #Devices# --exitsick --platform #GPUPlatform# #AlgorithmParameters#",
+    "Arguments": [
+        "--url #Protocol#://#Server#:#Port#",
+        "--user #Login#",
+        "--pass #Password#",
+        "--platform #GPUPlatform#",
+        "--device #Devices#",
+        "--exitsick",
+        "#AlgorithmParameters#"
+    ],
     "API": "wrapper",
     "APIPort": 4028,
     "SSL": true,

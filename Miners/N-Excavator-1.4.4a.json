@@ -5,7 +5,11 @@
     "Type": "NVIDIA",
     "GenerateConfigFile": "excavator\\#GroupName#-#Algorithm#.json",
     "PatternConfigFile": ".\\Patterns\\excavatorPattern.txt",
-    "Arguments": "-p #APIPort# -c #GroupName#-#Algorithm#.json -na ",
+    "Arguments": [
+        "-c #GroupName#-#Algorithm#.json",
+        "-p #APIPort#",
+        "-na"
+    ],
     "API": "excavator",
     "APIPort": 4068,
     "Algorithms": {

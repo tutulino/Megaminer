@@ -3,7 +3,17 @@
     "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.027e.zip",
     "SHA256": "3799fbc599686b1d1016d1e4fc3ed90ab8645b1daf72e2fa6bf8a39cbfdde9fe",
     "Type": "CPU",
-    "Arguments": "-o #Server#:#Port# -u #Login# -p #Password# #SSL#--ssl#SSL# #NH#--nicehash#NH# --mport #APIPort# --stakjson --low #AlgorithmParameters#",
+    "Arguments": [
+        "-o #Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "#SSL#--ssl#SSL#",
+        "#NH#--nicehash#NH#",
+        "--stakjson",
+        "--low",
+        "--mport #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "GenerateConfigFile": "config-#Algorithm#.txt",
     "PatternConfigFile": ".\\Patterns\\JCE-#Algorithm#-Pattern.txt",
     "API": "XMRig",

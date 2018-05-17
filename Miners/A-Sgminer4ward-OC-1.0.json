@@ -3,7 +3,16 @@
     "Uri": "https://github.com/yuzi-co/sgminer-oc/releases/download/1.0/sgminer-oc-4ward-1.0.7z",
     "SHA256": "9fd475fb4da384be58f4c1bd6112307affbe1fa1286cdf580078fe409060a670",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "--gpu-platform #GPUPlatform#",
+        "--device #Devices#",
+        "--api-listen",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {

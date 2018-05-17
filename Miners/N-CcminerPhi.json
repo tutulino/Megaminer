@@ -3,7 +3,16 @@
     "Uri": "https://github.com/216k155/ccminer-phi-anxmod/releases/download/ccminer%2Fphi-1.0/ccminer-phi-1.0.zip",
     "SHA256": "c24103c03aabf1688c5c8a2b2b477c64612880f8e769d5c934b623fd01f84760",
     "Type": "NVIDIA",
-    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# -d #Devices# #AlgorithmParameters# ",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-d #Devices#",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {

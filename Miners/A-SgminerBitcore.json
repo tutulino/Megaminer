@@ -3,7 +3,16 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/sgminer-timetravel-5.6.1-nicehash-9-windows-amd64.zip",
     "SHA256": "74fe415b1d4167ff1b382e5262c854eae0630eb211a75a2845db210c105bd7bb",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "--gpu-platform #GPUPlatform#",
+        "--device #Devices#",
+        "--api-listen",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {

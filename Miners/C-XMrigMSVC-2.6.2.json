@@ -3,7 +3,15 @@
     "Uri": "https://github.com/xmrig/xmrig/releases/download/v2.6.2/xmrig-2.6.2-msvc-win64.zip",
     "SHA256": "c0662942fcea885fa5c405c77d8e46b8f52265ea51e1b41592c4fbc56e0343e8",
     "Type": "CPU",
-    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --api-port #APIPort# #NH#--nicehash#NH# --donate-level 1 #AlgorithmParameters#",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "#NH#--nicehash#NH#",
+        "--donate-level 1",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "XMRig",
     "APIPort": 4048,
     "Fee": 0.01,

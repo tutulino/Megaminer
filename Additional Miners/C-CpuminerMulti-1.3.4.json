@@ -3,7 +3,15 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.5/cpuminer-multi-1.3.4.7z",
     "SHA256": "2663d05b23511bb6e81f580f8fb88e6cc6080e12361e5ee43c44d69a8b826041",
     "Type": "CPU",
-    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password# -R 10 -r 4 -b #APIPort# #AlgorithmParameters#",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "BenchmarkArg": "--benchmark",
     "API": "Ccminer",
     "APIPort": 4048,

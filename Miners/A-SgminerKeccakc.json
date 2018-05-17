@@ -3,7 +3,16 @@
     "Uri": "https://www.creativechain.org/wp-content/uploads/2017/10/SG-Miner-CREA-Win.zip",
     "SHA256": "ec75ed8ebe85b708a9ffc6741b059e284535a574cfe9c29deeeff15ebae58aab",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "--gpu-platform #GPUPlatform#",
+        "--device #Devices#",
+        "--api-listen",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {

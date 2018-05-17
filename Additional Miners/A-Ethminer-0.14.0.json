@@ -3,7 +3,16 @@
     "Uri": "https://github.com/ethereum-mining/ethminer/releases/download/v0.14.0/ethminer-0.14.0-Windows.zip",
     "SHA256": "bc0fadbaa98d113663b588e2cf9dc61e72745363645f1f46dcddc1526be88a98",
     "Type": "AMD",
-    "Arguments": "-G -SP 2 -S #Server#:#Port# -O #Login#:#Password# --api-port #APIPort# --opencl-devices #DevicesETHMode# --opencl-platform #GPUPlatform# #AlgorithmParameters#",
+    "Arguments": [
+        "-S #Server#:#Port#",
+        "-O #Login#:#Password#",
+        "-SP 2",
+        "-G",
+        "--opencl-platform #GPUPlatform#",
+        "--opencl-devices #DevicesETHMode#",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Claymore",
     "APIPort": 4028,
     "Algorithms": {

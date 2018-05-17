@@ -3,7 +3,16 @@
     "Uri": "https://github.com/yuzi-co/miners/releases/download/1/Chaincoin.SGMINER.zip",
     "SHA256": "84e519b353ba571cdc6ec33c59b20e7e6d06d7acce7b8fb32212a83c9c6e0c7b",
     "Type": "AMD",
-    "Arguments": "--api-listen -o #Protocol#://#Server#:#Port# -u #Login# -p #Password# --device #Devices# --api-port #APIPort# --gpu-platform #GPUPlatform# #AlgorithmParameters#",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "--gpu-platform #GPUPlatform#",
+        "--device #Devices#",
+        "--api-listen",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {

@@ -3,7 +3,15 @@
     "Uri": "https://github.com/justaminer/hsrm-fork/raw/master/hsrminer_neoscrypt_fork_hp.zip",
     "SHA256": "834b089d79645da5ad47acdc8593db4963d160eb68cefeeaa74eeca7b88214f8",
     "Type": "NVIDIA",
-    "Arguments": "-o #Protocol#://#Server#:#Port# -u #Login# -p #Password#  -d #Devices# --api-bind #APIPort# -r 10 #AlgorithmParameters# ",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-d #Devices#",
+        "-r 10",
+        "--api-bind #APIPort#",
+        "#AlgorithmParameters#"
+    ],
     "API": "Palgin",
     "APIPort": 4068,
     "Algorithms": {
