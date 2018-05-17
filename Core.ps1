@@ -201,6 +201,14 @@ if ((Get-ConfigVariable "Afterburner") -eq "Enabled") {
     . .\Includes\afterburner.ps1
 }
 
+#enable EthlargementPill
+
+if (($config.EthlargementPill) -like "Rev*") {
+    Write-Log "Starting ETHlargementPill " $LogFile $false
+    $arg = "-" + $config.EthlargementPill
+    $EthPill = Start-Process -FilePath "OhGodAnETHlargementPill-r2.exe" -passthru -Verb RunAs -ArgumentList $arg
+}
+
 #-----------------------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------
@@ -1764,4 +1772,5 @@ Clear-Files
 $ActiveMiners | Where-Object Process -ne $null | ForEach-Object {try {Exit-Process $_.Process} catch {}}
 try {Invoke-WebRequest ("http://localhost:$($config.ApiPort)/?command=Exit") -timeoutsec 1 -UseDefaultCredentials} catch {}
 
+if ($EthPill -ne $null) {Stop-Process -Id $EthPill.Id}
 Stop-Process -Id $PID
