@@ -6,7 +6,7 @@
 		{"id":1,"method":"algorithm.add","params":["#AlgorithmParameters#"]}
     ]},
 	{"time":2,"commands":[
-#ForEachDevice##NL#		{"id":1,"method":"worker.add","params":["#AlgorithmParametersS#","#DeviceID#"]},#EndForEachDevice##RemoveLastCharacter#
+#ForEachDevice##NL#		{"id":1,"method":"worker.add","params":["#AlgorithmParameters#","#DeviceID#"]},#EndForEachDevice##RemoveLastCharacter#
 	]},
 	{"time":10,"loop":10,"commands":[
 		{"id":1,"method":"worker.print.speed","params":["0"]},
