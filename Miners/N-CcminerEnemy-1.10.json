@@ -1,7 +1,7 @@
 {
     "Path": "z-enemy.exe",
-    "Uri": "https://github.com/Fedeparma74/Miners/releases/download/1.0/z-enemy.109a-release.zip",
-    "SHA256": "2540c3608d2aa231c5fd5955ea6d26bd5c13216eaf8efeafd0359971944e7237",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.5/z-enemy.1.10.release.zip",
+    "SHA256": "868c6820abc3dcf49b140b18e5e7f25116440da315fca3acd8fd700fda949474",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -15,9 +15,11 @@
     ],
     "API": "Ccminer",
     "APIPort": 4068,
+    "Fee": 0.01,
     "Algorithms": {
         "Bitcore": "-a bitcore -i 20",
         "PHI": "-a phi -i 20",
+        "Tribus": "-a tribus -i 20",
         "Vitalium": "-a vit -i 20",
         "X16r": "-a x16r -i 20",
         "X16s": "-a x16s -i 20",
