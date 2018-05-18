@@ -8,10 +8,9 @@
         "-u #Login#",
         "-p #Password#",
         "--opencl-platform=#GPUPlatform#",
-        "--opencl-devices=#Devices#",
         "#NH#--nicehash#NH#",
-        "--api-port #APIPort#",
         "--donate-level 1",
+        "--api-port #APIPort#",
         "#AlgorithmParameters#"
     ],
     "API": "XMRig",

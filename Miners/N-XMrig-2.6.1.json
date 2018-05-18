@@ -9,7 +9,6 @@
         "-p #Password#",
         "#NH#--nicehash#NH#",
         "--donate-level 1",
-        "--cuda-devices=#Devices#",
         "--api-port #APIPort#",
         "#AlgorithmParameters#"
     ],
