@@ -8,6 +8,8 @@
         "-u #Login#",
         "-p #Password#",
         "--opencl-platform=#GPUPlatform#",
+        "--opencl-devices=#Devices#$(if(-not($DeviceGroup.MemoryGB -lt 8 -and $Algorithm -eq 'CryptoNightHeavy')){',#Devices#'})",
+		"--opencl-launch=864x8",
         "#NH#--nicehash#NH#",
         "--donate-level 1",
         "--api-port #APIPort#",
