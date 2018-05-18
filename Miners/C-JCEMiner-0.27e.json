@@ -27,6 +27,7 @@
         "CryptoNightHeavy|dh": "--variation 5 --any -c config-CryptoNightHeavy.txt",
         "CryptoLightIPBC": "--variation 6 --any --auto",
         "CryptoNightXTL": "--variation 7 --any --auto",
-        "CryptoNightAlloy": "--variation 8 --any --auto"
+        "CryptoNightAlloy": "--variation 8 --any --auto",
+        "CryptoNightMkt": "--variation 9 --any --auto"
     }
 }
