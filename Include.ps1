@@ -1453,17 +1453,24 @@ function Get-CoinSymbol ([string]$Coin) {
 
 function Test-DeviceGroupsConfig ($Types) {
     $Devices = Get-DevicesInformation $Types
-    $Types | Where-Object Type -ne 'CPU'  | ForEach-Object {
+    $Types | Where-Object Type -ne 'CPU' | ForEach-Object {
         $DetectedDevices = @()
         $DetectedDevices += $Devices | Where-Object Group -eq $_.GroupName
         if ($DetectedDevices.count -eq 0) {
             Write-Log ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config") $LogFile $false
-            write-warning ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config")
-            start-sleep 5
+            Write-Warning ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config")
+            Start-Sleep -Seconds 5
         } elseif ($DetectedDevices.count -ne $_.DevicesCount) {
             Write-Log ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat") $LogFile $false
-            write-warning ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat")
-            start-sleep 5
+            Write-Warning ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat")
+            Start-Sleep -Seconds 5
         }
+        }
+    $TotalMem = (($Types | Where-Object Type -ne 'CPU').OCLDevices.GlobalMemSize | Measure-Object -Sum).Sum / 1GB
+    $TotalSwap = (Get-WmiObject Win32_PageFile | Select-Object -ExpandProperty FileSize | Measure-Object -Sum).Sum / 1GB
+    if ($TotalMem -gt $TotalSwap) {
+        Write-Log ("Make sure you have at least $TotalMem GB swap configured") $LogFile $false
+        Write-Warning ("Make sure you have at least $TotalMem GB swap configured")
+        Start-Sleep -Seconds 5
     }
 }
