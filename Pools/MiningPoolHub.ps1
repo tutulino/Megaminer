@@ -91,12 +91,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $MiningPoolHub_OriginalCoin = $_.coin_name
 
         $MiningPoolHub_Hosts = $_.host_list -split ";"
-
-        if ($MiningPoolHub_Algorithm -like 'CryptoNight*') {
-            # Temporary fix for Cryptonight
-            $MiningPoolHub_Hosts = "us-east.cryptonight-hub.miningpoolhub.com;asia.cryptonight-hub.miningpoolhub.com;europe.cryptonight-hub.miningpoolhub.com" -split ";"
-        }
-
         $MiningPoolHub_Port = $_.port
 
         $Divisor = [double]1000000000
