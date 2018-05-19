@@ -25,7 +25,9 @@
               {"neoscrypt":"-a neoscrypt"},
               {"tribus":"-a tribus"},
               {"x16s":"-a x16s"},
-              {"x16s":"-a x16r"}
+              {"x16r":"-a x16r"},
+              {"sha256t":"-a sha256t"}
+               
               
               ]
 

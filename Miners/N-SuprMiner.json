@@ -6,8 +6,8 @@
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",
     "APIPort": 2323,
-    "Algorithms": {
-        "X16r": "-a x16r",
-        "X16s": "-a x16s"
-    }
+    "Algorithms": [
+        {"X16r": "-a x16r"},
+        {"X16s": "-a x16s"}
+    ]
 }

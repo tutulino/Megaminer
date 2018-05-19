@@ -6,7 +6,7 @@
     "Arguments": "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
     "API": "Ccminer",
     "APIPort": 4423,
-    "Algorithms": {
-        "Allium": "-a allium"
-    }
+    "Algorithms": [
+        {"Allium": "-a allium"}
+           ]
 }
