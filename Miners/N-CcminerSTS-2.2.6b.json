@@ -1,0 +1,39 @@
+{
+    "Path": "ccminer 2.2.6-Beta\\ccminer-x64.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.5/ccminer.2.2.6-Beta.7z",
+    "SHA256": "eba7412dc81475f842f42e3e13a83cd7eb8802644c2fa7b9d7e10435297d5c63",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-d #Devices#",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Allium": "-a allium",
+        "Bitcore": "-a bitcore",
+        "Blake2s": "-a blake2s",
+        "C11": "-a c11",
+        "HMQ1725": "-a hmq1725",
+        "HSR": "-a hsr",
+        "Keccak": "-a keccak",
+        "KeccakC": "-a keccakc",
+        "Lyra2v2": "-a lyra2v2",
+        "Lyra2z": "-a lyra2z",
+        "NeoScrypt": "-a neoscrypt",
+        "PHI": "-a phi",
+        "SHA256t": "-a sha256t",
+        "Skunk": "-a skunk",
+        "Timetravel": "-a timetravel",
+        "Tribus": "-a tribus",
+        "X11evo": "-a x11evo",
+        "X16r": "-a x16r",
+        "X17": "-a x17"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "Path": "CCMiner Klaust - Yescrypt\\ccminer.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.5/CCMiner.Klaust.-.Yescrypt.7z",
+    "SHA256": "ecfe266cb0c42e57de51015e8ea78f917b243db21e0a0201883074244ee7cb3f",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-d #Devices#",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Yescrypt": "-a yescrypt",
+        "YescryptR16": "-a yescryptr16"
+    }
+}
