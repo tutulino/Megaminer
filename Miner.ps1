@@ -1,23 +1,17 @@
-#--------------optional parameters...to allow direct launch without prompt to user
 param(
     [Parameter(Mandatory = $false)]
-    [String]$MiningMode = $null#= "AUTOMATIC/MANUAL"
-    #[String]$MiningMode = "MANUAL"
-    ,
+    [String]$MiningMode = $null,
     [Parameter(Mandatory = $false)]
-    [string]$PoolsName = $null
-    #[string]$PoolsName = "YIIMP"
-    ,
+    [string]$PoolsName = $null,
     [Parameter(Mandatory = $false)]
     [string]$CoinsName = $null
-    #[string]$CoinsName ="decred"
 )
 
 . .\Include.ps1
 
 #check parameters
 
-if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) { write-host ONLY ONE POOL CAN BE SELECTED ON MANUAL MODE}
+if (($MiningMode -eq "MANUAL") -and ($PoolsName.count -gt 1)) {Write-Warning "ONLY ONE POOL CAN BE SELECTED ON MANUAL MODE"}
 
 #--------------Load config.ini file
 
@@ -25,10 +19,9 @@ $Currency = Get-ConfigVariable "Currency"
 $Location = Get-ConfigVariable "Location"
 $FarmRigs = Get-ConfigVariable "FarmRigs"
 $LocalCurrency = Get-ConfigVariable "LocalCurrency"
-if ($LocalCurrency.length -eq 0) {
+if (-not $LocalCurrency) {
     #for old config.ini compatibility
     $LocalCurrency = switch ($location) {
-        'Europe' {"EUR"}
         'EU' {"EUR"}
         'US' {"USD"}
         'ASIA' {"USD"}
@@ -57,28 +50,25 @@ Print-HorizontalLine "SELECT OPTION"
 Print-HorizontalLine ""
 
 $Modes = @()
-$Modes += [PSCustomObject]@{"Option" = 0; "Mode" = 'Mine Automatic'; "Explanation" = 'Not necesary choose coin to mine, program choose more profitable coin based on pool´s current statistics'}
-$Modes += [PSCustomObject]@{"Option" = 1; "Mode" = 'Mine Automatic24h'; "Explanation" = 'Same as Automatic mode but based on pools/WTM reported last 24h profit'}
-$Modes += [PSCustomObject]@{"Option" = 2; "Mode" = 'Mine Manual'; "Explanation" = 'You select coin to mine'}
+$Modes += [PSCustomObject]@{"Option" = 0; "Mode" = 'Automatic'; "Explanation" = 'Automatically choose most profitable coin based on pools current statistics'}
+$Modes += [PSCustomObject]@{"Option" = 1; "Mode" = 'Automatic24h'; "Explanation" = 'Automatically choose most profitable coin based on pools 24 hour statistics'}
+$Modes += [PSCustomObject]@{"Option" = 2; "Mode" = 'Manual'; "Explanation" = 'Manual coin selection'}
 
-if ($FarmRigs) {$Modes += [PSCustomObject]@{"Option" = 3; "Mode" = 'Farm Monitoring'; "Explanation" = 'I want to see my rigs state'}
+if ($FarmRigs) {
+    $Modes += [PSCustomObject]@{"Option" = 3; "Mode" = 'Farm Monitoring'; "Explanation" = 'I want to see my rigs state'}
 }
-$Modes | Format-Table Option, Mode, Explanation  | Out-Host
+$Modes | Format-Table Option, Mode, Explanation
 
 If ($MiningMode -eq "") {
     $SelectedOption = Read-Host -Prompt 'SELECT ONE OPTION:'
     $MiningMode = $Modes[$SelectedOption].Mode
-    write-host SELECTED OPTION::$MiningMode
-} else { write-host SELECTED BY PARAMETER OPTION::$MiningMode }
+    Write-Host "SELECTED OPTION: $MiningMode"
+} else { Write-Host "SELECTED BY PARAMETER OPTION: $MiningMode" }
 
 if ($MiningMode -ne "FARM MONITORING") {
     #-----------------Ask user for pool/s to use, if a pool is indicated in parameters no prompt
 
-    switch ($MiningMode) {
-        "Mine Automatic" {$MiningMode = 'Automatic'; $Pools = Get-Pools -Querymode "Info" | Where-Object ActiveOnAutomaticMode -eq $true | Sort-Object name }
-        "Mine Automatic24h" {$MiningMode = 'Automatic24h'; $Pools = Get-Pools -Querymode "Info" | Where-Object ActiveOnAutomatic24hMode -eq $true | Sort-Object name }
-        "Mine Manual" {$MiningMode = 'Manual'; $Pools = Get-Pools -Querymode "Info" | Where-Object ActiveOnManualMode -eq $true | Sort-Object name }
-    }
+    $Pools = Get-Pools -Querymode "Info" | Where-Object ("ActiveOn" + $MiningMode + "Mode") -eq $true | Sort-Object name
 
     $Pools | Add-Member Option "0"
     $counter = 0
@@ -86,54 +76,39 @@ if ($MiningMode -ne "FARM MONITORING") {
         $_.Option = $counter
         $counter++}
 
-    if ($MiningMode -ne "Manual") {
-        $Pools += [PSCustomObject]@{"Disclaimer" = ""; "ActiveOnManualMode" = $false; "ActiveOnAutomaticMode" = $true; "ActiveOnAutomatic24hMode" = $true; "name" = 'ALL POOLS'; "option" = 99}
-    }
-
     #Clear-Host
     Print-HorizontalLine ""
-    Print-HorizontalLine "SELECT POOL/S  TO MINE"
+    Print-HorizontalLine "SELECT POOL/S TO MINE"
     Print-HorizontalLine ""
 
-    $Pools | Where-Object name -ne "Donationpool" | Format-Table Option, name, rewardtype, disclaimer | Out-Host
+    $Pools | Format-Table Option, name, rewardtype, disclaimer
 
-    If (($PoolsName -eq "") -or ($PoolsName -eq $null)) {
-
-        if ($MiningMode -eq "manual") {
+    If (-not $PoolsName) {
+        if ($MiningMode -eq "Manual") {
             $SelectedOption = Read-Host -Prompt 'SELECT ONE OPTION:'
             while ($SelectedOption -like '*,*') {
                 $SelectedOption = Read-Host -Prompt 'SELECT ONLY ONE OPTION:'
             }
-        }
-        if ($MiningMode -ne "Manual") {
-            $SelectedOption = Read-Host -Prompt 'SELECT OPTION/S (separated by comma):'
-            if ($SelectedOption -eq "99") {
-                $SelectedOption = ""
-                $Pools | Where-Object Option -ne 99 | ForEach-Object {
-                    if ($SelectedOption -eq "") {$comma = ''} else {$comma = ','}
-                    $SelectedOption += $comma + $_.Option
-                }
-            }
-        }
-        $SelectedOptions = $SelectedOption -split ','
-        $PoolsName = ""
-        $SelectedOptions | ForEach-Object {
-            if ($PoolsName -eq "") {$comma = ''} else {$comma = ','}
-            $PoolsName += $comma + $Pools[$_].name
+        } else {
+            $SelectedOption = Read-Host -Prompt 'SELECT OPTION/S (separated by comma). 999 for all pools:'
         }
 
-        $PoolsName = ('#' + $PoolsName) -replace '# ,', '' -replace ' ', '' -replace '#', '' #In test mode this is not necesary, in real execution yes...??????
+        if ($SelectedOption -eq "999") {
+            $PoolsName = $Pools.name -join ',' -replace "\s+"
+        } else {
+            $PoolsName = ($SelectedOption -split ',' | ForEach-Object {$Pools[$_].name}) -join ',' -replace "\s+"
+        }
 
-        write-host SELECTED OPTION:: $PoolsName
+        Write-Host "SELECTED OPTION: $PoolsName"
     } else {
-        write-host SELECTED BY PARAMETER ::$PoolsName
+        Write-Host "SELECTED BY PARAMETER: $PoolsName"
     }
 
     #-----------------Ask user for coins----------------------------------------------------
 
     if ($MiningMode -eq "manual") {
 
-        If ($CoinsName -eq "") {
+        If (-not $CoinsName) {
 
             #Load coins from pools
             $CoinsPool = Get-Pools -Querymode "Menu" -PoolsFilterList $PoolsName -location $Location | Select-Object Info, Symbol, Algorithm, Workers, PoolHashRate, Blocks_24h, Price -unique | Sort-Object info
@@ -147,7 +122,7 @@ if ($MiningMode -ne "FARM MONITORING") {
             $CoinsPool | Add-Member LocalPrice ([Double]0.0)
 
             'Calling Coindesk API' | Write-Host
-            $CDKResponse = try { Invoke-WebRequest "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 | ConvertFrom-Json | Select-Object -ExpandProperty BPI } catch { $null; Write-Host "Not responding" }
+            $CDKResponse = try { Invoke-RestMethod -Uri "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -UseBasicParsing -TimeoutSec 5 | Select-Object -ExpandProperty BPI } catch { $null; Write-Host "Not responding" }
 
             if (($CoinsPool | Where-Object Price -gt 0).count -gt 0) {
                 $Counter = 0
@@ -161,31 +136,33 @@ if ($MiningMode -ne "FARM MONITORING") {
             } else {
                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
                 'Calling CoinMarketCap API' | Write-Host
-                $CMCResponse = try { Invoke-WebRequest "https://api.coinmarketcap.com/v1/ticker/?limit=0" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json } catch { $null; Write-Host "Not responding" }
+                $CMCResponse = try { Invoke-RestMethod -Uri "https://api.coinmarketcap.com/v1/ticker/?limit=0" -UseBasicParsing -TimeoutSec 10 } catch { $null; Write-Host "Not responding" }
                 'Calling Bittrex API' | Write-Host
-                $BTXResponse = try { Invoke-WebRequest "https://bittrex.com/api/v1.1/public/getmarketsummaries" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'result' } catch { $null; Write-Host "Not responding" }
+                $BTXResponse = try { Invoke-RestMethod -Uri "https://bittrex.com/api/v1.1/public/getmarketsummaries" -UseBasicParsing -TimeoutSec 10 | Select-Object -ExpandProperty 'result' } catch { $null; Write-Host "Not responding" }
                 'Calling Cryptopia API' | Write-Host
-                $CRYResponse = try { Invoke-WebRequest "https://www.cryptopia.co.nz/api/GetMarkets/BTC" -UseBasicParsing -TimeoutSec 10 | ConvertFrom-Json | Select-Object -ExpandProperty 'data' } catch { $null; Write-Host "Not responding" }
+                $CRYResponse = try { Invoke-RestMethod -Uri "https://www.cryptopia.co.nz/api/GetMarkets/BTC" -UseBasicParsing -TimeoutSec 10 | Select-Object -ExpandProperty 'data' } catch { $null; Write-Host "Not responding" }
 
                 #Add main page coins
                 $WtmUrl = 'https://whattomine.com/coins.json?' +
+                'bk14=true&factor[bk14_hr]=10&factor[bk14_p]=0&' + #Decred
+                'cn=true&factor[cn_hr]=10&factor[cn_p]=0&' + #CryptoNight
+                'cn7=true&factor[cn7_hr]=10&factor[cn7_p]=0&' + #CryptoNightV7
+                'eq=true&factor[eq_hr]=10&factor[eq_p]=0&' + #Equihash
                 'eth=true&factor[eth_hr]=10&factor[eth_p]=0&' + #Ethash
                 'grof=true&factor[gro_hr]=10&factor[gro_p]=0&' + #Groestl
-                'x11gf=true&factor[x11g_hr]=10&factor[x11g_p]=0&' + #X11gost
-                'cn=true&factor[cn_hr]=10&factor[cn_p]=0&' + #CryptoNight
-                'eq=true&factor[eq_hr]=10&factor[eq_p]=0&' + #Equihash
-                'lre=true&factor[lrev2_hr]=10&factor[lrev2_p]=0&' + #Lyra2v2
-                'ns=true&factor[ns_hr]=10&factor[ns_p]=0&' + #NeoScrypt
-                'lbry=true&factor[lbry_hr]=10&factor[lbry_p]=0&' + #Lbry
-                'bk14=true&factor[bk14_hr]=10&factor[bk14_p]=0&' + #Decred
-                'pas=true&factor[pas_hr]=10&factor[pas_p]=0&' + #Pascal
-                'skh=true&factor[skh_hr]=10&factor[skh_p]=0&' + #Skunk
-                'n5=true&factor[n5_hr]=10&factor[n5_p]=0&' + #Nist5
                 'l2z=true&factor[l2z_hr]=10&factor[l2z_p]=0&' + #Lyra2z
+                'lbry=true&factor[lbry_hr]=10&factor[lbry_p]=0&' + #Lbry
+                'lre=true&factor[lrev2_hr]=10&factor[lrev2_p]=0&' + #Lyra2v2
+                'n5=true&factor[n5_hr]=10&factor[n5_p]=0&' + #Nist5
+                'ns=true&factor[ns_hr]=10&factor[ns_p]=0&' + #NeoScrypt
+                'pas=true&factor[pas_hr]=10&factor[pas_p]=0&' + #Pascal
+                'phi=true&factor[phi_hr]=10&factor[phi_p]=0&' + #PHI
+                'skh=true&factor[skh_hr]=10&factor[skh_p]=0&' + #Skunk
+                'x11gf=true&factor[x11g_hr]=10&factor[x11g_p]=0&' + #X11gost
                 'xn=true&factor[xn_hr]=10&factor[xn_p]=0' #Xevan
 
                 'Calling WhatToMine API' | Write-Host
-                $WTMResponse = try { Invoke-APIRequest -Url $WtmUrl -Retry 3 | Select-Object -ExpandProperty coins } catch { $null; Write-Host "Not responding" }
+                $WTMResponse = try { Invoke-RestMethod -Uri $WtmUrl -UseBasicParsing -TimeoutSec 10 | Select-Object -ExpandProperty coins } catch { $null; Write-Host "Not responding" }
             }
 
             $Counter = 0
@@ -220,7 +197,7 @@ if ($MiningMode -ne "FARM MONITORING") {
                             $WTMFactor = switch ($Coin.Algorithm) {
                                 "Bitcore" { 1000000 }
                                 "Blake2s" { 1000000 }
-                                "CryptoLight" { 1 }
+                                "CryptoLightV7" { 1 }
                                 "CryptoNightV7" { 1 }
                                 "CryptoNightHeavy" { 1 }
                                 "Equihash" { 1 }
@@ -239,23 +216,22 @@ if ($MiningMode -ne "FARM MONITORING") {
                                 default { $null }
                             }
 
-                            if ($WTMFactor -ne $null) {
+                            if ($WTMFactor) {
                                 $Coin.Reward = [double]([double]$WtmCoin.estimated_rewards * ([double]$Coin.YourHashRate / [double]$WTMFactor))
                                 $Coin.BtcProfit = [double]([double]$WtmCoin.Btc_revenue * ([double]$Coin.YourHashRate / [double]$WTMFactor))
                             }
                         }
                     }
-                    $Coin.LocalProfit = $CDKResponse.$LocalCurrency.rate_float * [double]$Coin.BtcProfit
-                    $Coin.LocalPrice = $CDKResponse.$LocalCurrency.rate_float * [double]$Coin.BtcPrice
+                    $Coin.LocalProfit = $CDKResponse.$LocalCurrency.rate_float * $Coin.BtcProfit
+                    $Coin.LocalPrice = $CDKResponse.$LocalCurrency.rate_float * $Coin.BtcPrice
                 }
             }
 
             # Clear-Host
-            write-host ....................................................................................................
-            write-host ............................SELECT COIN TO MINE.....................................................
-            write-host ....................................................................................................
-
-            $CoinsPool  | Format-Table -Wrap (
+            Print-HorizontalLine ""
+            Print-HorizontalLine "SELECT COIN TO MINE"
+            Print-HorizontalLine ""
+            $CoinsPool | Format-Table -Wrap (
                 @{Label = "Opt."; Expression = {$_.Option}; Align = 'right'} ,
                 @{Label = "Name"; Expression = {$_.Info}; Align = 'left'} ,
                 @{Label = "Symbol"; Expression = {$_.symbol}; Align = 'left'},
@@ -266,7 +242,7 @@ if ($MiningMode -ne "FARM MONITORING") {
                 @{Label = "Reward"; Expression = {if ($_.Reward -gt 0 ) {[math]::Round($_.Reward, 3)}}; Align = 'right'},
                 @{Label = "mBTCProfit"; Expression = {if ($_.BtcProfit -gt 0 ) {($_.BtcProfit * 1000).ToString("n5")}}; Align = 'right'},
                 @{Label = $LocalCurrency + "Profit"; Expression = {if ($_.LocalProfit -gt 0 ) {[math]::Round($_.LocalProfit, 2)}}; Align = 'right'}
-            )  | Out-Host
+            )
 
             $SelectedOption = Read-Host -Prompt 'SELECT ONE OPTION:'
             while ($SelectedOption -like '*,*') {
@@ -275,24 +251,26 @@ if ($MiningMode -ne "FARM MONITORING") {
             $CoinsName = $CoinsPool[$SelectedOption].Info -replace '_', ',' #for dual mining
             $AlgosName = $CoinsPool[$SelectedOption].Algorithm -replace '_', ',' #for dual mining
 
-            write-host SELECTED OPTION:: $CoinsName - $AlgosName
+            Write-Host SELECTED OPTION:: $CoinsName - $AlgosName
         } else {
-            write-host SELECTED BY PARAMETER :: $CoinsName
+            Write-Host SELECTED BY PARAMETER :: $CoinsName
         }
     }
 
     #-----------------Launch Command
-    $command = "./core.ps1 -MiningMode $MiningMode -PoolsName $PoolsName"
-    if ($MiningMode -eq "manual") {
-        $command += " -Algorithm $AlgosName"
-        if (![string]::IsNullOrEmpty($CoinsName)) {$command += " -Coinsname $CoinsName"}
+    $Params = @{
+        MiningMode = $MiningMode
+        PoolsName  = $PoolsName
     }
-
-    #write-host $command
-    Invoke-Expression $command
+    if ($MiningMode -eq 'Manual') {
+        $Params.Algorithm = $AlgosName
+        if ($CoinsName) {$Params.CoinsName = $CoinsName}
+    }
+    $Params | Format-List
+    Pause
+    & .\Core.ps1 @Params
 
 } else {
     #FARM MONITORING
-    $command = ".\Includes\FarmMonitor.ps1"
-    Invoke-Expression $command
+    & .\Includes\FarmMonitor.ps1
 }
