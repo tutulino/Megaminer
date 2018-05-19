@@ -135,22 +135,17 @@ $PoolsErrors = switch ($MiningMode) {
 }
 
 $PoolsErrors | ForEach-Object {
-    "Selected MiningMode is not valid for pool " + $_.Name | Write-Host -ForegroundColor Red
+    Write-Error "Selected MiningMode is not valid for pool " + $_.Name
     Exit
 }
 
-if ($MiningMode -eq 'Manual' -and $CoinsName) {
-    "On manual mode only one coin must be selected" | Write-Host -ForegroundColor Red
+if ($MiningMode -eq 'Manual' -and ($CoinsName -split ',').Count -ne 1) {
+    Write-Error "On manual mode one coin must be selected"
     Exit
 }
 
-if ($MiningMode -eq 'Manual' -and !$CoinsName) {
-    "On manual mode must select one coin" | Write-Host -ForegroundColor Red
-    Exit
-}
-
-if ($MiningMode -eq 'Manual' -and $Algorithm) {
-    "On manual mode only one algorithm must be selected" | Write-Host -ForegroundColor Red
+if ($MiningMode -eq 'Manual' -and ($Algorithm -split ',').Count -ne 1) {
+    Write-Error "On manual mode one algorithm must be selected"
     Exit
 }
 
