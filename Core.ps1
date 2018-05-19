@@ -229,10 +229,10 @@ while ($Quit -eq $false) {
         $Uri = $Request.assets | Where-Object Name -eq "$($Application)-$($RemoteVersion).7z" | Select-Object -ExpandProperty browser_download_url
 
         if ($RemoteVersion -gt $Release) {
-            Write-Host "$Application is out of date. There is an updated version available at $URI" -ForegroundColor Yellow
+            Write-Warning "$Application is out of date. There is an updated version available at $URI"
         }
     } catch {
-        Write-Host "Failed to get $Application updates."
+        Write-Warning "Failed to get $Application updates."
     }
 
     #get mining types
