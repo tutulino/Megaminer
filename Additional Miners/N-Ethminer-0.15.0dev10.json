@@ -4,10 +4,8 @@
     "SHA256": "81e3d0fac4a19392a21623be436e66756868cbe2297a8590fe6351fb17e97512",
     "Type": "NVIDIA",
     "Arguments": [
-        "-S #Server#:#Port#",
-        "-O #Login#:#Password#",
-        "-SP 2",
-        "-U",
+        "-P stratum2+tcp://#Login#:#Password#@#Server#:#Port#",
+        "--cuda",
         "--cuda-devices #DevicesETHMode#",
         "--api-port #APIPort#",
         "#AlgorithmParameters#"

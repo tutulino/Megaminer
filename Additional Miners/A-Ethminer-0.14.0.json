@@ -4,10 +4,8 @@
     "SHA256": "bc0fadbaa98d113663b588e2cf9dc61e72745363645f1f46dcddc1526be88a98",
     "Type": "AMD",
     "Arguments": [
-        "-S #Server#:#Port#",
-        "-O #Login#:#Password#",
-        "-SP 2",
-        "-G",
+        "-P stratum2+tcp://#Login#:#Password#@#Server#:#Port#",
+        "--opencl",
         "--opencl-platform #GPUPlatform#",
         "--opencl-devices #DevicesETHMode#",
         "--api-port #APIPort#",
