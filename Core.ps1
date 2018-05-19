@@ -387,7 +387,8 @@ while ($Quit -eq $false) {
     }
 
     ## Select highest paying pool for each algo and check if pool is alive.
-    Write-Log ("Select top pool for each algo in config and check availability...") $LogFile $true
+    Write-Log ("Select top pool for each algo in config") $LogFile $true
+    if ($config.PingPools -eq 'Enabled') {Write-Log ("Checking pool availability") $LogFile $true}
     $PoolsFiltered = $Pools | Group-Object -Property Algorithm | ForEach-Object {
         $NeedPool = $false
         foreach ($DeviceGroup in $DeviceGroups) {
@@ -402,7 +403,7 @@ while ($Quit -eq $false) {
             @{Expression = "LocationPriority"; Ascending = $true} | ForEach-Object {
                 if ($NeedPool) {
                     ## test tcp connection to pool
-                    if (Test-TCPPort -Server $_.Host -Port $_.Port -Timeout 100) {
+                    if ($config.PingPools -ne 'Enabled' -or (Test-TCPPort -Server $_.Host -Port $_.Port -Timeout 100)) {
                         $NeedPool = $false
                         $_  ## return result
                     } else {
@@ -413,6 +414,7 @@ while ($Quit -eq $false) {
         }
     }
     $Pools = $PoolsFiltered
+
     Write-Log ([string]$Pools.Count + " pools left") $LogFile $true
     Remove-Variable PoolsFiltered
 
