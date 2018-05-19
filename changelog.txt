@@ -718,3 +718,22 @@ If you want to reuse your old config.txt file, and you want to use new EthLargem
 If you use new ETHlargementpill feature you must delete ETHASH 
 
 
+-------------------------------
+6.4
+
+---FEATURES CHANGES:
+
+Addded sha256t algo for NVIDIA and gpu
+
+---MINERS CHANGES:
+
+* Renamed ccminerX16r to ccminerEnemy
+
+
+---BUG FIXES:
+
+* CCminer Allium and ccminer SuprminerSP not working
+
+
+
+--RELEASE NOTES
