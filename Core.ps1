@@ -420,7 +420,7 @@ while ($Quit -eq $false) {
 
     #Call api to local currency conversion
     try {
-        $CDKResponse = Invoke-APIRequest -Url "https://api.Coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -MaxAge 60 |
+        $CDKResponse = Invoke-APIRequest -Url "https://api.coindesk.com/v1/bpi/currentprice/$LocalCurrency.json" -MaxAge 60 |
             Select-Object -ExpandProperty BPI
         $LocalBTCvalue = $CDKResponse.$LocalCurrency.rate_float
         Write-Log ("CoinDesk API was responsive...") $LogFile $true
@@ -491,7 +491,8 @@ while ($Quit -eq $false) {
                         $enableSSL = [bool]($Miner.SSL -and $Pool.SSL)
 
                         #Replace wildcards patterns
-                        if ($Pool.PoolName -eq 'Nicehash') {
+                        if ($Pool.PoolName -eq 'Nicehash') {$Nicehash = $true} else {$Nicehash = $false}
+                        if ($Nicehash) {
                             $WorkerName2 = $WorkerName + $DeviceGroup.GroupName #Nicehash requires alphanumeric WorkerNames
                         } else {
                             $WorkerName2 = $WorkerName + '_' + $DeviceGroup.GroupName
@@ -516,20 +517,6 @@ while ($Quit -eq $false) {
                             '#EthStMode#'           = $Pool.EthStMode
                             '#GroupName#'           = $DeviceGroup.GroupName
                         }
-                        if ($enableSSL) {
-                            $Params.'#SSL#(.*)#SSL#' = '$1'
-                            $Params.'#NoSSL#(.*)#NoSSL#' = ''
-                        } else {
-                            $Params.'#SSL#(.*)#SSL#' = ''
-                            $Params.'#NoSSL#(.*)#NoSSL#' = '$1'
-                        }
-                        if ($Pool.PoolName -eq 'Nicehash') {
-                            $Params.'#NH#(.*)#NH#' = '$1'
-                            $Params.'#NoNH#(.*)#NoNH#' = ''
-                        } else {
-                            $Params.'#NH#(.*)#NH#' = ''
-                            $Params.'#NoNH#(.*)#NoNH#' = '$1'
-                        }
 
                         $Arguments = $Miner.Arguments -join " "
                         foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
@@ -537,10 +524,6 @@ while ($Quit -eq $false) {
                         if ($PatternConfigFile -and (Test-Path -Path $PatternConfigFile)) {
                             $ConfigFileArguments = Replace-ForEachDevice (Get-Content $PatternConfigFile -raw) -Devices $DeviceGroup.Devices
                             foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
-                        }
-                        if ($Miner.PatternPoolsFile -and (Test-Path -Path $Miner.PatternPoolsFile)) {
-                            $PoolsFileArguments = Get-Content $Miner.PatternPoolsFile -raw
-                            foreach ($P in $Params.Keys) {$PoolsFileArguments = $PoolsFileArguments -replace $P, $Params.$P}
                         }
 
                         #select correct price by mode
@@ -575,9 +558,6 @@ while ($Quit -eq $false) {
                             foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
                             if ($PatternConfigFile -and (Test-Path -Path $PatternConfigFile)) {
                                 foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
-                            }
-                            if ($Miner.PatternPoolsFile -and (Test-Path -Path $Miner.PatternPoolsFile)) {
-                                foreach ($P in $Params.Keys) {$PoolsFileArguments = $PoolsFileArguments -replace $P, $Params.$P}
                             }
                         } else {
                             $PoolDual = $null
@@ -710,10 +690,8 @@ while ($Quit -eq $false) {
                             Coin                = $Pool.Info
                             CoinDual            = $PoolDual.Info
                             ConfigFileArguments = $ExecutionContext.InvokeCommand.ExpandString($ConfigFileArguments)
-                            PoolsFileArguments  = $ExecutionContext.InvokeCommand.ExpandString($PoolsFileArguments)
                             ExtractionPath      = $(".\Bin\" + $MinerFile.BaseName + "\")
                             GenerateConfigFile  = $(if ($PatternConfigFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GenerateConfigFile -replace '#GroupName#', $DeviceGroup.GroupName -replace '#Algorithm#', $AlgoName})
-                            GeneratePoolsFile   = $(if ($Miner.GeneratePoolsFile) {".\Bin\" + $MinerFile.BaseName + "\" + $Miner.GeneratePoolsFile -replace '#GroupName#', $DeviceGroup.GroupName -replace '#Algorithm#', $AlgoName})
                             DeviceGroup         = $DeviceGroup
                             Host                = $Pool.Host
                             Location            = $Pool.Location
@@ -849,9 +827,7 @@ while ($Quit -eq $false) {
                 Coin                = $Miner.Coin
                 CoinDual            = $Miner.CoinDual
                 ConfigFileArguments = $Miner.ConfigFileArguments
-                PoolsFileArguments  = $Miner.PoolsFileArguments
                 GenerateConfigFile  = $Miner.GenerateConfigFile
-                GeneratePoolsFile   = $Miner.GeneratePoolsFile
                 DeviceGroup         = $Miner.DeviceGroup
                 Host                = $Miner.Host
                 Id                  = $ActiveMiners.Count
@@ -1067,9 +1043,6 @@ while ($Quit -eq $false) {
                 if ($ActiveMiners[$BestNow.IdF].GenerateConfigFile) {
                     $ActiveMiners[$BestNow.IdF].ConfigFileArguments = $ActiveMiners[$BestNow.IdF].ConfigFileArguments -replace '#APIPort#', $ActiveMiners[$BestNow.IdF].Port
                     $ActiveMiners[$BestNow.IdF].ConfigFileArguments | Set-Content ($ActiveMiners[$BestNow.IdF].GenerateConfigFile)
-                }
-                if ($ActiveMiners[$BestNow.IdF].GeneratePoolsFile) {
-                    $ActiveMiners[$BestNow.IdF].PoolsFileArguments | Set-Content ($ActiveMiners[$BestNow.IdF].GeneratePoolsFile)
                 }
 
                 if ($ActiveMiners[$BestNow.IdF].PrelaunchCommand) {Start-Process -FilePath $ActiveMiners[$BestNow.IdF].PrelaunchCommand}            #run prelaunch command

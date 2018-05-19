@@ -4,7 +4,7 @@
     "SHA256": "eb774f39ebc83522fb0d4e80d0a02aac35e2d6c1d859400f540df897a144bbe3",
     "Type": "AMD",
     "Arguments": [
-        "#NoSSL#-o#NoSSL# #SSL#-O#SSL# #Server#:#Port#",
+        "$(if ($enableSSL){'-O'}else{'-o'}) #Server#:#Port#",
         "-u #Login#",
         "-p #Password#",
         "-r #WorkerName#",
@@ -12,8 +12,8 @@
         "--noCPU",
         "--noUAC",
         "--noAMDCache",
-        "#NH#--use-nicehash#NH#",
-        "-i #APIPort#",
+        "$(if ($Nicehash){'--use-nicehash'})",
+        "--httpd #APIPort#",
         "--amd #GroupName#-#Algorithm#.txt",
         "#AlgorithmParameters#"
     ],

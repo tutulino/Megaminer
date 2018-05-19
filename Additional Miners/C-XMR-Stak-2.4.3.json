@@ -4,14 +4,14 @@
     "SHA256": "eb774f39ebc83522fb0d4e80d0a02aac35e2d6c1d859400f540df897a144bbe3",
     "Type": "CPU",
     "Arguments": [
-        "#NoSSL#-o#NoSSL# #SSL#-O#SSL# #Server#:#Port#",
+        "$(if ($enableSSL){'-O'}else{'-o'}) #Server#:#Port#",
         "-u #Login#",
         "-p #Password#",
         "-r #WorkerName#",
         "--noNVIDIA",
         "--noAMD",
         "--noUAC",
-        "#NH#--use-nicehash#NH#",
+        "$(if ($Nicehash){'--use-nicehash'})",
         "--httpd #APIPort#",
         "--cpu #GroupName#-#Algorithm#.txt",
         "#AlgorithmParameters#"

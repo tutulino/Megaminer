@@ -16,7 +16,7 @@
         "--ratewatchdog",
         "--memset",
         "--maxmem",
-        "#NoNH#--nonicehash#NoNH#",
+        "$(if (-not $Nicehash){'--nonicehash'})",
         "#AlgorithmParameters#"
     ],
     "API": "castXMR",

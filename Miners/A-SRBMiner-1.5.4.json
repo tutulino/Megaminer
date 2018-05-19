@@ -10,8 +10,8 @@
         "--cpool #Server#:#Port#",
         "--cwallet #Login#",
         "--cpassword #Password#",
-        "#SSL#--ctls true#SSL#",
-        "#NH#--cnicehash true#NH#"
+        "$(if ($enableSSL){'--ctls true'})",
+        "$(if ($Nicehash){'--cnicehash true'})"
     ],
     "API": "SRB",
     "APIPort": 4028,
