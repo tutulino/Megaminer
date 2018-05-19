@@ -116,7 +116,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
         $WTMFactor = switch ($HPool.Algorithm) {
             "Bitcore" { 1000000 }
             "Blake2s" { 1000000 }
-            "CryptoLight" { 1 }
+            "CryptoLightV7" { 1 }
             "CryptoNightV7" { 1 }
             "CryptoNightHeavy" { 1 }
             "Equihash" { 1 }
@@ -135,7 +135,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             default { $null }
         }
 
-        if (($Result | Where-Object { $_.Info -eq $HPool.Info -and $_.Algorithm -eq $HPool.Algorithm}).count -eq 0 -and $WTMFactor) {
+        if ($WTMFactor -and ($Result | Where-Object {$_.Info -eq $HPool.Info -and $_.Algorithm -eq $HPool.Algorithm}).count -eq 0) {
             #look that this coin is not included in result
 
             #look for this coin in main page coins
