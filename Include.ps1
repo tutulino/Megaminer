@@ -616,7 +616,7 @@ function Invoke-APIRequest {
         while ($Retry -gt 0) {
             try {
                 $Retry--
-                $Response = Invoke-WebRequest $Url -UserAgent $UserAgent -UseBasicParsing -TimeoutSec $Timeout | ConvertFrom-Json
+                $Response = Invoke-RestMethod -Uri $Url -UserAgent $UserAgent -UseBasicParsing -TimeoutSec $Timeout
                 if ($Response) {$Retry = 0}
             } catch {
                 Start-Sleep -Seconds 2
