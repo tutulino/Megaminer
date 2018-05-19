@@ -27,7 +27,7 @@
         "Bastion": "-a bastion",
         "Bitcore": "-a timetravel10",
         "C11": "-a c11",
-        "CryptoNightV7": "-a cryptonightv7 -t $($f=$DeviceGroup.Features;[math]::min([math]::floor($f.l3 / 2KB),$f.cores))",
+        "#CryptoNightV7": "-a cryptonightv7 -t $($f=$DeviceGroup.Features;[math]::min([math]::floor($f.l3 / 2KB),$f.cores))",
         "Deep": "-a deep",
         "Drop": "-a drop",
         "Fresh": "-a fresh",
