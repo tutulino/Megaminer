@@ -1,7 +1,7 @@
 {
-    "Path": "sgminer-kl-1.0.3-windows\\sgminer.exe",
-    "Uri": "https://github.com/KL0nLutiy/sgminer-kl/releases/download/kl-1.0.3/sgminer-kl-1.0.3-windows.zip",
-    "SHA256": "72c8b278e279f28c4973af03b1a34bb43327358f3751422a818fdff2f8b3bc7e",
+    "Path": "sgminer-kl-1.0.4-windows\\sgminer.exe",
+    "Uri": "https://github.com/KL0nLutiy/sgminer-kl/releases/download/kl-1.0.4/sgminer-kl-1.0.4-windows.zip",
+    "SHA256": "59ce6600f04cd5f5044a9af138f66c677ae5dafd3369c2ccfd6e712c993d2096",
     "Type": "AMD",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -22,6 +22,7 @@
         "X16r": "-k x16r -g 2 -w 64 -X 256",
         "X16s": "-k x16s -g 2 -w 64 -X 256",
         "X17": "-k x17 -g 2 -w 64 -X 256",
+        "Tribus": "-k tribus -g 2 -w 64 -X 256",
         "Xevan": "-k xevan -g 2 -w 64 -X 256"
     }
 }
