@@ -1,36 +1,31 @@
-namespace OpenCl
-{
-    using System;
+namespace OpenCl {
+	using System;
 
-	public abstract class RefCountedObject : HandleObject, IDisposable
-    {
-		protected RefCountedObject(IntPtr handle) : base(handle) { }
+	public abstract class RefCountedObject : HandleObject, IDisposable {
+		protected RefCountedObject (IntPtr handle) : base (handle) { }
 
-        ~RefCountedObject()
-        {
-            Dispose(false);
-        }
+			~RefCountedObject () {
+				Dispose (false);
+			}
 
-        protected abstract void Retain();
+		protected abstract void Retain ();
 
-		protected abstract void Release();
+		protected abstract void Release ();
 
 		// IDisposable
 
 		private bool disposed = false;
 
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
+		public void Dispose () {
+			Dispose (true);
+			GC.SuppressFinalize (this);
 		}
 
-        protected virtual void Dispose(bool disposing)
-		{
+		protected virtual void Dispose (bool disposing) {
 			if (!disposed) {
-				Release();
+				Release ();
 				disposed = true;
 			}
 		}
-    }
+	}
 }

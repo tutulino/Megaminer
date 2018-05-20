@@ -1,79 +1,70 @@
-namespace OpenCl
-{
-    using System;
+namespace OpenCl {
     using System.Runtime.InteropServices;
+    using System;
 
-    public sealed class Platform : HandleObject
-    {
-        private const uint CL_PLATFORM_PROFILE               = 0x0900;
-        private const uint CL_PLATFORM_VERSION               = 0x0901;
-        private const uint CL_PLATFORM_NAME                  = 0x0902;
-        private const uint CL_PLATFORM_VENDOR                = 0x0903;
-        private const uint CL_PLATFORM_EXTENSIONS            = 0x0904;
+    public sealed class Platform : HandleObject {
+        private const uint CL_PLATFORM_PROFILE = 0x0900;
+        private const uint CL_PLATFORM_VERSION = 0x0901;
+        private const uint CL_PLATFORM_NAME = 0x0902;
+        private const uint CL_PLATFORM_VENDOR = 0x0903;
+        private const uint CL_PLATFORM_EXTENSIONS = 0x0904;
         private const uint CL_PLATFORM_HOST_TIMER_RESOLUTION = 0x0905;
 
-        internal Platform(IntPtr handle) : base(handle) { }
+        internal Platform (IntPtr handle) : base (handle) { }
 
         // Platform attributes
 
-        public string Profile
-        {
-            get { return Cl.GetInfoString(NativeMethods.clGetPlatformInfo, this.handle, CL_PLATFORM_PROFILE); }
+        public string Profile {
+            get { return Cl.GetInfoString (NativeMethods.clGetPlatformInfo, this.handle, CL_PLATFORM_PROFILE); }
         }
 
-        public string Version
-        {
-            get { return Cl.GetInfoString(NativeMethods.clGetPlatformInfo, this.handle, CL_PLATFORM_VERSION); }
+        public string Version {
+            get { return Cl.GetInfoString (NativeMethods.clGetPlatformInfo, this.handle, CL_PLATFORM_VERSION); }
         }
 
-        public string Name
-        {
-            get { return Cl.GetInfoString(NativeMethods.clGetPlatformInfo, this.handle, CL_PLATFORM_NAME); }
+        public string Name {
+            get { return Cl.GetInfoString (NativeMethods.clGetPlatformInfo, this.handle, CL_PLATFORM_NAME); }
         }
 
-        public string Vendor
-        {
-            get { return Cl.GetInfoString(NativeMethods.clGetPlatformInfo, this.handle, CL_PLATFORM_VENDOR); }
+        public string Vendor {
+            get { return Cl.GetInfoString (NativeMethods.clGetPlatformInfo, this.handle, CL_PLATFORM_VENDOR); }
         }
 
-        public string[] Extensions
-        {
+        public string[] Extensions {
             get {
-                var res = Cl.GetInfoString(NativeMethods.clGetPlatformInfo, this.handle, CL_PLATFORM_EXTENSIONS);
-                return res.Split(new char[] { ' ' });
+                var res = Cl.GetInfoString (NativeMethods.clGetPlatformInfo, this.handle, CL_PLATFORM_EXTENSIONS);
+                return res.Split (new char[] { ' ' });
             }
         }
 
-        public T GetExtensionFunction<T>(string name) where T : class
-        {
-            IntPtr addr = NativeMethods.clGetExtensionFunctionAddressForPlatform(this.handle, name);
+        public T GetExtensionFunction<T> (string name) where T : class {
+            IntPtr addr = NativeMethods.clGetExtensionFunctionAddressForPlatform (this.handle, name);
             if (addr == IntPtr.Zero) {
                 return null;
             }
-            return Marshal.GetDelegateForFunctionPointer(addr, typeof(T)) as T;
+            return Marshal.GetDelegateForFunctionPointer (addr, typeof (T)) as T;
         }
 
         // static factory method
 
-        public static Platform[] GetPlatformIDs()
-        {
+        public static Platform[] GetPlatformIDs () {
             ErrorCode error;
             uint count;
 
-            error = NativeMethods.clGetPlatformIDs(0, null, out count);
+            error = NativeMethods.clGetPlatformIDs (0, null, out count);
             if (error != ErrorCode.Success) {
-                throw new OpenClException(error);
+                throw new OpenClException (error);
             }
 
-            var ids = new IntPtr[count] ;
-            error = NativeMethods.clGetPlatformIDs(count, ids, out count);
+            var ids = new IntPtr[count];
+            error = NativeMethods.clGetPlatformIDs (count, ids, out count);
             if (error != ErrorCode.Success) {
-                throw new OpenClException(error);
+                throw new OpenClException (error);
             }
 
             var res = new Platform[count];
-            for (var i=0; i<count; i++) {
-                res[i] = new Platform(ids[i]);
+            for (var i = 0; i < count; i++) {
+                res[i] = new Platform (ids[i]);
             }
             return res;
         }
