@@ -599,18 +599,20 @@ function Invoke-APIRequest {
         [Parameter(Mandatory = $true)]
         [String]$Url = "http://localhost/",
         [Parameter(Mandatory = $false)]
-        [Int]$Timeout = 5, #seconds
+        [Int]$Timeout = 5, # Request timeout in seconds
         [Parameter(Mandatory = $false)]
-        [Int]$Retry = 3,
+        [Int]$Retry = 3, # Amount of retries for request from origin
         [Parameter(Mandatory = $false)]
-        [Int]$MaxAge = 10
+        [Int]$MaxAge = 10, # Max cache age if request failed, in minutes
+        [Parameter(Mandatory = $false)]
+        [Int]$Age = 3 # Cache age after which to request from origin, in minutes
     )
     $UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'
     $CachePath = '.\Cache\'
     $CacheFile = $CachePath + [System.Web.HttpUtility]::UrlEncode($Url) + '.json'
 
     if (!(Test-Path -Path $CachePath)) { New-Item -Path $CachePath -ItemType directory -Force | Out-Null }
-    if (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes(-3)) {
+    if (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes( - $Age)) {
         $Response = Get-Content -Path $CacheFile | ConvertFrom-Json
     } else {
         while ($Retry -gt 0) {
@@ -627,6 +629,8 @@ function Invoke-APIRequest {
             if ($CacheFile.Length -lt 250) {$Response | ConvertTo-Json -Depth 100 | Set-Content -Path $CacheFile}
         } elseif (Test-Path -LiteralPath $CacheFile -NewerThan (Get-Date).AddMinutes( - $MaxAge)) {
             $Response = Get-Content -Path $CacheFile | ConvertFrom-Json
+        } else {
+            $Response = $null
         }
     }
     $Response
@@ -640,7 +644,6 @@ function Get-LiveHashRate {
         [Int]$Port,
         [Parameter(Mandatory = $false)]
         [Object]$Parameters = @{}
-
     )
 
     $Server = "localhost"
@@ -1187,18 +1190,20 @@ function Get-AlgoUnifiedName ([string]$Algo) {
 function Get-CoinUnifiedName ([string]$Coin) {
 
     if ($Coin) {
-        switch -wildcard ($Coin.Trim()) {
+        $Coin = $Coin.Trim() -replace '[\s_]', '-'
+        switch -wildcard ($Coin) {
+            "Aur-*" { "Aurora" }
             "Auroracoin-*" { "Aurora" }
+            "Bitcoin-*" { $_ -replace '-' }
             "Dgb-*" { "Digibyte" }
             "Digibyte-*" { "Digibyte" }
             "Ethereum-Classic" { "EthereumClassic" }
+            "Haven-Protocol" { "Haven" }
             "Myriad-*" { "Myriad" }
             "Myriadcoin-*" { "Myriad" }
+            "Shield-*" { "Verge" }
             "Verge-*" { "Verge" }
-            "Bitcoin-Gold" { "BitcoinGold" }
-            "Bitcoin-Cash" { "BitcoinCash" }
-            "Bitcoin-Private" { "BitcoinPrivate" }
-            Default { $Coin.Trim() }
+            Default { $Coin }
         }
     }
 }
@@ -1465,7 +1470,7 @@ function Test-DeviceGroupsConfig ($Types) {
             Write-Warning ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat")
             Start-Sleep -Seconds 5
         }
-        }
+    }
     $TotalMem = (($Types | Where-Object Type -ne 'CPU').OCLDevices.GlobalMemSize | Measure-Object -Sum).Sum / 1GB
     $TotalSwap = (Get-WmiObject Win32_PageFile | Select-Object -ExpandProperty FileSize | Measure-Object -Sum).Sum / 1GB
     if ($TotalMem -gt $TotalSwap) {
