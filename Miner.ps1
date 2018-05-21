@@ -260,7 +260,7 @@ if ($MiningMode -ne "FARM MONITORING") {
     #-----------------Launch Command
     $Params = @{
         MiningMode = $MiningMode
-        PoolsName  = $PoolsName
+        PoolsName  = $PoolsName -split ','
     }
     if ($MiningMode -eq 'Manual') {
         $Params.Algorithm = $AlgosName
