@@ -394,7 +394,7 @@ while ($Quit -eq $false) {
         if ($NeedPool) {
             ## Order by price (profitability)
             $_.Group | Sort-Object -Property `
-            @{Expression = {if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}}; Descending = $true},
+            @{Expression = $(if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}); Descending = $true},
             @{Expression = "LocationPriority"; Ascending = $true} | ForEach-Object {
                 if ($NeedPool) {
                     ## test tcp connection to pool
