@@ -46,6 +46,7 @@ if ($Querymode -eq "wallet") {
         switch ($Info.Symbol) {
             'pasl' { $Divisor = 10000 }
             'sumo' { $Divisor = 1000000000}
+            'loki' { $Divisor = 1000000000}
             Default { $Divisor = 10000 }
         }
         $Result = [PSCustomObject]@{
