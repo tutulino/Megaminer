@@ -368,7 +368,7 @@ while ($Quit -eq $false) {
         }
     } while ($AllPools.Count -eq 0)
 
-    $AllPools | Select-Object name -unique | ForEach-Object {Write-Log ("Pool " + $_.Name + " was responsive...") $LogFile $true}
+    $AllPools | Select-Object name -unique | ForEach-Object {Write-Log ("Pool $($_.Name) was responsive...") $LogFile $true}
 
     Write-Log ("Detected $($AllPools.Count) pools...") $LogFile $true
 
@@ -529,7 +529,7 @@ while ($Quit -eq $false) {
                             #search dual pool and select correct price by mode
                             $PoolDual = $Pools |
                                 Where-Object Algorithm -eq $AlgoNameDual |
-                                Sort-Object @{Expression = {if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}}; Descending = $true} |
+                                Sort-Object @{Expression = $(if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"}); Descending = $true} |
                                 Select-Object -First 1
                             $PriceDual = [double]$PoolDual.$(if ($MiningMode -eq 'Automatic24h') {"Price24h"} else {"Price"})
 
