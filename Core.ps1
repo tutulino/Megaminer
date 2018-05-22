@@ -639,9 +639,9 @@ while ($Quit -eq $false) {
                                 BenchmarkedTimes = 0
                                 LastTimeActive   = [DateTime]0
                                 ActivatedTimes   = 0
-                                ActiveTime       = [TimeSpan]0
+                                ActiveTime       = 0
                                 FailedTimes      = 0
-                                StatsTime        = [TimeSpan]0
+                                StatsTime        = [DateTime]0
                             }
                             if (!$StatsHistory) {$StatsHistory = $Stats}
 
@@ -1093,7 +1093,6 @@ while ($Quit -eq $false) {
             Value      = $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory
         }
         Set-Stats @Params
-
     }
 
     if ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty Subminers | Where-Object {$_.NeedBenchmark -and $_.Status -ne 'Cancelled'}) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
@@ -1170,7 +1169,7 @@ while ($Quit -eq $false) {
                     $_.SpeedLive -and
                     ($_.SpeedLiveDual -or !$ActiveMiners[$_.IdF].AlgorithmDual)
                 ) {
-                    if ($_.Stats.StatsTime) { $_.Stats.ActiveTime += (Get-Date) - $_.Stats.StatsTime }
+                    if ($_.Stats.StatsTime) { $_.Stats.ActiveTime += ((Get-Date) - $_.Stats.StatsTime).TotalSeconds }
                     $_.Stats.StatsTime = Get-Date
 
                     [array]$_.SpeedReads = $_.SpeedReads
@@ -1668,7 +1667,7 @@ while ($Quit -eq $false) {
                 Sort-Object `
             @{expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName -eq 'CPU'}; Ascending = $true},
             @{expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}; Ascending = $true},
-            @{expression = {$_.Stats.Activetime.TotalMinutes}; Descending = $true} |
+            @{expression = {$_.Stats.Activetime}; Descending = $true} |
                 Format-Table -Wrap -GroupBy @{Label = "Group"; Expression = {$ActiveMiners[$_.IdF].DeviceGroup.GroupName}}(
                 @{Label = "Algorithm"; Expression = {$ActiveMiners[$_.IdF].Algorithms + $(if ($ActiveMiners[$_.IdF].AlgoLabel) {"|$($ActiveMiners[$_.IdF].AlgoLabel)"})}},
                 @{Label = "Coin"; Expression = {$ActiveMiners[$_.IdF].Symbol + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"_$($ActiveMiners[$_.IdF].SymbolDual)"})}},
@@ -1677,7 +1676,7 @@ while ($Quit -eq $false) {
                 @{Label = "PwLmt"; Expression = {if ($_.PowerLimit -gt 0) {$_.PowerLimit}}},
                 @{Label = "Launch"; Expression = {$_.Stats.ActivatedTimes}},
                 @{Label = "Best"; Expression = {$_.Stats.BestTimes}},
-                @{Label = "ActiveTime"; Expression = {if ($_.Stats.ActiveTime.TotalMinutes -le 60) {"{0:N1} min" -f ($_.Stats.ActiveTime.TotalMinutes)} else {"{0:N1} hours" -f ($_.Stats.ActiveTime.TotalHours)}}},
+                @{Label = "ActiveTime"; Expression = {if ($_.Stats.ActiveTime -le 3600) {"{0:N1} min" -f ($_.Stats.ActiveTime / 60)} else {"{0:N1} hours" -f ($_.Stats.ActiveTime / 3600)}}},
                 @{Label = "LastTimeActive"; Expression = {$($_.Stats.LastTimeActive).tostring("dd/MM/yy H:mm")}},
                 @{Label = "Status"; Expression = {$_.Status}}
             ) | Out-Host
