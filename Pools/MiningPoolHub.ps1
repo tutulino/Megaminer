@@ -127,7 +127,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 WalletMode            = $WalletMode
                 WalletSymbol          = $MiningPoolHub_OriginalCoin
                 PoolName              = $Name
-                Fee                   = 0.009
+                Fee                   = 0.009 + 0.002 # Pool fee + AutoExchange fee
                 EthStMode             = 2
                 RewardType            = $RewardType
             }
