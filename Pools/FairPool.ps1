@@ -47,7 +47,9 @@ if ($Querymode -eq "wallet") {
             'pasl' { $Divisor = 10000 }
             'sumo' { $Divisor = 1000000000}
             'loki' { $Divisor = 1000000000}
-            Default { $Divisor = 10000 }
+            'xhv' { $Divisor = 1000000000000}
+            'xrn' { $Divisor = 1000000000}
+            Default { $Divisor = 1000000000 }
         }
         $Result = [PSCustomObject]@{
             Pool     = $name
@@ -61,7 +63,7 @@ if ($Querymode -eq "wallet") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
 
-    $Pools += [PSCustomObject]@{coin = "Akroma"; algo = "Ethash"; symbol = "AKA"; port = 2222; fee = 0.01    }
+    $Pools += [PSCustomObject]@{coin = "Akroma"; algo = "Ethash"; symbol = "AKA"; port = 2222; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Dogethereum"; algo = "Ethash"; symbol = "DOGX"; port = 7788; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Electroneum"; algo = "CryptoNight"; symbol = "ETN"; port = 8888; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "EthereumClassic"; algo = "Ethash"; symbol = "ETC"; port = 4444; fee = 0.01}
@@ -72,6 +74,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "PascalLite"; algo = "Pascal"; symbol = "PASL"; port = 4009; fee = 0.02}
     $Pools += [PSCustomObject]@{coin = "Pegascoin"; algo = "Ethash"; symbol = "PGC"; port = 1111; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "PURK"; algo = "Keccak"; symbol = "PURK"; port = 2244; fee = 0.01}
+    $Pools += [PSCustomObject]@{coin = "Saronite"; algo = "CryptoNightHeavy"; symbol = "XRN"; port = 5599; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Sumokoin"; algo = "CryptoNightHeavy"; symbol = "SUMO"; port = 5555; fee = 0.01}
 
     $Pools | ForEach-Object {
