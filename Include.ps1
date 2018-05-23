@@ -746,8 +746,8 @@ function Get-LiveHashRate {
                         "* - ZEC" {$Multiplier = 1} #Equihash
                         Default {$Multiplier = 1000}
                     }
-                    $HashRate = [double]$Data.result[2].Split(";")[0] * $Multiplier
-                    $HashRate_Dual = [double]$Data.result[4].Split(";")[0] * $Multiplier
+                    [double[]]$HashRate = [double]$Data.result[2].Split(";")[0] * $Multiplier
+                    $HashRate += [double]$Data.result[4].Split(";")[0] * $Multiplier
                 }
             }
 
@@ -781,15 +781,35 @@ function Get-LiveHashRate {
                 }
             }
 
-            "Bminer" {
+            "BMiner" {
                 $Request = Invoke-HTTPRequest $Server $Port "/api/status" 5
                 if ($Request) {
-                    $Data = $Request.content | ConvertFrom-Json
-                    $HashRate = ($Data.miners | Get-Member -MemberType NoteProperty | ForEach-Object {$Data.miners.($_.name).solver.solution_rate} | Measure-Object -Sum).Sum
+                    $Data = $Request | ConvertFrom-Json
+                    $HashRate = $Data.miners |
+                        Get-Member -MemberType NoteProperty |
+                        ForEach-Object {$Data.miners.($_.name).solver.solution_rate} |
+                        Measure-Object -Sum |
+                        Select-Object -ExpandProperty Sum
                 }
             }
 
-            "optiminer" {
+            "BMiner8" {
+                $Request = Invoke-HTTPRequest $Server $Port "/api/v1/status/solver" 5
+                if ($Request) {
+                    $Data = $Request | ConvertFrom-Json
+                    $HashRate = $Data.devices |
+                        Get-Member -MemberType NoteProperty |
+                        ForEach-Object {$Data.devices.($_.name).solvers} |
+                        Group-Object algorithm |
+                        ForEach-Object {
+                        $_.group.speed_info.hash_rate |
+                            Measure-Object -Sum |
+                            Select-Object -ExpandProperty Sum
+                    }
+                }
+            }
+
+            "Optiminer" {
                 $Request = Invoke-HTTPRequest $Server $Port "" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
@@ -827,8 +847,7 @@ function Get-LiveHashRate {
 
         } #end switch
 
-        $HashRates = [double[]]([double]$HashRate, [double]$HashRate_Dual)
-        $HashRates
+        $HashRate
     } catch {}
 }
 
