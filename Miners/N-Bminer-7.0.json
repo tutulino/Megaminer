@@ -4,16 +4,17 @@
     "SHA256": "61526d3bdd6054b5d09b06069aed2e17e8facd842db105d750bc073af0d834db",
     "Type": "NVIDIA",
     "Arguments": [
-        "-uri ethash://$([System.Web.HttpUtility]::UrlEncode('#Login#')):$([System.Web.HttpUtility]::UrlEncode('#Password#'))@#Server#:#Port#",
+        "-uri #AlgorithmParameters#://$([System.Web.HttpUtility]::UrlEncode('#Login#')):$([System.Web.HttpUtility]::UrlEncode('#Password#'))@#Server#:#Port#",
         "-devices #Devices#",
         "-watchdog",
         "-api 127.0.0.1:#APIPort#",
-        "#AlgorithmParameters#"
+        ""
     ],
-    "API": "BMINER",
+    "API": "BMiner",
     "APIPort": 4068,
     "Fee": 0.02,
     "Algorithms": {
-        "Ethash": ""
+        "Equihash": "stratum",
+        "Ethash": "ethash"
     }
 }
