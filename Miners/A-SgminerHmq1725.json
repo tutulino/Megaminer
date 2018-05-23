@@ -16,6 +16,6 @@
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "HMQ1725": "-k hmq1725 -w 256 -X 256"
+        "HMQ1725": "-k hmq1725 -I 15"
     }
 }
