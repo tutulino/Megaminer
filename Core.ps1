@@ -999,7 +999,7 @@ while ($Quit -eq $false) {
 
                     if ($Bestnow.NeedBenchmark -or $DelayCloseMiners -eq 0 -or $BestLast.Status -eq 'PendingCancellation') {
                         #inmediate kill
-                        Exit-Process $ActiveMiners[$BestLast.IdF].Process
+                        if ($ActiveMiners[$BestLast.IdF].Process) {Exit-Process $ActiveMiners[$BestLast.IdF].Process}
                     } else {
                         #delayed kill
                         $Code = {
