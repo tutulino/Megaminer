@@ -28,7 +28,7 @@ if ($Querymode -eq "info") {
 if ($Querymode -eq "speed") {
     $Request = Invoke-APIRequest -Url $("https://" + $Info.Symbol + ".fairpool.cloud/api/stats?login=" + ($Info.user -split "\+")[0]) -Retry 1
 
-    if ($Request) {
+    if ($Request -and $Request.Workers) {
         $Request.Workers | ForEach-Object {
             $Result += [PSCustomObject]@{
                 PoolName   = $name
