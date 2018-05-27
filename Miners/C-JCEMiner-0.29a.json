@@ -1,7 +1,7 @@
 {
     "Path": "jce_cn_cpu_miner$(if($DeviceGroup.Features.'64bit'){'64'}else{'32'}).exe",
-    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.windows.029.zip",
-    "SHA256": "ec6aa896c1395b5a336dbdcbe5f8e1eb8ef3e61a08b13684f1edba7ad7786264",
+    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.windows.029a.zip",
+    "SHA256": "7887968364146b00f9d58dbca77be2d4dc22d4d009018895428314faa1bfe2f6",
     "Type": "CPU",
     "Arguments": [
         "-o #Server#:#Port#",
@@ -9,14 +9,13 @@
         "-p #Password#",
         "$(if ($enableSSL){'--ssl'})",
         "$(if ($Nicehash){'--nicehash'})",
-        "--stakjson",
         "--low",
         "--mport #APIPort#",
         "#AlgorithmParameters#"
     ],
     "GenerateConfigFile": "config-#Algorithm#.txt",
     "PatternConfigFile": ".\\Patterns\\JCE-#Algorithm#-Pattern.txt",
-    "API": "XMRig",
+    "API": "JCE",
     "APIPort": 4048,
     "Fee": "$(if($DeviceGroup.Features.aes -and $DeviceGroup.Features.'64bit'){0.015}else{0.03})",
     "SSL": true,
