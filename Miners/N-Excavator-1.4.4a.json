@@ -3,6 +3,8 @@
     "Uri": "https://github.com/nicehash/excavator/releases/download/v1.4.4a/excavator_v1.4.4a_NVIDIA_Win64.zip",
     "SHA256": "8922df00ea62affc6039701885f10a59b3bbdc3b966beb4d4d8068201e914560",
     "Type": "NVIDIA",
+    "PrerequisitePath": "$env:SystemRoot\\System32\\msvcr120.dll",
+    "PrerequisiteURI": "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe",
     "GenerateConfigFile": "excavator\\#GroupName#-#Algorithm#.json",
     "PatternConfigFile": ".\\Patterns\\excavatorPattern.txt",
     "Arguments": [

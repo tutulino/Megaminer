@@ -980,21 +980,23 @@ function Expand-WebRequest {
     $CachePath = $PSScriptRoot + '\Downloads\'
     $FilePath = $CachePath + $Filename
 
-    if (!(Test-Path -Path $CachePath)) { New-Item -Path $CachePath -ItemType directory | Out-Null }
+    if (-not (Test-Path -LiteralPath $CachePath)) {$null = New-Item -Path $CachePath -ItemType directory}
 
     try {
-        if (Test-Path $FilePath) {
+        if (Test-Path -LiteralPath $FilePath) {
             if ($SHA256 -and (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash -ne $SHA256) {
-                "Existing file hash doesn't match. Will re-download." | Write-Host -ForegroundColor Red
+                Write-Warning "Existing file hash doesn't match. Will re-download."
                 Remove-Item $FilePath
             }
         }
-        if (!(Test-Path $FilePath)) {
+        if (-not (Test-Path -LiteralPath $FilePath)) {
             (New-Object System.Net.WebClient).DownloadFile($Uri, $FilePath)
         }
-        if (Test-Path $FilePath) {
+        if (Test-Path -LiteralPath $FilePath) {
             if ($SHA256 -and (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash -ne $SHA256) {
-                "File hash doesn't match. Skipping miner." | Write-Host -ForegroundColor Red
+                Write-Warning "File hash doesn't match. Removing file."
+            } elseif ((Get-Item $FilePath).Extension -in @('.msi', '.exe')) {
+                Start-Process $FilePath "-qb" -Wait
             } else {
                 $Command = 'x "' + $FilePath + '" -o"' + $DestinationFolder + '" -y -spe'
                 Start-Process ".\includes\7z.exe" $Command -Wait
@@ -1374,34 +1376,27 @@ function Start-Downloader {
         [String]$SHA256
     )
 
-    if (-not (Test-Path $Path)) {
+    if (-not (Test-Path -LiteralPath $Path)) {
         try {
             if ($URI -and (Split-Path $URI -Leaf) -eq (Split-Path $Path -Leaf)) {
-                New-Item (Split-Path $Path) -ItemType "Directory" | Out-Null
+                # downloading a single file
+                $null = New-Item (Split-Path $Path) -ItemType "Directory"
                 (New-Object System.Net.WebClient).DownloadFile($URI, $Path)
                 if ($SHA256 -and (Get-FileHash -Path $Path -Algorithm SHA256).Hash -ne $SHA256) {
-                    "File hash doesn't match. Skipping miner." | Write-Host -ForegroundColor Red
+                    Write-Warning "File hash doesn't match. Removing file."
                     Remove-Item $Path
                 }
             } else {
-                $Message = "Downloading....$($URI)"
-                Write-Host -BackgroundColor green -ForegroundColor Black $Message
+                # downloading an archive or installer
+                $Message = "Downloading $URI"
+                Write-Host $Message -BackgroundColor green -ForegroundColor Black
                 Write-Log $Message $LogFile
-                Expand-WebRequest $URI $ExtractionPath -ErrorAction Stop -SHA256 $SHA256
+                Expand-WebRequest -URI $URI -Path $ExtractionPath -SHA256 $SHA256 -ErrorAction Stop
             }
         } catch {
             $Message = "Cannot download $URI"
-            Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
+            Write-Warning $Message
             Write-Log $Message $LogFile
-
-            if ($Path_Old) {
-                if (Test-Path (Split-Path $Path_New)) {(Split-Path $Path_New) | Remove-Item -Recurse -Force}
-                (Split-Path $Path_Old) | Copy-Item -Destination (Split-Path $Path_New) -Recurse -Force
-            } else {
-                $Message = "Cannot find $($Path) distributed at $($URI). "
-                Write-Host -BackgroundColor Yellow -ForegroundColor Black $Message
-                Write-Log $Message $LogFile
-            }
         }
     }
 }

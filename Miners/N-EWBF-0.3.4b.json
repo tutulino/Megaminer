@@ -3,6 +3,8 @@
     "Uri": "https://github.com/nemosminer/EWBF-Zec-Miner/releases/download/0.3.4b/0.3.4b.7z",
     "SHA256": "57fc1e56f37ee6e5ae78f0fd1e9efcc2a57a16d31b3e6b14ab146f260aadc62f",
     "Type": "NVIDIA",
+    "PrerequisitePath": "$env:SystemRoot\\System32\\msvcr120.dll",
+    "PrerequisiteURI": "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe",
     "Arguments": [
         "--server #Server#",
         "--port #Port#",

@@ -706,6 +706,8 @@ while ($Quit -eq $false) {
                             PoolWorkersDual     = $PoolDual.PoolWorkers
                             Port                = $(if (($DeviceGroups | Where-Object type -eq $DeviceGroup.type).Count -le 1 -and $DelayCloseMiners -eq 0 -and $config.ForceDynamicPorts -ne "Enabled") { $Miner.ApiPort })
                             PrelaunchCommand    = $Miner.PrelaunchCommand
+                            PrerequisitePath    = $Miner.PrerequisitePath
+                            PrerequisiteURI     = $Miner.PrerequisiteURI
                             SubMiners           = $SubMiners
                             SHA256              = $Miner.SHA256
                             Symbol              = $Pool.Symbol
@@ -736,7 +738,17 @@ while ($Quit -eq $false) {
         -not [string]::IsNullOrEmpty($_.Path)} |
         Select-Object URI, ExtractionPath, Path, SHA256 -Unique |
         ForEach-Object {
-        if (!(Test-Path $_.Path)) {Start-Downloader -URI $_.URI -ExtractionPath $_.ExtractionPath -Path $_.Path -SHA256 $_.SHA256}
+        if (-not (Test-Path $_.Path)) {Start-Downloader -URI $_.URI -ExtractionPath $_.ExtractionPath -Path $_.Path -SHA256 $_.SHA256}
+    }
+    #Launch download of prerequisites
+    $Miners |
+        Where-Object PrerequisitePath |
+        Select-Object PrerequisitePath, PrerequisiteURI -Unique |
+        ForEach-Object {
+        $_.PrerequisitePath = $ExecutionContext.InvokeCommand.ExpandString($_.PrerequisitePath)
+        if (-not (Test-Path $_.PrerequisitePath)) {
+            Start-Downloader -URI $_.PrerequisiteURI -Path $_.PrerequisitePath -ExtractionPath $_.PrerequisitePath
+        }
     }
 
     Send-ErrorsToLog $LogFile

@@ -3,6 +3,8 @@
     "Uri": "https://github.com/GarlicoinOrg/sgminer-gm/releases/download/5.6.0-allium-1/x86_64-sgminer.zip",
     "SHA256": "a4fdfd662dd3f7967545205b53a458a144683a437dc9fb23a635193894d43dc6",
     "Type": "AMD",
+    "PrerequisitePath": "$env:SystemRoot\\System32\\msvcr110.dll",
+    "PrerequisiteURI": "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
         "-u #Login#",
