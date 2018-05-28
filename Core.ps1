@@ -115,7 +115,7 @@ $Screen = $Config.STARTSCREEN
 #---Parameters checking
 
 if ($MiningMode -NotIn @('Manual', 'Automatic', 'Automatic24h')) {
-    "Parameter MiningMode not valid, valid options: Manual, Automatic, Automatic24h" | Out-Host
+    Log-Message "Parameter MiningMode not valid, valid options: Manual, Automatic, Automatic24h" -Severity Error
     Exit
 }
 $Params = @{
@@ -1590,7 +1590,7 @@ while ($Quit -eq $false) {
 
                 } -End {
                     Set-ConsolePosition 0 $YToWriteMessages
-                    "                                                                         " | Out-Host
+                    " " * 70 | Out-Host
                 }
 
                 if (!$WalletStatusAtStart) {$WalletStatusAtStart = $WalletStatus}
