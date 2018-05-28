@@ -5,15 +5,16 @@ $baseFolder = Split-Path -parent $script:MyInvocation.MyCommand.Path
 try {
     Add-Type -Path $baseFolder\MSIAfterburner.NET.dll
 } catch {
-    Write-Host $_.Exception.Message -ForegroundColor Yellow
-    throw "Failed to load Afterburner interface library"
+    Log-Message $_.Exception.Message -Severity Warn
+    Log-Message "Failed to load Afterburner interface library" -Severity Error
+    Exit
 }
 
 try {
     $abMonitor = New-Object MSI.Afterburner.HardwareMonitor
 } catch {
-    Write-Host $_.Exception.Message -ForegroundColor Yellow
-    Write-Log "Failed to create MSI Afterburner Monitor object. Falling back to standard monitoring" $LogFile $true
+    Log-Message $_.Exception.Message -Severity Warn
+    Log-Message "Failed to create MSI Afterburner Monitor object. Falling back to standard monitoring." -Severity Warn
     $abMonitor = $false
     Start-Sleep -Seconds 5
 }
@@ -21,8 +22,8 @@ try {
 try {
     $abControl = New-Object MSI.Afterburner.ControlMemory
 } catch {
-    Write-Host $_.Exception.Message -ForegroundColor Yellow
-    Write-Log "Failed to create MSI Afterburner Control object. PowerLimits will not be available" $LogFile $true
+    Log-Message $_.Exception.Message -Severity Warn
+    Log-Message "Failed to create MSI Afterburner Control object. PowerLimits will not be available" -Severity Warn
     $abControl = $false
     Start-Sleep -Seconds 5
 }
@@ -67,8 +68,9 @@ function Get-AfterburnerDevices ($Type) {
     try {
         $abControl.ReloadAll()
     } catch {
-        Write-Host $_.Exception.Message -ForegroundColor Yellow
-        throw "Failed to communicate with MSI Afterburner"
+        Log-Message $_.Exception.Message -Severity Warn
+        Log-Message "Failed to communicate with MSI Afterburner" -Severity Error
+        Exit
     }
 
     if ($Type -in @('AMD', 'NVIDIA', 'Intel')) {

@@ -43,7 +43,7 @@ function Send-ErrorsToLog ($LogFile) {
         if ($error[$i].InnerException.Paramname -ne "scopeId") {
             # errors in debug
             $Msg = "###### ERROR ##### " + [string]($error[$i]) + ' ' + $error[$i].ScriptStackTrace
-            Write-Log $msg $LogFile
+            Log-Message $msg -Severity Error -NoEcho
         }
     }
     $error.clear()
@@ -494,13 +494,45 @@ Function Get-MiningTypes () {
 
 Function Write-Log ($Message, $LogFile, $SendToScreen) {
 
-    if (![string]::IsNullOrWhitespace($message)) {
-        $M = [string](Get-Date) + "...... " + $Message
-        $LogFile.WriteLine($M)
+    # if (![string]::IsNullOrWhitespace($message)) {
+    #     $M = [string](Get-Date) + "...... " + $Message
+    #     $LogFile.WriteLine($M)
 
-        if ($SendToScreen) { $Message | Write-Host -ForegroundColor Green }
+    #     if ($SendToScreen) { $Message | Write-Host -ForegroundColor Green }
+    # }
+    if ($SendToScreen) {
+        Log-Message $Message -Severity Info
+    } else {
+        Log-Message $Message -Severity Debug
     }
 }
+
+Function Log-Message {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]$Message,
+
+        [Parameter()]
+        [ValidateSet('Info', 'Warn', 'Error', 'Debug')]
+        [string]$Severity = 'Info',
+
+        [Parameter()]
+        [switch]$NoEcho = $false
+    )
+    if ($Message) {
+        $LogFile.WriteLine("$(Get-Date -f "HH:mm:ss.ff")`t$Severity`t$Message")
+        if ($NoEcho -eq $false) {
+            switch ($Severity) {
+                Info { Write-Host $Message -ForegroundColor Green }
+                Warn { Write-Warning $Message }
+                Error { Write-Error $Message }
+            }
+        }
+    }
+}
+Set-Alias Log Log-Message
+
 
 Function Read-KeyboardTimed {
     param(
@@ -508,7 +540,6 @@ Function Read-KeyboardTimed {
         [int]$SecondsToWait,
         [Parameter(Mandatory = $true)]
         [array]$ValidKeys
-
     )
 
     $LoopStart = Get-Date
@@ -538,7 +569,7 @@ function Clear-ScreenZone {
     Set-ConsolePosition 0 $start
 
     for ($i = $startY; $i -le $endY; $i++) {
-        $BlankLine | write-host
+        $BlankLine | Out-Host
     }
 }
 
@@ -985,7 +1016,7 @@ function Expand-WebRequest {
     try {
         if (Test-Path -LiteralPath $FilePath) {
             if ($SHA256 -and (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash -ne $SHA256) {
-                Write-Warning "Existing file hash doesn't match. Will re-download."
+                Log-Message "Existing file hash doesn't match. Will re-download." -Severity Warn
                 Remove-Item $FilePath
             }
         }
@@ -994,7 +1025,7 @@ function Expand-WebRequest {
         }
         if (Test-Path -LiteralPath $FilePath) {
             if ($SHA256 -and (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash -ne $SHA256) {
-                Write-Warning "File hash doesn't match. Removing file."
+                Log-Message "File hash doesn't match. Removing file." -Severity Warn
             } elseif ((Get-Item $FilePath).Extension -in @('.msi', '.exe')) {
                 Start-Process $FilePath "-qb" -Wait
             } else {
@@ -1259,7 +1290,7 @@ function Get-HashRates {
         $Content = (Get-Content -path "$Pattern.csv")
         try {$Content = $Content | ConvertFrom-Csv} catch {
             #if error from convert from json delete file
-            Write-Log ("Corrupted file $Pattern.csv, deleting") $LogFile $true
+            Log-Message "Corrupted file $Pattern.csv, deleting" -Severity Warn
             Remove-Item -path "$Pattern.csv"
         }
     }
@@ -1314,7 +1345,7 @@ function Get-Stats {
         $Content = (Get-Content -path "$Pattern.json")
         try {$Content = $Content | ConvertFrom-Json} catch {
             #if error from convert from json delete file
-            Write-Log ("Corrupted file $Pattern.json, deleting") $LogFile $true
+            Log-Message "Corrupted file $Pattern.json, deleting" -Severity Warn
             Remove-Item -path "$Pattern.json"
         }
     }
@@ -1383,20 +1414,17 @@ function Start-Downloader {
                 $null = New-Item (Split-Path $Path) -ItemType "Directory"
                 (New-Object System.Net.WebClient).DownloadFile($URI, $Path)
                 if ($SHA256 -and (Get-FileHash -Path $Path -Algorithm SHA256).Hash -ne $SHA256) {
-                    Write-Warning "File hash doesn't match. Removing file."
+                    Log-Message "File hash doesn't match. Removing file." -Severity Warn
                     Remove-Item $Path
                 }
             } else {
                 # downloading an archive or installer
-                $Message = "Downloading $URI"
-                Write-Host $Message -BackgroundColor green -ForegroundColor Black
-                Write-Log $Message $LogFile
+                Log-Message "Downloading $URI" -Severity Info
                 Expand-WebRequest -URI $URI -Path $ExtractionPath -SHA256 $SHA256 -ErrorAction Stop
             }
         } catch {
             $Message = "Cannot download $URI"
-            Write-Warning $Message
-            Write-Log $Message $LogFile
+            Log-Message $Message -Severity Warn
         }
     }
 }
@@ -1476,20 +1504,17 @@ function Test-DeviceGroupsConfig ($Types) {
         $DetectedDevices = @()
         $DetectedDevices += $Devices | Where-Object Group -eq $_.GroupName
         if ($DetectedDevices.count -eq 0) {
-            Write-Log ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config") $LogFile $false
-            Write-Warning ("No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config")
+            Log-Message "No Devices for group " + $_.GroupName + " was detected, activity based watchdog will be disabled for that group, this can happens if AMD beta blockchain drivers are installed or incorrect gpugroups config" -Severity Warn
             Start-Sleep -Seconds 5
         } elseif ($DetectedDevices.count -ne $_.DevicesCount) {
-            Write-Log ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat") $LogFile $false
-            Write-Warning ("Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat")
+            Log-Message "Mismatching Devices for group " + $_.GroupName + " was detected, check gpugroups config and gpulist.bat" -Severity Warn
             Start-Sleep -Seconds 5
         }
     }
     $TotalMem = (($Types | Where-Object Type -ne 'CPU').OCLDevices.GlobalMemSize | Measure-Object -Sum).Sum / 1GB
     $TotalSwap = (Get-WmiObject Win32_PageFile | Select-Object -ExpandProperty FileSize | Measure-Object -Sum).Sum / 1GB
     if ($TotalMem -gt $TotalSwap) {
-        Write-Log ("Make sure you have at least $TotalMem GB swap configured") $LogFile $false
-        Write-Warning ("Make sure you have at least $TotalMem GB swap configured")
+        Log-Message "Make sure you have at least $TotalMem GB swap configured" -Severity Warn
         Start-Sleep -Seconds 5
     }
 }
