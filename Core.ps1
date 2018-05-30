@@ -199,7 +199,7 @@ if ((Get-ConfigVariable "Afterburner") -eq "Enabled") {
 
 #enable EthlargementPill
 
-if (($config.EthlargementPill) -like "Rev*") {
+if (($config.EthlargementPill) -in @('RevA', 'RevB')) {
     Log-Message "Starting EthlargementPill"
     $arg = "-" + $config.EthlargementPill
     $EthPill = Start-Process -FilePath ".\Includes\OhGodAnETHlargementPill-r2.exe" -passthru -Verb RunAs -ArgumentList $arg
