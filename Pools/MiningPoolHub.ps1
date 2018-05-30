@@ -103,8 +103,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
             $enableSSL = ($MiningPoolHub_Algorithm -in @('CryptoNightV7', 'Equihash'))
 
-            if ($MiningPoolHub_Coin -eq 'Electroneum') {$MiningPoolHub_Algorithm = 'CryptoNight'}  # Temporary fix for Cryptonight
-
             $Result += [PSCustomObject]@{
                 Algorithm             = $MiningPoolHub_Algorithm
                 Info                  = $MiningPoolHub_Coin
