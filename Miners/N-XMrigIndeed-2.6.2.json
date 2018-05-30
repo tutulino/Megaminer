@@ -1,7 +1,7 @@
 {
     "Path": "xmrig-nvidia.exe",
-    "Uri": "https://github.com/xmrig/xmrig-nvidia/releases/download/v2.6.1/xmrig-nvidia-2.6.1-cuda9-win64.zip",
-    "SHA256": "4bf8380367438cbc51b2c2ca8a2abc06f3deb06310150ced4db6a0e87604d087",
+    "Uri": "https://github.com/IndeedMiners/xmrig-nvidia/releases/download/v2.6.2/XMRig-NVIDIA-2.6.2-CUDA9-0.7-dev-fee-V7-CN-Heavy-IPBC-Win64.zip",
+    "SHA256": "2115f08d352e01ec36d4832f6a7ebf1ca090b117f38c92b6ff8710268fa482b5",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -19,6 +19,7 @@
     "Algorithms": {
         "CryptoLightV7": "-a cryptonight-lite --variant 1",
         "CryptoNightV7": "-a cryptonight --variant 1",
-        "CryptoNightHeavy": "-a cryptonight-heavy"
+        "CryptoNightHeavy": "-a cryptonight-heavy",
+        "CryptoLightIPBC": "-a ipbc"
     }
 }
