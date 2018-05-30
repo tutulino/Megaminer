@@ -58,7 +58,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $PrePools += [PSCustomObject]@{coin = "Ethereum"; algo = "Ethash"; symbol = "ETH"; port = 9999; fee = 0.01; divisor = 1000000; protocol = "stratum+tcp"};
     $PrePools += [PSCustomObject]@{coin = "Zcash"; algo = "Equihash"; symbol = "ZEC"; port = 6666; fee = 0.01; divisor = 1; protocol = "stratum+ssl"};
     $PrePools += [PSCustomObject]@{coin = "Monero"; algo = "CryptoNightV7"; symbol = "XMR"; port = 14444; fee = 0.01; divisor = 1; protocol = "stratum+ssl"};
-    $PrePools += [PSCustomObject]@{coin = "Electroneum"; algo = "CryptoNight"; symbol = "ETN"; port = 13333; fee = 0.02; divisor = 1; protocol = "stratum+ssl"};
+    $PrePools += [PSCustomObject]@{coin = "Electroneum"; algo = "CryptoNightV7"; symbol = "ETN"; port = 13333; fee = 0.02; divisor = 1; protocol = "stratum+ssl"};
 
     $Pools = @() #generate a pool for each location and add API data
     $PrePools | ForEach-Object {
@@ -94,6 +94,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 WalletSymbol          = $_.symbol
                 Fee                   = $_.fee
                 EthStMode             = 0
+                RewardType            = $RewardType
             }
         }
         Start-Sleep -Seconds 1 # Prevent API Saturation
