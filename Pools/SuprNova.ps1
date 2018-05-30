@@ -74,7 +74,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "Credits"; algo = "Argon2d250"; symbol = "CRDS"; server = "crds.suprnova.cc"; port = 2771; location = "US"};
     $Pools += [PSCustomObject]@{coin = "Criptoreal"; algo = "Lyra2Z"; symbol = "CRS"; server = "crs.suprnova.cc"; port = 4155; location = "US"};
     $Pools += [PSCustomObject]@{coin = "Dynamic"; algo = "Argon2d500"; symbol = "DYN"; server = "dyn.suprnova.cc"; port = 5960; location = "US"};
-    $Pools += [PSCustomObject]@{coin = "Electroneum"; algo = "CryptoNight"; symbol = "ETN"; server = "etn-stratum.suprnova.cc"; port = 8875; location = "US"};
+    $Pools += [PSCustomObject]@{coin = "Electroneum"; algo = "CryptoNightV7"; symbol = "ETN"; server = "etn-stratum.suprnova.cc"; port = 8875; location = "US"};
     $Pools += [PSCustomObject]@{coin = "Ethereum"; algo = "Ethash"; symbol = "ETH"; server = "eth.suprnova.cc"; port = 5000; location = "US"};
     $Pools += [PSCustomObject]@{coin = "EuropeCoin"; algo = "HOdl"; symbol = "ERC"; server = "erc.suprnova.cc"; port = 7674; location = "US"};
     $Pools += [PSCustomObject]@{coin = "Garlicoin"; algo = "Allium"; symbol = "GRLC"; server = "grlc.suprnova.cc"; port = 8600; location = "US"};
@@ -98,7 +98,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "ZCash"; algo = "Equihash"; symbol = "ZEC"; server = "zec-eu.suprnova.cc"; port = 2142; location = "EU"; portSSL = 2242; serverSSL = "zec.suprnova.cc"; SSL = $true};
     $Pools += [PSCustomObject]@{coin = "ZCash"; algo = "Equihash"; symbol = "ZEC"; server = "zec-us.suprnova.cc"; port = 2142; location = "US"};
     $Pools += [PSCustomObject]@{coin = "ZClassic"; algo = "Equihash"; symbol = "ZCL"; server = "zcl.suprnova.cc"; port = 4042; location = "US"; portSSL = 4142; SSL = $true};
-    $Pools += [PSCustomObject]@{coin = "Zcoin"; algo = "Lyra2Z"; symbol = "XZC"; server = "xzc.suprnova.cc"; port = 1569; location = "US"};
+    $Pools += [PSCustomObject]@{coin = "Zcoin"; algo = "Lyra2z"; symbol = "XZC"; server = "xzc.suprnova.cc"; port = 1569; location = "US"};
     $Pools += [PSCustomObject]@{coin = "ZENCash"; algo = "Equihash"; symbol = "ZEN"; server = "zen.suprnova.cc"; port = 3618; location = "US"; portSSL = 3621; SSL = $true};
     $Pools += [PSCustomObject]@{coin = "Zero"; algo = "Zero"; symbol = "ZER"; server = "zero.suprnova.cc"; port = 6568; location = "US"; walletSymbol = "ZERO"};
 
