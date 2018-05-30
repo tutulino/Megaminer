@@ -10,7 +10,7 @@ param(
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
-$ActiveOnAutomatic24hMode = $false
+$ActiveOnAutomatic24hMode = $true
 $AbbName = 'NP'
 $WalletMode = "WALLET"
 $RewardType = "PPLS"
@@ -63,7 +63,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @() #generate a pool for each location and add API data
     $PrePools | ForEach-Object {
         $RequestW = Invoke-APIRequest -Url $("https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/pool/activeworkers") -Retry 1
-        $RequestP = Invoke-APIRequest -Url $("https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/approximated_earnings/1") -Retry 1 |
+        $RequestP = Invoke-APIRequest -Url $("https://api.nanopool.org/v1/" + $_.symbol.ToLower() + "/approximated_earnings/1000") -Retry 1 |
             Select-Object -ExpandProperty data | Select-Object -ExpandProperty day
 
         $Locations = @()
@@ -75,8 +75,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             $Result += [PSCustomObject]@{
                 Algorithm             = $_.algo
                 Info                  = $_.Coin
-                Price                 = [decimal]$RequestP.bitcoins / $_.Divisor
-                Price24h              = $null
+                Price                 = [decimal]$RequestP.bitcoins / $_.Divisor / 1000
+                Price24h              = [decimal]$RequestP.bitcoins / $_.Divisor / 1000
                 Protocol              = "stratum+tcp" #$_.Protocol
                 Host                  = $loc.server
                 Port                  = $_.Port
