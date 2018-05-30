@@ -159,6 +159,7 @@ if ($MiningMode -ne "FARM MONITORING") {
                 'phi=true&factor[phi_hr]=10&factor[phi_p]=0&' + #PHI
                 'skh=true&factor[skh_hr]=10&factor[skh_p]=0&' + #Skunk
                 'x11gf=true&factor[x11g_hr]=10&factor[x11g_p]=0&' + #X11gost
+                'x16r=true&factor[x16r_hr]=10&factor[x16r_p]=0&' + #X16r
                 'xn=true&factor[xn_hr]=10&factor[xn_p]=0' #Xevan
 
                 'Calling WhatToMine API' | Write-Host
@@ -210,6 +211,7 @@ if ($MiningMode -ne "FARM MONITORING") {
                                 "PHI" { 1000000 }
                                 "Skunk" { 1000000 }
                                 "X16r" { 1000000 }
+                                "X16s" { 1000000 }
                                 "X17" { 1000 }
                                 "Yescrypt" { 1 }
                                 "Zero" { 1 }
