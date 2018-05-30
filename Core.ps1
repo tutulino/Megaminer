@@ -921,17 +921,17 @@ while ($Quit -eq $false) {
             }
         }
 
-        #look for best for next round
+        # look for best for next round
         $Candidates = $ActiveMiners | Where-Object {$_.DeviceGroup.Id -eq $DeviceGroup.Id -and $_.IsValid -and $_.UserName}
 
         ## Select top miner that need Benchmark, or if running in Manual mode, or highest Profit above zero.
         $BestNow = $Candidates.SubMiners |
             Where-Object Status -ne 'Cancelled' |
             ForEach-Object {if ($_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt 0) {$_}} |
-            Sort-Object -Descending NeedBenchmark, Profits, @{Expression = {$ActiveMiners[$_.IdF].Algorithm}; Ascending = $true}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
+            Sort-Object -Descending NeedBenchmark, Profits, HashRate, HashRateDual, @{Expression = {$ActiveMiners[$_.IdF].Algorithm}; Ascending = $true}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
 
-        if ($null -eq $BestNow) {Log-Message "No detected any valid candidate for device group $($DeviceGroup.GroupName)" -Severity Warn; Continue}
+        if ($null -eq $BestNow) {Log-Message "No valid candidate for device group $($DeviceGroup.GroupName)" -Severity Warn; Continue}
 
         $BestNowLogMsg = $(
             "$($ActiveMiners[$BestNow.IdF].Name)/" +
@@ -1499,7 +1499,9 @@ while ($Quit -eq $false) {
             @{expression = "GroupName"; Ascending = $true},
             @{expression = "Status"; Descending = $true},
             @{expression = "NeedBenchmark"; Descending = $true},
-            @{expression = "Profits"; Descending = $true} |
+            @{expression = "Profits"; Descending = $true},
+            @{expression = "HashRate"; Descending = $true},
+            @{expression = "HashRateDual"; Descending = $true} |
                 Format-Table (
                 @{Label = "Algorithm"; Expression = {$_.Algorithms + $(if ($_.AlgoLabel) {"|$($_.AlgoLabel)"})}},
                 @{Label = "Coin"; Expression = {$_.Symbol + $(if ($_.AlgorithmDual) {"_$($_.SymbolDual)"})}},
