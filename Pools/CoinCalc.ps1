@@ -14,7 +14,7 @@ param(
 # . .\..\Include.ps1
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
-$ActiveOnManualMode = $false
+$ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $true
 $ActiveOnAutomatic24hMode = $true
 $WalletMode = "MIXED"
@@ -91,8 +91,8 @@ if ($Querymode -in @("Core", "Menu")) {
                 $Result += [PSCustomObject]@{
                     Info                  = $Pool.Info
                     Algorithm             = $Pool.Algorithm
-                    Price                 = [decimal]($_.rewardsInDay * $_.price_btc / 1000)
-                    Price24h              = [decimal]($_.rewardsInDay * $_.price_btc / $_.currentDifficulty * $_.difficulty24 / 1000)
+                    Price                 = [decimal]($_.rewardsInDay * $_.price_btc / $_.yourHashrate)
+                    Price24h              = [decimal]($_.rewardsInDay * $_.price_btc / $_.currentDifficulty * $_.difficulty24 / $_.yourHashrate)
                     Symbol                = $_.Symbol
                     Host                  = $Pool.Host
                     HostSSL               = $Pool.HostSSL
