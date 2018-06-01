@@ -95,25 +95,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Algo = $Request.$_
         $Pool_Algo = Get-AlgoUnifiedName $Algo.name
 
-        $Divisor = 1000000
-
-        switch ($Pool_Algo) {
-            "Blake2s" {$Divisor *= 1000}
-            "Blakecoin" {$Divisor *= 1000}
-            "Decred" {$Divisor *= 1000}
-            "Equihash" {$Divisor /= 1000}
-            "Quark" {$Divisor *= 1000}
-            "Qubit" {$Divisor *= 1000}
-            "Scrypt" {$Divisor *= 1000}
-            "SHA256" {$Divisor *= 1000}
-            "X11" {$Divisor *= 1000}
-        }
-
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
             Info                  = $Pool_Algo
-            Price                 = [decimal]$Algo.estimate_current / $Divisor
-            Price24h              = [decimal]$Algo.estimate_last24h / $Divisor
+            Price                 = [decimal]$Algo.estimate_current / 1000000 / $Algo.mbtc_mh_factor
+            Price24h              = [decimal]$Algo.estimate_last24h / 1000000 / $Algo.mbtc_mh_factor
             Protocol              = "stratum+tcp"
             Host                  = $MineUrl
             Port                  = $Algo.port
