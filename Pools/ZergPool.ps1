@@ -95,11 +95,13 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Algo = $Request.$_
         $Pool_Algo = Get-AlgoUnifiedName $Algo.name
 
+        $Divisor = 1000000 * $Algo.mbtc_mh_factor
+
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
             Info                  = $Pool_Algo
-            Price                 = [decimal]$Algo.estimate_current / 1000000 / $Algo.mbtc_mh_factor
-            Price24h              = [decimal]$Algo.estimate_last24h / 1000000 / $Algo.mbtc_mh_factor
+            Price                 = [decimal]$Algo.estimate_current / $Divisor
+            Price24h              = [decimal]$Algo.estimate_last24h / $Divisor
             Protocol              = "stratum+tcp"
             Host                  = $Algo.name + "." + $MineUrl
             Port                  = [int]$Algo.port
