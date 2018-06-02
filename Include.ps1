@@ -888,15 +888,13 @@ function ConvertTo-Hash {
         [double]$Hash
     )
 
-    $Return = switch ([math]::truncate([math]::log($Hash, [math]::Pow(1000, 1)))) {
-
-        "-Infinity" {"0 h"}
-        0 {"{0:g4} h" -f ($Hash / [math]::Pow(1000, 0))}
-        1 {"{0:g4} kh" -f ($Hash / [math]::Pow(1000, 1))}
-        2 {"{0:g4} mh" -f ($Hash / [math]::Pow(1000, 2))}
-        3 {"{0:g4} gh" -f ($Hash / [math]::Pow(1000, 3))}
-        4 {"{0:g4} th" -f ($Hash / [math]::Pow(1000, 4))}
-        Default {"{0:g4} ph" -f ($Hash / [math]::Pow(1000, 5))}
+    $Return = switch ([math]::truncate([math]::log($Hash, 1e3))) {
+        1 {"{0:g4} kh" -f ($Hash / 1e3)}
+        2 {"{0:g4} mh" -f ($Hash / 1e6)}
+        3 {"{0:g4} gh" -f ($Hash / 1e9)}
+        4 {"{0:g4} th" -f ($Hash / 1e12)}
+        5 {"{0:g4} ph" -f ($Hash / 1e15)}
+        default {"{0:g4} h" -f ($Hash)}
     }
     $Return
 }
@@ -1435,7 +1433,7 @@ function Clear-Files {
     $Days = "3"
 
     $TargetFolder = ".\Logs"
-    $Extension = "*.txt"
+    $Extension = "*.log"
     $LastWrite = $Now.AddDays( - $Days)
     $Files = Get-Childitem $TargetFolder -Include $Extension -Exclude "empty.txt" -File -Recurse | Where-Object {$_.LastWriteTime -le "$LastWrite"}
     $Files | ForEach-Object {Remove-Item $_.fullname}
