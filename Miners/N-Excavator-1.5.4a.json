@@ -17,7 +17,7 @@
     "Pools": "$(if ($Nicehash){$true}else{$false})",
     "Algorithms": {
         "Blake2s": "blake2s",
-        "CryptonightV7": "cryptonightv7",
+        "CryptonightV7": "cryptonightV7",
         "Equihash": "equihash",
         "Ethash": "daggerhashimoto",
         "Keccak": "keccak",
