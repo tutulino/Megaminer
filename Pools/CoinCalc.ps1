@@ -62,7 +62,7 @@ if ($Querymode -in @("Core", "Menu")) {
     # $Response = Get-Content .\WIP\CoinCalculators.json | ConvertFrom-Json
     $Response = Invoke-APIRequest -Url $Url -Age 30     ### Requests limited to 100 per day from a single IP
     if (-not $Response) {
-        Write-Error $Name 'API NOT RESPONDING...ABORTING'
+        Write-Warning "$Name API NOT RESPONDING...ABORTING"
         Exit
     }
     $Response | ForEach-Object {

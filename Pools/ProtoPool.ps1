@@ -68,7 +68,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Request = Invoke-APIRequest -Url $($ApiUrl + "/status") -Retry 3
     $RequestCurrencies = Invoke-APIRequest -Url $($ApiUrl + "/currencies") -Retry 3
     if (!$Request -or !$RequestCurrencies) {
-        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+        Write-Warning "$Name API NOT RESPONDING...ABORTING"
         Exit
     }
 

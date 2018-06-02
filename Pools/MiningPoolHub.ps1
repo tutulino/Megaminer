@@ -70,14 +70,14 @@ if ($Querymode -eq "SPEED") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$UserName) {
-        Write-Host "$Name UserName not defined in config.ini"
+        Write-Warning "$Name UserName not defined in config.ini"
         Exit
     }
 
     $MiningPoolHub_Request = Invoke-APIRequest -Url "https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics&$(Get-Date -Format "yyyy-MM-dd_HH-mm")" -Retry 3
 
     if (!$MiningPoolHub_Request) {
-        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+        Write-Warning "$Name API NOT RESPONDING...ABORTING"
         Exit
     }
 

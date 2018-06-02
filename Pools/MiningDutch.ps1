@@ -32,7 +32,7 @@ if ($Querymode -eq "info") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$UserName) {
-        Write-Host "$Name UserName not defined in config.ini"
+        Write-Warning "$Name UserName not defined in config.ini"
         Exit
     }
 

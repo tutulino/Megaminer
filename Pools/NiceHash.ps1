@@ -70,7 +70,7 @@ if ($Querymode -eq "wallet") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$CoinsWallets.BTC_NICE -and !$CoinsWallets.BTC) {
-        Write-Host "$Name BTC or BTC_NICE wallets not defined in config.ini"
+        Write-Warning "$Name BTC or BTC_NICE wallets not defined in config.ini"
         Exit
     }
 
@@ -78,7 +78,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Select-Object -expand result | Select-Object -expand simplemultialgo
 
     if (!$Request) {
-        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+        Write-Warning "$Name API NOT RESPONDING...ABORTING"
         Exit
     }
 

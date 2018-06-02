@@ -68,7 +68,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Request = Invoke-APIRequest -Url $($ApiUrl + "/status") -Retry 3
     $RequestCurrencies = Invoke-APIRequest -Url $($ApiUrl + "/currencies") -Retry 3
     if (!$Request -or !$RequestCurrencies) {
-        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+        Write-Warning "$Name API NOT RESPONDING...ABORTING"
         Exit
     }
 
@@ -78,11 +78,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Currency -notin @('BTC', 'LTC') -and
         !($RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object { $_ -eq $Currency })
     ) {
-        Write-Host "$Name $Currency may not be supported for payment" -ForegroundColor Yellow
+        Write-Warning "$Name $Currency may not be supported for payment"
     }
 
     if (!$CoinsWallets.$Currency) {
-        Write-Host "$Name $Currency wallet not defined in config.ini"
+        Write-Warning "$Name $Currency wallet not defined in config.ini"
         Exit
     }
 

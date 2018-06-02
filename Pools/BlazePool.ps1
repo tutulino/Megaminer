@@ -67,13 +67,13 @@ if ($Querymode -eq "wallet") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     if (!$CoinsWallets.BTC) {
-        Write-Host "$Name BTC wallet not defined in config.ini"
+        Write-Warning "$Name BTC wallet not defined in config.ini"
         Exit
     }
 
     $Request = Invoke-APIRequest -Url $($ApiUrl + "/status") -Retry 3
     if (!$Request) {
-        Write-Host $Name 'API NOT RESPONDING...ABORTING'
+        Write-Warning "$Name API NOT RESPONDING...ABORTING"
         Exit
     }
 
@@ -88,20 +88,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Algo = $Request.$_
         $Pool_Algo = Get-AlgoUnifiedName $Algo.name
 
-        $Divisor = 1000000
-
-        switch ($Pool_Algo) {
-            "Blake2s" {$Divisor *= 1000}
-            "Blakecoin" {$Divisor *= 1000}
-            "Decred" {$Divisor *= 1000}
-            "Keccak" {$Divisor *= 1000}
-            "Quark" {$Divisor *= 1000}
-            "Qubit" {$Divisor *= 1000}
-            "Scrypt" {$Divisor *= 1000}
-            "SHA256" {$Divisor *= 1000000}
-            "X11" {$Divisor *= 1000}
-            "Yescrypt" {$Divisor /= 1000}
-        }
+        $Divisor = 1000000 * $Algo.mbtc_mh_factor
 
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
