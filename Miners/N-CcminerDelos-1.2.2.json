@@ -1,0 +1,29 @@
+{
+    "Path": "ccminer.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/DelosMiner1.2.2-x86-cu92.zip",
+    "SHA256": "40697caa6f5c3556c2cc68846afdba261374c95aa9683abfedc2f0d781636dff",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-d #Devices#",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Bitcore": "-a bitcore",
+        "C11": "-a c11",
+        "HMQ1725": "-a hmq1725",
+        "HSR": "-a hrs",
+        "Phi": "-a phi",
+        "Skunk": "-a skunk",
+        "X16r": "-a x16r",
+        "X16s": "-a x16s",
+        "X17": "-a x17"
+    }
+}
