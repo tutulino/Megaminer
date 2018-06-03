@@ -1,7 +1,7 @@
 {
-    "Path": "XMR-AEON-STAK-2.4.7-20180504-win64-1%fee\\xmr-stak.exe",
-    "Uri": "https://github.com/IndeedMiners/xmr-aeon-stak/releases/download/2.4.7/XMR-AEON-STAK-2.4.7-20180504-win64-1.fee.zip",
-    "SHA256": "e848d5cbc3a3092d3f880287ae3372a549c6fb1f37405fad575eaae353794047",
+    "Path": "xmr-stak.exe",
+    "Uri": "https://github.com/IndeedMiners/xmr-aeon-stak/releases/download/2.4.8/XMR-AEON-STAK-2.4.8-20180602-win64-1.fee.zip",
+    "SHA256": "5a440348f381bb6a3cf1577f8b428301cc5bb5d00a7fdcc8b822222cff8e2481",
     "Type": "CPU",
     "Arguments": [
         "$(if ($enableSSL){'-O'}else{'-o'}) #Server#:#Port#",
