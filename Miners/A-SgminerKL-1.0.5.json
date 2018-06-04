@@ -1,7 +1,7 @@
 {
-    "Path": "sgminer-kl-1.0.5-windows\\sgminer.exe",
-    "Uri": "https://github.com/KL0nLutiy/sgminer-kl/releases/download/kl-1.0.5/sgminer-kl-1.0.5-windows.zip",
-    "SHA256": "693688d6870810cc5aff9b65699955da14f6ad7aa7d4bd321950c878d16dcc5a",
+    "Path": "sgsgminer-kl-1.0.5_fix-windows\\sgminer.exee",
+    "Uri": "https://github.com/KL0nLutiy/sgminer-kl/releases/download/kl-1.0.5fix/sgminer-kl-1.0.5_fix-windows.zip",
+    "SHA256": "cdb80d007fa43e3548ab94112ccb111f2bd3ea8458b9377d36c4a822fb5fb8a6",
     "Type": "AMD",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
