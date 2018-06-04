@@ -1,7 +1,7 @@
 {
     "Path": "avermore-windows\\sgminer.exe",
-    "Uri": "https://github.com/brian112358/avermore-miner/releases/download/v1.4/avermore-v1.4-windows.zip",
-    "SHA256": "1c077ef222ffe90143ada3f5f81d94cff76eaaa9b531004cae5754169cbfeedf",
+    "Uri": "https://github.com/brian112358/avermore-miner/releases/download/v1.4.1/avermore-v1.4.1-windows.zip",
+    "SHA256": "aea0f83f90e632668026df377fad6e210df78f571f36f433b7afc2e4adf11f48",
     "Type": "AMD",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
