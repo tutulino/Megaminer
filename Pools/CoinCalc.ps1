@@ -71,7 +71,6 @@ if ($Querymode -in @("Core", "Menu")) {
 
         # CryptoNight algo fixes
         $Algorithm = switch ($_.Name) {
-            'BitTube' {'CryptoLightIPBC'}
             'Stellite' {'CryptoNightXTL'}
             default {$null}
         }
