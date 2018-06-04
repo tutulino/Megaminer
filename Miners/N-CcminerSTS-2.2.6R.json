@@ -1,7 +1,7 @@
 {
-    "Path": "ccminer 2.2.6-Beta\\ccminer-x64.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.5/ccminer.2.2.6-Beta.7z",
-    "SHA256": "eba7412dc81475f842f42e3e13a83cd7eb8802644c2fa7b9d7e10435297d5c63",
+    "Path": "CCMiner 2.2.6R\\ccminer-x64.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/CCMiner.2.2.6R.7z",
+    "SHA256": "d434799b374222d03d7867a20918ba933b7defca8741bfcd125010d929be04b9",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
