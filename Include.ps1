@@ -492,21 +492,6 @@ Function Get-MiningTypes () {
     $Types #return
 }
 
-Function Write-Log ($Message, $LogFile, $SendToScreen) {
-
-    # if (![string]::IsNullOrWhitespace($message)) {
-    #     $M = [string](Get-Date) + "...... " + $Message
-    #     $LogFile.WriteLine($M)
-
-    #     if ($SendToScreen) { $Message | Write-Host -ForegroundColor Green }
-    # }
-    if ($SendToScreen) {
-        Log-Message $Message -Severity Info
-    } else {
-        Log-Message $Message -Severity Debug
-    }
-}
-
 Function Log-Message {
     [CmdletBinding()]
     param(
