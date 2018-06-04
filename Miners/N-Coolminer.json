@@ -1,0 +1,21 @@
+{
+    "Path": "coolMiner-x64.exe",
+    "Uri": "https://github.com/Fedeparma74/Miners/releases/download/1.0/coolMiner-x64.zip",
+    "SHA256": "e1aedfa08bdaa823fd2802660527d23b99b19ada3fdf810ea5609eb233bfa140",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-d #Devices#",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Lyra2z": "-a lyra2z"
+    }
+}
