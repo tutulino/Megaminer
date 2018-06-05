@@ -74,7 +74,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "PascalLite"; algo = "Pascal"; symbol = "PASL"; port = 4009; fee = 0.02}
     $Pools += [PSCustomObject]@{coin = "Pegascoin"; algo = "Ethash"; symbol = "PGC"; port = 1111; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "PURK"; algo = "Keccak"; symbol = "PURK"; port = 2244; fee = 0.01}
+    $Pools += [PSCustomObject]@{coin = "RYOCurrency"; algo = "CryptoNightHeavy"; symbol = "RYO"; port = 5555; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Saronite"; algo = "CryptoNightHeavy"; symbol = "XRN"; port = 5599; fee = 0.01}
+    $Pools += [PSCustomObject]@{coin = "SolaceCoin"; algo = "CryptoNightHeavy"; symbol = "SOLACE"; port = 5588; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Sumokoin"; algo = "CryptoNightHeavy"; symbol = "SUMO"; port = 5555; fee = 0.01}
 
     $Pools | ForEach-Object {
