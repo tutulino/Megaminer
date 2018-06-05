@@ -60,7 +60,7 @@ if ($Querymode -in @("Core", "Menu")) {
 
     $Url = "https://www.coincalculators.io/api/allcoins.aspx?hashrate=1000"
     # $Response = Get-Content .\WIP\CoinCalculators.json | ConvertFrom-Json
-    $Response = Invoke-APIRequest -Url $Url -Age 30     ### Requests limited to 100 per day from a single IP
+    $Response = Invoke-APIRequest -Url $Url -Age 10     ### Requests limited to 500 per day from a single IP
     if (-not $Response) {
         Write-Warning "$Name API NOT RESPONDING...ABORTING"
         Exit
