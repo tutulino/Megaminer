@@ -14,7 +14,7 @@
     "APIPort": 4068,
     "Algorithms": {
         "Allium": "-a allium",
-        "Lyra2v2": "-a lyra2rev2",
+        "Lyra2v2": "-a lyra2v2",
         "Lyra2z": "-a lyra2z",
         "NeoScrypt": "-a neoscrypt",
         "Phi": "-a phi1612"
