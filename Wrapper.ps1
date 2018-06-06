@@ -30,14 +30,13 @@ do {
     $PowerShell.Streams.Verbose.ReadAll() | ForEach-Object {
         $Line = $_
 
-        if ($Line -like "*total speed:*" -or
-            $Line -like "*accepted:*" -or
+        if ($Line -like "*accepted:*" -or
             $Line -like "*Mining on #*" -or
             $Line -like "*diff*yes!*" -or
             $Line -like ">*Rej*" -or
             $Line -like "*overall*" -or
             $Line -like "*Average*" -or
-            $Line -like "*Total:*"
+            $Line -like "*Total*"
         ) {
             $Line = $Line  `
                 -replace "\smh/s", "mh/s" `
