@@ -58,7 +58,7 @@ if ($Querymode -in @("Core", "Menu")) {
         $PoolsTmp | Where-Object {[string]::IsNullOrEmpty($_.PoolWorkers) -or $_.PoolWorkers -ge (Get-ConfigVariable "MinWorkers")}
     }
 
-    $Url = "https://www.coincalculators.io/api/allcoins.aspx?hashrate=1000"
+    $Url = "https://www.coincalculators.io/api/allcoins.aspx?hashrate=1000&difficultytime=0"
     # $Response = Get-Content .\WIP\CoinCalculators.json | ConvertFrom-Json
     $Response = Invoke-APIRequest -Url $Url -Age 10     ### Requests limited to 500 per day from a single IP
     if (-not $Response) {

@@ -6,8 +6,7 @@
     "GenerateConfigFile": "#GroupName#-#Algorithm#.toml",
     "PatternConfigFile": ".\\Patterns\\ProspectorPattern.txt",
     "Arguments": "-c #GroupName#-#Algorithm#.toml",
-    "API": "prospector",
-    "APIPort": 42000,
+    "API": "$(if (($DeviceGroups | Where-Object Type -ne 'CPU').Count -gt 1) {'wrapper'} else {'prospector'})",
     "PrelaunchCommand": "",
     "Fee": 0.01,
     "Algorithms": {
