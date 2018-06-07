@@ -21,6 +21,7 @@
         "C11": "-a c11",
         "HMQ1725": "-a hmq1725",
         "HSR": "-a hsr",
+		"Lyra2v2": "-a lyra2v2",
         "Phi": "-a phi",
         "Skunk": "-a skunk",
         "X16r": "-a x16r",
