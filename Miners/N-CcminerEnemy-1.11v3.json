@@ -1,7 +1,7 @@
 {
     "Path": "z-enemy.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/z-enemy.1-11-x32-aerium.zip",
-    "SHA256": "dcf23273d44028633b5e76a5a8490a37e885560911ad665c61860fb5fd4be7ff",
+    "Uri": "https://github.com/Fedeparma74/Miners/releases/download/1.0/z-enemy.1-11-public-final_v3.zip",
+    "SHA256": "a855d56792a4c7ed98a04667afc81c3e605d993e79035dfaf9e46adc18a78cc8",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",

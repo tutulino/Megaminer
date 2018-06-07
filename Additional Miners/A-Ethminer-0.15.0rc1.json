@@ -1,7 +1,7 @@
 {
     "Path": "bin\\ethminer.exe",
-    "Uri": "https://github.com/ethereum-mining/ethminer/releases/download/v0.15.0.dev11/ethminer-0.15.0.dev11-Windows.zip",
-    "SHA256": "0485e357c3923bd5b662ceea52eae91ad4c034767432e81925b7ce6696bdb03e",
+    "Uri": "https://github.com/ethereum-mining/ethminer/releases/download/v0.15.0rc1/ethminer-0.15.0rc1-Windows.zip",
+    "SHA256": "79e577fd51a022f1f41acf0aa0931789ea0ff9f6d7c419e2924ac0dacaf951aa",
     "Type": "AMD",
     "Arguments": [
         "-P stratum2+tcp://#Login#:#Password#@#Server#:#Port#",

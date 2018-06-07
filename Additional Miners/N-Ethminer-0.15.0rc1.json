@@ -1,0 +1,18 @@
+{
+    "Path": "bin\\ethminer.exe",
+    "Uri": "https://github.com/ethereum-mining/ethminer/releases/download/v0.15.0rc1/ethminer-0.15.0rc1-Windows.zip",
+    "SHA256": "79e577fd51a022f1f41acf0aa0931789ea0ff9f6d7c419e2924ac0dacaf951aa",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-P stratum2+tcp://#Login#:#Password#@#Server#:#Port#",
+        "--cuda",
+        "--cuda-devices #DevicesETHMode#",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "Claymore",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Ethash": ""
+    }
+}

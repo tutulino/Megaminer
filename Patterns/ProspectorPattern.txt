@@ -1,5 +1,6 @@
 [general]
-gpu-coin = "#AlgorithmParameters#"
+gpu-algo = "#AlgorithmParameters#"
+api-port = #APIPort#
 
 [pools.#AlgorithmParameters#]
 url = "#Protocol#://#Server#:#Port#"

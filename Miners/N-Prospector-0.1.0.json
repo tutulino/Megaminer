@@ -1,15 +1,18 @@
 {
     "Path": "prospector.exe",
-    "Uri": "https://github.com/semtexzv/Prospector/releases/download/0.0.13-ALPHA/prospector-0.0.13-ALPHA-win64.zip",
-    "SHA256": "6214f095c24997c03c8ccf2394a32385ce40f29e646ee5f6038cd0f3ba49a41c",
-    "Type": "AMD",
+    "Uri": "https://github.com/semtexzv/Prospector/releases/download/0.1.0/prospector-0.1.0-win64.zip",
+    "SHA256": "d3fb02c15026f737be219fa049dd265fe21dd4de66a5154144122b4ac4f0515a",
+    "Type": "NVIDIA",
     "GenerateConfigFile": "#GroupName#-#Algorithm#.toml",
     "PatternConfigFile": ".\\Patterns\\ProspectorPattern.txt",
     "Arguments": "-c #GroupName#-#Algorithm#.toml",
     "API": "$(if (($DeviceGroups | Where-Object Type -ne 'CPU').Count -gt 1) {'wrapper'} else {'prospector'})",
+    "APIPort": 4068,
     "PrelaunchCommand": "",
     "Fee": 0.01,
     "Algorithms": {
-        "Skunk": "sigt"
+		"CryptoNightV7": "cryptonight",
+		"Ethash": "ethash",
+        "Skunk": "skunkhash"
     }
 }
