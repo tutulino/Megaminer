@@ -771,8 +771,7 @@ function Get-LiveHashRate {
                 $Request = Invoke-HTTPRequest $Server $port "/api/v0/rates" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-					$NumberDevices = ($Devices | Measure-Object).count
-                    $HashRate = [double]($Data.rate | Select-Object -last $NumberDevices | Measure-Object -Sum).sum
+                    $HashRate = [double]($Data | Group-Object device | ForEach-Object { $_.Group | Sort-Object time -Descending | Select-Object -First 1 } | Measure-Object -Sum -Property Rate).Sum
                 }
             }
 
