@@ -6,13 +6,12 @@
     "GenerateConfigFile": "#GroupName#-#Algorithm#.toml",
     "PatternConfigFile": ".\\Patterns\\ProspectorPattern.txt",
     "Arguments": "-c #GroupName#-#Algorithm#.toml",
-    "API": "$(if (($DeviceGroups | Where-Object Type -ne 'CPU').Count -gt 1) {'wrapper'} else {'prospector'})",
+    "API": "prospector",
     "APIPort": 4028,
-    "PrelaunchCommand": "",
     "Fee": 0.01,
     "Algorithms": {
-		"CryptoNightV7": "cryptonight",
-		"Ethash": "ethash",
+        "CryptoNightV7": "cryptonight",
+        "Ethash": "ethash",
         "Skunk": "skunkhash"
     }
 }
