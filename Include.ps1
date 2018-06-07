@@ -768,10 +768,11 @@ function Get-LiveHashRate {
             }
 
             "prospector" {
-                $Request = Invoke-HTTPRequest $Server 42000 "/api/v0/hashrates" 5
+                $Request = Invoke-HTTPRequest $Server $port "/api/v0/rates" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [double]($Data.rate | Measure-Object -Sum).sum
+					$NumberDevices = ($Devices | Measure-Object).count
+                    $HashRate = [double]($Data.rate | Select-Object -last $NumberDevices | Measure-Object -Sum).sum
                 }
             }
 
