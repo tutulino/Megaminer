@@ -1,7 +1,7 @@
 {
     "Path": "coolMiner-x64.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/coolMiner-x64-v1-2.7z",
-    "SHA256": "a9b9ddd0f2eb380d036fe38ebcf05a1f3dd0cd5789cb2f83c6e7486e6e5bd951",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/coolMiner-x64-v1-3.7z",
+    "SHA256": "e399f2451ba994e61ac189f9b11392da647c3678128cefe1e7aea15088b5aae2",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
