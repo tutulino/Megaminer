@@ -28,7 +28,7 @@ if ($Querymode -eq "info") {
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools = @()
 
-      $Pools += [PSCustomObject]@{coin = "Aeon"; algo = "CryptoLight"; symbol = "AEON"; server = "mine.aeon-pool.com"; port = 5555; fee = 0.01; user = $CoinsWallets.AEON}
+      $Pools += [PSCustomObject]@{coin = "Aeon"; algo = "CryptoLightV7"; symbol = "AEON"; server = "mine.aeon-pool.com"; port = 5555; fee = 0.01; user = $CoinsWallets.AEON}
       $Pools += [PSCustomObject]@{coin = "HPPcoin"; algo = "Lyra2h"; symbol = "HPP"; server = "pool.hppcoin.com"; port = 3008; fee = 0.02; user = "$UserName.#WorkerName#"}
       # $Pools += [PSCustomObject]@{coin = "HPPcoin"; algo = "Lyra2h"; symbol = "HPP"; server = "hpp.jkpool.com"; port = 3003; fee = 0.03; user = "$UserName.#WorkerName#"}
       # $Pools += [PSCustomObject]@{coin = "HPPcoin"; algo = "Lyra2h"; symbol = "HPP"; server = "sg-mine.idcray.com"; port = 10111; fee = 0.01; user = "$UserName.#WorkerName#"}
