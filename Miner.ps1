@@ -206,7 +206,7 @@ if ($MiningMode -ne "FARM MONITORING") {
                                 "Keccak" { 1000000 }
                                 "KeccakC" { 1000000 }
                                 "Lyra2v2" {1000}
-                                "Lyra2z" { 1000 }
+                                "Lyra2z" { 1000000 }
                                 "NeoScrypt" { 1000 }
                                 "PHI" { 1000000 }
                                 "Skunk" { 1000000 }
