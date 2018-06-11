@@ -15,7 +15,7 @@
     ],
     "API": "XMRig",
     "APIPort": 4068,
-    "Fee": 0.01,
+    "Fee": 0.007,
     "Algorithms": {
         "CryptoLightV7": "-a cryptonight-lite --variant 1",
         "CryptoNightV7": "-a cryptonight --variant 1",
