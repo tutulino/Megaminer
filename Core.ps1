@@ -990,12 +990,14 @@ while ($Quit -eq $false) {
                 $BestLast.Id -ne $BestNow.Id
             ) {
                 #Must launch other SubMiner
-                if ($BestNow.PowerLimit -gt 0) {
+                if ($BestNow.PowerLimit -ne $BestLast.PowerLimit) {
                     if ($abControl) {
                         Set-AfterburnerPowerLimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
                     } else {
-                        if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA') {Set-NvidiaPowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
-                        if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD') {}
+                        switch ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type) {
+                            'NVIDIA' { Set-NvidiaPowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices }
+                            Default {}
+                        }
                     }
                 }
 
@@ -1058,12 +1060,14 @@ while ($Quit -eq $false) {
                 #Start New
                 if ($BestNow) {
 
-                    if ($BestNow.PowerLimit -gt 0) {
+                    if ($BestNow.PowerLimit -ne $BestLast.PowerLimit) {
                         if ($abControl) {
                             Set-AfterburnerPowerLimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
                         } else {
-                            if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'NVIDIA') {Set-NvidiaPowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices}
-                            if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq 'AMD') {}
+                            switch ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type) {
+                                'NVIDIA' { Set-NvidiaPowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices }
+                                Default {}
+                            }
                         }
                     }
 
@@ -1410,7 +1414,7 @@ while ($Quit -eq $false) {
             ForEach-Object {
             [PSCustomObject]@{
                 GroupName   = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
-                PwLim       = if ($_.PowerLimit -gt 0) {$_.PowerLimit} else {""}
+                PwLim       = if ($_.PowerLimit -ne 0) {$_.PowerLimit} else {""}
                 LocalSpeed  = "$(ConvertTo-Hash $_.SpeedLive)" + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"/$(ConvertTo-Hash $_.SpeedLiveDual)"})
                 mbtcDay     = ((($_.RevenueLive + $_.RevenueLiveDual) * 1000).tostring("n5"))
                 RevDay      = ((($_.RevenueLive + $_.RevenueLiveDual) * $localBTCvalue ).tostring("n2"))
@@ -1537,7 +1541,7 @@ while ($Quit -eq $false) {
                 @{Label = "Coin"; Expression = {$_.Symbol + $(if ($_.AlgorithmDual) {"_$($_.SymbolDual)"})}},
                 @{Label = "Miner"; Expression = {$_.Name}},
                 @{Label = "StatsSpeed"; Expression = {if ($_.SubMiner.NeedBenchmark) {"Benchmarking"} else {"$(ConvertTo-Hash $_.SubMiner.HashRate)" + $(if ($_.AlgorithmDual) {"/$(ConvertTo-Hash $_.SubMiner.HashRateDual)"})}}; Align = 'right'},
-                @{Label = "PwLim"; Expression = {if ($_.SubMiner.PowerLimit -gt 0) {$_.SubMiner.PowerLimit}}; align = 'right'},
+                @{Label = "PwLim"; Expression = {if ($_.SubMiner.PowerLimit -ne 0) {$_.SubMiner.PowerLimit}}; align = 'right'},
                 @{Label = "Watt"; Expression = {if ($_.SubMiner.PowerAvg -gt 0) {$_.SubMiner.PowerAvg.tostring("n0")} else {$null}}; Align = 'right'},
                 @{Label = "$LocalCurrency/W"; Expression = {if ($_.SubMiner.PowerAvg -gt 0) {($_.SubMiner.Profits / $_.SubMiner.PowerAvg).tostring("n4")} else {$null} }; Align = 'right'},
                 @{Label = "mBTC/Day"; Expression = {if ($_.SubMiner.Revenue) {((($_.SubMiner.Revenue + $_.SubMiner.RevenueDual) * 1000).tostring("n5"))} else {$null}} ; Align = 'right'},

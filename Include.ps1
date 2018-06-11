@@ -162,14 +162,14 @@ function Get-DevicesInformation ($Types) {
                     Group             = $Group
                     AdapterId         = [int]$_.Index
                     Name              = $_.Device
-                    Utilization       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?usage").Data
-                    UtilizationMem    = [int]$($mem = $CardData | Where-Object SrcName -match "^(GPU\d* )?memory usage"; if ($mem.MaxLimit) {$mem.Data / $mem.MaxLimit * 100})
-                    Clock             = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?core clock").Data
-                    ClockMem          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?memory clock").Data
-                    FanSpeed          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?fan speed").Data
-                    Temperature       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?temperature").Data
-                    PowerDraw         = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?power").Data
-                    PowerLimitPercent = [int]$($abControl.GpuEntries[$_.Index].PowerLimitCur + 100)
+                    Utilization       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?usage$").Data
+                    UtilizationMem    = [int]$($mem = $CardData | Where-Object SrcName -match "^(GPU\d* )?memory usage$"; if ($mem.MaxLimit) {$mem.Data / $mem.MaxLimit * 100})
+                    Clock             = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?core clock$").Data
+                    ClockMem          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?memory clock$").Data
+                    FanSpeed          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?fan speed$").Data
+                    Temperature       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?temperature$").Data
+                    PowerDraw         = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?power$").Data
+                    PowerLimitPercent = [int]$($abControl.GpuEntries[$_.Index].PowerLimitCur)
                 }
                 $Devices += [PSCustomObject]$Card
                 $DeviceId++
