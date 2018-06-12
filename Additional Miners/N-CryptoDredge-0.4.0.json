@@ -1,7 +1,7 @@
 {
     "Path": "CryptoDredge.exe",
-    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.2.1/CryptoDredge_0.2.1.zip",
-    "SHA256": "63a889b7f2826f53b3d3b582b478ad7e93ffbfcee175b75493cb2e6d86620d5b",
+    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.4.0/CryptoDredge_0.4.0.zip",
+    "SHA256": "d85e1cee5e87b065d1f43cf4a6db35b4517ca534af983dc11d495c516114a490",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -17,6 +17,8 @@
         "Lyra2v2": "-a lyra2v2",
         "Lyra2z": "-a lyra2z",
         "NeoScrypt": "-a neoscrypt",
-        "Phi": "-a phi1612"
+        "Phi": "-a phi1612",
+        "Phi2": "-a phi2",
+        "Skunk": "-a skunkhash"
     }
 }
