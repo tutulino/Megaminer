@@ -1,7 +1,7 @@
 {
     "Path": "ccminer.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/DelosMiner1.3.0-x86-cu91.7z",
-    "SHA256": "f7aa2edc8aa93ba9fb0a34ddb42f5405bde3920f48f16b6683bd58aedbf9c39a",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/DelosMiner1.3.0a-x86-cu91.7z",
+    "SHA256": "c6be5cbacfbc4c970aa0aa175075f073f05c6c818f45b085bf847b3b9a6ef022",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
