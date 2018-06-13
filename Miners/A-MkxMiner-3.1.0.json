@@ -17,6 +17,6 @@
     "SSL": true,
     "Algorithms": {
         "Lyra2v2": "-I 23",
-        "#Lyra2v2|asm": "-I 23 --asm"
+        "_Lyra2v2|asm": "-I 23 --asm"
     }
 }
