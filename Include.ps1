@@ -1215,10 +1215,11 @@ function Set-WindowSize ([int]$Width, [int]$Height) {
 
 function Get-AlgoUnifiedName ([string]$Algo) {
 
-    if (![string]::IsNullOrEmpty($Algo)) {
+    $Algo = $Algo -ireplace '[^a-z0-9]'
+    if ($Algo) {
         $Algos = Get-Content -Path ".\Includes\algorithms.json" | ConvertFrom-Json
-        if ($null -ne $Algos.($Algo.Trim())) { $Algos.($Algo.Trim()) }
-        else { $Algo.Trim() }
+        if ($Algos.$Algo) { $Algos.$Algo }
+        else { $Algo }
     }
 }
 
