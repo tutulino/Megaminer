@@ -1,7 +1,7 @@
 ﻿{
     "Path": "xmrig.exe",
-    "Uri": "https://github.com/xmrig/xmrig/releases/download/v2.6.2/xmrig-2.6.2-gcc-win64.zip",
-    "SHA256": "0cc97db6790970d8729a08f174f4d10702d629a011b64b354292ed12c4a55588",
+    "Uri": "https://github.com/xmrig/xmrig/releases/download/v2.6.3/xmrig-2.6.3-gcc-win64.zip",
+    "SHA256": "05cee5014b96dd8257048bd2fcb8d113d9b8703de6568db9d513bb90e78a11ff",
     "Type": "CPU",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -16,10 +16,12 @@
     "APIPort": 4048,
     "Fee": 0.01,
     "Algorithms": {
-        "CryptoLightV7": "-a cryptonight-lite --variant 1",
-        "CryptoNightV7": "-a cryptonight --variant 1",
-        "CryptoNightHeavy": "-a cryptonight-heavy",
         "CryptoLightIBPC": "-a cryptonight-lite --variant ipbc",
+        "CryptoLightV7": "-a cryptonight-lite --variant 1",
+        "CryptoNightFast": "-a cryptonight --variant fast",
+        "CryptoNightHaven": "-a cryptonight-heavy --variant xhv",
+        "CryptoNightHeavy": "-a cryptonight-heavy",
+        "CryptoNightV7": "-a cryptonight --variant 1",
         "CryptoNightXTL": "-a cryptonight --variant xtl"
     }
 }
