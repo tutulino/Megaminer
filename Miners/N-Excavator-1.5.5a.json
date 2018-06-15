@@ -1,7 +1,7 @@
 {
     "Path": "excavator\\excavator.exe",
-    "Uri": "https://github.com/nicehash/excavator/releases/download/v1.5.4a/excavator_v1.5.4a_NVIDIA_Win64.zip",
-    "SHA256": "6e4299835df3856de9287ba7d43d4343931180aaa8730a24ab52fa45fb7a6cb0",
+    "Uri": "https://github.com/nicehash/excavator/releases/download/v1.5.5a/excavator_v1.5.5a_NVIDIA_Win64.zip",
+    "SHA256": "92d59a24401e962ad27eca8298a712c6599ed03323d843927e77eac46e67d84d",
     "Type": "NVIDIA",
     "PrerequisitePath": "$env:SystemRoot\\System32\\msvcr120.dll",
     "PrerequisiteURI": "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe",
