@@ -3,6 +3,8 @@
     "Uri": "https://github.com/yuzi-co/sgminer-kl-x16r/releases/download/1.0/sgminer-4ward-x16-1.0.7z",
     "SHA256": "1046a8165cb1a86fa2f83a0cf78df8069315d88f81595774cbc644cf8dd08007",
     "Type": "AMD",
+    "PrerequisitePath": "$env:SystemRoot\\System32\\msvcr100.dll",
+    "PrerequisiteURI": "https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
         "-u #Login#",
