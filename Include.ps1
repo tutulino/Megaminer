@@ -2,6 +2,7 @@ Add-Type -Path .\Includes\OpenCL\*.cs
 
 function Set-NvidiaPowerLimit ([int]$PowerLimitPercent, [string]$Devices) {
 
+    if ($PowerLimitPercent -eq 0) { return }
     foreach ($Device in @($Devices -split ',')) {
 
         $Command = '.\includes\nvidia-smi.exe'

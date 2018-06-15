@@ -982,44 +982,45 @@ while ($Quit -eq $false) {
             $BestLast.Status -in @("PendingCancellation", "Cancelled") -or
             -not $BestNow
         ) {
-            #something changes or some miner error
+            ### something changes or some miner error
 
+            # if (
+            #     $false -and ### Because not all miners live nicely with powerlimit changes during run
+            #     $BestLast.IdF -eq $BestNow.IdF -and
+            #     $BestLast.Id -ne $BestNow.Id
+            # ) {
+            #     #Must launch other SubMiner
+            #     if ($BestNow.PowerLimit -ne $BestLast.PowerLimit) {
+            #         if ($abControl) {
+            #             Set-AfterburnerPowerLimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
+            #         } elseif ($BestNow.PowerLimit -ne 0) {
+            #             switch ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type) {
+            #                 'NVIDIA' { Set-NvidiaPowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices }
+            #                 Default {}
+            #             }
+            #         }
+            #     }
+
+            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
+            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = "Running"
+            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.LastTimeActive = Get-Date
+            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.LastTimeActive = Get-Date
+            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.StatsTime = Get-Date
+            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.ActivatedTimes++
+            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.ActivatedTimes++
+            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].TimeSinceStartInterval = [TimeSpan]0
+
+            #     $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Best = $false
+            #     Switch ($BestLast.Status) {
+            #         "Running" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Idle"}
+            #         "PendingCancellation" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Failed"}
+            #         "Cancelled" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Cancelled"}
+            #     }
+
+            #     Log-Message "$BestNowLogMsg - Marked as best, changed Power Limit from $($BestLast.PowerLimit)"
+
+            # } else
             if (
-                $false -and ### Because not all miners live nicely with powerlimit changes during run
-                $BestLast.IdF -eq $BestNow.IdF -and
-                $BestLast.Id -ne $BestNow.Id
-            ) {
-                #Must launch other SubMiner
-                if ($BestNow.PowerLimit -ne $BestLast.PowerLimit) {
-                    if ($abControl) {
-                        Set-AfterburnerPowerLimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
-                    } elseif ($BestNow.PowerLimit -ne 0) {
-                        switch ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type) {
-                            'NVIDIA' { Set-NvidiaPowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices }
-                            Default {}
-                        }
-                    }
-                }
-
-                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
-                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = "Running"
-                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.LastTimeActive = Get-Date
-                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.LastTimeActive = Get-Date
-                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.StatsTime = Get-Date
-                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.ActivatedTimes++
-                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.ActivatedTimes++
-                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].TimeSinceStartInterval = [TimeSpan]0
-
-                $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Best = $false
-                Switch ($BestLast.Status) {
-                    "Running" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Idle"}
-                    "PendingCancellation" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Failed"}
-                    "Cancelled" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Cancelled"}
-                }
-
-                Log-Message "$BestNowLogMsg - Marked as best, changed Power Limit from $($BestLast.PowerLimit)"
-
-            } elseif (
                 $ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))) -or
                 $BestNow.NeedBenchmark -or
                 $BestLast.Status -in @("Running", "PendingCancellation", "Cancelled") -or
@@ -1063,7 +1064,7 @@ while ($Quit -eq $false) {
                     if ($BestNow.PowerLimit -ne $BestLast.PowerLimit) {
                         if ($abControl) {
                             Set-AfterburnerPowerLimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
-                        } else {
+                        } elseif ($BestNow.PowerLimit -ne 0) {
                             switch ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type) {
                                 'NVIDIA' { Set-NvidiaPowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices }
                                 Default {}
