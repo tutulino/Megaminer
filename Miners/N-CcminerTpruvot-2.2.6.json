@@ -1,7 +1,7 @@
 {
     "Path": "ccminer-x64.exe",
-    "Uri": "https://github.com/tpruvot/ccminer/releases/download/2.2.5-tpruvot/ccminer-x64-2.2.5-cuda9.7z",
-    "SHA256": "161dfe46a270ae97224c50ad6c98bbb83c63fcfcf19c1adc6745748aad6a2c4a",
+    "Uri": "https://github.com/tpruvot/ccminer/releases/download/2.2.6-tpruvot/ccminer-x64-2.2.6-phi2-cuda9.7z",
+    "SHA256": "f41551d847298d5f60d5fe9ba86dcda4a689916ac86df56e12eddf32914ca36c",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -16,11 +16,11 @@
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {
+        "Allium": "-a allium",
         "Bitcore": "-a bitcore",
         "Blake2s": "-a blake2s",
         "C11": "-a c11",
         "CryptoLight": "-a cryptolight",
-        "Equihash": "-a equihash",
         "HMQ1725": "-a hmq1725",
         "JHA": "-a jha",
         "Keccak": "-a keccak",
@@ -28,7 +28,8 @@
         "Lyra2v2": "-a lyra2v2",
         "Lyra2z": "-a lyra2z",
         "NeoScrypt": "-a neoscrypt",
-        "PHI": "-a phi",
+        "Phi": "-a phi",
+        "Phi2": "-a phi2",
         "SHA256t": "-a sha256t",
         "Skunk": "-a skunk",
         "Timetravel": "-a timetravel",
