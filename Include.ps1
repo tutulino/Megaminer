@@ -6,17 +6,17 @@ function Set-NvidiaPowerLimit ([int]$PowerLimitPercent, [string]$Devices) {
 
         $Command = '.\includes\nvidia-smi.exe'
         $Arguments = @(
-            '-i ' + $Device
-            '--query-gpu=power.default_limit'
-            '--format=csv,noheader'
+            "-i $Device"
+            "--query-gpu=power.default_limit"
+            "--format=csv,noheader"
         )
-        $PowerDefaultLimit = [int]((& $Command $Arguments) -replace 'W', '')
+        $PowerDefaultLimit = [int](((& $Command $Arguments) -replace 'W').Trim())
 
         #powerlimit change must run in admin mode
         $newProcess = New-Object System.Diagnostics.ProcessStartInfo ".\includes\nvidia-smi.exe"
         $newProcess.Verb = "runas"
         #$newProcess.UseShellExecute = $false
-        $newProcess.Arguments = "-i " + $Device + " -pl " + [Math]::Floor([int]($PowerDefaultLimit -replace ' W', '') * ($PowerLimitPercent / 100))
+        $newProcess.Arguments = "-i $Device -pl $([Math]::Floor([int]($PowerDefaultLimit -replace ' W', '') * ($PowerLimitPercent / 100)))"
         [System.Diagnostics.Process]::Start($newProcess) | Out-Null
     }
     Remove-Variable newprocess

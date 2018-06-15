@@ -993,7 +993,7 @@ while ($Quit -eq $false) {
                 if ($BestNow.PowerLimit -ne $BestLast.PowerLimit) {
                     if ($abControl) {
                         Set-AfterburnerPowerLimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
-                    } else {
+                    } elseif ($BestNow.PowerLimit -ne 0) {
                         switch ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type) {
                             'NVIDIA' { Set-NvidiaPowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices }
                             Default {}
