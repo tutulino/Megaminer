@@ -255,7 +255,7 @@ function Get-DevicesInformation ($Types) {
                         Utilization       = [int]$AdlResultSplit[5]
                         Temperature       = [int]$AdlResultSplit[6] / 1000
                         PowerLimitPercent = 100 + [int]$AdlResultSplit[7]
-                        PowerDraw         = $AmdCardsTDP.$($AdlResultSplit[8].Trim()) * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100)
+                        PowerDraw         = $AmdCardsTDP.$CardName * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100)
                         Name              = $CardName
                         UDID              = $AdlResultSplit[9].Trim()
                     }
