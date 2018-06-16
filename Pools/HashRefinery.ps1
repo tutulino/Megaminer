@@ -95,13 +95,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Algo = $Request.$_
         $Pool_Algo = Get-AlgoUnifiedName $Algo.name
 
-        $Divisor = 1000000
-
-        switch ($Pool_Algo) {
-            "blake2s" {$Divisor *= 1000}
-            "blakecoin" {$Divisor *= 1000}
-            "sha256" {$Divisor *= 1000}
-        }
+        $Divisor = 1000000 * $Algo.mbtc_mh_factor
 
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
