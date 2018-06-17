@@ -1,0 +1,26 @@
+{
+    "Path": "miner.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/EWBF.Equihash.miner.v0.1.7z",
+    "SHA256": "4d15f349fc0bb60f27ef755dcd18e0fceeb8473c9b631787c1bd62484202da3e",
+    "Type": "NVIDIA",
+    "PrerequisitePath": "$env:SystemRoot\\System32\\msvcr120.dll",
+    "PrerequisiteURI": "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe",
+    "Arguments": [
+        "--server #Server#",
+        "--port #Port#",
+        "--user #Login#",
+        "--pass #Password#",
+        "--pec",
+        "--fee 0",
+        "--eexit 1",
+        "--cuda_devices #DevicesETHMode#",
+        "--api 127.0.0.1:#APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "EWBF",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Zhash": "--algo 144_5",
+        "Zero": "--algo 192_7 --pers ZERO_PoW"
+    }
+}
