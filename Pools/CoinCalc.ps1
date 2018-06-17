@@ -73,6 +73,7 @@ if ($Querymode -in @("Core", "Menu")) {
         switch ($Coin.Name) {
             'Stellite' {$Coin.Algorithm = 'CryptoNightXTL'}
             'BitcoinZ' {$Coin.Algorithm = 'Zhash'}
+            'Masari' {$Coin.Algorithm = 'CryptoNightFast'}
         }
     }
 
