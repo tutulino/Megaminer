@@ -65,17 +65,15 @@ if ($Querymode -in @("Core", "Menu")) {
         Write-Warning "$Name API NOT RESPONDING...ABORTING"
         Exit
     }
-    $Response | ForEach-Object {
-        $_.Name = Get-CoinUnifiedName $_.Name
-        $_.Algorithm = Get-AlgoUnifiedName $_.Algorithm
+    foreach ($Coin in $Response) {
+        $Coin.Name = Get-CoinUnifiedName $Coin.Name
+        $Coin.Algorithm = Get-AlgoUnifiedName $Coin.Algorithm
 
         # Algo fixes
-        $Algorithm = switch ($_.Name) {
-            'Stellite' {'CryptoNightXTL'}
-            'BitcoinZ' {'Zhash'}
-            default {$null}
+        switch ($Coin.Name) {
+            'Stellite' {$Coin.Algorithm = 'CryptoNightXTL'}
+            'BitcoinZ' {$Coin.Algorithm = 'Zhash'}
         }
-        if ($Algorithm) {$_.Algorithm = $Algorithm}
     }
 
     #join pools and coins
