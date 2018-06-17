@@ -113,6 +113,10 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
         $HPool.Algorithm = Get-AlgoUnifiedName $HPool.Algorithm
         $HPool.Info = Get-CoinUnifiedName $HPool.Info
 
+        switch ($HPool.Info) {
+            'BitcoinZ' {$HPool.Algorithm = 'Zhash'}
+        }
+
         #we must add units for each algo, this value must be filled if we want a coin to be selected
         $WTMFactor = switch ($HPool.Algorithm) {
             "Bitcore" { 1000000 }
@@ -134,6 +138,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             "X17" { 1000 }
             "Yescrypt" { 1 }
             "Zero" { 1 }
+            "Zhash" { 1 }
             default { $null }
         }
 

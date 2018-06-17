@@ -68,7 +68,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "BitcoinGold"; algo = "Equihash"; symbol = "BTG"; server = "btg.suprnova.cc"; port = 8816; location = "US"};
     $Pools += [PSCustomObject]@{coin = "BitcoinPrivate"; algo = "Equihash"; symbol = "BTCP"; server = "btcp.suprnova.cc"; port = 6822; location = "US"};
     $Pools += [PSCustomObject]@{coin = "BitcoinInterest"; algo = "Equihash"; symbol = "BCI"; server = "bci.suprnova.cc"; port = 8166; location = "US"; portSSL = 8168};
-    $Pools += [PSCustomObject]@{coin = "BitcoinZ"; algo = "Equihash"; symbol = "BTCZ"; server = "btcz.suprnova.cc"; port = 5586; location = "US"};
+    $Pools += [PSCustomObject]@{coin = "BitcoinZ"; algo = "Zhash"; symbol = "BTCZ"; server = "btcz.suprnova.cc"; port = 6586; location = "US"};
     $Pools += [PSCustomObject]@{coin = "BitCore"; algo = "Bitcore"; symbol = "BTX"; server = "btx.suprnova.cc"; port = 3629; location = "US"};
     $Pools += [PSCustomObject]@{coin = "BitSend"; algo = "Xevan"; symbol = "BSD"; server = "bsd.suprnova.cc"; port = 8686; location = "US"};
     $Pools += [PSCustomObject]@{coin = "Credits"; algo = "Argon2d250"; symbol = "CRDS"; server = "crds.suprnova.cc"; port = 2771; location = "US"};

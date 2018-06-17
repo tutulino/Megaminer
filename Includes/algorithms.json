@@ -124,6 +124,7 @@
     "yescryptr32": "YescryptR32",
     "yescryptr8": "YescryptR8",
     "zec": "Equihash",
+    "zhash": "Zhash",
     "zoin": "Lyra2z330",
     "zr5": "ZR5",
     "zuikkis": "Scrypt"
