@@ -69,11 +69,13 @@ if ($Querymode -in @("Core", "Menu")) {
         $_.Name = Get-CoinUnifiedName $_.Name
         $_.Algorithm = Get-AlgoUnifiedName $_.Algorithm
 
-        # CryptoNight algo fixes
-        switch ($_.Name) {
-            'Stellite' {$_.Algorithm = 'CryptoNightXTL'}
-            'BitcoinZ' {$_.Algorithm = 'Zhash'}
+        # Algo fixes
+        $Algorithm = switch ($_.Name) {
+            'Stellite' {'CryptoNightXTL'}
+            'BitcoinZ' {'Zhash'}
+            default {$null}
         }
+        if ($Algorithm) {$_.Algorithm = $Algorithm}
     }
 
     #join pools and coins
