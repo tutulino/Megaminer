@@ -76,10 +76,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "Electroneum"; algo = "CryptoNightV7"; symbol = "ETN"; port = 8888; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Haven"; algo = "CryptoNightHaven"; symbol = "XHV"; port = 5566; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Loki"; algo = "CryptoNightHeavy"; symbol = "LOKI"; port = 5577; fee = 0.01}
-    $Pools += [PSCustomObject]@{coin = "RYOCurrency"; algo = "CryptoNightHeavy"; symbol = "RYO"; port = 5555; fee = 0.01}
+    $Pools += [PSCustomObject]@{coin = "RYO"; algo = "CryptoNightHeavy"; symbol = "RYO"; port = 5555; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Saronite"; algo = "CryptoNightHeavy"; symbol = "XRN"; port = 5599; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "SolaceCoin"; algo = "CryptoNightHeavy"; symbol = "SOLACE"; port = 5588; fee = 0.01}
-    $Pools += [PSCustomObject]@{coin = "Sumokoin"; algo = "CryptoNightHeavy"; symbol = "SUMO"; port = 5555; fee = 0.01}
 
     $Pools | ForEach-Object {
         if ($CoinsWallets.($_.symbol)) {
