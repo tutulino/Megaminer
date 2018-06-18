@@ -1104,7 +1104,7 @@ while ($Quit -eq $false) {
                     $CommonParams = @{
                         WorkingDirectory = Split-Path $ActiveMiners[$BestNow.IdF].Path
                         MinerWindowStyle = $MinerWindowStyle
-                        Priority         = if ($ActiveMiners[$BestNow.IdF].GroupType -eq "CPU") {-2} else {-1}
+                        Priority         = if ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type -eq "CPU") {-2} else {-1}
                     }
                     $ActiveMiners[$BestNow.IdF].Process = Start-SubProcess @ProcessParams @CommonParams
 
