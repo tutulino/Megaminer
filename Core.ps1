@@ -514,8 +514,9 @@ while ($Quit -eq $false) {
                         }
 
                         $Arguments = $Miner.Arguments -join " "
+                        $Arguments = $Arguments -replace '#AlgorithmParameters#', $Algo.Value
                         foreach ($P in $Params.Keys) {$Arguments = $Arguments -replace $P, $Params.$P}
-                        $PatternConfigFile = $Miner.PatternConfigFile -replace '#Algorithm#', $AlgoName
+                        $PatternConfigFile = $Miner.PatternConfigFile -replace '#Algorithm#', $AlgoName -replace '#GroupName#', $DeviceGroup.GroupName
                         if ($PatternConfigFile -and (Test-Path -Path $PatternConfigFile)) {
                             $ConfigFileArguments = Replace-ForEachDevice (Get-Content $PatternConfigFile -raw) -Devices $DeviceGroup.Devices
                             foreach ($P in $Params.Keys) {$ConfigFileArguments = $ConfigFileArguments -replace $P, $Params.$P}
