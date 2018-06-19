@@ -10,7 +10,7 @@ $ActiveOnManualMode = $true
 $ActiveOnAutomaticMode = $false
 $AbbName = 'FAIR'
 $WalletMode = "WALLET"
-$RewardType = "PPS"
+$RewardType = "PPLS"
 $Result = @()
 
 if ($Querymode -eq "info") {
