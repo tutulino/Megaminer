@@ -147,7 +147,7 @@ function Get-DevicesInformation ($Types) {
     if ($abControl) {$abControl.ReloadAll()}
 
     if ($abMonitor) {
-        foreach ($Type in @('AMD', 'NVIDIA')) {
+        foreach ($Type in @('AMD')) {
             $DeviceId = 0
             $Pattern = @{
                 AMD    = '*Radeon*'
@@ -169,7 +169,7 @@ function Get-DevicesInformation ($Types) {
                     ClockMem          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?memory clock$").Data
                     FanSpeed          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?fan speed$").Data
                     Temperature       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?temperature$").Data
-                    PowerDraw         = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?power$").Data
+                    PowerDraw         = [int]$($CardData | Where-Object {$_.SrcName -match "^(GPU\d* )?power$" -and $_.SrcUnits -eq 'W'}).Data
                     PowerLimitPercent = [int]$($abControl.GpuEntries[$_.Index].PowerLimitCur)
                 }
                 $Devices += [PSCustomObject]$Card
@@ -177,45 +177,6 @@ function Get-DevicesInformation ($Types) {
             }
         }
     } else {
-        #NVIDIA
-        if ($Types | Where-Object Type -eq 'NVIDIA') {
-            $DeviceId = 0
-            $Command = '.\includes\nvidia-smi.exe'
-            $Arguments = @(
-                '--query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit'
-                '--format=csv,noheader'
-            )
-            & $Command $Arguments  | ForEach-Object {
-                $SMIresultSplit = $_ -split (",")
-                if ($SMIresultSplit.count -gt 10) {
-                    #less is error or no NVIDIA gpu present
-
-                    $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object DevicesArray -contains $DeviceId).groupname
-
-                    $Card = [PSCustomObject]@{
-                        Type              = 'NVIDIA'
-                        Id                = $DeviceId
-                        Group             = $Group
-                        Name              = $SMIresultSplit[0]
-                        Utilization       = if ($SMIresultSplit[1] -like "*Supported*") {100} else {[int]($SMIresultSplit[1] -replace '%', '')} #If we dont have real Utilization, at least make the watchdog happy
-                        UtilizationMem    = if ($SMIresultSplit[2] -like "*Supported*") {$null} else {[int]($SMIresultSplit[2] -replace '%', '')}
-                        Temperature       = if ($SMIresultSplit[3] -like "*Supported*") {$null} else {[int]($SMIresultSplit[3] -replace '%', '')}
-                        PowerDraw         = if ($SMIresultSplit[4] -like "*Supported*") {$null} else {[int]($SMIresultSplit[4] -replace 'W', '')}
-                        PowerLimit        = if ($SMIresultSplit[5] -like "*Supported*" -or $SMIresultSplit[5] -like "*error*") {$null} else {[int]($SMIresultSplit[5] -replace 'W', '')}
-                        Pstate            = $SMIresultSplit[7]
-                        FanSpeed          = if ($SMIresultSplit[6] -like "*Supported*" -or $SMIresultSplit[6] -like "*error*") {$null} else {[int]($SMIresultSplit[6] -replace '%', '')}
-                        Clock             = if ($SMIresultSplit[8] -like "*Supported*") {$null} else {[int]($SMIresultSplit[8] -replace 'Mhz', '')}
-                        ClockMem          = if ($SMIresultSplit[9] -like "*Supported*") {$null} else {[int]($SMIresultSplit[9] -replace 'Mhz', '')}
-                        PowerMaxLimit     = if ($SMIresultSplit[10] -like "*Supported*") {$null} else { [int]($SMIresultSplit[10] -replace 'W', '')}
-                        PowerDefaultLimit = if ($SMIresultSplit[11] -like "*Supported*") {$null} else {[int]($SMIresultSplit[11] -replace 'W', '')}
-                    }
-                    if ($Card.Power_DefaultLimit -gt 0) { $Card | Add-Member Power_limit_percent ([math]::Floor(($Card.power_limit * 100) / $Card.Power_DefaultLimit))}
-                    $Devices += $Card
-                    $DeviceId++
-                }
-            }
-        }
-
         #AMD
         if ($Types | Where-Object Type -eq 'AMD') {
             #ADL
@@ -258,13 +219,51 @@ function Get-DevicesInformation ($Types) {
                         PowerLimitPercent = 100 + [int]$AdlResultSplit[7]
                         PowerDraw         = $AmdCardsTDP.$CardName * ((100 + [double]$AdlResultSplit[7]) / 100) * ([double]$AdlResultSplit[5] / 100)
                         Name              = $CardName
-                        UDID              = $AdlResultSplit[9].Trim()
                     }
                     $Devices += $Card
                     $DeviceId++
                 }
             }
             Clear-Variable AmdCardsTDP
+        }
+    }
+
+    #NVIDIA
+    if ($Types | Where-Object Type -eq 'NVIDIA') {
+        $DeviceId = 0
+        $Command = '.\includes\nvidia-smi.exe'
+        $Arguments = @(
+            '--query-gpu=gpu_name,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,fan.speed,pstate,clocks.current.graphics,clocks.current.memory,power.max_limit,power.default_limit'
+            '--format=csv,noheader'
+        )
+        & $Command $Arguments  | ForEach-Object {
+            $SMIresultSplit = $_ -split (",")
+            if ($SMIresultSplit.count -gt 10) {
+                #less is error or no NVIDIA gpu present
+
+                $Group = ($Types | Where-Object type -eq 'NVIDIA' | Where-Object DevicesArray -contains $DeviceId).groupname
+
+                $Card = [PSCustomObject]@{
+                    Type              = 'NVIDIA'
+                    Id                = $DeviceId
+                    Group             = $Group
+                    Name              = $SMIresultSplit[0]
+                    Utilization       = if ($SMIresultSplit[1] -like "*Supported*") {100} else {[int]($SMIresultSplit[1] -replace '%', '')} #If we dont have real Utilization, at least make the watchdog happy
+                    UtilizationMem    = if ($SMIresultSplit[2] -like "*Supported*") {$null} else {[int]($SMIresultSplit[2] -replace '%', '')}
+                    Temperature       = if ($SMIresultSplit[3] -like "*Supported*") {$null} else {[int]($SMIresultSplit[3] -replace '%', '')}
+                    PowerDraw         = if ($SMIresultSplit[4] -like "*Supported*") {$null} else {[int]($SMIresultSplit[4] -replace 'W', '')}
+                    PowerLimit        = if ($SMIresultSplit[5] -like "*Supported*" -or $SMIresultSplit[5] -like "*error*") {$null} else {[int]($SMIresultSplit[5] -replace 'W', '')}
+                    FanSpeed          = if ($SMIresultSplit[6] -like "*Supported*" -or $SMIresultSplit[6] -like "*error*") {$null} else {[int]($SMIresultSplit[6] -replace '%', '')}
+                    Pstate            = $SMIresultSplit[7]
+                    Clock             = if ($SMIresultSplit[8] -like "*Supported*") {$null} else {[int]($SMIresultSplit[8] -replace 'Mhz', '')}
+                    ClockMem          = if ($SMIresultSplit[9] -like "*Supported*") {$null} else {[int]($SMIresultSplit[9] -replace 'Mhz', '')}
+                    PowerMaxLimit     = if ($SMIresultSplit[10] -like "*Supported*") {$null} else { [int]($SMIresultSplit[10] -replace 'W', '')}
+                    PowerDefaultLimit = if ($SMIresultSplit[11] -like "*Supported*") {$null} else {[int]($SMIresultSplit[11] -replace 'W', '')}
+                }
+                if ($Card.PowerDefaultLimit -gt 0) { $Card | Add-Member PowerLimitPercent ([math]::Floor(($Card.PowerLimit * 100) / $Card.PowerDefaultLimit))}
+                $Devices += $Card
+                $DeviceId++
+            }
         }
     }
 
