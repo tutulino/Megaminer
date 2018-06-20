@@ -83,7 +83,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Locations = "EU", "US", "Asia"
 
-    $MiningPoolHub_Request.return | Where-Object {$_.time_since_last_block -gt 0} | ForEach-Object {
+    $FilterCoins = @("maxcoin")
+
+    $MiningPoolHub_Request.return | Where-Object coin_name -notin $FilterCoins | Where-Object time_since_last_block -gt 0 | ForEach-Object {
 
         $MiningPoolHub_Algorithm = Get-AlgoUnifiedName $_.algo
         $MiningPoolHub_Coin = Get-CoinUnifiedName $_.coin_name
@@ -93,9 +95,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $MiningPoolHub_Hosts = $_.host_list -split ";"
         $MiningPoolHub_Port = $_.port
 
-        $Divisor = [double]1000000000
+        $Divisor = 1e9
 
-        $MiningPoolHub_Price = [Double]($_.profit / $Divisor)
+        $MiningPoolHub_Price = [double]($_.profit / $Divisor)
 
         foreach ($Location in $Locations) {
 
@@ -107,7 +109,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 Algorithm             = $MiningPoolHub_Algorithm
                 Info                  = $MiningPoolHub_Coin
                 Price                 = [decimal]$MiningPoolHub_Price
-                Price24h              = [decimal]$MiningPoolHub_Price #MPH not send this on api
+                Price24h              = [decimal]$MiningPoolHub_Price #MPH doesnt send this on api
                 Protocol              = "stratum+tcp"
                 ProtocolSSL           = "ssl"
                 Host                  = $Server
