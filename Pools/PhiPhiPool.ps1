@@ -78,7 +78,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Currency -notin @('BTC') -and
         !($RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object { $_ -eq $Currency })
     ) {
-        Write-Warning "$Name $Currency may not be supported for payment" -ForegroundColor Yellow
+        Write-Warning "$Name $Currency may not be supported for payment"
     }
 
     if (!$CoinsWallets.$Currency) {
@@ -95,19 +95,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Algo = $Request.$_
         $Pool_Algo = Get-AlgoUnifiedName $Algo.name
 
-        $Divisor = 1000000
-
-        switch ($Pool_Algo) {
-            "Blake2s" {$Divisor *= 1000}
-            "Blakecoin" {$Divisor *= 1000}
-            "Decred" {$Divisor *= 1000}
-            "Equihash" {$Divisor /= 1000}
-            "Keccak" {$Divisor *= 1000}
-            "Quark" {$Divisor *= 1000}
-            "Qubit" {$Divisor *= 1000}
-            "Scrypt" {$Divisor *= 1000}
-            "X11" {$Divisor *= 1000}
-        }
+        $Divisor = 1000000 * $Algo.mbtc_mh_factor
 
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo

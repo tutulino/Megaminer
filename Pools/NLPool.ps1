@@ -9,8 +9,8 @@
 
 $Name = (Get-Item $script:MyInvocation.MyCommand.Path).BaseName
 $ActiveOnManualMode = $true
-$ActiveOnAutomaticMode = $false
-$ActiveOnAutomatic24hMode = $false
+$ActiveOnAutomaticMode = $true
+$ActiveOnAutomatic24hMode = $true
 $AbbName = 'NL'
 $WalletMode = 'WALLET'
 $ApiUrl = 'https://nlpool.nl/api'
@@ -21,7 +21,7 @@ $Result = @()
 
 if ($Querymode -eq "info") {
     $Result = [PSCustomObject]@{
-        Disclaimer               = "No registration, Autoexchange to LTC for Blake2S / Keccak / YescryptR16, need wallet for each coin on config.ini"
+        Disclaimer               = "Autoexchange to @@currency coin specified in config.ini, no registration required"
         ActiveOnManualMode       = $ActiveOnManualMode
         ActiveOnAutomaticMode    = $ActiveOnAutomaticMode
         ActiveOnAutomatic24hMode = $ActiveOnAutomatic24hMode
@@ -72,56 +72,57 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         Exit
     }
 
-    if ($(Get-ConfigVariable "CURRENCY_$Name") -eq 'LTC') {$Currency = 'LTC'}
+    $Currency = if ([string]::IsNullOrEmpty($(Get-ConfigVariable "CURRENCY_$Name"))) { Get-ConfigVariable "CURRENCY" } else { Get-ConfigVariable "CURRENCY_$Name" }
 
-    $RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
-        $RequestCurrencies.$_.'24h_blocks' -gt 0 -and
-        $RequestCurrencies.$_.HashRate -gt 0 -and
-        $RequestCurrencies.$_.workers -gt 0
+    if (
+        $Currency -notin @('BTC') -and
+        !($RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object { $_ -eq $Currency })
+    ) {
+        Write-Warning "$Name $Currency may not be supported for payment"
+    }
+
+    if (!$CoinsWallets.$Currency) {
+        Write-Warning "$Name $Currency wallet not defined in config.ini"
+        Exit
+    }
+
+    $Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object {
+        $Request.$_.actual_last24h -gt 0 -and
+        $Request.$_.HashRate -gt 0 -and
+        $Request.$_.workers -gt 0
     } | ForEach-Object {
 
-        $Coin = $RequestCurrencies.$_
-        $Pool_Algo = Get-AlgoUnifiedName $Coin.algo
-        $Pool_Coin = Get-CoinUnifiedName $Coin.name
-        $Pool_Symbol = $_
+        $Algo = $Request.$_
+        $Pool_Algo = Get-AlgoUnifiedName $Algo.name
 
-        $Divisor = 1000000
-
-        switch ($Pool_Algo) {
-            "blake2s" {$Divisor *= 1000}
-            "blakecoin" {$Divisor *= 1000}
-            "equihash" {$Divisor /= 1000}
-            "scrypt" {$Divisor *= 1000}
-            "sha256" {$Divisor *= 1000}
-        }
+        $Divisor = 1000000 * $Algo.mbtc_mh_factor
 
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
-            Info                  = $Pool_Coin
-            Price                 = [decimal]$Coin.estimate / $Divisor
-            Price24h              = [decimal]$Coin.'24h_btc' / $Divisor
+            Info                  = $Pool_Algo
+            Price                 = [decimal]$Algo.estimate_current / $Divisor
+            Price24h              = [decimal]$Algo.estimate_last24h / $Divisor
             Protocol              = "stratum+tcp"
             Host                  = $MineUrl
-            Port                  = [int]$Coin.port
-            User                  = if ($Currency -eq 'LTC' -and $Pool_Algo -in @('Blake2s', 'Keccak', 'YescryptR16')) {$CoinsWallets.$Currency} else {$CoinsWallets.$Pool_Symbol}
-            Pass                  = "c=$Pool_Symbol,ID=#WorkerName#"
+            Port                  = $Algo.port
+            User                  = $CoinsWallets.$Currency
+            Pass                  = "c=$Currency,ID=#WorkerName#"
             Location              = $Location
             SSL                   = $false
-            Symbol                = $Pool_Symbol
+            Symbol                = Get-CoinSymbol -Coin $Pool_Algo
             AbbName               = $AbbName
             ActiveOnManualMode    = $ActiveOnManualMode
             ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-            PoolWorkers           = [int]$Coin.workers
-            PoolHashRate          = [decimal]$Coin.HashRate
+            PoolWorkers           = $Algo.workers
+            PoolHashRate          = $Algo.HashRate
             WalletMode            = $WalletMode
-            Walletsymbol          = $Pool_Symbol
+            WalletSymbol          = $Currency
             PoolName              = $Name
-            Fee                   = $Request.($Coin.algo).fees / 100
+            Fee                   = $Algo.fees / 100
             RewardType            = $RewardType
         }
     }
     Remove-Variable Request
-    Remove-Variable RequestCurrencies
 }
 
 $Result | ConvertTo-Json | Set-Content $Info.SharedFile
