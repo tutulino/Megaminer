@@ -1,7 +1,7 @@
 {
-    "Path": "bminer-lite-v8.0.0-32928c5\\bminer.exe",
-    "Uri": "https://www.bminercontent.com/releases/bminer-lite-v8.0.0-32928c5-amd64.zip",
-    "SHA256": "dff1c61dc71b9441e98f8d7de9c38da5951222530e0bfe5f0a9a3e7c31c64905",
+    "Path": "bminer-lite-v9.0.0-199ca8c\\bminer.exe",
+    "Uri": "https://www.bminercontent.com/releases/bminer-lite-v9.0.0-199ca8c-amd64.zip",
+    "SHA256": "95565a938e9bf37458b9b927452bbc80c29436c694464acf3dd9441f6299f961",
     "Type": "NVIDIA",
     "Arguments": [
         "-uri stratum$(if($enableSSL){'+ssl'})://$([System.Web.HttpUtility]::UrlEncode('#Login#')):$([System.Web.HttpUtility]::UrlEncode('#Password#'))@#Server#:#Port#",
