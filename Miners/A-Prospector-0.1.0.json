@@ -6,6 +6,7 @@
     "GenerateConfigFile": "#GroupName#-#Algorithm#.toml",
     "PatternConfigFile": ".\\Patterns\\ProspectorPattern.txt",
     "Arguments": "-c #GroupName#-#Algorithm#.toml",
+	"PrelaunchCommand": "${env:SystemRoot}\\system32\\cmd.exe /c del /f /q $('.\\Bin\\' + $MinerFile.BaseName)\\info.db",
     "API": "prospector",
     "APIPort": 4028,
     "Fee": 0.01,

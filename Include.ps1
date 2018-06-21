@@ -771,14 +771,14 @@ function Get-LiveHashRate {
                 $Request = Invoke-HTTPRequest $Server $port "/api/v0/rates" 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [double]($Data | Group-Object device | ForEach-Object { $_.Group | Sort-Object time -Descending | Select-Object -First 1 } | Measure-Object -Sum -Property Rate).Sum
+                    $HashRate = [double]($Data | Group-Object device | ForEach-Object { $_.Group | Select-Object -Last 1 } | Measure-Object -Sum -Property Rate).Sum
                 }
             }
 
             "wrapper" {
                 $HashRate = ""
                 $wrpath = ".\Wrapper_$Port.txt"
-                $HashRate = [double]$(if (Test-Path -path $wrpath) {Get-Content $wrpath}else {0})
+                $HashRate = [double]$(if (Test-Path -path $wrpath) {Get-Content $wrpath} else {0})
             }
 
             "castXMR" {
