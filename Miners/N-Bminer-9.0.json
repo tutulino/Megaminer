@@ -4,16 +4,18 @@
     "SHA256": "95565a938e9bf37458b9b927452bbc80c29436c694464acf3dd9441f6299f961",
     "Type": "NVIDIA",
     "Arguments": [
-        "-uri stratum$(if($enableSSL){'+ssl'})://$([System.Web.HttpUtility]::UrlEncode('#Login#')):$([System.Web.HttpUtility]::UrlEncode('#Password#'))@#Server#:#Port#",
+        "-uri #AlgorithmParameters#$(if($enableSSL){'+ssl'})://$([System.Web.HttpUtility]::UrlEncode('#Login#')):$([System.Web.HttpUtility]::UrlEncode('#Password#'))@#Server#:#Port#",
         "-devices #Devices#",
         "-watchdog",
         "-api 127.0.0.1:#APIPort#"
     ],
     "API": "BMiner",
     "APIPort": 4068,
-    "Fee": 0.02,
+    "Fee": "$(switch ($Algorithm){ 'Ethash' {0.0065}; default {0.02} }",
     "SSL": true,
     "Algorithms": {
-        "Equihash": ""
+        "Tensority": "tensority",
+        "Equihash": "stratum",
+        "Ethash": "ethstratum"
     }
 }

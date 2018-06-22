@@ -5,18 +5,17 @@
     "Type": "NVIDIA",
     "Arguments": [
         "-uri ethstratum$(if($enableSSL){'+ssl'})://$([System.Web.HttpUtility]::UrlEncode('#Login#')):$([System.Web.HttpUtility]::UrlEncode('#Password#'))@#Server#:#Port#",
-        "#AlgorithmParameters#",
+        "-uri2 #AlgorithmParameters#$(if($enableDualSSL){'+ssl'})://$([System.Web.HttpUtility]::UrlEncode('#LoginDual#')):$([System.Web.HttpUtility]::UrlEncode('#PasswordDual#'))@#ServerDual#:#PortDual#",
         "-devices #Devices#",
         "-watchdog",
         "-api 127.0.0.1:#APIPort#"
     ],
     "API": "BMiner8",
     "APIPort": 4068,
-    "Fee": "$(if ($AlgorithmDual){0.013}else{0.0065})",
+    "Fee": 0.013,
     "SSL": true,
     "Algorithms": {
-        "Ethash": "",
-        "Ethash_Blake2s": "-uri2 blake2s://$([System.Web.HttpUtility]::UrlEncode('#LoginDual#')):$([System.Web.HttpUtility]::UrlEncode('#PasswordDual#'))@#ServerDual#:#PortDual#",
-        "Ethash_Blake14r": "-uri2 blake14r://$([System.Web.HttpUtility]::UrlEncode('#LoginDual#')):$([System.Web.HttpUtility]::UrlEncode('#PasswordDual#'))@#ServerDual#:#PortDual#"
+        "Ethash_Blake2s": "blake2s",
+        "Ethash_Blake14r": "blake14r"
     }
 }
