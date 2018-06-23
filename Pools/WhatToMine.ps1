@@ -133,6 +133,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             "NeoScrypt" { 1000 }
             "PHI" { 1000000 }
             "Skunk" { 1000000 }
+            "Tensority" { 1 }
             "X16r" { 1000000 }
             "X16s" { 1000000 }
             "X17" { 1000 }
