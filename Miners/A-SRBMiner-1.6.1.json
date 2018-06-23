@@ -1,15 +1,16 @@
 {
-    "Path": "SRBMiner-CN.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/SRBMiner-CN-V1-6-0.7z",
-    "SHA256": "5cd5274949bf3a62e6f41a49cf7e758cc066cb501470ea16fe82751c58f021f2",
+    "Path": "SRBMiner-CN-V1-6-1\\SRBMiner-CN.exe",
+    "Uri": "http://www.srbminer.com/downloads/SRBMiner-CN-V1-6-1.zip",
+    "SHA256": "814d6bb1c6375e51a1011815f20585df12a6540a9719e90aedbe66ed884c7cf9",
     "Type": "AMD",
-    "GenerateConfigFile": "config-#GroupName#-#Algorithm#.txt",
+    "GenerateConfigFile": "SRBMiner-CN-V1-6-1\\config-#GroupName#-#Algorithm#.txt",
     "PatternConfigFile": ".\\Patterns\\SRBMinerConfig-Pattern.txt",
     "Arguments": [
         "--config config-#GroupName#-#Algorithm#.txt",
         "--cpool #Server#:#Port#",
         "--cwallet #Login#",
         "--cpassword #Password#",
+        "--disablegpuwatchdog",
         "$(if ($enableSSL){'--ctls true'})",
         "$(if ($Nicehash){'--cnicehash true'})"
     ],
@@ -18,7 +19,7 @@
     "Fee": 0.0085,
     "SSL": true,
     "Algorithms": {
-        "CryptoLightIPBC": "ipbc",
+        "CryptoLightBitTube": "bittubev2",
         "CryptoLightV7": "liteV7",
         "CryptoNightAlloy": "alloy",
         "CryptoNightArto": "artocash",
