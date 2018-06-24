@@ -30,7 +30,7 @@ do {
     $PowerShell.Streams.Verbose.ReadAll() | ForEach-Object {
         $Line = $_
 
-        if ($Line -like "*accepted:*" -or
+        if ($Line -like "*accepted*" -or
             $Line -like "*Mining on #*" -or
             $Line -like "*diff*yes!*" -or
             $Line -like ">*Rej*" -or

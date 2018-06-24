@@ -1,0 +1,47 @@
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+# Global settings:
+#
+#    TerminalColors
+#        Enable colors for logging. Windows Command Prompt is not supported.
+#        Default: false
+#
+#    ExtraNonce
+#        Enable extranonce subscription.
+#        Default: true
+#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+<Global TerminalColors = "false"
+        ExtraNonce = "true">
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+# Pool connection setup:
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+<Connection Url = "#Protocol#://#Server#:#Port#"
+            Username = "#Login#"
+            Password = "#Password#">
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+# Device config:
+#
+# Available platforms:
+#
+# 1. Platform name: Advanced Micro Devices, Inc.
+#    Index: 0
+#
+# Available devices:
+#
+# 1. Device: Ellesmere
+#    Board name: Radeon RX 580 Series
+#    PCIe bus ID: 1
+#    Available platforms indices: 0
+#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+<Device0 PCIeBusId = "1" PlatformIndex = "#GpuPlatform#" BinaryFormat = "amdcl2" AsmProgram = "gfx8" WorkSize = "1048576">
+
+/*
+# Ignore. Work in Progress. Set devices yourself above this section.
+#ForEachDevice#<Device#DeviceID# PCIeBusId = "1" PlatformIndex = "#GpuPlatform#" BinaryFormat = "amdcl2" AsmProgram = "gfx8" WorkSize = "1048576">#NL##EndForEachDevice#
+*/
