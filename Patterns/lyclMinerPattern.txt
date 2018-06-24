@@ -24,24 +24,6 @@
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 # Device config:
-#
-# Available platforms:
-#
-# 1. Platform name: Advanced Micro Devices, Inc.
-#    Index: 0
-#
-# Available devices:
-#
-# 1. Device: Ellesmere
-#    Board name: Radeon RX 580 Series
-#    PCIe bus ID: 1
-#    Available platforms indices: 0
-#
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-<Device0 PCIeBusId = "1" PlatformIndex = "#GpuPlatform#" BinaryFormat = "amdcl2" AsmProgram = "gfx8" WorkSize = "1048576">
-
-/*
-# Ignore. Work in Progress. Set devices yourself above this section.
-#ForEachDevice#<Device#DeviceID# PCIeBusId = "1" PlatformIndex = "#GpuPlatform#" BinaryFormat = "amdcl2" AsmProgram = "gfx8" WorkSize = "1048576">#NL##EndForEachDevice#
-*/
+#ForEachPCIBus#<Device#DeviceIndex# PCIeBusId = "#DevicePCIBus#" PlatformIndex = "#GpuPlatform#" BinaryFormat = "amdcl2" AsmProgram = "gfx8" WorkSize = "1048576">#NL##EndForEachPCIBus#

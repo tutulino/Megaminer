@@ -55,7 +55,7 @@ function Replace-ForEachDevice {
         [Parameter(Mandatory = $true)]
         [string]$ConfigFileArguments,
         [Parameter(Mandatory = $false)]
-        [string]$Devices
+        $Devices
     )
 
     #search string to replace
@@ -67,7 +67,20 @@ function Replace-ForEachDevice {
         $Match.Matches | ForEach-Object {
             $Base = $_.value -replace "#ForEachDevice#" -replace "#EndForEachDevice#"
             $Final = ""
-            $Devices -split ',' | ForEach-Object {$Final += ($base -replace "#DeviceID#", $_)}
+            $Index = 0
+            $Devices.Devices -split ',' | ForEach-Object {$Final += ($base -replace "#DeviceID#", $_ -replace "#DeviceIndex", $Index); $Index++}
+            $ConfigFileArguments = $ConfigFileArguments.Substring(0, $_.index) + $Final + $ConfigFileArguments.Substring($_.index + $_.Length, $ConfigFileArguments.Length - ($_.index + $_.Length))
+        }
+    }
+
+    $Match = $ConfigFileArguments | Select-String -Pattern "#ForEachPCIBus#.*?#EndForEachPCIBus#"
+    if ($null -ne $Match) {
+
+        $Match.Matches | ForEach-Object {
+            $Base = $_.value -replace "#ForEachPCIBus#" -replace "#EndForEachPCIBus#"
+            $Final = ""
+            $Index = 0
+            $Devices.PCIBus -split ',' | ForEach-Object {$Final += ($base -replace "#DevicePCIBus#", $_ -replace "#DeviceIndex#", $Index); $Index++}
             $ConfigFileArguments = $ConfigFileArguments.Substring(0, $_.index) + $Final + $ConfigFileArguments.Substring($_.index + $_.Length, $ConfigFileArguments.Length - ($_.index + $_.Length))
         }
     }
@@ -171,6 +184,7 @@ function Get-DevicesInformation ($Types) {
                     Temperature       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?temperature$").Data
                     PowerDraw         = [int]$($CardData | Where-Object {$_.SrcName -match "^(GPU\d* )?power$" -and $_.SrcUnits -eq 'W'}).Data
                     PowerLimitPercent = [int]$($abControl.GpuEntries[$_.Index].PowerLimitCur)
+                    PCIBus            = [int]$($null = $_.GpuId -match "&BUS_(\d+)&"; $matches[1])
                 }
                 $Devices += [PSCustomObject]$Card
                 $DeviceId++
@@ -257,7 +271,7 @@ function Get-DevicesInformation ($Types) {
                     Pstate            = $SMIresultSplit[7]
                     Clock             = if ($SMIresultSplit[8] -like "*Supported*") {$null} else {[int]($SMIresultSplit[8] -replace 'Mhz', '')}
                     ClockMem          = if ($SMIresultSplit[9] -like "*Supported*") {$null} else {[int]($SMIresultSplit[9] -replace 'Mhz', '')}
-                    PowerMaxLimit     = if ($SMIresultSplit[10] -like "*Supported*") {$null} else { [int]($SMIresultSplit[10] -replace 'W', '')}
+                    PowerMaxLimit     = if ($SMIresultSplit[10] -like "*Supported*") {$null} else {[int]($SMIresultSplit[10] -replace 'W', '')}
                     PowerDefaultLimit = if ($SMIresultSplit[11] -like "*Supported*") {$null} else {[int]($SMIresultSplit[11] -replace 'W', '')}
                 }
                 if ($Card.PowerDefaultLimit -gt 0) { $Card | Add-Member PowerLimitPercent ([math]::Floor(($Card.PowerLimit * 100) / $Card.PowerDefaultLimit))}
@@ -367,6 +381,7 @@ Function Get-MiningTypes () {
             $PlatformID++
             $Devs
         })
+    $PnpDevices = Get-PnpDevice | Where-Object Class -eq Display
 
     # # start fake
     # $OCLDevices = @()
@@ -387,14 +402,17 @@ Function Get-MiningTypes () {
             $DeviceID = 0
             $_.Group | ForEach-Object {
 
-                Switch ($_.Vendor) {
-                    "Advanced Micro Devices, Inc." {$Type = "AMD"}
-                    "NVIDIA Corporation" {$Type = "NVIDIA"}
-                    # "Intel(R) Corporation" {$Type = "INTEL"} #Nothing to be mined on Intel iGPU
-                    default {$Type = $false}
+                $Vendors = @{
+                    "Advanced Micro Devices, Inc." = "AMD"
+                    "NVIDIA Corporation"           = "NVIDIA"
+                    # "Intel(R) Corporation"         = "INTEL" #Nothing to be mined on Intel iGPU
+                    # "Intel Corporation"            = "INTEL" #Nothing to be mined on Intel iGPU
                 }
 
+                $Type = $Vendors.($_.Vendor)
+
                 $MemoryGB = [int]($_.GlobalMemSize / 1GB)
+
                 if ((Get-ConfigVariable "GpuGroupByType") -eq "Enabled") {
                     $Name_Norm = $Type
                 } else {
@@ -403,6 +421,13 @@ Function Get-MiningTypes () {
                 }
 
                 $PlatformID = $_.PlatformID
+
+                $PnpDeviceProperties = ($PnpDevices | Where-Object {$Vendors.($_.Manufacturer) -eq $Type})[$DeviceID] | Get-PnpDeviceProperty
+
+                $LocationInfo = ($PnpDeviceProperties | Where-Object KeyName -eq 'DEVPKEY_Device_LocationInfo').Data
+                if ($LocationInfo -match "^PCI bus (\d+), device (\d+), function (\d+)$") {
+                    $PCIBus = $matches[1]
+                }
 
                 if ($Type) {
                     if ($null -eq ($Types0 | Where-Object {$_.GroupName -eq $Name_Norm -and $_.Platform -eq $PlatformID})) {
@@ -413,10 +438,12 @@ Function Get-MiningTypes () {
                             Platform    = $PlatformID
                             MemoryGB    = $MemoryGB
                             PowerLimits = "0"
+                            PCIBus      = [string]$PCIBus
                         }
                     } else {
                         $Types0 | Where-Object {$_.GroupName -eq $Name_Norm -and $_.Platform -eq $PlatformID} | ForEach-Object {
                             $_.Devices += "," + $DeviceID
+                            $_.PCIBus += "," + $PCIBus
                         }
                     }
                 }
