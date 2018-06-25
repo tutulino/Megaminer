@@ -82,8 +82,7 @@ $Application = "Forager"
 $Release = "1.8"
 Log-Message "$Application v$Release"
 
-if ($GroupNames -eq $null) {$Host.UI.RawUI.WindowTitle = $Application}
-else {$Host.UI.RawUI.WindowTitle = "Forager-" + ($GroupNames -join "/")}
+$Host.UI.RawUI.WindowTitle = "$Application v$Release"
 
 $env:CUDA_DEVICE_ORDER = 'PCI_BUS_ID' #This align cuda id with nvidia-smi order
 $env:GPU_FORCE_64BIT_PTR = 0 #For AMD
@@ -1360,6 +1359,9 @@ while ($Quit -eq $false) {
 
         #get pool reported speed (1 or each 10 executions to not saturate pool)
         if ($SwitchLoop -eq 0) {
+
+            $RunTime = $(Get-Date) - $(Get-Process -Pid $Global:PID | Select-Object -ExpandProperty StartTime)
+            $Host.UI.RawUI.WindowTitle = $Application + " - " + $(if ($RunTime.TotalDays -lt 1) {"{0:hh\:mm}" -f $RunTime} else {"{0:dd\d\ hh\:mm}" -f $RunTime})
 
             # Report stats
             if ($MinerStatusURL -and $MinerStatusKey) { & .\Includes\ReportStatus.ps1 -Key $MinerStatusKey -WorkerName $WorkerName -ActiveMiners $ActiveMiners -MinerStatusURL $MinerStatusURL }
