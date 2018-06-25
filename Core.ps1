@@ -953,7 +953,7 @@ while ($Quit -eq $false) {
         $BestNow = $Candidates.SubMiners |
             Where-Object Status -ne 'Cancelled' |
             ForEach-Object {if ($_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt 0) {$_}} |
-            Sort-Object -Descending NeedBenchmark, Profits, HashRate, HashRateDual, @{Expression = {$ActiveMiners[$_.IdF].Algorithm}; Ascending = $true}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
+            Sort-Object -Descending NeedBenchmark, {$(if ($MiningMode -eq "Manual") {$_.HashRate} else {$_.Profits})}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
 
         if ($BestNow -eq $null) {Log-Message "No valid candidate for device group $($DeviceGroup.GroupName)" -Severity Warn; Continue}
