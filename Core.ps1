@@ -1360,8 +1360,10 @@ while ($Quit -eq $false) {
         #get pool reported speed (1 or each 10 executions to not saturate pool)
         if ($SwitchLoop -eq 0) {
 
+            $CurrentAlgos = ($ActiveMiners.SubMiners | Where-Object Best | ForEach-Object {$ActiveMiners[$_.IdF].Symbol + $(if ($ActiveMiners[$_.IdF].AlgorithmDual) {"_$($ActiveMiners[$_.IdF].SymbolDual)"})}) -join '/'
+
             $RunTime = $(Get-Date) - $(Get-Process -Pid $Global:PID | Select-Object -ExpandProperty StartTime)
-            $Host.UI.RawUI.WindowTitle = $Application + " - " + $(if ($RunTime.TotalDays -lt 1) {"{0:hh\:mm}" -f $RunTime} else {"{0:dd\d\ hh\:mm}" -f $RunTime})
+            $Host.UI.RawUI.WindowTitle = $(if ($RunTime.TotalDays -lt 1) {"{0:hh\:mm}" -f $RunTime} else {"{0:dd\d\ hh\:mm}" -f $RunTime}) + " : " + $CurrentAlgos
 
             # Report stats
             if ($MinerStatusURL -and $MinerStatusKey) { & .\Includes\ReportStatus.ps1 -Key $MinerStatusKey -WorkerName $WorkerName -ActiveMiners $ActiveMiners -MinerStatusURL $MinerStatusURL }
