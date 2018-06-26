@@ -9,6 +9,9 @@
     "API": "wrapper",
     "APIPort": 4028,
     "Algorithms": {
-        "Lyra2v2": ""
+        "Lyra2v2|1": "1048576",
+        "Lyra2v2|2": "2097152",
+        "Lyra2v2|4": "4194304",
+        "Lyra2v2|8": "8388608"
     }
 }
