@@ -1,0 +1,23 @@
+{
+    "Path": "ourminer-x64-1.0.0-cuda-9.1\\ourminer-x64.exe",
+    "Uri": "https://github.com/ourpool/ourminer/files/2130348/OurMiner-x64-1.0.0-cuda-9.1.zip",
+    "SHA256": "a6e3badd4fe79b0189a24e21766fd4d4a97fe993af9a93fd5d52d10ab713b95e",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-d #Devices#",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Lyra2z": "-a lyra2z",
+        "X16r": "-a x16r",
+        "X16s": "-a x16s"
+    }
+}
