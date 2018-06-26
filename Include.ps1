@@ -68,7 +68,7 @@ function Replace-ForEachDevice {
             $Base = $_.value -replace "#ForEachDevice#" -replace "#EndForEachDevice#"
             $Final = ""
             $Index = 0
-            $Devices.Devices -split ',' | ForEach-Object {$Final += ($base -replace "#DeviceID#", $_ -replace "#DeviceIndex", $Index); $Index++}
+            $Devices.Devices -split ',' | ForEach-Object {$Final += ($base -replace "#DeviceID#", $_ -replace "#DeviceIndex#", $Index); $Index++}
             $ConfigFileArguments = $ConfigFileArguments.Substring(0, $_.index) + $Final + $ConfigFileArguments.Substring($_.index + $_.Length, $ConfigFileArguments.Length - ($_.index + $_.Length))
         }
     }
@@ -481,6 +481,7 @@ Function Get-MiningTypes () {
     }
 
     $Types = @()
+    $PnpDevices = Get-PnpDevice | Where-Object Class -eq Display
     $TypeID = 0
     $Types0 | ForEach-Object {
         if (!$Filter -or (Compare-Object $_.GroupName $Filter -IncludeEqual -ExcludeDifferent)) {
