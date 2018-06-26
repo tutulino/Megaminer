@@ -49,6 +49,7 @@ if ($Querymode -eq "wallet") {
             'loki' { $Divisor = 1000000000}
             'xhv' { $Divisor = 1000000000000}
             'xrn' { $Divisor = 1000000000}
+            'bloc' { $Divisor = 10000}
             Default { $Divisor = 1000000000 }
         }
         $Result = [PSCustomObject]@{
