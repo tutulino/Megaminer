@@ -1,7 +1,7 @@
 {
     "Path": "ccminer-x64.exe",
-    "Uri": "https://github.com/tpruvot/ccminer/releases/download/2.2.6-tpruvot/ccminer-x64-2.2.6-phi2-cuda9.7z",
-    "SHA256": "f41551d847298d5f60d5fe9ba86dcda4a689916ac86df56e12eddf32914ca36c",
+    "Uri": "https://github.com/tpruvot/ccminer/releases/download/2.3-tpruvot/ccminer-2.3-cuda9.7z",
+    "SHA256": "a66d2d84ef305c44b4fc0161c8b961d7ed1436ba403b0900bc882da3280e7986",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -20,8 +20,10 @@
         "Bitcore": "-a bitcore",
         "Blake2s": "-a blake2s",
         "C11": "-a c11",
-        "CryptoLight": "-a cryptolight",
+        "CryptoLightV7": "-a cryptolight",
+        "CryptoNightV7": "-a monero",
         "HMQ1725": "-a hmq1725",
+        "HSR": "-a hsr",
         "JHA": "-a jha",
         "Keccak": "-a keccak",
         "KeccakC": "-a keccakc",
@@ -32,12 +34,14 @@
         "Phi2": "-a phi2",
         "SHA256t": "-a sha256t",
         "Skunk": "-a skunk",
+        "SonoA": "-a sonoa",
         "Timetravel": "-a timetravel",
         "Tribus": "-a tribus",
         "Veltor": "-a veltor",
         "X11evo": "-a x11evo",
         "X12": "-a x12",
         "X16r": "-a x16r",
+        "X16s": "-a x16s",
         "X17": "-a x17"
     }
 }
