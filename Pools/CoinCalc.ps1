@@ -74,6 +74,8 @@ if ($Querymode -in @("Core", "Menu")) {
             'Stellite' {$Coin.Algorithm = 'CryptoNightXTL'}
             'BitcoinZ' {$Coin.Algorithm = 'Zhash'}
             'Masari' {$Coin.Algorithm = 'CryptoNightFast'}
+            'PURK' {$Coin.Algorithm = 'WildKeccakPurk'}
+            'Boolberry' {$Coin.Algorithm = 'WildKeccakBbr'}
         }
     }
 

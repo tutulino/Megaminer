@@ -44,13 +44,14 @@ if ($Querymode -eq "wallet") {
     $Request = Invoke-APIRequest -Url $("https://" + $Info.Symbol + ".fairpool.cloud/api/stats?login=" + ($Info.User -split "\+")[0]) -Retry 3
     if ($Request) {
         switch ($Info.Symbol) {
-            'pasl' { $Divisor = 10000 }
-            'sumo' { $Divisor = 1000000000}
-            'loki' { $Divisor = 1000000000}
-            'xhv' { $Divisor = 1000000000000}
-            'xrn' { $Divisor = 1000000000}
-            'bloc' { $Divisor = 10000}
-            Default { $Divisor = 1000000000 }
+            'pasl' { $Divisor = 1e4 }
+            'sumo' { $Divisor = 1e9}
+            'loki' { $Divisor = 1e9}
+            'xhv' { $Divisor = 1e12}
+            'xrn' { $Divisor = 1e9}
+            'bloc' { $Divisor = 1e4}
+            'purk' { $Divisor = 1e6}
+            Default { $Divisor = 1e9 }
         }
         $Result = [PSCustomObject]@{
             Pool     = $name
@@ -72,7 +73,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "Pegascoin"; algo = "Ethash"; symbol = "PGC"; port = 1111; fee = 0.01}
 
     $Pools += [PSCustomObject]@{coin = "PascalLite"; algo = "Pascal"; symbol = "PASL"; port = 4009; fee = 0.02}
-    $Pools += [PSCustomObject]@{coin = "PURK"; algo = "Keccak"; symbol = "PURK"; port = 2244; fee = 0.01}
+    $Pools += [PSCustomObject]@{coin = "PURK"; algo = "WildKeccakPurk"; symbol = "PURK"; port = 2244; fee = 0.01}
 
     $Pools += [PSCustomObject]@{coin = "BLOC.money"; algo = "CryptoNightHeavy"; symbol = "BLOC"; port = 6010; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Haven"; algo = "CryptoNightHaven"; symbol = "XHV"; port = 5566; fee = 0.01}
