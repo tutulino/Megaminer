@@ -95,6 +95,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [pscustomobject]@{coin = "Verge"; algo = "X17"; symbol = "XVG"; server = "xvg-x17.suprnova.cc"; port = 7477; location = "US"; walletSymbol = "XVG-17"};
     $Pools += [PSCustomObject]@{coin = "Vertcoin"; algo = "Lyra2v2"; symbol = "VTC"; server = "vtc.suprnova.cc"; port = 5678; location = "US"; portSSL = 5676; SSL = $true};
     $Pools += [PSCustomObject]@{coin = "WaviCoin"; algo = "YescryptR32"; symbol = "WAVI"; server = "wavi.suprnova.cc"; port = 6762; location = "US"};
+    $Pools += [PSCustomObject]@{coin = "XDNA"; algo = "Keccak"; symbol = "XDNA"; server = "xdna.suprnova.cc"; port = 3919; location = "US"};
     $Pools += [PSCustomObject]@{coin = "ZCash"; algo = "Equihash"; symbol = "ZEC"; server = "zec-apac.suprnova.cc"; port = 2142; location = "Asia"};
     $Pools += [PSCustomObject]@{coin = "ZCash"; algo = "Equihash"; symbol = "ZEC"; server = "zec-eu.suprnova.cc"; port = 2142; location = "EU"; portSSL = 2242; serverSSL = "zec.suprnova.cc"; SSL = $true};
     $Pools += [PSCustomObject]@{coin = "ZCash"; algo = "Equihash"; symbol = "ZEC"; server = "zec-us.suprnova.cc"; port = 2142; location = "US"};
