@@ -107,7 +107,6 @@ if ((Get-Command "Get-MpPreference" -ErrorAction SilentlyContinue) -and (Get-MpC
 $ActiveMiners = @()
 $ShowBestMinersOnly = $true
 $FirstTotalExecution = $true
-$StartTime = Get-Date
 
 $Screen = $Config.STARTSCREEN
 
@@ -256,7 +255,6 @@ while ($Quit -eq $false) {
     else {$PercentToSwitch2 = [int]$PercentToSwitch}
     $DelayCloseMiners = $Config.DelayCloseMiners
 
-    $Currency = $Config.Currency
     $BenchmarkIntervalTime = [int]($Config.BenchmarkTime)
     $LocalCurrency = $Config.LocalCurrency
     if ([string]::IsNullOrWhiteSpace($LocalCurrency)) {
@@ -323,6 +321,7 @@ while ($Quit -eq $false) {
         }
         [string]$ElapsedDonationTime + "_0" | Set-Content -Path Donation.ctr
     }
+    $Currency = $Config.Currency
     $UserName = $Config.UserName
     $WorkerName = $Config.WorkerName
 
@@ -1657,7 +1656,7 @@ while ($Quit -eq $false) {
             if ($Screen -eq "Wallets" -and $RepaintScreen) {
 
                 Set-ConsolePosition 0 $YToWriteMessages
-                "Start Time: $StartTime                               "
+                "Start Time: $((Get-Process -PID $PID).StartTime)                               "
                 Set-ConsolePosition ($Host.UI.RawUI.WindowSize.Width - 10) $YToWriteMessages
                 "(U)pdate" | Out-Host
                 "" | Out-Host
@@ -1702,7 +1701,7 @@ while ($Quit -eq $false) {
 
         if ($Screen -eq "Stats" -and $RepaintScreen) {
             Set-ConsolePosition 0 $YToWriteMessages
-            "Start Time: $StartTime"
+            "Start Time: $((Get-Process -PID $PID).StartTime)"
 
             Set-ConsolePosition ($Host.UI.RawUI.WindowSize.Width - 30) $YToWriteMessages
 
