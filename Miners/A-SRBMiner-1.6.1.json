@@ -19,7 +19,6 @@
     "Fee": 0.0085,
     "SSL": true,
     "Algorithms": {
-        "CryptoLightBitTube": "bittubev2",
         "CryptoLightV7": "liteV7",
         "CryptoNightAlloy": "alloy",
         "CryptoNightArto": "artocash",
@@ -27,6 +26,7 @@
         "CryptoNightHaven": "haven",
         "CryptoNightHeavy": "heavy",
         "CryptoNightMkt": "marketcash",
+        "CryptoNightSaber": "bittubev2",
         "CryptoNightV7": "normalV7"
     }
 }
