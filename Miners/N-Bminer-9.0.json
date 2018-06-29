@@ -11,7 +11,7 @@
     ],
     "API": "BMiner",
     "APIPort": 4068,
-    "Fee": "$(switch ($Algorithm){ 'Ethash' {0.0065}; default {0.02} }",
+    "Fee": "$(switch ($Algorithm){ 'Ethash' {0.0065}; default {0.02} })",
     "SSL": true,
     "Algorithms": {
         "Tensority": "tensority",
