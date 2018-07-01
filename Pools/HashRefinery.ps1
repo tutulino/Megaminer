@@ -111,32 +111,58 @@ if ($Querymode -eq "info"){
 
 if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
 
-        try
-        {
-            $Request = Invoke-WebRequest "http://pool.hashrefinery.com/api/status" -UseBasicParsing -timeoutsec 10 | ConvertFrom-Json
-        }
-        catch
-        {
-            EXIT
-        }
+
+
+        $retries=1
+        do {
+                try {
+                    $Request = Invoke-WebRequest "http://pool.hashrefinery.com/api/status" -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36"  -UseBasicParsing -timeoutsec 5 | ConvertFrom-Json 
+               
+                }
+                catch {start-sleep 2}
+                $retries++
+                if ($Request -eq $null -or $Request -eq "") {start-sleep 3}
+            } while ($Request -eq $null -and $retries -le 3)
+        
+        if ($retries -gt 3) {
+                            WRITE-HOST 'HASHREFINERY API NOT RESPONDING...ABORTING'
+                            EXIT
+                            }
+
+
+
+
+
+
 
 
         if ($Request -ne $null) {
 
                         $Currency= if ((get_config_variable "CURRENCY_HASHREFINERY") -eq "") {get_config_variable "CURRENCY"} else {get_config_variable "CURRENCY_HASHREFINERY"}                                    
 
-                        $Request | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | ForEach-Object {
 
-                                $Divisor = (Get_Algo_Divisor $_) / 1000
+
+                        $Request | Get-Member -MemberType properties| ForEach-Object {
+                                
+                            $coin=$Request | Select-Object -ExpandProperty $_.name
+
+                            $HR_Algo =  get_algo_unified_name ($_.name)
+
+                        
+                            $Divisor = 1000000 * $coin.mbtc_mh_factor
+
+
+
+                    
                             
                                 $Result += [PSCustomObject]@{
-                                                Algorithm = get_algo_unified_name $_
+                                                Algorithm =  $HR_Algo
                                                 Info = $null
-                                                Price = [Double]$Request.$_.estimate_current/$Divisor
-                                                Price24h =[Double]$Request.$_.estimate_last24h/$Divisor
+                                                Price = $coin.estimate_current/$Divisor
+                                                Price24h =$coin.estimate_last24h/$Divisor
                                                 Protocol = "stratum+tcp"
-                                                Host = $_+".us.hashrefinery.com"
-                                                Port = $Request.$_.port
+                                                Host = $_.name+".us.hashrefinery.com"
+                                                Port = $coin.port
                                                 User = $CoinsWallets.get_item($currency)
                                                 Pass = "c=$Currency,#WorkerName#"
                                                 Location = "US"
@@ -144,11 +170,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                                 AbbName = $AbbName
                                                 ActiveOnManualMode    = $ActiveOnManualMode
                                                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                                                PoolWorkers = $Request.$_.workers
+                                                PoolWorkers = $coin.workers
                                                 WalletMode=$WalletMode
                                                 WalletSymbol    = $currency
                                                 PoolName = $Name
-                                                Fee = $Request.$_.Fees/100
+                                                Fee = $coin.Fees/100
                                                 RewardType=$RewardType
                                     
                                 }

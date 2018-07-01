@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\NVIDIA-CcminerX16R\\z-enemy.exe",
 "ExtractionPath" : ".\\Bin\\NVIDIA-CcminerX16R\\",
-"Uri" : "https://github.com/tutulino/Software/releases/download/0/z-enemy-1.08-release.zip",
+"Uri" : "https://github.com/Fedeparma74/Miners/releases/download/1.0/z-enemy.1-11-public-final_v3.zip",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
 "API" : "Ccminer",
@@ -10,7 +10,16 @@
 "PrelaunchCommand":"",
 "Algorithms": [
                 {"x16r":"-a x16r"},
-                {"x16s":"-a x16s"}
+                {"x16s":"-a x16s"},
+                {"x17":"-a x17"},
+                {"Vitalium":"-a vit"},
+                {"AeriumX":"-a AeriumX"},
+                {"Tribus": "-a tribus"},
+                {"C11": "-a c11"},
+                {"PHI": "-a phi"},
+                {"Polytimos": "-a poly"},
+                {"TimeTravel": "-a timetravel"}
+             
               ]
 }
  

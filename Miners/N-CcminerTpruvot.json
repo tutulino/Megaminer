@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\NVIDIA-TPruvot\\ccminer-x64.exe",
 "ExtractionPath" : ".\\Bin\\NVIDIA-TPruvot\\",
-"Uri" : "https://github.com/tpruvot/ccminer/releases/download/2.2.5-tpruvot/ccminer-x64-2.2.5-cuda9.7z",
+"Uri" : "https://github.com/tpruvot/ccminer/releases/download/2.3-tpruvot/ccminer-2.3-cuda9.7z",
 "Types" : ["NVIDIA"],
 "Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
 "API" : "Ccminer",
@@ -17,13 +17,16 @@
                 {"lyra2v2" : "-a lyra2v2" },
                 {"whirpool":"-a whirl"},
                 {"phi":"-a phi"},
+                {"phi2":"-a phi2"},
                 {"polytimos": "-a polytimos"},
                 {"keccakc":"-a keccakc"},
                 {"keccak":"-a keccak"},
                 {"x12":"-a x12"},
                 {"x16r":"-a x16r"},
                 {"x16s":"-a x16s"},
-                {"sha256t ":"-a sha256t"}
+                {"sha256t ":"-a sha256t"},
+                {"allium ":"-a allium"}
+                 
                 
 
                 

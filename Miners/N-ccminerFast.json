@@ -1,0 +1,17 @@
+{
+"Path" : ".\\Bin\\NVIDIA-ccminerFast\\zFastminer-v234.exe",
+"ExtractionPath" : ".\\Bin\\NVIDIA-ccminerFast\\",
+"Uri" : "https://github.com/yuzi-co/miners/releases/download/2018.6/zFastminer-v234.7z",
+"Types" : ["NVIDIA"],
+"Arguments" : "-o #PROTOCOL#://#SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -R 10 -r 4 -b #APIPORT# -d #DEVICES# #ALGORITHMPARAMETERS# ",
+"API" : "Ccminer",
+"Fee" : 0,
+"Dualmining":false,
+"APIPort" : 4578,
+"PrelaunchCommand":"",
+"Algorithms": [
+                 {"Lyra2z":"-a Lyra2z"}
+            
+            ]
+
+}

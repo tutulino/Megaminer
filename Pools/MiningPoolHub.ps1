@@ -186,7 +186,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
     } #foreach pool
 
 
-Remove-variable Request
+
 } #end mode
 
 

@@ -140,6 +140,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
             
 
                     $Divisor = Get_Algo_Divisor $Yiimp_Algorithm
+ 
                     
                 
                     $Result+=[PSCustomObject]@{

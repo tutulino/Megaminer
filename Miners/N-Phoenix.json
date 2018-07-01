@@ -1,7 +1,7 @@
 {
 "Path" : ".\\Bin\\NA-Phoenix\\PhoenixMiner_2.8c\\Phoenixminer.exe",
 "ExtractionPath" : ".\\Bin\\NA-Phoenix\\",
-"Uri" : "https://github.com/tutulino/Software/releases/download/0/PhoenixMiner_2.8c.zip",
+"Uri" : "https://github.com/yuzi-co/miners/releases/download/2018.6/PhoenixMiner_3.0c.zip",
 "Types" : ["NVIDIA"],
 "Arguments" : "-epool #SERVER#:#PORT# -ewal #LOGIN# -epsw #PASSWORD# -esm #ETHSTMODE# -allpools 1 -wd 1   -di #DEVICESCLAYMODE# -mport -#APIPORT# -platform 2 #ALGORITHMPARAMETERS#",
 "API" : "Phoenix",

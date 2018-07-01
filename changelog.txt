@@ -723,16 +723,24 @@ If you use new ETHlargementpill feature you must delete ETHASH
 
 ---FEATURES CHANGES:
 
-Addded sha256t algo for NVIDIA and gpu
+* Addded sha256t algo for NVIDIA and gpu
+* New Nvdia algos: allium, phi2,Vitalium,Aeriumx
+* New amd algos: CryptoLightIPBC,CryptoNightHaven,CryptoNightHeavy,CryptoNightV7,CryptoNightXTL,CryptoNightTUBE,CryptoNightFast
 
 ---MINERS CHANGES:
 
-* Renamed ccminerX16r to ccminerEnemy
+* New zFastminer-v2.3.4 (nvidia)
+* Renamed ccminerX16r to ccminerEnemy (nvidia)
+* Updated ccminer tpruvot to 2.3 (nVidia)
+* Updated castXMR to 1.3.0 (AMD)
+* Updated Phoenix v3.0c (nvidia)
+* Updated Claymore Dual v11.8 (nvidia)
 
 
 ---BUG FIXES:
 
 * CCminer Allium and ccminer SuprminerSP not working
+* Ahashpool,zpool and hashrefinery changed units for some algorithms 
 
 
 

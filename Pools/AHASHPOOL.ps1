@@ -143,7 +143,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                     $Aha_Algorithm = get_algo_unified_name $_.name
             
 
-                    $Divisor = (Get_Algo_Divisor $Aha_Algorithm) / 1000
+                    #$Divisor = (Get_Algo_Divisor $Aha_Algorithm) / 1000
+
+
+                    $Divisor = 1000000 * $coin.mbtc_mh_factor
+                        
 
                 
                     $Result+=[PSCustomObject]@{

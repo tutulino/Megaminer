@@ -137,14 +137,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")){
                                 $Zpool_Algo =  get_algo_unified_name ($_.name)
 
                             
-                                $Divisor = (Get_Algo_Divisor $Zpool_Algo) / 1000
-
-                                switch ($Zpool_Algo){
-                                    "X11"{$Divisor *= 1000}
-                                    "qubit"{$Divisor *= 1000}
-                                    "quark"{$Divisor *= 1000}
-                                    "keccak"{$Divisor *= 1000}
-                                    }
+                                $Divisor = 1000000 * $coin.mbtc_mh_factor
 
                 
                                     

@@ -1,18 +1,25 @@
 {
 "Path" : ".\\Bin\\AMD-CastXMR\\cast_xmr-vega.exe",
 "ExtractionPath" : ".\\Bin\\AMD-CastXMR\\",
-"Uri" : "http://www.gandalph3000.com/download/cast_xmr-vega-win64_081.zip",
+"Uri" : "https://github.com/tutulino/Software/releases/download/0/cast_xmr-vega-win64_130.zip",
 "Types" : ["AMD"],
 "Arguments" : "--remoteaccess -S #SERVER#:#PORT# -u #LOGIN# -p #PASSWORD# -G #DEVICES# --remoteport #APIPORT# --opencl #GPUPLATFORM# --forcecompute --fastjobswitch #ALGORITHMPARAMETERS#",
 "API" : "castXMR",
 "Dualmining":false,
-"Fee":"0.015",
+"Fee":0.015,
 "PrelaunchCommand":"",
 "Algorithms": [
-                {"Cryptonight":""}
+              {"Cryptonight":""},
+              {"CryptoLightIPBC": "--algo=5"},
+              {"CryptoLightV7": "--algo=4"},
+              {"CryptoNightHaven": "--algo=7"},
+              {"CryptoNightHeavy": "--algo=2"},
+              {"CryptoNightV7": "--algo=1"},
+              {"CryptoNightTUBE": "--algo=5"},
+              {"CryptoNightFast": "--algo=8"},
+              {"CryptoNightXTL": "--algo=6"}
               ]
 
 }
 
 
- 
