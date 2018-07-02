@@ -1,7 +1,7 @@
 {
-    "Path": "ccminer-dumax-0.9.2\\ccminer.exe",
-    "Uri": "https://github.com/DumaxFr/ccminer/releases/download/dumax-0.9.2/ccminer-dumax-0.9.2-win64.zip",
-    "SHA256": "c85abe6c15ac8653a19795c025df2f3d3bd84ee842987797342747cccdc18483",
+    "Path": "ccminer-dumax-0.9.3\\ccminer.exe",
+    "Uri": "https://github.com/DumaxFr/ccminer/releases/download/dumax-0.9.3/ccminer-dumax-0.9.3-win64.zip",
+    "SHA256": "4a6e0ca2940b086005bcdf98b52332c4f5a42d7f0aa8d85a50c01a045c1a8e84",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
