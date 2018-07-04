@@ -1,4 +1,4 @@
-﻿param(
+param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
@@ -83,9 +83,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
     $Locations = "EU", "US", "Asia"
 
-    $FilterCoins = @("maxcoin")
-
-    $MiningPoolHub_Request.return | Where-Object coin_name -notin $FilterCoins | Where-Object time_since_last_block -gt 0 | ForEach-Object {
+    $MiningPoolHub_Request.return | Where-Object time_since_last_block -gt 0 | ForEach-Object {
 
         $MiningPoolHub_Algorithm = Get-AlgoUnifiedName $_.algo
         $MiningPoolHub_Coin = Get-CoinUnifiedName $_.coin_name

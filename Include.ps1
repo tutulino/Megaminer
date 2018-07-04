@@ -1108,6 +1108,15 @@ function Get-Pools {
             #must have wallet
             if (!$Pool.User) {continue}
 
+            # Exclude pool algos and coins
+            if (
+                $Pool.Algorithm -in @($Config.("ExcludeAlgos_" + $Pool.PoolName) -split ',') -or
+                $Pool.Info -in @($Config.("ExcludeCoins_" + $Pool.PoolName) -split ',')
+            ) {
+                Log-Message "Excluding $($Pool.Algorithm)/$($Pool.Info) on $($Pool.PoolName)" -Severity Debug
+                continue
+            }
+
             #must be in algo filter list or no list
             if ($AlgoFilterList) {$Algofilter = Compare-Object $AlgoFilterList $Pool.Algorithm -IncludeEqual -ExcludeDifferent}
             if ($AlgoFilterList.count -eq 0 -or $Algofilter) {
