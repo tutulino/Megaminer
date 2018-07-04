@@ -1,7 +1,7 @@
 {
     "Path": "z-enemy.exe",
-    "Uri": "https://github.com/Fedeparma74/Miners/releases/download/1.0/z-enemy.1-11-public-final_v3.zip",
-    "SHA256": "a855d56792a4c7ed98a04667afc81c3e605d993e79035dfaf9e46adc18a78cc8",
+    "Uri": "https://github.com/Fedeparma74/Miners/releases/download/1.0/z-enemy.1-12-testv2.zip",
+    "SHA256": "c1615591d5bd64cf087f1ec52c9dbce6c9d9fc8986b2f72036e3b0547e9055cc",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -20,9 +20,11 @@
         "AeriumX": "-a aeriumx -i 20",
         "Bitcore": "-a bitcore -i 20",
         "C11": "-a c11 -i 20",
-        "PHI": "-a phi -i 20",
+        "Phi": "-a phi -i 20",
+        "Phi2": "-a phi2 -i 20",
         "Polytimos": "-a poly -i 20",
         "Skunk": "-a skunk -i 20",
+        "Sonoa": "-a sonoa -i 20",
         "TimeTravel": "-a timetravel -i 20",
         "Tribus": "-a tribus -i 20",
         "Vitalium": "-a vit -i 20",
