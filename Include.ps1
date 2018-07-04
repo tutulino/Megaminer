@@ -73,18 +73,6 @@ function Replace-ForEachDevice {
         }
     }
 
-    $Match = $ConfigFileArguments | Select-String -Pattern "#ForEachPCIBus#.*?#EndForEachPCIBus#"
-    if ($null -ne $Match) {
-
-        $Match.Matches | ForEach-Object {
-            $Base = $_.value -replace "#ForEachPCIBus#" -replace "#EndForEachPCIBus#"
-            $Final = ""
-            $Index = 0
-            $Devices.PCIBus -split ',' | ForEach-Object {$Final += ($base -replace "#DevicePCIBus#", $_ -replace "#DeviceIndex#", $Index); $Index++}
-            $ConfigFileArguments = $ConfigFileArguments.Substring(0, $_.index) + $Final + $ConfigFileArguments.Substring($_.index + $_.Length, $ConfigFileArguments.Length - ($_.index + $_.Length))
-        }
-    }
-
     $Match = $ConfigFileArguments | Select-String -Pattern "#RemoveLastCharacter#"
     if ($null -ne $Match) {
         $Match.Matches | ForEach-Object {
@@ -381,7 +369,6 @@ Function Get-MiningTypes () {
             $PlatformID++
             $Devs
         })
-    $PnpDevices = Get-PnpDevice | Where-Object Class -eq Display
 
     # # start fake
     # $OCLDevices = @()
@@ -422,13 +409,6 @@ Function Get-MiningTypes () {
 
                 $PlatformID = $_.PlatformID
 
-                $PnpDeviceProperties = ($PnpDevices | Where-Object {$Vendors.($_.Manufacturer) -eq $Type})[$DeviceID] | Get-PnpDeviceProperty
-
-                $LocationInfo = ($PnpDeviceProperties | Where-Object KeyName -eq 'DEVPKEY_Device_LocationInfo').Data
-                if ($LocationInfo -match "^PCI bus (\d+), device (\d+), function (\d+)$") {
-                    $PCIBus = $matches[1]
-                }
-
                 if ($Type) {
                     if ($null -eq ($Types0 | Where-Object {$_.GroupName -eq $Name_Norm -and $_.Platform -eq $PlatformID})) {
                         $Types0 += [PSCustomObject] @{
@@ -438,12 +418,10 @@ Function Get-MiningTypes () {
                             Platform    = $PlatformID
                             MemoryGB    = $MemoryGB
                             PowerLimits = "0"
-                            PCIBus      = [string]$PCIBus
                         }
                     } else {
                         $Types0 | Where-Object {$_.GroupName -eq $Name_Norm -and $_.Platform -eq $PlatformID} | ForEach-Object {
                             $_.Devices += "," + $DeviceID
-                            $_.PCIBus += "," + $PCIBus
                         }
                     }
                 }
@@ -481,7 +459,6 @@ Function Get-MiningTypes () {
     }
 
     $Types = @()
-    $PnpDevices = Get-PnpDevice | Where-Object Class -eq Display
     $TypeID = 0
     $Types0 | ForEach-Object {
         if (!$Filter -or (Compare-Object $_.GroupName $Filter -IncludeEqual -ExcludeDifferent)) {
