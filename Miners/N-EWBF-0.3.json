@@ -1,0 +1,29 @@
+{
+    "Path": "miner.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.7/EWBF.Equihash.miner.v0.3.7z",
+    "SHA256": "b80e58b41d7e6695c45d96e99d0d43c8a415f2d3733c3e551d2c2e8315bae070",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "--server #Server#",
+        "--port #Port#",
+        "--user #Login#",
+        "--pass #Password#",
+        "--pec",
+        "--fee 0",
+        "--eexit 1",
+        "--cuda_devices #DevicesETHMode#",
+        "--api 127.0.0.1:#APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "EWBF",
+    "APIPort": 4068,
+    "Algorithms": {
+        "EquihashBTCZ": "--algo 144_5 --pers BitcoinZ",
+        "EquihashBTG": "--algo 144_5 --pers BgoldPoW",
+        "EquihashLTZ": "--algo 144_5 --pers ZcashPoW",
+        "EquihashSafe": "--algo 144_5 --pers Safecoin",
+        "EquihashXTG": "--algo 144_5 --pers sngemPoW",
+        "Mars": "--algo 96_5",
+        "Zero": "--algo 192_7 --pers ZERO_PoW"
+    }
+}
