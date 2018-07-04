@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)]
     [String]$Querymode = $null,
     [Parameter(Mandatory = $false)]
@@ -96,6 +96,11 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $Divisor = 1e9
 
         $MiningPoolHub_Price = [double]($_.profit / $Divisor)
+
+        # fix for equihash btg
+        if ($_.coin_name -eq 'bitcoin-gold') {
+            $MiningPoolHub_Hosts = "us-east.equihash-hub.miningpoolhub.com;asia.equihash-hub.miningpoolhub.com;europe.equihash-hub.miningpoolhub.com" -split ';'
+        }
 
         foreach ($Location in $Locations) {
 
