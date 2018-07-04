@@ -1,7 +1,7 @@
 {
     "Path": "lolMiner-144.exe",
     "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.7/lolMiner-144_v038_Win64.7z",
-    "SHA256": "b4b485b24655c44ba6b895c5f8030f989207398da58b30f718e5b0a879d73651",
+    "SHA256": "dd7e213f8ee492184ab7888c1c0d3fa3ca185ab468375a96d9b4d68fc9a62ac9",
     "Type": "AMD",
     "GenerateConfigFile": "user_config.json",
     "PatternConfigFile": ".\\Patterns\\lolMiner-Pattern.txt",
