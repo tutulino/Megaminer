@@ -125,6 +125,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             "CryptoNightV7" { 1 }
             "CryptoNightHeavy" { 1 }
             "Equihash" { 1 }
+            "EquihashBTG" { 1 }
             "Ethash" { 1000000 }
             "Keccak" { 1000000 }
             "KeccakC" { 1000000 }

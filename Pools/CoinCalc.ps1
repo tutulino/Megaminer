@@ -67,17 +67,24 @@ if ($Querymode -in @("Core", "Menu")) {
     }
     foreach ($Coin in $Response) {
         $Coin.Name = Get-CoinUnifiedName $Coin.Name
-        $Coin.Algorithm = Get-AlgoUnifiedName $Coin.Algorithm
 
         # Algo fixes
         switch ($Coin.Name) {
             'Stellite' {$Coin.Algorithm = 'CryptoNightXTL'}
-            'BitcoinZ' {$Coin.Algorithm = 'Zhash'}
             'Masari' {$Coin.Algorithm = 'CryptoNightFast'}
+
             'PURK' {$Coin.Algorithm = 'WildKeccakPurk'}
             'Boolberry' {$Coin.Algorithm = 'WildKeccakBbr'}
+
+            'BitcoinGold' {$Coin.Algorithm = 'EquihashBTG'}
+            'BitcoinZ' {$Coin.Algorithm = 'EquihashBTCZ'}
+            'LitecoinZ' {$Coin.Algorithm = 'EquihashLTZ'}
+            'SafeCoin' {$Coin.Algorithm = 'EquihashSafe'}
+            'SnowGem' {$Coin.Algorithm = 'EquihashXSG'}
         }
     }
+
+    $Coin.Algorithm = Get-AlgoUnifiedName $Coin.Algorithm
 
     #join pools and coins
     ForEach ($Pool in $Pools) {
