@@ -596,6 +596,39 @@ function Invoke-TCPRequest {
     $response
 }
 
+function Invoke-TCPRequest2 {
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]$Server = "localhost",
+        [Parameter(Mandatory = $true)]
+        [String]$Port,
+        [Parameter(Mandatory = $true)]
+        [String]$Request,
+        [Parameter(Mandatory = $true)]
+        [Int]$Timeout = 10 #seconds
+    )
+
+    try {
+        $Client = New-Object System.Net.Sockets.TcpClient $Server, $Port
+        $Stream = $Client.GetStream()
+        $Writer = New-Object System.IO.StreamWriter $Stream
+        $Reader = New-Object System.IO.StreamReader $Stream
+        $client.SendTimeout = $Timeout * 1000
+        $client.ReceiveTimeout = $Timeout * 1000
+        $Writer.AutoFlush = $true
+
+        $Writer.Write($Request)
+        $Response = $Reader.ReadLine()
+    } catch { $Error.Remove($error[$Error.Count - 1])}
+    finally {
+        if ($Reader) {$Reader.Close()}
+        if ($Writer) {$Writer.Close()}
+        if ($Stream) {$Stream.Close()}
+        if ($Client) {$Client.Close()}
+    }
+    $response
+}
+
 function Invoke-HTTPRequest {
     param(
         [Parameter(Mandatory = $true)]
@@ -712,6 +745,19 @@ function Get-LiveHashRate {
 
             "ccminer" {
                 $Request = Invoke-TCPRequest $Server $port "summary" 5
+                if ($Request) {
+                    $Data = $Request -split ";" | ConvertFrom-StringData
+                    $HashRate = [double]$Data.HS
+                    if (-not $HashRate) {$HashRate = [double]$Data.KHS * [math]::Pow(1000, 1)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.MHS * [math]::Pow(1000, 2)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.GHS * [math]::Pow(1000, 3)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.THS * [math]::Pow(1000, 4)}
+                    if (-not $HashRate) {$HashRate = [double]$Data.PHS * [math]::Pow(1000, 5)}
+                }
+            }
+			
+            "cryptodredge" {
+                $Request = Invoke-TCPRequest2 $Server $port "summary" 5
                 if ($Request) {
                     $Data = $Request -split ";" | ConvertFrom-StringData
                     $HashRate = [double]$Data.HS

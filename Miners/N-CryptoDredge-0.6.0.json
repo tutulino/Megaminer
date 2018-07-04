@@ -1,0 +1,25 @@
+{
+    "Path": "CryptoDredge.exe",
+    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.6.0/CryptoDredge_0.6.0.zip",
+    "SHA256": "8c933e59ad165f37e348618ba8aa206c39aaaad3431d5f25c68012ef2d95d7c4",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-d #Devices#",
+        "-b 127.0.0.1:#APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "cryptodredge",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Allium": "-a allium",
+        "Lyra2v2": "-a lyra2v2",
+        "Lyra2z": "-a lyra2z",
+        "NeoScrypt": "-a neoscrypt",
+        "Phi": "-a phi",
+        "Phi2": "-a phi2",
+        "Skunk": "-a skunk"
+    }
+}
