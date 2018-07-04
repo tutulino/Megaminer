@@ -1,0 +1,17 @@
+{
+    "DEFAULTS": {
+        "PLATFORM": #GpuPlatform#,
+        "DEVICES": [#Devices#]
+    },
+    "#Algorithm#-#GroupName#": {
+        "COIN": "#AlgorithmParameters#",
+        "POOLS": [
+            {
+                "POOL": "#Server#",
+                "PORT": "#Port#",
+                "USER": "#Login#",
+                "PASS": "#Password#"
+            }
+        ]
+    }
+}
