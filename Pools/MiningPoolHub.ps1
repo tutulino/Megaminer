@@ -101,7 +101,9 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         if ($_.coin_name -eq 'bitcoin-gold') {
             $MiningPoolHub_Hosts = "us-east.equihash-hub.miningpoolhub.com;asia.equihash-hub.miningpoolhub.com;europe.equihash-hub.miningpoolhub.com" -split ';'
         }
-
+        if ($_.coin_name -eq 'electroneum') {
+            $MiningPoolHub_Algorithm = 'CryptoNight'
+        }
         foreach ($Location in $Locations) {
 
             $Server = $MiningPoolHub_Hosts | Sort-Object {$_ -like "$Location*"} -Descending | Select-Object -First 1
