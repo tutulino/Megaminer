@@ -1032,20 +1032,28 @@ while ($Quit -eq $false) {
                 #Stop old
                 if ($BestLast) {
 
-                    Log-Message "Killing in $DelayCloseMiners sec. $BestLastLogMsg with system process id $($ActiveMiners[$BestLast.IdF].Process.Id)"
-
-                    if ($Bestnow.NeedBenchmark -or $DelayCloseMiners -eq 0 -or $BestLast.Status -eq 'PendingCancellation') {
-                        #inmediate kill
-                        if ($ActiveMiners[$BestLast.IdF].Process) {Exit-Process $ActiveMiners[$BestLast.IdF].Process}
-                    } else {
-                        #delayed kill
-                        $Code = {
-                            param($Process, $DelaySeconds)
-                            Start-Sleep -Seconds $DelaySeconds
-                            $Process.CloseMainWindow() | Out-Null
-                            Stop-Process $Process.Id -force -wa SilentlyContinue -ea SilentlyContinue
+                    if (
+                        $ActiveMiners[$BestLast.IdF].Process -and
+                        $ActiveMiners[$BestLast.IdF].Process.Id -gt 0
+                    ) {
+                        Log-Message "Killing in $DelayCloseMiners sec. $BestLastLogMsg with system process id $($ActiveMiners[$BestLast.IdF].Process.Id)"
+                        if (
+                            $DelayCloseMiners -eq 0 -or
+                            $BestNow.NeedBenchmark -or
+                            $BestLast.Status -eq 'PendingCancellation'
+                        ) {
+                            #immediate kill
+                            Exit-Process $ActiveMiners[$BestLast.IdF].Process
+                        } else {
+                            #delayed kill
+                            $Code = {
+                                param($Process, $DelaySeconds)
+                                Start-Sleep -Seconds $DelaySeconds
+                                $Process.CloseMainWindow() | Out-Null
+                                Stop-Process $Process.Id -force -wa SilentlyContinue -ea SilentlyContinue
+                            }
+                            Start-Job -ScriptBlock $Code -ArgumentList ($ActiveMiners[$BestLast.IdF].Process), $DelayCloseMiners
                         }
-                        Start-Job -ScriptBlock $Code -ArgumentList ($ActiveMiners[$BestLast.IdF].Process), $DelayCloseMiners
                     }
 
                     $ActiveMiners[$BestLast.IdF].Process = $null

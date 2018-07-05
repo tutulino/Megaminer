@@ -755,7 +755,7 @@ function Get-LiveHashRate {
                     if (-not $HashRate) {$HashRate = [double]$Data.PHS * [math]::Pow(1000, 5)}
                 }
             }
-			
+
             "cryptodredge" {
                 $Request = Invoke-TCPRequest2 $Server $port "summary" 5
                 if ($Request) {
@@ -953,11 +953,22 @@ function Start-SubProcess {
         [String]$UseAlternateMinerLauncher = $true <# UselessGuru #>
     )
 
-    $PriorityNames = [PSCustomObject]@{-2 = "Idle"; -1 = "BelowNormal"; 0 = "Normal"; 1 = "AboveNormal"; 2 = "High"; 3 = "RealTime"}
+    $PriorityNames = @{
+        -2 = "Idle"
+        -1 = "BelowNormal"
+        0  = "Normal"
+        1  = "AboveNormal"
+        2  = "High"
+        3  = "RealTime"
+    }
 
     if ($UseAlternateMinerLauncher) {
 
-        $ShowWindow = [PSCustomObject]@{"Normal" = "SW_SHOW"; "Maximized" = "SW_SHOWMAXIMIZE"; "Minimized" = "SW_SHOWMINNOACTIVE"}
+        $ShowWindow = @{
+            Normal    = "SW_SHOW"
+            Maximized = "SW_SHOWMAXIMIZE"
+            Minimized = "SW_SHOWMINNOACTIVE"
+        }
 
         $Job = Start-Job `
             -InitializationScript ([scriptblock]::Create("Set-Location('$(Get-Location)');. .\Includes\CreateProcess.ps1")) `
@@ -966,7 +977,7 @@ function Start-SubProcess {
 
             . .\Includes\CreateProcess.ps1
             $ControllerProcess = Get-Process -Id $ControllerProcessID
-            if ($null -eq $ControllerProcess) {return}
+            if (-not $ControllerProcess) {return}
 
             $ProcessParams = @{
                 Binary           = $FilePath
@@ -978,17 +989,26 @@ function Start-SubProcess {
                 WorkingDirectory = $WorkingDirectory
             }
             $Process = Invoke-CreateProcess @ProcessParams
-            if ($null -eq $Process) {
-                [PSCustomObject]@{ProcessId = $null}
+            if (-not $Process) {
+                [PSCustomObject]@{
+                    ProcessId = $null
+                }
                 return
             }
 
-            [PSCustomObject]@{ProcessId = $Process.Id; ProcessHandle = $Process.Handle}
+            [PSCustomObject]@{
+                ProcessId     = $Process.Id
+                ProcessHandle = $Process.Handle
+            }
 
-            $ControllerProcess.Handle | Out-Null
-            $Process.Handle | Out-Null
+            $null = $ControllerProcess.Handle
+            $null = $Process.Handle
 
-            do {if ($ControllerProcess.WaitForExit(1000)) {$Process.CloseMainWindow() | Out-Null}}
+            do {
+                if ($ControllerProcess.WaitForExit(1000)) {
+                    $null = $Process.CloseMainWindow()
+                }
+            }
             while ($Process.HasExited -eq $false)
         }
     } else {
@@ -996,38 +1016,56 @@ function Start-SubProcess {
             param($ControllerProcessID, $FilePath, $ArgumentList, $WorkingDirectory, $MinerWindowStyle)
 
             $ControllerProcess = Get-Process -Id $ControllerProcessID
-            if ($null -eq $ControllerProcess) {return}
-
-            $ProcessParam = @{}
-            $ProcessParam.Add("FilePath", $FilePath)
-            $ProcessParam.Add("WindowStyle", $MinerWindowStyle)
-            if ($ArgumentList -ne "") {$ProcessParam.Add("ArgumentList", $ArgumentList)}
-            if ($WorkingDirectory -ne "") {$ProcessParam.Add("WorkingDirectory", $WorkingDirectory)}
-            $Process = Start-Process @ProcessParam -PassThru
-            if ($null -eq $Process) {
-                [PSCustomObject]@{ProcessId = $null}
+            if (-not $ControllerProcess) {
                 return
             }
 
-            [PSCustomObject]@{ProcessId = $Process.Id; ProcessHandle = $Process.Handle}
+            $ProcessParam = @{
+                FilePath         = $FilePath
+                WindowStyle      = $MinerWindowStyle
+                ArgumentList     = $(if ($ArgumentList) {$ArgumentList})
+                WorkingDirectory = $(if ($WorkingDirectory) {$WorkingDirectory})
+            }
 
-            $ControllerProcess.Handle | Out-Null
-            $Process.Handle | Out-Null
+            $Process = Start-Process @ProcessParam -PassThru
+            if (-not $Process) {
+                [PSCustomObject]@{
+                    ProcessId = $null
+                }
+                return
+            }
 
-            do {if ($ControllerProcess.WaitForExit(1000)) {$Process.CloseMainWindow() | Out-Null}}
+            [PSCustomObject]@{
+                ProcessId     = $Process.Id
+                ProcessHandle = $Process.Handle
+            }
+
+            $null = $ControllerProcess.Handle
+            $null = $Process.Handle
+
+            do {
+                if ($ControllerProcess.WaitForExit(1000)) {
+                    $null = $Process.CloseMainWindow()
+                }
+            }
             while ($Process.HasExited -eq $false)
 
         }
     }
 
-    do {Start-Sleep 1; $JobOutput = Receive-Job $Job}
-    while ($null -eq $JobOutput)
+    do {
+        Start-Sleep -Seconds 1
+        $JobOutput = Receive-Job $Job
+    }
+    while ($JobOutput -eq $null)
 
-    $Process = Get-Process | Where-Object Id -EQ $JobOutput.ProcessId
-    $Process.Handle | Out-Null
-    $Process
+    if ($JobOutput.ProcessId -gt 0) {
+        $Process = Get-Process | Where-Object Id -eq $JobOutput.ProcessId
+        $null = $Process.Handle
+        $Process
 
-    if ($Process) {$Process.PriorityClass = $PriorityNames.$Priority}
+        if ($Process) {$Process.PriorityClass = $PriorityNames.$Priority}
+    }
 }
 
 function Expand-WebRequest {
