@@ -1,5 +1,5 @@
 {
-"Path" : ".\\Bin\\NA-Phoenix\\PhoenixMiner_2.8c\\Phoenixminer.exe",
+"Path" : ".\\Bin\\NA-Phoenix\\PhoenixMiner_3.0c\\Phoenixminer.exe",
 "ExtractionPath" : ".\\Bin\\NA-Phoenix\\",
 "Uri" : "https://github.com/yuzi-co/miners/releases/download/2018.6/PhoenixMiner_3.0c.zip",
 "Types" : ["NVIDIA"],
