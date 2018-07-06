@@ -5,13 +5,16 @@ function Set-NvidiaPowerLimit ([int]$PowerLimitPercent, [string]$Devices) {
     if ($PowerLimitPercent -eq 0) { return }
     foreach ($Device in @($Devices -split ',')) {
 
-        $Command = '.\includes\nvidia-smi.exe'
-        $Arguments = @(
-            "-i $Device"
-            "--query-gpu=power.default_limit"
-            "--format=csv,noheader"
-        )
-        $PowerDefaultLimit = [int](((& $Command $Arguments) -replace 'W').Trim())
+        # $Command = (Resolve-Path -Path '.\includes\nvidia-smi.exe').Path
+        # $Arguments = @(
+        #     "-i $Device"
+        #     "--query-gpu=power.default_limit"
+        #     "--format=csv,noheader"
+        # )
+        # $PowerDefaultLimit = [int](((& $Command $Arguments) -replace 'W').Trim())
+
+        $xpr = ".\includes\nvidia-smi.exe -i " + $Device + " --query-gpu=power.default_limit --format=csv,noheader"
+        $PowerDefaultLimit = [int]((invoke-expression $xpr) -replace 'W', '')
 
         #powerlimit change must run in admin mode
         $newProcess = New-Object System.Diagnostics.ProcessStartInfo ".\includes\nvidia-smi.exe"
