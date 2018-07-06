@@ -1,7 +1,7 @@
 {
     "Path": "jce_cn_cpu_miner$(if($DeviceGroup.Features.'64bit'){'64'}else{'32'}).exe",
-    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.windows.029e.zip",
-    "SHA256": "1e9942300fac5d240fe031cfca17ad73063833b2896e1c9060a6d704f19e63b9",
+    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.windows.031a.zip",
+    "SHA256": "5AD8CB2A5F78EE0836B0A6AD3B573C5619CB2EF0A15C51B3892264E935ED009B",
     "Type": "CPU",
     "Arguments": [
         "-o #Server#:#Port#",
@@ -31,6 +31,7 @@
         "CryptoNightHeavy": "--variation 5 --auto",
         "CryptoNightHeavy|dh": "--variation 5 -c config-CryptoNightHeavy.txt",
         "CryptoNightMkt": "--variation 9 --auto",
+        "CryptoNightSaber": "--variation 13 --auto",
         "CryptoNightV7": "--variation 3 --auto",
         "CryptoNightXTL": "--variation 7 --auto"
     }
