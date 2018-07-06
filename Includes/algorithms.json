@@ -1,5 +1,6 @@
 {
     "aeon": "CryptoLightV7",
+    "aergo": "Aergo",
     "allium": "Allium",
     "argon2dcrds": "Argon2d250",
     "argon2ddyn": "Argon2d500",
@@ -47,6 +48,7 @@
     "dmdgr": "DiamondGroestl",
     "equihash1445": "Zhash",
     "equihash1927": "Zero",
+    "equihash192": "Zero",
     "equihash": "Equihash",
     "equihashbtcz": "Zhash",
     "equihashbtg": "EquihashBTG",
