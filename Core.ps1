@@ -799,7 +799,7 @@ while ($Quit -eq $false) {
                 }
             }
         } else {
-            #An existant miner is not found now
+            #An existing miner is not found now
             $ActiveMiner.IsValid = $false
         }
     }
@@ -869,8 +869,9 @@ while ($Quit -eq $false) {
     }
 
     ## Reset failed miners after 4 hours
-    $ActiveMiners.SubMiners | Where-Object {$_.Status -eq 'Cancelled' -and $_.Stats.LastTimeActive -lt (Get-Date).AddHours(-4)} | ForEach-Object {
+    $ActiveMiners.SubMiners | Where-Object {$_.Status -eq 'Failed' -and $_.Stats.LastTimeActive -lt (Get-Date).AddHours(-4)} | ForEach-Object {
         $_.Status = 'Idle'
+        $_.Stats.FailedTimes = 0
         Log-Message "Reset failed miner status: $($ActiveMiners[$_.IdF].Name)/$($ActiveMiners[$_.IdF].Algorithms)"
     }
 
@@ -908,6 +909,15 @@ while ($Quit -eq $false) {
                 "with Power Limit $($BestLast.PowerLimit) " +
                 "(id $($BestLast.IdF)-$($BestLast.Id)) " +
                 "for group $($DeviceGroup.GroupName)")
+
+            # cancel miner if current pool workers below MinWorkers
+            if (
+                $ActiveMiners[$BestLast.IdF].PoolWorkers -ne $null -and
+                $ActiveMiners[$BestLast.IdF].PoolWorkers -le $config.MinWorkers
+            ) {
+                $BestLast.Status = 'PendingCancellation'
+                Log-Message "Cancelling miner due to low worker count"
+            }
         } else {
             $ProfitLast = 0
         }
@@ -940,7 +950,7 @@ while ($Quit -eq $false) {
         #check if must cancel miner/algo/coin combo
         if ($BestLast.Status -eq 'PendingCancellation') {
             if (($ActiveMiners[$BestLast.IdF].SubMiners.Stats.FailedTimes | Measure-Object -sum).sum -ge 3) {
-                $ActiveMiners[$BestLast.IdF].SubMiners | ForEach-Object {$_.Status = 'Cancelled'}
+                $ActiveMiners[$BestLast.IdF].SubMiners | ForEach-Object {$_.Status = 'Failed'}
                 Log-Message "Detected more than 3 fails, cancelling combination for $BestNowLogMsg" -Severity Warn
             }
         }
@@ -950,7 +960,7 @@ while ($Quit -eq $false) {
 
         ## Select top miner that need Benchmark, or if running in Manual mode, or highest Profit above zero.
         $BestNow = $Candidates.SubMiners |
-            Where-Object Status -ne 'Cancelled' |
+            Where-Object Status -ne 'Failed' |
             ForEach-Object {if ($_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt 0) {$_}} |
             Sort-Object -Descending NeedBenchmark, {$(if ($MiningMode -eq "Manual") {$_.HashRate} else {$_.Profits})}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
@@ -978,7 +988,7 @@ while ($Quit -eq $false) {
         if (
             $BestLast.IdF -ne $BestNow.IdF -or
             $BestLast.Id -ne $BestNow.Id -or
-            $BestLast.Status -in @("PendingCancellation", "Cancelled") -or
+            $BestLast.Status -in @('PendingCancellation', 'Failed') -or
             -not $BestNow
         ) {
             ### something changes or some miner error
@@ -1001,7 +1011,7 @@ while ($Quit -eq $false) {
             #     }
 
             #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
-            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = "Running"
+            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = 'Running'
             #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.LastTimeActive = Get-Date
             #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.LastTimeActive = Get-Date
             #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.StatsTime = Get-Date
@@ -1010,22 +1020,22 @@ while ($Quit -eq $false) {
             #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].TimeSinceStartInterval = [TimeSpan]0
 
             #     $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Best = $false
-            #     Switch ($BestLast.Status) {
-            #         "Running" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Idle"}
-            #         "PendingCancellation" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Failed"}
-            #         "Cancelled" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Cancelled"}
+            #     switch ($BestLast.Status) {
+            #         'Running' {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = 'Idle'}
+            #         'PendingCancellation' {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = 'Cancelled'}
+            #         'Failed' {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = 'Failed'}
             #     }
 
             #     Log-Message "$BestNowLogMsg - Marked as best, changed Power Limit from $($BestLast.PowerLimit)"
 
             # } else
             if (
-                $ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))) -or
-                $BestNow.NeedBenchmark -or
-                $BestLast.Status -in @("Running", "PendingCancellation", "Cancelled") -or
-                -not $BestNow -or
+                $DonationInterval -or
                 -not $BestLast -or
-                $DonationInterval
+                -not $BestNow -or
+                $BestNow.NeedBenchmark -or
+                $BestLast.Status -in @('PendingCancellation', 'Failed') -or
+                ($BestLast.Status -in @('Running') -and $ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))))
             ) {
                 #Must launch other miner and/or stop actual
 
@@ -1040,7 +1050,7 @@ while ($Quit -eq $false) {
                         if (
                             $DelayCloseMiners -eq 0 -or
                             $BestNow.NeedBenchmark -or
-                            $BestLast.Status -eq 'PendingCancellation'
+                            $BestLast.Status -in @('PendingCancellation', 'Failed')
                         ) {
                             #immediate kill
                             Exit-Process $ActiveMiners[$BestLast.IdF].Process
@@ -1058,10 +1068,10 @@ while ($Quit -eq $false) {
 
                     $ActiveMiners[$BestLast.IdF].Process = $null
                     $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Best = $false
-                    Switch ($BestLast.Status) {
-                        "Running" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Idle"}
-                        "PendingCancellation" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Failed"}
-                        "Cancelled" {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = "Cancelled"}
+                    switch ($BestLast.Status) {
+                        'Running' {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = 'Idle'}
+                        'PendingCancellation' {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = 'Cancelled'}
+                        'Failed' {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = 'Failed'}
                     }
                 }
 
@@ -1115,7 +1125,7 @@ while ($Quit -eq $false) {
                     }
                     $ActiveMiners[$BestNow.IdF].Process = Start-SubProcess @ProcessParams @CommonParams
 
-                    $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = "Running"
+                    $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = 'Running'
                     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].BestBySwitch = ""
                     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.LastTimeActive = Get-Date
                     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.StatsTime = Get-Date
@@ -1128,7 +1138,7 @@ while ($Quit -eq $false) {
                 $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Best = $true
                 if ($ProfitLast -lt $ProfitNow) {
                     $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].BestBySwitch = "*"
-                    Log-Message "$BestNowLogMsg Continue mining due to percenttoswitch value"
+                    Log-Message "$BestNowLogMsg Continue mining due to PercentToSwitch value"
                 }
             }
         }
@@ -1144,7 +1154,7 @@ while ($Quit -eq $false) {
         Set-Stats @Params
     }
 
-    if ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty Subminers | Where-Object {$_.NeedBenchmark -and $_.Status -ne 'Cancelled'}) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
+    if ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty Subminers | Where-Object {$_.NeedBenchmark -and $_.Status -ne 'Failed'}) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
 
     if ($DonationInterval) { $NextInterval = $DonateInterval }
     elseif ($NeedBenchmark) { $NextInterval = $BenchmarkIntervalTime }
@@ -1500,7 +1510,7 @@ while ($Quit -eq $false) {
 
             $ProfitMiners = @()
             if ($ShowBestMinersOnly) {
-                foreach ($SubMiner in ($ActiveMiners.SubMiners | Where-Object {$ActiveMiners[$_.IdF].IsValid -and $_.Status -ne "Cancelled"})) {
+                foreach ($SubMiner in ($ActiveMiners.SubMiners | Where-Object {$ActiveMiners[$_.IdF].IsValid -and $_.Status -ne 'Failed'})) {
                     $Candidates = $ActiveMiners |
                         Where-Object {$_.IsValid -and
                         $_.DeviceGroup.Id -eq $ActiveMiners[$SubMiner.IdF].DeviceGroup.Id -and
@@ -1766,6 +1776,7 @@ while ($Quit -eq $false) {
             $ActiveMiners.SubMiners | Where-Object Best | ForEach-Object {
                 if ($_.NeedBenchmark -and $_.SpeedReads.Count -eq 0) {
                     $_.Status = 'PendingCancellation'
+                    $_.Stats.FailedTimes++
                     Log-Message "No speed detected while benchmark $($ActiveMiners[$_.IdF].Name)/$($ActiveMiners[$_.IdF].Algorithm) (id $($ActiveMiners[$_.IdF].Id))" -Severity Warn
                 }
             }
