@@ -113,7 +113,7 @@ $Screen = $Config.STARTSCREEN
 #---Parameters checking
 
 if ($MiningMode -NotIn @('Manual', 'Automatic', 'Automatic24h')) {
-    Log-Message "Parameter MiningMode not valid, valid options: Manual, Automatic, Automatic24h" -Severity Error
+    Log-Message "Parameter MiningMode not valid, valid options: Manual, Automatic, Automatic24h" -Severity Warn
     Exit
 }
 $Params = @{
@@ -133,17 +133,17 @@ $PoolsErrors = switch ($MiningMode) {
 }
 
 $PoolsErrors | ForEach-Object {
-    Log-Message "Selected MiningMode is not valid for pool $($_.Name)" -Severity Error
+    Log-Message "Selected MiningMode is not valid for pool $($_.Name)" -Severity Warn
     Exit
 }
 
 if ($MiningMode -eq 'Manual' -and ($CoinsName -split ',').Count -ne 1) {
-    Log-Message "On manual mode one coin must be selected" -Severity Error
+    Log-Message "On manual mode one coin must be selected" -Severity Warn
     Exit
 }
 
 if ($MiningMode -eq 'Manual' -and ($Algorithm -split ',').Count -ne 1) {
-    Log-Message "On manual mode one algorithm must be selected" -Severity Error
+    Log-Message "On manual mode one algorithm must be selected" -Severity Warn
     Exit
 }
 
@@ -361,8 +361,9 @@ while ($Quit -eq $false) {
         }
         $AllPools = Get-Pools @Params
         if ($AllPools.Count -eq 0) {
-            Log-Message "NO POOLS! Retry in 10 sec. If you are mining on anonymous pool without exchage, like YIIMP, NANOPOOL or similar, you must set wallet for at leat one pool coin in config.ini" -Severity Warn
-            Start-Sleep 10
+            Log-Message "NO POOLS! Retry in 30 seconds" -Severity Warn
+            Log-Message "If you are mining on anonymous pool without exchage, like YIIMP, NANOPOOL or similar, you must set wallet for at least one pool coin in config.ini" -Severity Warn
+            Start-Sleep 30
         }
     } while ($AllPools.Count -eq 0)
 
@@ -432,7 +433,7 @@ while ($Quit -eq $false) {
     foreach ($MinerFile in $MinersFolderContent) {
         try { $Miner = $MinerFile | Get-Content | ConvertFrom-Json }
         catch {
-            Log-Message "Badly formed JSON: $MinerFile" -Severity Error
+            Log-Message "Badly formed JSON: $MinerFile" -Severity Warn
             Exit
         }
 
@@ -752,7 +753,11 @@ while ($Quit -eq $false) {
 
     #Paint no miners message
     $Miners = $Miners | Where-Object {Test-Path $_.Path}
-    if ($Miners.Count -eq 0) {Log-Message "NO MINERS!" -Severity Error; Exit}
+    if ($Miners.Count -eq 0) {
+        Log-Message "NO MINERS! Retry in 30 seconds..." -Severity Warn
+        Start-Sleep -Seconds 30
+        Continue
+    }
 
     #Update the active miners list which is alive for all execution time
     foreach ($ActiveMiner in ($ActiveMiners | Sort-Object [int]id)) {
@@ -770,7 +775,7 @@ while ($Quit -eq $false) {
 
         if (($Miner | Measure-Object).count -gt 1) {
             Clear-Host
-            Log-Message "DUPLICATED MINER $($Miner.Algorithms) in $($Miner.Name)" -Severity Error
+            Log-Message "DUPLICATE MINER $($Miner.Algorithms) in $($Miner.Name)" -Severity Warn
             Exit
         }
 
