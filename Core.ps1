@@ -223,10 +223,10 @@ while ($Quit -eq $false) {
     # Check for updates
     try {
         $Request = Invoke-RestMethod -Uri "https://api.github.com/repos/yuzi-co/$Application/releases/latest" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
-        $RemoteVersion = ($Request.tag_name -replace '^v')
+        $RemoteVersion = ($Request.tag_name -replace '[^\d.]')
         $Uri = $Request.assets | Where-Object Name -eq "$($Application)-$($RemoteVersion).7z" | Select-Object -ExpandProperty browser_download_url
 
-        if ($RemoteVersion -gt $Release) {
+        if ([version]$RemoteVersion -gt [version]$Release) {
             Log-Message "$Application is out of date. There is an updated version available at $URI" -Severity Warn
         }
     } catch {
