@@ -1,7 +1,7 @@
 {
     "Path": "excavator\\excavator.exe",
-    "Uri": "https://github.com/nicehash/excavator/releases/download/v1.5.6a/excavator_v1.5.6a_NVIDIA_Win64.zip",
-    "SHA256": "5a719dc4380bf5b3215e2fd9247f6940453f30266797b814ea53f058665424ea",
+    "Uri": "https://github.com/nicehash/excavator/releases/download/v1.5.8a/excavator_v1.5.8a_NVIDIA_Win64.zip",
+    "SHA256": "FCEB4E64E468FE7916B419E836947B1FE4D981E1DC6971BE529CD73B56AB9CF7",
     "Type": "NVIDIA",
     "GenerateConfigFile": "excavator\\#GroupName#-#Algorithm#.json",
     "PatternConfigFile": ".\\Patterns\\excavator15Pattern.txt",
