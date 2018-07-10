@@ -1038,6 +1038,7 @@ while ($Quit -eq $false) {
                 $DonationInterval -or
                 -not $BestLast -or
                 -not $BestNow -or
+                -not $ActiveMiners[$BestLast.IdF].IsValid -or
                 $BestNow.NeedBenchmark -or
                 $BestLast.Status -in @('PendingCancellation', 'Failed') -or
                 ($BestLast.Status -in @('Running') -and $ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))))
