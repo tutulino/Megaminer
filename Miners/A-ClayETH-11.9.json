@@ -1,29 +1,30 @@
 {
     "Path": "EthDcrMiner64.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/ClaymoreDual11.8.7z",
-    "SHA256": "bfc45db8cad39fef1c275e1e3d2f5418220db2629fb65380bfabb3f081b0ab2b",
-    "Type": "NVIDIA",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.7/ClaymoreDual11.9.7z",
+    "SHA256": "D0B97F7F14B719F7ECE050597024D0D46A1BBA3F4139A8C4ADF133793A735A3F",
+    "Type": "AMD",
     "Arguments": [
         "-epool #Protocol#://#Server#:#Port#",
         "-ewal #Login#",
         "-epsw #Password#",
         "-esm #EthStMode#",
+        "-mode 1",
         "-wd 1",
         "-r -1",
         "-logfile #GroupName#_log.txt",
         "-logsmaxsize 10",
-        "-mode 1",
-        "-platform 2",
+        "-platform 1",
         "-di #DevicesClayMode#",
-        "-allpools 1",
         "-mport -#APIPort#",
+        "-allpools 1",
         "#AlgorithmParameters#"
     ],
     "API": "Claymore",
-    "APIPort": 4068,
+    "APIPort": 4028,
     "Fee": "$(if ($DeviceGroup.MemoryGB -gt 3){0.01}else{0})",
     "SSL": true,
     "Algorithms": {
-        "Ethash": ""
+        "Ethash|a1": "-asm 1",
+        "Ethash|a2": "-asm 2"
     }
 }
