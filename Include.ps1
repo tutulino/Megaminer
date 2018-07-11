@@ -122,29 +122,25 @@ function Exit-Process {
         $Process
     )
 
-    $stopped = $false
-    $procid = $Process.Id
-    do {
-        try {
-            $null = $Process.CloseMainWindow()
-            $null = $Process.WaitForExit(5 * 1000)
-            if (-not $Process.HasExited -or (Get-Process -Id $procid -ErrorAction SilentlyContinue)) {
-                Log-Message "Process $($Process.ProcessName) did not exit for 5 sec. Killing it." -Severity Debug
-                $null = $Process.Kill()
-                $null = $Process.WaitForExit(5 * 1000)
-                if (-not $Process.HasExited -or (Get-Process -Id $procid -ErrorAction SilentlyContinue)) {
-                    throw [Exception]::new("Can't stop process!")
-                } else {
-                    $stopped = $true
-                }
-            } else {
-                $stopped = $true
+    $sw = [Diagnostics.Stopwatch]::new()
+    try {
+        $Process.CloseMainWindow() | Out-Null
+        $sw.Start()
+        do {
+            if ($sw.Elapsed.TotalSeconds -gt 1) {
+                Stop-Process -InputObject $Process -Force
             }
-        } catch {
-            Log-Message "Cannot stop process $($Process.ProcessName)" -Severity Warn
+            if (!$Process.HasExited) {
+                Start-Sleep -Milliseconds 1
+            }
+        } while (!$Process.HasExited)
+    } finally {
+        $sw.Stop()
+        if (!$Process.HasExited) {
+            Stop-Process -InputObject $Process -Force
         }
-    } while (-not $stopped)
-    Remove-Variable procid, stopped
+    }
+    Remove-Variable sw
 }
 
 function Get-DevicesInformation ($Types) {
