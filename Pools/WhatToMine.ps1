@@ -65,6 +65,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     'bk14=true&factor[bk14_hr]=10&factor[bk14_p]=0&' + #Decred
     'cn=true&factor[cn_hr]=10&factor[cn_p]=0&' + #CryptoNight
     'cn7=true&factor[cn7_hr]=10&factor[cn7_p]=0&' + #CryptoNightV7
+    'cnh=true&factor[cnh_hr]=10&factor[cnh_p]=0&' + #CryptoNightHeavy
     'eq=true&factor[eq_hr]=10&factor[eq_p]=0&' + #Equihash
     'eth=true&factor[eth_hr]=10&factor[eth_p]=0&' + #Ethash
     'grof=true&factor[gro_hr]=10&factor[gro_p]=0&' + #Groestl
@@ -75,6 +76,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     'ns=true&factor[ns_hr]=10&factor[ns_p]=0&' + #NeoScrypt
     'pas=true&factor[pas_hr]=10&factor[pas_p]=0&' + #Pascal
     'phi=true&factor[phi_hr]=10&factor[phi_p]=0&' + #PHI
+    'phi2=true&factor[phi2_hr]=10&factor[phi2_p]=0&' + #PHI2
     'skh=true&factor[skh_hr]=10&factor[skh_p]=0&' + #Skunk
     'x11gf=true&factor[x11g_hr]=10&factor[x11g_p]=0&' + #X11gost
     'x16r=true&factor[x16r_hr]=10&factor[x16r_p]=0&' + #X16r
@@ -132,7 +134,8 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             "Lyra2v2" {1000}
             "Lyra2z" { 1000000 }
             "NeoScrypt" { 1000 }
-            "PHI" { 1000000 }
+            "Phi" { 1000000 }
+            "Phi2" { 1000000 }
             "Skunk" { 1000000 }
             "Tensority" { 1 }
             "X16r" { 1000000 }
