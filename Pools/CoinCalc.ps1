@@ -70,14 +70,9 @@ if ($Querymode -in @("Core", "Menu")) {
 
         # Algo fixes
         switch ($Coin.Name) {
-            'Stellite' {$Coin.Algorithm = 'CryptoNightXTL'}
-            'Masari' {$Coin.Algorithm = 'CryptoNightFast'}
-
             'PURK' {$Coin.Algorithm = 'WildKeccakPurk'}
             'Boolberry' {$Coin.Algorithm = 'WildKeccakBbr'}
 
-            'BitcoinGold' {$Coin.Algorithm = 'EquihashBTG'}
-            'BitcoinZ' {$Coin.Algorithm = 'EquihashBTCZ'}
             'LitecoinZ' {$Coin.Algorithm = 'EquihashLTZ'}
             'SafeCoin' {$Coin.Algorithm = 'EquihashSafe'}
             'SnowGem' {$Coin.Algorithm = 'EquihashXSG'}
