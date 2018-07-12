@@ -1,7 +1,7 @@
 {
     "Path": "SRBMiner-CN.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.7/SRBMiner-CN-V1-6-3.7z",
-    "SHA256": "52E267AFDC98117E311C4B63353C28E71E7243C47A992DD4C0C51A1A359BF56C",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.7/SRBMiner-CN-V1-6-4.7z",
+    "SHA256": "49141BB3EE184C541CAE2A3E9EA1EE78F0C869EB71DB382F59BC4B0508905009",
     "Type": "AMD",
     "GenerateConfigFile": "config-#GroupName#-#Algorithm#.txt",
     "PatternConfigFile": ".\\Patterns\\SRBMinerConfig-Pattern.txt",
@@ -11,6 +11,7 @@
         "--cwallet #Login#",
         "--cpassword #Password#",
         "--disablegpuwatchdog",
+        "--sendallstales",
         "$(if ($enableSSL){'--ctls true'})",
         "$(if ($Nicehash){'--cnicehash true'})"
     ],
