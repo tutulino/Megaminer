@@ -141,6 +141,7 @@
     "yescryptr16": "YescryptR16",
     "yescryptr32": "YescryptR32",
     "yescryptr8": "YescryptR8",
+    "yespower": "YesPower",
     "zec": "Equihash",
     "zhash": "Zhash",
     "zoin": "Lyra2z330",
