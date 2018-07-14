@@ -22,7 +22,7 @@
         "EquihashBTG": "--algo 144_5 --pers BgoldPoW",
         "EquihashLTZ": "--algo 144_5 --pers ZcashPoW",
         "EquihashSafe": "--algo 144_5 --pers Safecoin",
-        "EquihashXTG": "--algo 144_5 --pers sngemPoW",
+        "EquihashXSG": "--algo 144_5 --pers sngemPoW",
         "Mars": "--algo 96_5",
         "Zero": "--algo 192_7 --pers ZERO_PoW"
     }
