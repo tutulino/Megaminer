@@ -16,14 +16,14 @@
     "APIPort": 4048,
     "Fee": 0.01,
     "Algorithms": {
-        "CryptoLightV7": "-a cryptonight-lite --variant 1",
-        "CryptoNightAlloy": "-a cryptonight --variant xao",
-        "CryptoNightArto": "-a cryptonight --variant rto",
-        "CryptoNightFast": "-a cryptonight --variant fast",
-        "CryptoNightHaven": "-a cryptonight-heavy --variant xhv",
-        "CryptoNightHeavy": "-a cryptonight-heavy",
-        "CryptoNightSaber": "-a cryptonight-heavy --variant tube",
-        "CryptoNightV7": "-a cryptonight --variant 1",
-        "CryptoNightXTL": "-a cryptonight --variant xtl"
+        "CryptoLightV7": "-a cn-lite/1",
+        "CryptoNightAlloy": "-a cn/xao",
+        "CryptoNightArto": "-a cn/rto",
+        "CryptoNightFast": "-a cn/msr",
+        "CryptoNightHaven": "-a cn-heavy/xhv",
+        "CryptoNightHeavy": "-a cn-heavy",
+        "CryptoNightSaber": "-a cn-heavy/tube",
+        "CryptoNightV7": "-a cn/1",
+        "CryptoNightXTL": "-a cn/xtl"
     }
 }
