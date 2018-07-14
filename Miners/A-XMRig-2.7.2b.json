@@ -1,0 +1,28 @@
+﻿{
+    "Path": "xmrig-amd.exe",
+    "Uri": "https://github.com/xmrig/xmrig-amd/releases/download/v2.7.2-beta/xmrig-amd-2.7.2-beta-win64.zip",
+    "SHA256": "EA4B86B4065B0EF64E7477CC338DD2479CCE12339787ED494DB6031DF8F5FAE6",
+    "Type": "AMD",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "--opencl-platform=#GPUPlatform#",
+        "--opencl-devices=#Devices#$(if(-not($DeviceGroup.MemoryGB -lt 8 -and $Algorithm -in @('CryptoNightHeavy', 'CryptoNightHaven'))){',#Devices#'})",
+        "$(if ($Nicehash){'--nicehash'})",
+        "--donate-level 1",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "XMRig",
+    "APIPort": 4028,
+    "Fee": 0.01,
+    "Algorithms": {
+        "CryptoLightV7": "-a  cn-lite/1 --opencl-launch=1024x8",
+        "CryptoNightFast": "-a cn/msr --opencl-launch=1024x8",
+        "CryptoNightHaven": "-a cn-heavy/xhv --opencl-launch=864x8",
+        "CryptoNightHeavy": "-a cn-heavy --opencl-launch=864x8",
+        "CryptoNightV7": "-a cn/1 --opencl-launch=1024x8",
+        "CryptoNightXTL": "-a cn/xtl --opencl-launch=1024x8"
+    }
+}
