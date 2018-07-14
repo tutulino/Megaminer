@@ -123,9 +123,9 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
         $WTMFactor = switch ($HPool.Algorithm) {
             "Bitcore" { 1000000 }
             "Blake2s" { 1000000 }
-            "CryptoLightV7" { 1 }
-            "CryptoNightV7" { 1 }
-            "CryptoNightHeavy" { 1 }
+            "CnLiteV7" { 1 }
+            "CnV7" { 1 }
+            "CnHeavy" { 1 }
             "Equihash" { 1 }
             "EquihashBTG" { 1 }
             "Ethash" { 1000000 }

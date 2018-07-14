@@ -14,6 +14,6 @@
     "APIPort": 4048,
     "SSL": true,
     "Algorithms": {
-        "CryptoNightV7": "-pow7 1"
+        "CnV7": "-pow7 1"
     }
 }

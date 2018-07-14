@@ -16,14 +16,14 @@
     "APIPort": 4048,
     "Fee": 0.01,
     "Algorithms": {
-        "CryptoLightV7": "-a cn-lite/1",
-        "CryptoNightAlloy": "-a cn/xao",
-        "CryptoNightArto": "-a cn/rto",
-        "CryptoNightFast": "-a cn/msr",
-        "CryptoNightHaven": "-a cn-heavy/xhv",
-        "CryptoNightHeavy": "-a cn-heavy",
-        "CryptoNightSaber": "-a cn-heavy/tube",
-        "CryptoNightV7": "-a cn/1",
-        "CryptoNightXTL": "-a cn/xtl"
+        "CnAlloy": "-a cn/xao",
+        "CnArto": "-a cn/rto",
+        "CnFast": "-a cn/msr",
+        "CnHaven": "-a cn-heavy/xhv",
+        "CnHeavy": "-a cn-heavy",
+        "CnLiteV7": "-a cn-lite/1",
+        "CnSaber": "-a cn-heavy/tube",
+        "CnV7": "-a cn/1",
+        "CnXTL": "-a cn/xtl"
     }
 }

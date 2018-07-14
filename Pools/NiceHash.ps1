@@ -96,7 +96,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         foreach ($location in $Locations.Keys) {
 
-            $enableSSL = ($Algo -in @('CryptoNightV7', 'Equihash'))
+            $enableSSL = ($Algo -in @('CnV7', 'Equihash'))
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $Algo

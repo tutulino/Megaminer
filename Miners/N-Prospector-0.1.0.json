@@ -10,7 +10,6 @@
     "APIPort": 4068,
     "Fee": 0.01,
     "Algorithms": {
-        "CryptoNightV7": "cryptonight",
         "Ethash": "ethash",
         "Skunk": "skunkhash"
     }

@@ -20,14 +20,14 @@
     "Fee": 0.0085,
     "SSL": true,
     "Algorithms": {
-        "CryptoLightV7": "liteV7",
-        "CryptoNightAlloy": "alloy",
-        "CryptoNightArto": "artocash",
-        "CryptoNightFast": "fast",
-        "CryptoNightHaven": "haven",
-        "CryptoNightHeavy": "heavy",
-        "CryptoNightMkt": "marketcash",
-        "CryptoNightSaber": "bittubev2",
-        "CryptoNightV7": "normalV7"
+        "CnAlloy": "alloy",
+        "CnArto": "artocash",
+        "CnFast": "fast",
+        "CnHaven": "haven",
+        "CnHeavy": "heavy",
+        "CnLiteV7": "litev7",
+        "CnMkt": "marketcash",
+        "CnSaber": "bittubev2",
+        "CnV7": "normalv7"
     }
 }

@@ -21,18 +21,17 @@
     "Fee": "$(if($DeviceGroup.Features.aes -and $DeviceGroup.Features.'64bit'){0.015}else{0.03})",
     "SSL": true,
     "Algorithms": {
-        "CryptoLightIPBC": "--variation 6 --auto",
-        "CryptoLightV7": "--variation 4 --auto",
-        "CryptoNightAlloy": "--variation 8 --auto",
-        "CryptoNightArto": "--variation 10 --auto",
-        "CryptoNightFast": "--variation 11 --auto",
-        "CryptoNightHaven": "--variation 12 --auto",
-        "CryptoNightHaven|dh": "--variation 12 -c config-CryptoNightHaven.txt",
-        "CryptoNightHeavy": "--variation 5 --auto",
-        "CryptoNightHeavy|dh": "--variation 5 -c config-CryptoNightHeavy.txt",
-        "CryptoNightMkt": "--variation 9 --auto",
-        "CryptoNightSaber": "--variation 13 --auto",
-        "CryptoNightV7": "--variation 3 --auto",
-        "CryptoNightXTL": "--variation 7 --auto"
+        "CnAlloy": "--variation 8 --auto",
+        "CnArto": "--variation 10 --auto",
+        "CnFast": "--variation 11 --auto",
+        "CnHaven": "--variation 12 --auto",
+        "CnHaven|dh": "--variation 12 -c config-CnHaven.txt",
+        "CnHeavy": "--variation 5 --auto",
+        "CnHeavy|dh": "--variation 5 -c config-CnHeavy.txt",
+        "CnLiteV7": "--variation 4 --auto",
+        "CnMkt": "--variation 9 --auto",
+        "CnSaber": "--variation 13 --auto",
+        "CnV7": "--variation 3 --auto",
+        "CnXTL": "--variation 7 --auto"
     }
 }

@@ -16,8 +16,7 @@
     "API": "Xgminer",
     "APIPort": 4028,
     "Algorithms": {
-        "CryptoNightV7": "-k cryptonight -g 2 -w 4 --rawintensity 560 --monero",
-        "PHI": "-k phi -g 2 -w 256 -X 256",
+        "Phi": "-k phi -g 2 -w 256 -X 256",
         "Tribus": "-k tribus -g 2 -w 64 -X 256",
         "X16r": "-k x16r -g 2 -w 128 -I 19",
         "X16s": "-k x16s -g 2 -w 128 -I 19",

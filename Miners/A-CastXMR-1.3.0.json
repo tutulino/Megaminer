@@ -19,13 +19,12 @@
     "APIPort": 4028,
     "Fee": 0.015,
     "Algorithms": {
-        "CryptoLightIPBC": "--algo=5",
-        "CryptoLightV7": "--algo=4",
-        "CryptoNightFast": "--algo=8",
-        "CryptoNightHaven": "--algo=7",
-        "CryptoNightHeavy": "--algo=2",
-        "CryptoNightSaber": "--algo=5",
-        "CryptoNightV7": "--algo=1",
-        "CryptoNightXTL": "--algo=6"
+        "CnFast": "--algo=8",
+        "CnHaven": "--algo=7",
+        "CnHeavy": "--algo=2",
+        "CnLiteV7": "--algo=4",
+        "CnSaber": "--algo=5",
+        "CnV7": "--algo=1",
+        "CnXTL": "--algo=6"
     }
 }

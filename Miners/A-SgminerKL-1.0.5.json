@@ -19,7 +19,7 @@
     "Fee": 0.01,
     "Algorithms": {
         "Aergo": "-k aergo -g 2 -w 64 -X 256",
-        "PHI": "-k phi -g 2 -w 256 -X 256",
+        "Phi": "-k phi -g 2 -w 256 -X 256",
         "X16r": "-k x16r -g 2 -w 64 -X 256",
         "X16s": "-k x16s -g 2 -w 64 -X 256",
         "X17": "-k x17 -g 2 -w 64 -X 256",

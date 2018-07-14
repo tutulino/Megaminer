@@ -27,7 +27,7 @@
         "Lyra2v2": "-a lyra2v2",
         "Lyra2z": "-a lyra2z",
         "NeoScrypt": "-a neoscrypt",
-        "PHI": "-a phi",
+        "Phi": "-a phi",
         "SHA256t": "-a sha256t",
         "Skunk": "-a skunk",
         "Timetravel": "-a timetravel",

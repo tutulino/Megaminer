@@ -21,12 +21,11 @@
     "Fee": 0.02,
     "SSL": true,
     "Algorithms": {
-        "CryptoLightIPBC": "--currency ipbc",
-        "CryptoLightV7": "--currency cryptonight_lite_v7",
-        "CryptoNightFast": "--currency cryptonight_masari",
-        "CryptoNightHaven": "--currency cryptonight_haven",
-        "CryptoNightHeavy": "--currency cryptonight_heavy",
-        "CryptoNightV7": "--currency cryptonight_v7",
-        "CryptoNightXTL": "--currency stellite"
+        "CnFast": "--currency cryptonight_masari",
+        "CnHaven": "--currency cryptonight_haven",
+        "CnHeavy": "--currency cryptonight_heavy",
+        "CnLiteV7": "--currency cryptonight_lite_v7",
+        "CnV7": "--currency cryptonight_v7",
+        "CnXTL": "--currency stellite"
     }
 }

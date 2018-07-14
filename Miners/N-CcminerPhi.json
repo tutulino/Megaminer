@@ -16,6 +16,6 @@
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {
-        "PHI": "-a phi"
+        "Phi": "-a phi"
     }
 }
