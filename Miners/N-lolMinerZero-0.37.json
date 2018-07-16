@@ -7,7 +7,7 @@
         "--server #Server#",
         "--port #Port#",
         "--user #Login#",
-        "--pass #Password#",
+        "--pass $(('#Password#' -split ',')[0])",
         "--platform #GPUPlatform#",
         "--device #Devices#",
         "--use-compact-short-stat",
