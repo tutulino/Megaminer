@@ -1,0 +1,20 @@
+﻿{
+    "Path": "cpuminer$($f = $DeviceGroup.Features; if ($f.avx2 -and $f.sha -and $f.aes) {'-avx2-sha'} elseif ($f.sse42 -and $f.sha -and $f.aes) {'-sse42-sha'} elseif ($f.avx2 -and $f.aes) {'-avx2'} elseif ($f.avx -and $f.aes) {'-avx'} elseif ($f.sse42) {'-sse42'} elseif ($f.sse2) {'-sse2'} else {''}).exe",
+    "Uri": "https://github.com/bubasik/cpuminer-opt-yespower/releases/download/v3.8.8.3/cpuminer-opt-cryply-yespower-ver2.zip",
+    "SHA256": "A13F46AC84C9738A5BBFEA9299336EA4D75A637207BB2E85607DFBB24688111B",
+    "Type": "CPU",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-R 10",
+        "-r 4",
+        "-b #APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "Ccminer",
+    "APIPort": 4048,
+    "Algorithms": {
+        "YesPower": "-a yespower"
+    }
+}
