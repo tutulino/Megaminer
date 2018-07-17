@@ -1,24 +1,23 @@
 {
     "Path": "xmr-stak.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/xmr-stak-win64-2.4.5.7z",
-    "SHA256": "f9576888a193c585fe77022fe4116a32fc29aa1b7923d729b8b1ff514aa04afc",
-    "Type": "AMD",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.7/xmr-stak-win64-2.4.6.7z",
+    "SHA256": "F9A71F3C60E896275777E9AC4C784DFE187119B89751DB1E4E8B48C6B0C17C23",
+    "Type": "NVIDIA",
     "Arguments": [
         "$(if ($enableSSL){'-O'}else{'-o'}) #Server#:#Port#",
         "-u #Login#",
         "-p #Password#",
         "-r #WorkerName#",
-        "--noNVIDIA",
         "--noCPU",
+        "--noAMD",
         "--noUAC",
-        "--noAMDCache",
         "$(if ($Nicehash){'--use-nicehash'})",
         "--httpd #APIPort#",
-        "--amd #GroupName#-#Algorithm#.txt",
+        "--nvidia #GroupName#-#Algorithm#.txt",
         "#AlgorithmParameters#"
     ],
     "API": "XMRig",
-    "APIPort": 4028,
+    "APIPort": 4068,
     "Fee": 0.02,
     "SSL": true,
     "Algorithms": {
@@ -26,6 +25,7 @@
         "CnHaven": "--currency cryptonight_haven",
         "CnHeavy": "--currency cryptonight_heavy",
         "CnLiteV7": "--currency cryptonight_lite_v7",
+        "CnSaber": "--currency cryptonight_bittube2",
         "CnV7": "--currency cryptonight_v7",
         "CnXTL": "--currency stellite"
     }
