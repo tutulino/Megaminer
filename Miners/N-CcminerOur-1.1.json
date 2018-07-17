@@ -1,7 +1,7 @@
 {
-    "Path": "ourminer-x64-1.0.0-cuda-9.1\\ourminer-x64.exe",
-    "Uri": "https://github.com/ourpool/ourminer/files/2130348/OurMiner-x64-1.0.0-cuda-9.1.zip",
-    "SHA256": "a6e3badd4fe79b0189a24e21766fd4d4a97fe993af9a93fd5d52d10ab713b95e",
+    "Path": "ourminer-x64-1.1.0-cuda-9.2\\ourminer-x64.exe",
+    "Uri": "https://github.com/ourpool/ourminer/files/2196175/ourminer-x64-1.1.0-cuda-9.2.zip",
+    "SHA256": "33586037D58FC7075C1A80C3D02D25E730678E19CD8838483D04C29538380677",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
