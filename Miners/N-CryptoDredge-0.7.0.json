@@ -1,5 +1,5 @@
 {
-    "Path": "CryptoDredge.exe",
+    "Path": "CryptoDredge_0.7.0\\CryptoDredge.exe",
     "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.7.0/CryptoDredge_0.7.0_windows.zip",
     "SHA256": "CA8525A6F0CA976BD22B5DF9489EA0BF171E6B25BDF1E7655FA9EC70204FC78F",
     "Type": "NVIDIA",
