@@ -1,7 +1,7 @@
 ﻿{
     "Path": "xmrig-amd.exe",
-    "Uri": "https://github.com/xmrig/xmrig-amd/releases/download/v2.7.2-beta/xmrig-amd-2.7.2-beta-win64.zip",
-    "SHA256": "EA4B86B4065B0EF64E7477CC338DD2479CCE12339787ED494DB6031DF8F5FAE6",
+    "Uri": "https://github.com/xmrig/xmrig-amd/releases/download/v2.7.3-beta/xmrig-amd-2.7.3-beta-win64.zip",
+    "SHA256": "5E10526A475BA5F59D1FFE138F40622638BAB5C23CF0A2EB3A110237D49D6611",
     "Type": "AMD",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -18,10 +18,13 @@
     "APIPort": 4028,
     "Fee": 0.01,
     "Algorithms": {
+        "CnAlloy": "-a cn/xao --opencl-launch=1024x8",
+        "CnArto": "-a cn/rto --opencl-launch=1024x8",
         "CnFast": "-a cn/msr --opencl-launch=1024x8",
         "CnHaven": "-a cn-heavy/xhv --opencl-launch=864x8",
         "CnHeavy": "-a cn-heavy --opencl-launch=864x8",
         "CnLiteV7": "-a  cn-lite/1 --opencl-launch=1024x8",
+        "CnSaber": "-a cn-heavy/tube --opencl-launch=864x8",
         "CnV7": "-a cn/1 --opencl-launch=1024x8",
         "CnXTL": "-a cn/xtl --opencl-launch=1024x8"
     }
