@@ -1,0 +1,28 @@
+{
+    "Path": "t-rex.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.7/t-rex-0.5.1-win-cuda9.1.zip",
+    "SHA256": "F699DDCE39326F01B325E813BA4D00DFF8A657A8750DCAB2234E96CF140B55C1",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-d #Devices#",
+        "-R 10",
+        "-r 4",
+        "-b 127.0.0.1:#APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "Ccminer",
+    "APIPort": 4068,
+    "Fee": 0.01,
+    "Algorithms": {
+        "C11": "-a c11",
+        "HSR": "-a hsr",
+        "Lyra2z": "-a lyra2z",
+        "Phi": "-a phi",
+        "Phi2": "-a phi2",
+        "Tribus": "-a tribus",
+        "X17": "-a x17"
+    }
+}
