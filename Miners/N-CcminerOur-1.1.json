@@ -17,7 +17,7 @@
     "APIPort": 4068,
     "Algorithms": {
         "Lyra2z": "-a lyra2z",
-        "X16r": "-a x16r",
-        "X16s": "-a x16s"
+        "_X16r": "-a x16r",
+        "_X16s": "-a x16s"
     }
 }
