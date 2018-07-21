@@ -72,7 +72,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     }
 
     $Request = Invoke-APIRequest -Url $($ApiUrl + "/status") -Retry 3
-    if (!$Request) {
+    if (-not $Request) {
         Write-Warning "$Name API NOT RESPONDING...ABORTING"
         Exit
     }
