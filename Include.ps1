@@ -1173,12 +1173,26 @@ function Get-Pools {
             #must have wallet
             if (!$Pool.User) {continue}
 
+            # Include pool algos and coins
+            if (
+                (
+                    $Config.("IncludeAlgos_" + $Pool.PoolName) -and
+                    $Pool.Algorithm -notin @($Config.("IncludeAlgos_" + $Pool.PoolName) -split ',')
+                ) -or (
+                    $Config.("IncludeCoins_" + $Pool.PoolName) -and
+                    $Pool.Info -notin @($Config.("IncludeCoins_" + $Pool.PoolName) -split ',')
+                )
+            ) {
+                Log-Message "Excluding $($Pool.Algorithm)/$($Pool.Info) on $($Pool.PoolName) due to Include filter" -Severity Debug
+                continue
+            }
+
             # Exclude pool algos and coins
             if (
                 $Pool.Algorithm -in @($Config.("ExcludeAlgos_" + $Pool.PoolName) -split ',') -or
                 $Pool.Info -in @($Config.("ExcludeCoins_" + $Pool.PoolName) -split ',')
             ) {
-                Log-Message "Excluding $($Pool.Algorithm)/$($Pool.Info) on $($Pool.PoolName)" -Severity Debug
+                Log-Message "Excluding $($Pool.Algorithm)/$($Pool.Info) on $($Pool.PoolName) due to Exclude filter" -Severity Debug
                 continue
             }
 
