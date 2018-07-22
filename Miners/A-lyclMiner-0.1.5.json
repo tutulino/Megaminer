@@ -1,7 +1,7 @@
 {
     "Path": "lyclMiner015\\lyclMiner.exe",
     "Uri": "https://github.com/CryptoGraphics/lyclMiner/releases/download/untagged-95777e4326ae4e5ccdb5/lyclMiner015.zip",
-    "SHA256": "623aa6b4249efcf34249a5b2a4d1cdc23656fe9acca5a37386badcd8e96fe633",
+    "SHA256": "3EF8FD82BD1D837C52C7518337C707FFE96AA00D26054CBF473AD94A1F01496F",
     "Type": "AMD",
     "GenerateConfigFile": "lyclMiner015\\#GroupName#-#Algorithm#.conf",
     "PatternConfigFile": ".\\Patterns\\lyclMinerPattern.txt",
