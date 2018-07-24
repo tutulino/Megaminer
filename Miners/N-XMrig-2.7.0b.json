@@ -1,0 +1,30 @@
+{
+    "Path": "xmrig-nvidia.exe",
+    "Uri": "https://github.com/xmrig/xmrig-nvidia/releases/download/v2.7.0-beta/xmrig-nvidia-2.7.0-beta-cuda9-win64.zip",
+    "SHA256": "14C9E888B61B9D2881519503D0344F9E35C2BA5BB3D66B3B1110BAFC510CABC2",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "--cuda-devices=#Devices#",
+        "$(if ($Nicehash){'--nicehash'})",
+        "--donate-level 1",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "XMRig",
+    "APIPort": 4068,
+    "Fee": 0.01,
+    "Algorithms": {
+        "CnAlloy": "-a cn/xao",
+        "CnArto": "-a cn/rto",
+        "CnFast": "-a cn/msr",
+        "CnHaven": "-a cn-heavy/xhv",
+        "CnHeavy": "-a cn-heavy",
+        "CnLiteV7": "-a  cn-lite/1",
+        "CnSaber": "-a cn-heavy/tube",
+        "CnV7": "-a cn/1",
+        "CnXTL": "-a cn/xtl"
+    }
+}
