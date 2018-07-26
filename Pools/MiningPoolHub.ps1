@@ -30,30 +30,31 @@ if ($Querymode -eq "info") {
 
 if ($Querymode -eq "APIKEY") {
 
-    $Request = Invoke-APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" + $Info.ApiKey + "&id=" + "&$(Get-Date -Format "yyyy-MM-dd_HH-mm")") -Retry 3 |
-        Select-Object -ExpandProperty getdashboarddata | Select-Object -ExpandProperty data
+    $Request = Invoke-APIRequest -Url "https://$($Info.Symbol).miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=$($Info.ApiKey)&id=&$(Get-Date -Format "yyyy-MM-dd_HH-mm")" -Retry 3
 
-    if ($Request) {
+    if ($Request.getdashboarddata.data) {
+        $Data = $Request.getdashboarddata.data
         $Result = [PSCustomObject]@{
             Pool     = $name
             currency = $Info.Symbol
-            balance  = $Request.balance.confirmed +
-            $Request.balance.unconfirmed +
-            $Request.balance_for_auto_exchange.confirmed +
-            $Request.balance_for_auto_exchange.unconfirmed +
-            $Request.balance_on_exchange
+            balance  = $Data.balance.confirmed +
+            $Data.balance.unconfirmed +
+            $Data.balance_for_auto_exchange.confirmed +
+            $Data.balance_for_auto_exchange.unconfirmed +
+            $Data.balance_on_exchange
         }
         Remove-Variable Request
+        Remove-Variable Data
     }
 }
 
 if ($Querymode -eq "SPEED") {
 
-    $Request = Invoke-APIRequest -Url $("https://" + $Info.Symbol + ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" + $Info.ApiKey + "&$(Get-Date -Format "yyyy-MM-dd_HH-mm")") -Retry 1 |
-        Select-Object -ExpandProperty getuserworkers | Select-Object -ExpandProperty data
+    $Request = Invoke-APIRequest -Url "https://$($Info.Symbol).miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=$($Info.ApiKey)&$(Get-Date -Format "yyyy-MM-dd_HH-mm")" -Retry 1
 
-    if ($Request) {
-        $Result = $Request | ForEach-Object {
+    if ($Request.getuserworkers.data) {
+        $Data = $Request.getuserworkers.data
+        $Result = $Data | ForEach-Object {
             if ($_.HashRate -gt 0) {
                 [PSCustomObject]@{
                     PoolName   = $name
@@ -64,6 +65,7 @@ if ($Querymode -eq "SPEED") {
             }
         }
         Remove-Variable Request
+        Remove-Variable Data
     }
 }
 
@@ -98,9 +100,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
         $MiningPoolHub_Price = [double]($_.profit / $Divisor)
 
         # fix for equihash btg
-        if ($_.coin_name -eq 'bitcoin-gold') {
-            $MiningPoolHub_Hosts = "us-east.equihash-hub.miningpoolhub.com;asia.equihash-hub.miningpoolhub.com;europe.equihash-hub.miningpoolhub.com" -split ';'
-        }
         if ($_.coin_name -eq 'electroneum') {
             $MiningPoolHub_Algorithm = 'Cn'
         }
