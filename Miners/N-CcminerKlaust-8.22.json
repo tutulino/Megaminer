@@ -1,7 +1,7 @@
 {
     "Path": "ccminer.exe",
-    "Uri": "https://github.com/KlausT/ccminer/releases/download/8.21/ccminer-821-cuda91-x64.zip",
-    "SHA256": "79029e0287780982a2b913987171f26dee736b2541b381bc4995d02b76d38a6f",
+    "Uri": "https://github.com/KlausT/ccminer/releases/download/8.22/ccminer-822-cuda92-x64.zip",
+    "SHA256": "61B40A3FAC6016E82A93DF799E4A57F5E06034D0CA92872D70E8F5FE2E3723B2",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
