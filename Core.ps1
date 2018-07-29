@@ -966,29 +966,33 @@ while ($Quit -eq $false) {
         ## Select top miner that need Benchmark, or if running in Manual mode, or highest Profit above zero.
         $BestNow = $Candidates.SubMiners |
             Where-Object Status -ne 'Failed' |
-            ForEach-Object {if ($_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt 0) {$_}} |
+            Where-Object {$_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt $Config.('MinProfit_' + $DeviceGroup.GroupName) -or $DonationInterval} |
             Sort-Object -Descending NeedBenchmark, {$(if ($MiningMode -eq "Manual") {$_.HashRate} else {$_.Profits})}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
 
-        if ($BestNow -eq $null) {Log-Message "No valid candidate for device group $($DeviceGroup.GroupName)" -Severity Warn; Continue}
+        if ($BestNow) {
+            $BestNowLogMsg = $(
+                "$($ActiveMiners[$BestNow.IdF].Name)/" +
+                "$($ActiveMiners[$BestNow.IdF].Algorithms)/" +
+                "$($ActiveMiners[$BestNow.IdF].Coin)" +
+                "$(if ($ActiveMiners[$BestNow.IdF].CoinDual) { '_' + $ActiveMiners[$BestNow.IdF].CoinDual}) " +
+                "with Power Limit $($BestNow.PowerLimit) " +
+                "(id $($BestNow.IdF)-$($BestNow.Id))"
+                "for group $($DeviceGroup.GroupName)")
 
-        $BestNowLogMsg = $(
-            "$($ActiveMiners[$BestNow.IdF].Name)/" +
-            "$($ActiveMiners[$BestNow.IdF].Algorithms)/" +
-            "$($ActiveMiners[$BestNow.IdF].Coin)" +
-            "$(if ($ActiveMiners[$BestNow.IdF].CoinDual) { '_' + $ActiveMiners[$BestNow.IdF].CoinDual}) " +
-            "with Power Limit $($BestNow.PowerLimit) " +
-            "(id $($BestNow.IdF)-$($BestNow.Id))"
-            "for group $($DeviceGroup.GroupName)")
-        $ProfitNow = $BestNow.Profits
+            $ProfitNow = $BestNow.Profits
 
-        if ($BestNow.NeedBenchmark -eq $false) {
-            $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].BestBySwitch = ""
-            $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.BestTimes++
-            $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.BestTimes++
+            if ($BestNow.NeedBenchmark -eq $false) {
+                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].BestBySwitch = ""
+                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.BestTimes++
+                $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.BestTimes++
+            }
+
+            Log-Message "$BestNowLogMsg is the best combination for device group, last was $BestLastLogMsg"
+        } else {
+            Log-Message "No valid candidate for device group $($DeviceGroup.GroupName)" -Severity Warn
+            # Continue
         }
-
-        Log-Message "$BestNowLogMsg is the best combination for device group, last was $BestLastLogMsg"
 
         if (
             $BestLast.IdF -ne $BestNow.IdF -or
@@ -997,43 +1001,6 @@ while ($Quit -eq $false) {
             -not $BestNow
         ) {
             ### something changes or some miner error
-
-            # if (
-            #     $false -and ### Because not all miners live nicely with powerlimit changes during run
-            #     $BestLast.IdF -eq $BestNow.IdF -and
-            #     $BestLast.Id -ne $BestNow.Id
-            # ) {
-            #     #Must launch other SubMiner
-            #     if ($BestNow.PowerLimit -ne $BestLast.PowerLimit) {
-            #         if ($abControl) {
-            #             Set-AfterburnerPowerLimit -PowerLimitPercent $BestNow.PowerLimit -DeviceGroup $ActiveMiners[$BestNow.IdF].DeviceGroup
-            #         } elseif ($BestNow.PowerLimit -ne 0) {
-            #             switch ($ActiveMiners[$BestNow.IdF].DeviceGroup.Type) {
-            #                 'NVIDIA' { Set-NvidiaPowerLimit $BestNow.PowerLimit $ActiveMiners[$BestNow.IdF].DeviceGroup.Devices }
-            #                 Default {}
-            #             }
-            #         }
-            #     }
-
-            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Best = $true
-            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Status = 'Running'
-            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.LastTimeActive = Get-Date
-            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.LastTimeActive = Get-Date
-            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.StatsTime = Get-Date
-            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].Stats.ActivatedTimes++
-            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory.ActivatedTimes++
-            #     $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].TimeSinceStartInterval = [TimeSpan]0
-
-            #     $ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Best = $false
-            #     switch ($BestLast.Status) {
-            #         'Running' {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = 'Idle'}
-            #         'PendingCancellation' {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = 'Cancelled'}
-            #         'Failed' {$ActiveMiners[$BestLast.IdF].SubMiners[$BestLast.Id].Status = 'Failed'}
-            #     }
-
-            #     Log-Message "$BestNowLogMsg - Marked as best, changed Power Limit from $($BestLast.PowerLimit)"
-
-            # } else
             if (
                 $DonationInterval -or
                 -not $BestLast -or
@@ -1149,15 +1116,17 @@ while ($Quit -eq $false) {
             }
         }
 
-        $Params = @{
-            Algorithm  = $ActiveMiners[$BestNow.IdF].Algorithms
-            MinerName  = $ActiveMiners[$BestNow.IdF].Name
-            GroupName  = $ActiveMiners[$BestNow.IdF].DeviceGroup.GroupName
-            AlgoLabel  = $ActiveMiners[$BestNow.IdF].AlgoLabel
-            PowerLimit = $BestNow.PowerLimit
-            Value      = $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory
+        if ($BestNow) {
+            $Params = @{
+                Algorithm  = $ActiveMiners[$BestNow.IdF].Algorithms
+                MinerName  = $ActiveMiners[$BestNow.IdF].Name
+                GroupName  = $ActiveMiners[$BestNow.IdF].DeviceGroup.GroupName
+                AlgoLabel  = $ActiveMiners[$BestNow.IdF].AlgoLabel
+                PowerLimit = $BestNow.PowerLimit
+                Value      = $ActiveMiners[$BestNow.IdF].SubMiners[$BestNow.Id].StatsHistory
+            }
+            Set-Stats @Params
         }
-        Set-Stats @Params
     }
 
     if ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty Subminers | Where-Object {$_.NeedBenchmark -and $_.Status -ne 'Failed'}) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
@@ -1171,7 +1140,7 @@ while ($Quit -eq $false) {
             $PoolInterval  # Return value
         } | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum
     }
-    if (-not $NextInterval) {$NextInterval = 60} # fix cases when no best miners available
+    if (-not $NextInterval) {$NextInterval = 60} # when no best miners available retry every minute
     Log-Message "Next interval: $NextInterval"
 
     $FirstLoopExecution = $true
