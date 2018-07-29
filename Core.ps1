@@ -1430,24 +1430,28 @@ while ($Quit -eq $false) {
             }
         }
 
-        $ScreenOut | Format-Table (
-            @{Label = "Group"; Expression = {$_.GroupName}},
-            @{Label = "Algorithm"; Expression = {$_.Algorithm}},
-            @{Label = "Coin"; Expression = {$_.Coin}},
-            @{Label = "Miner"; Expression = {$_.Miner}},
-            @{Label = "LocalSpeed"; Expression = {$_.LocalSpeed} ; Align = 'right'},
-            @{Label = "PwLim"; Expression = {$_.PwLim} ; Align = 'right'},
-            @{Label = "Watt"; Expression = {$_.Power} ; Align = 'right'},
-            @{Label = "$LocalCurrency/W"; Expression = {$_.EfficiencyW}  ; Align = 'right'},
-            @{Label = "mBTC/Day"; Expression = {$_.mbtcDay} ; Align = 'right'},
-            @{Label = "$LocalCurrency/Day"; Expression = {$_.RevDay} ; Align = 'right'},
-            @{Label = "Profit/Day"; Expression = {$_.ProfitDay} ; Align = 'right'},
-            # @{Label = "Hash/W"; Expression = {$_.EfficiencyH} ; Align = 'right'},
-            @{Label = "PoolSpeed"; Expression = {$_.PoolSpeed} ; Align = 'right'},
-            @{Label = "Pool"; Expression = {$_.Pool} ; Align = 'right'},
-            @{Label = "Workers"; Expression = {$_.Workers} ; Align = 'right'},
-            @{Label = "Loc."; Expression = {$_.Location} ; Align = 'right'}
-        ) | Out-Host
+        if ($ScreenOut) {
+            $ScreenOut | Format-Table (
+                @{Label = "Group"; Expression = {$_.GroupName}},
+                @{Label = "Algorithm"; Expression = {$_.Algorithm}},
+                @{Label = "Coin"; Expression = {$_.Coin}},
+                @{Label = "Miner"; Expression = {$_.Miner}},
+                @{Label = "LocalSpeed"; Expression = {$_.LocalSpeed} ; Align = 'right'},
+                @{Label = "PwLim"; Expression = {$_.PwLim} ; Align = 'right'},
+                @{Label = "Watt"; Expression = {$_.Power} ; Align = 'right'},
+                @{Label = "$LocalCurrency/W"; Expression = {$_.EfficiencyW}  ; Align = 'right'},
+                @{Label = "mBTC/Day"; Expression = {$_.mbtcDay} ; Align = 'right'},
+                @{Label = "$LocalCurrency/Day"; Expression = {$_.RevDay} ; Align = 'right'},
+                @{Label = "Profit/Day"; Expression = {$_.ProfitDay} ; Align = 'right'},
+                # @{Label = "Hash/W"; Expression = {$_.EfficiencyH} ; Align = 'right'},
+                @{Label = "PoolSpeed"; Expression = {$_.PoolSpeed} ; Align = 'right'},
+                @{Label = "Pool"; Expression = {$_.Pool} ; Align = 'right'},
+                @{Label = "Workers"; Expression = {$_.Workers} ; Align = 'right'},
+                @{Label = "Loc."; Expression = {$_.Location} ; Align = 'right'}
+            ) | Out-Host
+        } else {
+            Write-Warning "No miners above MinProfit"
+        }
 
         if ($config.ApiPort -gt 0) {
             #generate api response
