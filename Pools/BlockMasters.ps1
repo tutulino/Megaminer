@@ -97,11 +97,6 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         $Divisor = 1000000 * $Algo.mbtc_mh_factor
 
-        switch ($Pool_Algo) {
-            #temp fix for profitability
-            "YescryptR16" {$Divisor *= 1000}
-        }
-
         $Result += [PSCustomObject]@{
             Algorithm             = $Pool_Algo
             Info                  = $Pool_Algo
