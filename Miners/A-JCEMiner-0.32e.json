@@ -15,9 +15,10 @@
         "--no-cpu",
         "--doublecheck",
         "--mport #APIPort#",
+        "--stakjson",
         "#AlgorithmParameters#"
     ],
-    "API": "JCE",
+    "API": "XMRig",
     "APIPort": 4028,
     "Fee": 0.009,
     "SSL": true,
