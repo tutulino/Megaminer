@@ -1,0 +1,21 @@
+{
+    "Path": "sgminer.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.7/sgminer-phi2-fancyIX-win64-beta.7z",
+    "SHA256": "9623C82D2BF8E135BD5B6EEFB1C66CCCAC39DF1C7A59EC564A2C6D994760A790",
+    "Type": "AMD",
+    "Arguments": [
+        "-o #Protocol#://#Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "--gpu-platform #GPUPlatform#",
+        "--device #Devices#",
+        "--api-listen",
+        "--api-port #APIPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "Xgminer",
+    "APIPort": 4028,
+    "Algorithms": {
+        "Phi2": "-k phi2 -w 32 -I 20"
+    }
+}
