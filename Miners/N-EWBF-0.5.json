@@ -1,7 +1,7 @@
 {
     "Path": "miner.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.7/EWBF.Equihash.miner.v0.4.7z",
-    "SHA256": "34CCF9AF9856BCF9AD6295335334FDFA906E997E3439A1948C251B6DF4DD760E",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.8/EWBF.Equihash.miner.v0.5.7z",
+    "SHA256": "06ADF942D3E932B10882A54867E483E7A7168C93341F1EA6E4297A785424860D",
     "Type": "NVIDIA",
     "Arguments": [
         "--server #Server#",
