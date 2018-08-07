@@ -1570,9 +1570,12 @@ while ($Quit -eq $false) {
 
         #############################################################
 
-        if ($Screen -eq "Wallets" -or $FirstTotalExecution) {
+        if (
+            ($Screen -eq "Wallets" -or -not $WalletStatusAtStart) -and
+            -not $ExitLoop
+        ) {
 
-            if ($null -eq $WalletsUpdate) {
+            if (-not $WalletsUpdate) {
                 #wallets only refresh for manual request
 
                 $WalletsUpdate = Get-Date
@@ -1631,10 +1634,10 @@ while ($Quit -eq $false) {
                     " " * 70 | Out-Host
                 }
 
-                if (!$WalletStatusAtStart) {$WalletStatusAtStart = $WalletStatus}
+                if (-not $WalletStatusAtStart) {$WalletStatusAtStart = $WalletStatus}
 
                 foreach ($Wallet in $WalletStatus) {
-                    if (!$Wallet.BalanceAtStart) {
+                    if (-not $Wallet.BalanceAtStart) {
                         $BalanceAtStart = $WalletStatusAtStart | Where-Object {
                             $_.Wallet -eq $Wallet.Wallet -and
                             $_.PoolName -eq $Wallet.PoolName -and
