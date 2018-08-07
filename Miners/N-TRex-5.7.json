@@ -1,7 +1,7 @@
 {
     "Path": "t-rex.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.8/t-rex-0.5.6-win-cuda9.1.7z",
-    "SHA256": "FFD1C64BB2EB1C31814F68D30C88E5042F71CA8CC59E1FE127A2F09C6095CBFC",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.8/t-rex-0.5.7-win-cuda9.1.zip",
+    "SHA256": "AF1B390BB3F5544DFCEF08A43878A4E75D4D4E62E5C2C9B2C60FD193E1F3E3C3",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
