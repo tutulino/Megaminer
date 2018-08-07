@@ -1,7 +1,7 @@
 {
-    "Path": "CryptoDredge_0.8.0\\CryptoDredge.exe",
-    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.8.0/CryptoDredge_0.8.0_cuda_9.2_windows.zip",
-    "SHA256": "E8434E619C269A04FB453BF8F710AB88B3843C16F84EB7BCF93C90D10818974A",
+    "Path": "CryptoDredge_0.8.3\\CryptoDredge.exe",
+    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.8.3/CryptoDredge_0.8.3_cuda_9.2_windows.zip",
+    "SHA256": "FBED2475934C294A1A53D102001357ACA600039D97B607F1BA53D01EF47E3A70",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
