@@ -54,17 +54,19 @@ do {
                 $Words = $Words | Select-Object -Last 1
             }
 
-            $HashRate = 0
-            foreach ($Word in $Words) {
-                if ($Word -match "([0-9.]+)([kmgtp]?h)/s") {
-                    $HashRate += [decimal]$Matches[1] * $(switch ($Matches[2]) {
-                            'kh' { 1e3 }
-                            'mh' { 1e6 }
-                            'gh' { 1e9 }
-                            'th' { 1e12 }
-                            'ph' { 1e15 }
-                            Default { 1 }
-                        })
+            if ($Words) {
+                $HashRate = 0
+                foreach ($Word in $Words) {
+                    if ($Word -match "([0-9.]+)([kmgtp]?h)/s") {
+                        $HashRate += [decimal]$Matches[1] * $(switch ($Matches[2]) {
+                                'kh' { 1e3 }
+                                'mh' { 1e6 }
+                                'gh' { 1e9 }
+                                'th' { 1e12 }
+                                'ph' { 1e15 }
+                                Default { 1 }
+                            })
+                    }
                 }
             }
 
