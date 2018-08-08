@@ -73,9 +73,12 @@ if ($Querymode -in @("Core", "Menu")) {
             'PURK' {$Coin.Algorithm = 'WildKeccakPurk'}
             'Boolberry' {$Coin.Algorithm = 'WildKeccakBbr'}
 
+            'BitcoinGold' {$Coin.Algorithm = 'EquihashBTG'}
+            'BitcoinZ' {$Coin.Algorithm = 'EquihashBTCZ'}
             'LitecoinZ' {$Coin.Algorithm = 'EquihashLTZ'}
             'SafeCoin' {$Coin.Algorithm = 'EquihashSafe'}
             'SnowGem' {$Coin.Algorithm = 'EquihashXSG'}
+            'Zelcash' {$Coin.Algorithm = 'EquihashZEL'}
         }
     }
 

@@ -79,7 +79,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "Haven"; algo = "CnHaven"; symbol = "XHV"; port = 5566; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Loki"; algo = "CnHeavy"; symbol = "LOKI"; port = 5577; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "PrivatePay"; algo = "CnFast"; symbol = "XPP"; port = 6050; fee = 0.01}
-    $Pools += [PSCustomObject]@{coin = "Quantum Resistant Ledger"; algo = "CnV7"; symbol = "QRL"; port = 6010; fee = 0.01}
+    $Pools += [PSCustomObject]@{coin = "Quantum R L"; algo = "CnV7"; symbol = "QRL"; port = 6010; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "RYO"; algo = "CnHeavy"; symbol = "RYO"; port = 5555; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "Saronite"; algo = "CnHeavy"; symbol = "XRN"; port = 5599; fee = 0.01}
     $Pools += [PSCustomObject]@{coin = "SolaceCoin"; algo = "CnHeavy"; symbol = "SOLACE"; port = 5588; fee = 0.01}

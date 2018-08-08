@@ -80,7 +80,8 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
     'skh=true&factor[skh_hr]=10&factor[skh_p]=0&' + #Skunk
     'x11gf=true&factor[x11g_hr]=10&factor[x11g_p]=0&' + #X11gost
     'x16r=true&factor[x16r_hr]=10&factor[x16r_p]=0&' + #X16r
-    'xn=true&factor[xn_hr]=10&factor[xn_p]=0' #Xevan
+    'xn=true&factor[xn_hr]=10&factor[xn_p]=0&' #Xevan
+    'zh=true&factor[zh_hr]=10&factor[zh_p]=0' #ZHash (Equihash144)
 
     $WTMResponse = Invoke-APIRequest -Url $WtmUrl -Retry 3 | Select-Object -ExpandProperty coins
     if (!$WTMResponse) {
@@ -104,6 +105,10 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             $res = $WTMResponse.($_)
             $res | Add-Member name (Get-CoinUnifiedName $_)
             $res.Algorithm = Get-AlgoUnifiedName ($res.Algorithm)
+            switch ($res.name) {
+                'BitcoinZ' {$res.Algorithm = 'EquihashBTCZ'}
+                'BitcoinGold' {$res.Algorithm = 'EquihashBTG'}
+            }
             if ($res.Status -eq "Active") {$res}
         }
         Remove-Variable WTMResponse
@@ -116,7 +121,8 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
         $HPool.Info = Get-CoinUnifiedName $HPool.Info
 
         switch ($HPool.Info) {
-            'BitcoinZ' {$HPool.Algorithm = 'Zhash'}
+            'BitcoinZ' {$HPool.Algorithm = 'EquihashBTCZ'}
+            'BitcoinGold' {$HPool.Algorithm = 'EquihashBTG'}
         }
 
         #we must add units for each algo, this value must be filled if we want a coin to be selected
@@ -126,8 +132,8 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
             "CnLiteV7" { 1 }
             "CnV7" { 1 }
             "CnHeavy" { 1 }
-            "Equihash" { 1 }
             "EquihashBTG" { 1 }
+            "EquihashBTCZ" { 1 }
             "Ethash" { 1000000 }
             "Keccak" { 1000000 }
             "KeccakC" { 1000000 }
@@ -165,7 +171,7 @@ if ($Querymode -eq "core" -or $Querymode -eq "Menu") {
                 if ($WtmSecCoin) {
                     $WtmCoin = Invoke-APIRequest -Url ('https://whattomine.com/coins/' + $WtmSecCoin.Id + '.json?hr=10&p=0&fee=0.0&cost=0.0&hcost=0.0') -Retry 3
                     if ($WtmCoin) {
-                        if (![decimal]$WtmCoin.btc_revenue) {
+                        if (-not [decimal]$WtmCoin.btc_revenue) {
                             if (!$CMCResponse) {
                                 'Calling CoinMarketCap API' | Write-Host
                                 $CMCResponse = Invoke-APIRequest -Url "https://api.coinmarketcap.com/v1/ticker/?limit=0" -MaxAge 60 -Retry 1
