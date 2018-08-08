@@ -1,7 +1,7 @@
 {
     "Path": "z-enemy.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.8/z-enemy.1-14-cuda9.2_x64.zip",
-    "SHA256": "439F269B6B9BF1B9999E282B20CF9F374E0440BF37A0F302A0AD802A18D4678B",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.8/z-enemy.1-15a-cuda9.2_x64.zip",
+    "SHA256": "78E1989CE525925C5BA74C5D4141A367D6BD5E4D9C4DC69E101E89EE05AD5132",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -17,14 +17,16 @@
     "APIPort": 4068,
     "Fee": 0.01,
     "Algorithms": {
-        "AeriumX": "-a aeriumx -i 20",
+        "Aergo": "-a aeriumx -i 20",
         "Bitcore": "-a bitcore -i 20",
         "C11": "-a c11 -i 20",
+        "HEX": "-a hex -i 20",
         "Phi": "-a phi -i 20",
         "Phi2": "-a phi2 -i 20",
         "Polytimos": "-a poly -i 20",
+        "Renesis": "-a renesis -i 20",
         "Skunk": "-a skunk -i 20",
-        "Sonoa": "-a sonoa -i 20",
+        "SonoA": "-a sonoa -i 20",
         "TimeTravel": "-a timetravel -i 20",
         "Tribus": "-a tribus -i 20",
         "Vitalium": "-a vit -i 20",
