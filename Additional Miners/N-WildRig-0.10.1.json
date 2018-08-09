@@ -1,0 +1,26 @@
+﻿{
+    "Path": "wildrig.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.8/wildrig-0.10.1-beta.7z",
+    "SHA256": "A9901E9458BBDE4736FB7457C558D100B963BA12E5CE645706B2B4B32EEC08DA",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-o #Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-r 4",
+        "-R 10",
+        "--cuda-devices #Devices#",
+        "--opencl-launch 1024x256",
+        "--send-stale",
+        "--donate-level 0",
+        "--api-port #ApiPort#",
+        "--scratchpad-file scratchpad-#Algorithm#.bin",
+        "#AlgorithmParameters#"
+    ],
+    "API": "XMRig",
+    "APIPort": 4028,
+    "Algorithms": {
+        "WildKeccakPurk": "--scratchpad-url http://purk.fairpool.xyz/static/scratchpad.bin",
+        "WildKeccakBbr": "--scratchpad-url http://bbr.poolto.be/dl/scratchpad.bin"
+    }
+}
