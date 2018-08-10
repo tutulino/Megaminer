@@ -222,7 +222,7 @@ while ($Quit -eq $false) {
 
     # Check for updates
     try {
-        $Request = Invoke-RestMethod -Uri "https://api.github.com/repos/yuzi-co/$Application/releases/latest" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+        $Request = Invoke-APIRequest -Url "https://api.github.com/repos/yuzi-co/$Application/releases/latest" -Age 60
         $RemoteVersion = ($Request.tag_name -replace '[^\d.]')
         $Uri = $Request.assets | Where-Object Name -eq "$($Application)-$($RemoteVersion).7z" | Select-Object -ExpandProperty browser_download_url
 
