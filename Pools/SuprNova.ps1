@@ -81,6 +81,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "Hush"; algo = "Equihash"; symbol = "HUSH"; server = "hush.suprnova.cc"; port = 4048; location = "US"; portSSL = 4050; SSL = $true};
     $Pools += [PSCustomObject]@{coin = "Komodo"; algo = "Equihash"; symbol = "KMD"; server = "kmd.suprnova.cc"; port = 6250; location = "US"};
     $Pools += [PSCustomObject]@{coin = "Kreds"; algo = "Lyra2v2"; symbol = "KREDS"; server = "kreds.suprnova.cc"; port = 7196; location = "US"};
+    $Pools += [PSCustomObject]@{coin = "LUXCoin"; algo = "Phi2"; symbol = "LUX"; server = "lux.suprnova.cc"; port = 4565; location = "US"};
     $Pools += [PSCustomObject]@{coin = "MinexCoin"; algo = "Mars"; symbol = "MNX"; server = "mnx.suprnova.cc"; port = 7076; location = "US"};
     $Pools += [PSCustomObject]@{coin = "MonaCoin"; algo = "Lyra2v2"; symbol = "MONA"; server = "mona.suprnova.cc"; port = 2995; location = "US"; portSSL = 3001; SSL = $true};
     $Pools += [PSCustomObject]@{coin = "MUNCoin"; algo = "Skunk"; symbol = "MUN"; server = "mun.suprnova.cc"; port = 8963; location = "US"};
