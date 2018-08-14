@@ -150,6 +150,8 @@ function Get-DevicesInformation ($Types) {
     if ($abMonitor) {$abMonitor.ReloadAll()}
     if ($abControl) {$abControl.ReloadAll()}
 
+    #AMD
+    if ($Types | Where-Object Type -eq 'AMD') {
     if ($abMonitor) {
         foreach ($Type in @('AMD')) {
             $DeviceId = 0
@@ -182,8 +184,6 @@ function Get-DevicesInformation ($Types) {
             }
         }
     } else {
-        #AMD
-        if ($Types | Where-Object Type -eq 'AMD') {
             #ADL
             $DeviceId = 0
 

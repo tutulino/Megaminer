@@ -1170,12 +1170,17 @@ while ($Quit -eq $false) {
 
         $ExitLoop = $false
 
-        $Devices = Get-DevicesInformation $DeviceGroups
+        if ($Config.HardwareMonitoring -ne 'Disabled') {
+            $Devices = Get-DevicesInformation $DeviceGroups
+        } else {
+            $Devices = $null
+        }
 
         #############################################################
 
         #Check Live Speed and record benchmark if necessary
         $ActiveMiners.SubMiners | Where-Object Best | ForEach-Object {
+
             if ($FirstLoopExecution -and $_.NeedBenchmark) {$_.Stats.BenchmarkedTimes++; $_.StatsHistory.BenchmarkedTimes++}
             $_.SpeedLive = 0
             $_.SpeedLiveDual = 0
@@ -1192,10 +1197,10 @@ while ($Quit -eq $false) {
                 $_.RevenueLive = $_.SpeedLive * $ActiveMiners[$_.IdF].PoolPrice
                 $_.RevenueLiveDual = $_.SpeedLiveDual * $ActiveMiners[$_.IdF].PoolPriceDual
 
-                $_.PowerLive = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].DeviceGroup.GroupName) | Measure-Object -property PowerDraw -sum).sum
-
                 $_.ProfitsLive = ($_.RevenueLive * (1 - $ActiveMiners[$_.IdF].MinerFee) + $_.RevenueLiveDual) * $LocalBTCvalue
-                $_.ProfitsLive -= ($ElectricityCostValue * ($_.PowerLive * 24) / 1000)
+
+                $_.PowerLive = ($Devices | Where-Object group -eq ($ActiveMiners[$_.IdF].DeviceGroup.GroupName) | Measure-Object -property PowerDraw -sum).sum
+                if ($_.PowerLive) { $_.ProfitsLive -= ($ElectricityCostValue * ($_.PowerLive * 24) / 1000) }
 
                 $_.TimeSinceStartInterval = (Get-Date) - $_.Stats.LastTimeActive
                 $TimeSinceStartInterval = [int]$_.TimeSinceStartInterval.TotalSeconds
@@ -1234,7 +1239,7 @@ while ($Quit -eq $false) {
                         $_.SpeedReads = $_.SpeedReads[$p5Index..$p95Index] | Sort-Object Date
                     }
 
-                    if (($Config.LiveStatsUpdate) -eq "ENABLED" -or $_.NeedBenchmark) {
+                    if (($Config.LiveStatsUpdate) -eq "Enabled" -or $_.NeedBenchmark) {
 
                         if ($_.SpeedReads.Count -gt 20 -and $_.NeedBenchmark) {
                             ### If average of last 2 periods is within SpeedDelta, we can stop benchmarking
@@ -1265,28 +1270,28 @@ while ($Quit -eq $false) {
                             Value      = $_.SpeedReads
                         }
                         Set-HashRates @Params
-
                     }
                 }
             }
 
+            if ($Devices) {
             #WATCHDOG
-            $GroupDevices = @()
-            $GroupDevices += $Devices | Where-Object Group -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName
+                $GroupDevices = @()
+                $GroupDevices += $Devices | Where-Object Group -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName
 
-            $ActivityAverages += [PSCustomObject]@{
-                DeviceGroup     = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
-                Average         = ($GroupDevices | Measure-Object -property Utilization -average).average
-                NumberOfDevices = $GroupDevices.count
+                $ActivityAverages += [PSCustomObject]@{
+                    DeviceGroup     = $ActiveMiners[$_.IdF].DeviceGroup.GroupName
+                    Average         = ($GroupDevices | Measure-Object -property Utilization -average).average
+                    NumberOfDevices = $GroupDevices.count
+                }
+
+                if ($ActivityAverages.count -gt 20 -and ($ActiveMiners.SubMiners | Where-Object Best).count -gt 0) {
+                    $ActivityAverages = $ActivityAverages[($ActivityAverages.Count - 20)..($ActivityAverages.Count - 1)]
+                    $ActivityAverage = ($ActivityAverages | Where-Object DeviceGroup -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName | Measure-Object -property Average -maximum).maximum
+                    $ActivityDeviceCount = ($ActivityAverages | Where-Object DeviceGroup -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName | Measure-Object -property NumberOfDevices -maximum).maximum
+                    Log-Message "Last 20 reads maximum Device activity is $ActivityAverage for DeviceGroup $($ActiveMiners[$_.IdF].DeviceGroup.GroupName)" -Severity Debug
+                } else { $ActivityAverage = 100 } #only want watchdog works with at least 20 reads
             }
-
-            if ($ActivityAverages.count -gt 20 -and ($ActiveMiners.SubMiners | Where-Object Best).count -gt 0) {
-                $ActivityAverages = $ActivityAverages[($ActivityAverages.Count - 20)..($ActivityAverages.Count - 1)]
-                $ActivityAverage = ($ActivityAverages | Where-Object DeviceGroup -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName | Measure-Object -property Average -maximum).maximum
-                $ActivityDeviceCount = ($ActivityAverages | Where-Object DeviceGroup -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName | Measure-Object -property NumberOfDevices -maximum).maximum
-                Log-Message "Last 20 reads maximum Device activity is $ActivityAverage for DeviceGroup $($ActiveMiners[$_.IdF].DeviceGroup.GroupName)" -Severity Debug
-            } else { $ActivityAverage = 100 } #only want watchdog works with at least 20 reads
-
             ## HashRate Watchdog
             $WatchdogHashRateFail = $false
             if (
@@ -1299,7 +1304,7 @@ while ($Quit -eq $false) {
                 $AvgCurrDual = $_.SpeedReads[-10..-1] | Measure-Object -Average -Property SpeedDual | Select-Object -ExpandProperty Average
                 if (
                     ($_.HashRate / $AvgCurr - 1) -ge ($Config.WatchdogHashRate / 100) -and
-                    (!$_.HashRateDual -or ($_.HashRateDual / $AvgCurrDual - 1) -ge ($Config.WatchdogHashRate / 100))
+                    (-not $_.HashRateDual -or ($_.HashRateDual / $AvgCurrDual - 1) -ge ($Config.WatchdogHashRate / 100))
                 ) {
                     # Remove failing SpeedReads from statistics to prevent average skewing
                     $_.SpeedReads = $_.SpeedReads[0..($_.SpeedReads.count - 10)]
@@ -1312,7 +1317,7 @@ while ($Quit -eq $false) {
                 ($Config.WatchdogHashRate -and $WatchdogHashRateFail) -or
                 $ActiveMiners[$_.IdF].Process -eq $null -or
                 $ActiveMiners[$_.IdF].Process.HasExited -or
-                ($ActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100 -and $ActivityDeviceCount -gt 0)
+                ($Devices -and $ActivityAverage -le 40 -and $TimeSinceStartInterval -gt 100 -and $ActivityDeviceCount -gt 0)
             ) {
                 $ExitLoop = $true
                 $_.Status = "PendingCancellation"
