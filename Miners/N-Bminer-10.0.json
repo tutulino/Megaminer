@@ -15,8 +15,6 @@
     "SSL": true,
     "Algorithms": {
         "Tensority": "tensority",
-        "Equihash": "stratum",
-        "Ethash": "ethstratum",
         "EquihashBTG": "zhash"
     }
 }

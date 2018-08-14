@@ -16,14 +16,7 @@
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {
-        "Blakecoin": "-a blakecoin",
-        "C11": "-a c11",
-        "Fresh": "-a fresh",
-        "Keccak": "-a keccak -m 2",
-        "Lyra2v2": "-a lyra2v2",
-        "Neoscrypt": "-a Neoscrypt",
         "WhirlpoolX": "-a whirlpoolx",
-        "Whirlpool": "-a whirl",
-        "X17": "-a x17"
+        "Whirlpool": "-a whirl"
     }
 }

@@ -16,7 +16,6 @@
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {
-        "Lyra2z": "-a lyra2z",
         "Lyra2h": "-a lyra2h"
     }
 }

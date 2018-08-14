@@ -16,9 +16,6 @@
     "API": "Ccminer",
     "APIPort": 4068,
     "Algorithms": {
-        "Blake2s": "-a blake2s",
-        "Keccak": "-a keccak -m 2",
-        "Lyra2v2": "-a lyra2v2",
         "Polytimos": "-a poly",
         "Veltor": "-a veltor"
     }

@@ -19,9 +19,6 @@
     "Algorithms": {
         "C11": "-a c11",
         "HSR": "-a hsr",
-        "Lyra2z": "-a lyra2z",
-        "Phi": "-a phi",
-        "Phi2": "-a phi2",
         "Renesis": "-a renesis",
         "Tribus": "-a tribus",
         "X16r": "-a x16r",
