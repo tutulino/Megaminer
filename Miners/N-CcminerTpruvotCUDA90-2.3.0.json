@@ -15,6 +15,7 @@
     ],
     "API": "Ccminer",
     "APIPort": 4068,
+    "CUDA": 9.0,
     "Algorithms": {
         "C11": "-a c11",
         "HMQ1725": "-a hmq1725",

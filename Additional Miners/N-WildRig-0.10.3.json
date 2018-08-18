@@ -19,6 +19,8 @@
     ],
     "API": "XMRig",
     "APIPort": 4028,
+    "Fee": 0.02,
+    "CUDA": 9.2,
     "Algorithms": {
         "WildKeccakPurk": "--scratchpad-url http://purk.fairpool.xyz/static/scratchpad.bin",
         "WildKeccakBbr": "--scratchpad-url http://bbr.poolto.be/dl/scratchpad.bin"

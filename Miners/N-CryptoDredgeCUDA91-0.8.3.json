@@ -1,7 +1,7 @@
 {
     "Path": "CryptoDredge_0.8.3\\CryptoDredge.exe",
-    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.8.3/CryptoDredge_0.8.3_cuda_9.2_windows.zip",
-    "SHA256": "FBED2475934C294A1A53D102001357ACA600039D97B607F1BA53D01EF47E3A70",
+    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.8.3/CryptoDredge_0.8.3_cuda_9.1_windows.zip",
+    "SHA256": "3D80427DB7DBCB40EE5D6F79F1D6BD67FD1C47A185DB8CE9B72FE9B0516D3199",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -16,6 +16,7 @@
     ],
     "API": "Ccminer",
     "APIPort": 4068,
+    "CUDA": 9.1,
     "Algorithms": {
         "Allium": "-a allium",
         "Blake2s": "-a blake2s",

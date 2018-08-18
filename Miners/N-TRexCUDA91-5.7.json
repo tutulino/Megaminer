@@ -16,6 +16,7 @@
     "API": "Ccminer",
     "APIPort": 4068,
     "Fee": 0.01,
+    "CUDA": 9.1,
     "Algorithms": {
         "C11": "-a c11",
         "HSR": "-a hsr",

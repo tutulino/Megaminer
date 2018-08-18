@@ -471,6 +471,13 @@ while ($Quit -eq $false) {
                     }
                 }
 
+                if ($Config.CUDAVersion -and $Miner.CUDA) {
+                    if ([version]$Miner.CUDA -gt [version]$Config.CUDAVersion) {
+                        Log-Message "$($MinerFile.BaseName) skipped due to CUDA version constraints" -Severity Debug
+                        Continue
+                    }
+                }
+
                 if ($DeviceGroup.Algorithms -and $Algorithms -notin $DeviceGroup.Algorithms) {Continue} #check config has this algo as minable
 
                 foreach ($Pool in ($Pools | Where-Object Algorithm -eq $AlgoName)) {

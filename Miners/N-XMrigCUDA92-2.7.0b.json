@@ -16,6 +16,7 @@
     "API": "XMRig",
     "APIPort": 4068,
     "Fee": 0.01,
+    "CUDA": 9.2,
     "Algorithms": {
         "CnAlloy": "-a cn/xao",
         "CnArto": "-a cn/rto",

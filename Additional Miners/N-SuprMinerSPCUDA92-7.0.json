@@ -13,6 +13,7 @@
     ],
     "API": "Ccminer",
     "APIPort": 4068,
+    "CUDA": 9.2,
     "Algorithms": {
         "X16r": "-a x16r",
         "X16s": "-a x16s"
