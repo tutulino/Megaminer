@@ -1,0 +1,33 @@
+{
+    "Path": "lolMiner.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.8/lolMiner_v042_Win64.zip",
+    "SHA256": "E26DA57ABF2EFD9EADDA42C787DECC452F472D15E41BC35E12AA74DF8B090529",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "-pool=#Server#",
+        "-port=#Port#",
+        "-user=#Login#",
+        "-pass=#Password#",
+        "-devices=#Devices#",
+        "-apiport=#ApiPort#",
+        "-digits=2",
+        "-connection_attempts=4",
+        "-reconnection_timer=5",
+        "-coin=#AlgorithmParameters#"
+    ],
+
+    "API": "LOL",
+    "APIPort": 4068,
+    "Algorithms": {
+        "EquihashASF": "ASF",
+        "EquihashBTCZ": "BTCZ",
+        "EquihashBTG": "BTG",
+        "EquihashHEPTA": "HEPTA",
+        "EquihashLTZ": "LTZ",
+        "EquihashSAFE": "SAFE",
+        "EquihashXSG": "XSG",
+        "Mars|m": "MNX -workbatch=MEDIUM",
+        "Mars|h": "MNX -workbatch=HIGH",
+        "Mars|vh": "MNX -workbatch=VERYHIGH"
+    }
+}

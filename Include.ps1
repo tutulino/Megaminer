@@ -152,38 +152,38 @@ function Get-DevicesInformation ($Types) {
 
     #AMD
     if ($Types | Where-Object Type -eq 'AMD') {
-    if ($abMonitor) {
-        foreach ($Type in @('AMD')) {
-            $DeviceId = 0
-            $Pattern = @{
-                AMD    = '*Radeon*'
-                NVIDIA = '*GeForce*'
-                Intel  = '*Intel*'
-            }
-            @($abMonitor.GpuEntries | Where-Object Device -like $Pattern.$Type) | ForEach-Object {
-                $CardData = $abMonitor.Entries | Where-Object GPU -eq $_.Index
-                $Group = $($Types | Where-Object Type -eq $Type | Where-Object DevicesArray -contains $DeviceId).GroupName
-                $Card = @{
-                    Type              = $Type
-                    Id                = $DeviceId
-                    Group             = $Group
-                    AdapterId         = [int]$_.Index
-                    Name              = $_.Device
-                    Utilization       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?usage$").Data
-                    UtilizationMem    = [int]$($mem = $CardData | Where-Object SrcName -match "^(GPU\d* )?memory usage$"; if ($mem.MaxLimit) {$mem.Data / $mem.MaxLimit * 100})
-                    Clock             = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?core clock$").Data
-                    ClockMem          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?memory clock$").Data
-                    FanSpeed          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?fan speed$").Data
-                    Temperature       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?temperature$").Data
-                    PowerDraw         = [int]$($CardData | Where-Object {$_.SrcName -match "^(GPU\d* )?power$" -and $_.SrcUnits -eq 'W'}).Data
-                    PowerLimitPercent = [int]$($abControl.GpuEntries[$_.Index].PowerLimitCur)
-                    PCIBus            = [int]$($null = $_.GpuId -match "&BUS_(\d+)&"; $matches[1])
+        if ($abMonitor) {
+            foreach ($Type in @('AMD')) {
+                $DeviceId = 0
+                $Pattern = @{
+                    AMD    = '*Radeon*'
+                    NVIDIA = '*GeForce*'
+                    Intel  = '*Intel*'
                 }
-                $Devices += [PSCustomObject]$Card
-                $DeviceId++
+                @($abMonitor.GpuEntries | Where-Object Device -like $Pattern.$Type) | ForEach-Object {
+                    $CardData = $abMonitor.Entries | Where-Object GPU -eq $_.Index
+                    $Group = $($Types | Where-Object Type -eq $Type | Where-Object DevicesArray -contains $DeviceId).GroupName
+                    $Card = @{
+                        Type              = $Type
+                        Id                = $DeviceId
+                        Group             = $Group
+                        AdapterId         = [int]$_.Index
+                        Name              = $_.Device
+                        Utilization       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?usage$").Data
+                        UtilizationMem    = [int]$($mem = $CardData | Where-Object SrcName -match "^(GPU\d* )?memory usage$"; if ($mem.MaxLimit) {$mem.Data / $mem.MaxLimit * 100})
+                        Clock             = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?core clock$").Data
+                        ClockMem          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?memory clock$").Data
+                        FanSpeed          = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?fan speed$").Data
+                        Temperature       = [int]$($CardData | Where-Object SrcName -match "^(GPU\d* )?temperature$").Data
+                        PowerDraw         = [int]$($CardData | Where-Object {$_.SrcName -match "^(GPU\d* )?power$" -and $_.SrcUnits -eq 'W'}).Data
+                        PowerLimitPercent = [int]$($abControl.GpuEntries[$_.Index].PowerLimitCur)
+                        PCIBus            = [int]$($null = $_.GpuId -match "&BUS_(\d+)&"; $matches[1])
+                    }
+                    $Devices += [PSCustomObject]$Card
+                    $DeviceId++
+                }
             }
-        }
-    } else {
+        } else {
             #ADL
             $DeviceId = 0
 
@@ -600,6 +600,32 @@ function Invoke-TCPRequest {
     $response
 }
 
+function Get-TCPResponse {
+    param(
+        [Parameter(Mandatory = $false)]
+        [String]$Server = "localhost",
+        [Parameter(Mandatory = $true)]
+        [String]$Port,
+        [Parameter(Mandatory = $false)]
+        [Int]$Timeout = 10 #seconds
+    )
+
+    try {
+        $Client = New-Object System.Net.Sockets.TcpClient $Server, $Port
+        $Stream = $Client.GetStream()
+        $Reader = New-Object System.IO.StreamReader $Stream
+        $Client.SendTimeout = $Timeout * 1000
+        $Client.ReceiveTimeout = $Timeout * 1000
+        $Response = $Reader.ReadToEnd()
+    } catch { $Error.Remove($error[$Error.Count - 1])}
+    finally {
+        if ($Reader) {$Reader.Close()}
+        if ($Stream) {$Stream.Close()}
+        if ($Client) {$Client.Close()}
+    }
+    $response
+}
+
 function Invoke-TCPRequest2 {
     param(
         [Parameter(Mandatory = $true)]
@@ -913,6 +939,15 @@ function Get-LiveHashRate {
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
                     $HashRate = [double]$Data.HashRate.total
+                }
+            }
+
+            "LOL" {
+                $Request = Get-TCPResponse -Server $Server -Port $Port -Timeout 5
+                if ($Request) {
+                    $Data = $Request | ConvertFrom-Json
+                    $HashRate = [double]$Data.'TotalSpeed(60s)'
+                    if (-not $HashRate) {$HashRate = [double]$Data.'TotalSpeed(5s)'}
                 }
             }
 
