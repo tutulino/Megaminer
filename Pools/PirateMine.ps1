@@ -54,7 +54,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
                 AbbName               = $AbbName
                 ActiveOnManualMode    = $ActiveOnManualMode
                 ActiveOnAutomaticMode = $ActiveOnAutomaticMode
-                PoolWorkers           = $Request.workers
+                PoolWorkers           = $Pool.workers
                 PoolName              = $Name
                 WalletMode            = $WalletMode
                 WalletSymbol          = $Pool.symbol
@@ -63,6 +63,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
             }
         }
     }
+    Remove-Variable Request
+    Remove-Variable Pool
 }
 
 $Result | ConvertTo-Json | Set-Content $Info.SharedFile
