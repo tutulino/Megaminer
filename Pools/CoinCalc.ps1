@@ -80,9 +80,8 @@ if ($Querymode -in @("Core", "Menu")) {
             'SnowGem' {$Coin.Algorithm = 'EquihashXSG'}
             'Zelcash' {$Coin.Algorithm = 'EquihashZEL'}
         }
+        $Coin.Algorithm = Get-AlgoUnifiedName $Coin.Algorithm
     }
-
-    $Coin.Algorithm = Get-AlgoUnifiedName $Coin.Algorithm
 
     #join pools and coins
     ForEach ($Pool in $Pools) {
