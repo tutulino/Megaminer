@@ -1,7 +1,7 @@
 {
     "Path": "jce_cn_cpu_miner$(if($DeviceGroup.Features.'64bit'){'64'}else{'32'}).exe",
-    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.windows.032g.zip",
-    "SHA256": "9948B969398336C94E7211682BBB4BABED50F94B5C4D081DF0ED5895FD323970",
+    "Uri": "https://github.com/jceminer/cn_cpu_miner/raw/master/jce_cn_cpu_miner.windows.032h.zip",
+    "SHA256": "A04A5BC7720D026D32F393BB7C1B1B9A15186451B1F0D9EC5E4C1EE76B09057D",
     "Type": "CPU",
     "Arguments": [
         "-o #Server#:#Port#",
