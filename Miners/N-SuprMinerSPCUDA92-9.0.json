@@ -15,6 +15,7 @@
     "APIPort": 4068,
     "CUDA": 9.2,
     "Algorithms": {
+        "C11": "-a c11",
         "X16r": "-a x16r",
         "X16s": "-a x16s"
     }
