@@ -278,23 +278,28 @@ while ($Quit -eq $false) {
     $ElapsedDonationTime = [int]($DonationPastTime + $LastIntervalTime.TotalMinutes)
     $ElapsedDonatedTime = [int]($DonatedTime + $LastIntervalTime.TotalMinutes)
 
-    $ConfigDonateTime = [int]($Config.Donate)
+    $ConfigDonateTime = [math]::Max([int]($Config.Donate), 10)
 
     #Activate or deactivate donation
+    $LastInterval = $CurrentInterval
     if ($ElapsedDonationTime -gt 1440 -and $ConfigDonateTime -gt 0) {
         # donation interval
+        $CurrentInterval = "Donate"
 
-        $DonationInterval = $true
         $Config.UserName = "ffwd"
         $Config.WorkerName = "Donate"
         $CoinsWallets = @{
             BTC = "3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL"
+            LTC = "MM8RmXUgxDwHJxrC54muF7KHciSCFS3gx3"
         }
+        $Config.Currency_Zpool = "LTC"
+        $Config.Currency_ZergPool = "LTC"
+        $Config.Currency_BlockMasters = "LTC"
 
         $DonateInterval = ($ConfigDonateTime - $ElapsedDonatedTime) * 60
 
         $Algorithm = $null
-        $PoolsName = ("MiningPoolHub", "NiceHash")
+        $PoolsName = ("MiningPoolHub", "NiceHash", "Zpool", "ZergPool", "BlockMasters")
         $CoinsName = $null
         $MiningMode = "Automatic"
 
@@ -304,7 +309,7 @@ while ($Quit -eq $false) {
         Log-Message "Next interval you will be donating for $DonateInterval seconds, thanks for your support"
     } else {
         #NOT donation interval
-        $DonationInterval = $false
+        $CurrentInterval = "Mining"
 
         $Algorithm = $ParamAlgorithmBCK
         $PoolsName = $ParamPoolsNameBCK
@@ -973,7 +978,7 @@ while ($Quit -eq $false) {
         ## Select top miner that need Benchmark, or if running in Manual mode, or highest Profit above zero.
         $BestNow = $Candidates.SubMiners |
             Where-Object Status -ne 'Failed' |
-            Where-Object {$_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt $Config.('MinProfit_' + $DeviceGroup.GroupName) -or $DonationInterval} |
+            Where-Object {$_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt $Config.('MinProfit_' + $DeviceGroup.GroupName) -or $CurrentInterval -eq "Donate"} |
             Sort-Object -Descending NeedBenchmark, {$(if ($MiningMode -eq "Manual") {$_.HashRate} else {$_.Profits})}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
 
@@ -1005,11 +1010,12 @@ while ($Quit -eq $false) {
             $BestLast.IdF -ne $BestNow.IdF -or
             $BestLast.Id -ne $BestNow.Id -or
             $BestLast.Status -in @('PendingCancellation', 'Failed') -or
+            $CurrentInterval -ne $LastInterval -or
             -not $BestNow
         ) {
             ### something changes or some miner error
             if (
-                $DonationInterval -or
+                $CurrentInterval -ne $LastInterval -or
                 -not $BestLast -or
                 -not $BestNow -or
                 -not $ActiveMiners[$BestLast.IdF].IsValid -or
@@ -1138,7 +1144,7 @@ while ($Quit -eq $false) {
 
     if ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty Subminers | Where-Object {$_.NeedBenchmark -and $_.Status -ne 'Failed'}) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
 
-    if ($DonationInterval) { $NextInterval = $DonateInterval }
+    if ($CurrentInterval -eq "Donate") { $NextInterval = $DonateInterval }
     elseif ($NeedBenchmark) { $NextInterval = $BenchmarkIntervalTime }
     else {
         $NextInterval = $ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object -ExpandProperty IdF | ForEach-Object {
@@ -1356,7 +1362,7 @@ while ($Quit -eq $false) {
         "  (E)nd Interval  (P)rofits  (C)urrent  (H)istory  (W)allets  (S)tats  (Q)uit" | Out-Host
 
         #display donation message
-        if ($DonationInterval) {" THIS INTERVAL YOU ARE DONATING, YOU CAN INCREASE OR DECREASE DONATION ON config.ini, THANK YOU FOR YOUR SUPPORT !!!!"}
+        if ($CurrentInterval -eq "Donate") {" THIS INTERVAL YOU ARE DONATING, YOU CAN INCREASE OR DECREASE DONATION ON config.ini, THANK YOU FOR YOUR SUPPORT !!!!"}
 
         #write speed
         Log-Message ($ActiveMiners | Where-Object Best | Select-Object id, process.Id, GroupName, name, poolabbname, Algorithm, AlgorithmDual, SpeedLive, ProfitsLive, location, port, arguments | ConvertTo-Json) -Severity Debug
