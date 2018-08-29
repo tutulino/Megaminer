@@ -148,7 +148,7 @@
  
  
 --Min number of workers in a pool to be considered as "good"
---You must set a generic min workers for all algos @@MINWORKERS=XXX or a min workers for one specific algo @@MINWORKERS_NAMEOFALGO=ZZZ valid only for that algo
+--You must set a generic min workers for all algos @@MINWORKERS=XXX and you may also set a min workers for specifics algos @@MINWORKERS_NAMEOFALGO=ZZZ valid only for that algo
 
 @@MINWORKERS=20
 @@MINWORKERS_NAMEOFALGO1=XXX
