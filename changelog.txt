@@ -39,7 +39,7 @@
 
 ----------------------------------------------
 2.0
-*Included Miners for AMD platform, I haven´t AMD card, not tested. ¡¡¡ AMD TESTERS NEEDED !!!
+*Included Miners for AMD platform, I havenÂ´t AMD card, not tested. Â¡Â¡Â¡ AMD TESTERS NEEDED !!!
 *Automatic dual mining between pools (ex. Eth on MPH and lbry on Zpool), choosing more profitable pool for each coin
 *Yiimp now support automatic profit based coin change, this pool has autoexchange off, you must set individual coins wallet on config.txt to mine
 *Manual mining now choose best benchmarked software for each algo.
@@ -87,7 +87,7 @@ THIS VERSION CHANGE ALL CONFIG FILES STRUCTURES (CONFIG,POOLS, MINERS, etc)
 ------------------------------------------------
 3.0
 *New "Virtual" Pool Whattomine, based in whattomine statistics, it uses MPH,Yiimp and Suprnova servers to mine most profitable coin, you must configure wallets on config.cfg and also have an account on Suprnova to use. See supported coins on readme.md file
-*Now if miner screen is closed (manually or error) MM don´t need to wait interval defined time, in less than 15 sec it will detect error and continue execution
+*Now if miner screen is closed (manually or error) MM donÂ´t need to wait interval defined time, in less than 15 sec it will detect error and continue execution
 *Benchmark auto-interval, MM automatic set interval to 200 seconds for benchmarks, other executions are based on config.txt defined interval
 *Added info on main screen of time left to next interval and local currency conversion, removed BTC/GH/day
 *New ccminer tpruvot 2.2 (added algos in which it is fastest)--> recomended delete al tpruvot files on stat folder if you are copying from old version
@@ -312,8 +312,8 @@ TO FORCE UPGRADE OF MINERS YOU MUST DELETE MINER FOLDER (CONTAINED ON BIN FOLDER
 *Merged Claymore dual miner files (one for each platform)
 
 
-*Removed prospector miner ¿someone is using?
-*Removed excavator miner ¿someone is using?
+*Removed prospector miner Â¿someone is using?
+*Removed excavator miner Â¿someone is using?
 *Removed pool API asistance on manual selection due to long waits.
 
 
@@ -476,7 +476,7 @@ NOTE: STATS FILE ARE NOT COMPATIBLE WITH PREVIOUS RELEASES, YOU MUST BENCHMARK A
 ---FEATURES CHANGES:
 
 *NVIDIA Automatic Gpu Power limit, you can define any power limit values (90%, 80%, etc) for each winner miner/algo MM checks what of that power limit point is more profitable at each interval based in power cost, hashrate and reward. (REQUIRES MM RUN AS ADMIN)
-*Added pool´s profit  correction factor config option (recommended if powerlimit feature is used)
+*Added poolÂ´s profit  correction factor config option (recommended if powerlimit feature is used)
 *New gpu activity based watchdog, if gpu group activity goes down miner is considered dead and it will be killed.
 *Added Different config interval time based on pool reward type (PPLS/PPS)
 *Changed @@electricitycost config variable to local currency instead of BTC
@@ -614,7 +614,7 @@ This release changes next config variables: @@ALGORITHMS_NVIDIA,@@ALGORITHMS_AMD
 
 *Fixed: blazepool not showing workername
 *Fixed: some miners not downloading
-*Fixed: efficiency in €/W not shown for dual minning
+*Fixed: efficiency in Â€/W not shown for dual minning
 
 
 --RELEASE NOTES
@@ -726,6 +726,7 @@ If you use new ETHlargementpill feature you must delete ETHASH
 * Addded sha256t algo for NVIDIA and gpu
 * New Nvdia algos: allium, phi2,Vitalium,Aeriumx
 * New amd algos: CryptoLightIPBC,CryptoNightHaven,CryptoNightHeavy,CryptoNightV7,CryptoNightXTL,CryptoNightTUBE,CryptoNightFast
+* Added config variable to define a minimum number of workers per algo of a pool to be considered as "good" (this avoid you mine in a pool with few people for that specifc algo)
 
 ---MINERS CHANGES:
 
