@@ -392,7 +392,7 @@ while ($Quit -eq $false) {
 
 
     #Filter by minworkers variable (only if there is any pool greater than minimum)
-    $PoolsFiltered=($Pools | Where-Object {$_.Poolworkers -ge ($config.MINWORKERS) -or $_.Poolworkers -eq $null})
+    $PoolsFiltered=($Pools | Where-Object {$_.Poolworkers -ge (($config.("MINWORKERS_"+$_.Algorithm), ($config.MINWORKERS) -ne $null)[0]) -or $_.Poolworkers -eq $null})
     if ($PoolsFiltered.count -ge 1) {
         $Pools = $PoolsFiltered
         writelog ([string]$Pools.count+" pools left after min workers filter.....") $logfile $true
