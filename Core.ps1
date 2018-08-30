@@ -106,9 +106,17 @@ if ((Get-Command "Get-MpPreference" -ErrorAction SilentlyContinue) -and (Get-MpC
 
 $ActiveMiners = @()
 $ShowBestMinersOnly = $true
-$FirstTotalExecution = $true
 
-$Screen = $Config.STARTSCREEN
+$Interval = @{
+    Current   = $null
+    Last      = $null
+    Duration  = $null
+    StartTime = $null
+    LastTime  = $null
+    Benchmark = $null
+}
+
+$Screen = $Config.StartScreen
 
 #---Parameters checking
 
@@ -156,7 +164,7 @@ $ParamMiningModeBCK = $MiningMode
 
 try {Set-WindowSize 180 50} catch {}
 
-$IntervalStartAt = (Get-Date) #first initialization, must be outside loop
+$Interval.StartTime = Get-Date #first initialization, must be outside loop
 
 Send-ErrorsToLog $LogFile
 
@@ -236,7 +244,7 @@ while ($Quit -eq $false) {
     #get mining types
     $DeviceGroups = Get-MiningTypes -filter $GroupNames
 
-    if ($FirstTotalExecution) {
+    if ($null -eq $Interval.Last) {
         Log-Message (Get-DevicesInformation $DeviceGroups | ConvertTo-Json) -Severity Debug
         Log-Message ($DeviceGroups | ConvertTo-Json) -Severity Debug
         Test-DeviceGroupsConfig $DeviceGroups
@@ -244,7 +252,7 @@ while ($Quit -eq $false) {
 
     $NumberTypesGroups = ($DeviceGroups | Measure-Object).count
     if ($NumberTypesGroups -gt 0) {$InitialProfitsScreenLimit = [Math]::Floor(30 / $NumberTypesGroups) - 5} #screen adjust to number of groups
-    if ($FirstTotalExecution) {$ProfitsScreenLimit = $InitialProfitsScreenLimit}
+    if ($null -eq $Interval.Last) {$ProfitsScreenLimit = $InitialProfitsScreenLimit}
 
     Log-Message "New interval starting..."
     Log-Message (Get-ComputerStats | ConvertTo-Json) -Severity Debug
@@ -269,22 +277,23 @@ while ($Quit -eq $false) {
         }
     }
 
+    $Interval.Last = $Interval.Current
+    $Interval.LastTime = (Get-Date) - $Interval.StartTime
+    $Interval.StartTime = Get-Date
+
     #Donation
-    $LastIntervalTime = (Get-Date) - $IntervalStartAt
-    $IntervalStartAt = (Get-Date)
     $DonationStat = if (Test-Path -Path 'Donation.ctr') { (Get-Content -Path 'Donation.ctr') -split '_' } else { 0, 0 }
     $DonationPastTime = [int]$DonationStat[0]
     $DonatedTime = [int]$DonationStat[1]
-    $ElapsedDonationTime = [int]($DonationPastTime + $LastIntervalTime.TotalMinutes)
-    $ElapsedDonatedTime = [int]($DonatedTime + $LastIntervalTime.TotalMinutes)
+    $ElapsedDonationTime = [int]($DonationPastTime + $Interval.LastTime.TotalMinutes)
+    $ElapsedDonatedTime = [int]($DonatedTime + $Interval.LastTime.TotalMinutes)
 
     $ConfigDonateTime = [math]::Max([int]($Config.Donate), 10)
 
     #Activate or deactivate donation
-    $LastInterval = $CurrentInterval
     if ($ElapsedDonationTime -gt 1440 -and $ConfigDonateTime -gt 0) {
         # donation interval
-        $CurrentInterval = "Donate"
+        $Interval.Current = "Donate"
 
         $Config.UserName = "ffwd"
         $Config.WorkerName = "Donate"
@@ -309,7 +318,7 @@ while ($Quit -eq $false) {
         Log-Message "Next interval you will be donating for $DonateInterval seconds, thanks for your support"
     } else {
         #NOT donation interval
-        $CurrentInterval = "Mining"
+        $Interval.Current = "Mining"
 
         $Algorithm = $ParamAlgorithmBCK
         $PoolsName = $ParamPoolsNameBCK
@@ -958,9 +967,9 @@ while ($Quit -eq $false) {
             @{Name = "Revenue"; Expression = {[decimal]$_.Revenue}},
             @{Name = "RevenueDual"; Expression = {[decimal]$_.RevenueDual}},
             @{Name = "Profits"; Expression = {[decimal]$_.Profits}},
-            @{Name = "IntervalRevenue"; Expression = {[decimal]$_.Revenue * $LastIntervalTime.TotalSeconds / (24 * 60 * 60)}},
-            @{Name = "IntervalRevenueDual"; Expression = {[decimal]$_.RevenueDual * $LastIntervalTime.TotalSeconds / (24 * 60 * 60)}},
-            @{Name = "Interval"; Expression = {[int]$LastIntervalTime.TotalSeconds}} |
+            @{Name = "IntervalRevenue"; Expression = {[decimal]$_.Revenue * $Interval.LastTime.TotalSeconds / (24 * 60 * 60)}},
+            @{Name = "IntervalRevenueDual"; Expression = {[decimal]$_.RevenueDual * $Interval.LastTime.TotalSeconds / (24 * 60 * 60)}},
+            @{Name = "Interval"; Expression = {[int]$Interval.LastTime.TotalSeconds}} |
                 Export-Csv -Path $(".\Logs\Stats-" + (Get-Process -PID $PID).StartTime.tostring('yyyy-MM-dd_HH-mm-ss') + ".csv") -Append -NoTypeInformation
         }
 
@@ -978,7 +987,7 @@ while ($Quit -eq $false) {
         ## Select top miner that need Benchmark, or if running in Manual mode, or highest Profit above zero.
         $BestNow = $Candidates.SubMiners |
             Where-Object Status -ne 'Failed' |
-            Where-Object {$_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt $Config.('MinProfit_' + $DeviceGroup.GroupName) -or $CurrentInterval -eq "Donate"} |
+            Where-Object {$_.NeedBenchmark -or $MiningMode -eq "Manual" -or $_.Profits -gt $Config.('MinProfit_' + $DeviceGroup.GroupName) -or $Interval.Current -eq "Donate"} |
             Sort-Object -Descending NeedBenchmark, {$(if ($MiningMode -eq "Manual") {$_.HashRate} else {$_.Profits})}, {$ActiveMiners[$_.IdF].PoolPrice}, {$ActiveMiners[$_.IdF].PoolPriceDual}, PowerLimit |
             Select-Object -First 1
 
@@ -1010,12 +1019,12 @@ while ($Quit -eq $false) {
             $BestLast.IdF -ne $BestNow.IdF -or
             $BestLast.Id -ne $BestNow.Id -or
             $BestLast.Status -in @('PendingCancellation', 'Failed') -or
-            $CurrentInterval -ne $LastInterval -or
+            $Interval.Current -ne $Interval.Last -or
             -not $BestNow
         ) {
             ### something changes or some miner error
             if (
-                $CurrentInterval -ne $LastInterval -or
+                $Interval.Current -ne $Interval.Last -or
                 -not $BestLast -or
                 -not $BestNow -or
                 -not $ActiveMiners[$BestLast.IdF].IsValid -or
@@ -1142,19 +1151,19 @@ while ($Quit -eq $false) {
         }
     }
 
-    if ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty Subminers | Where-Object {$_.NeedBenchmark -and $_.Status -ne 'Failed'}) {$NeedBenchmark = $true} else {$NeedBenchmark = $false}
+    if ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty Subminers | Where-Object {$_.NeedBenchmark -and $_.Status -ne 'Failed'}) {$Interval.Benchmark = $true} else {$Interval.Benchmark = $false}
 
-    if ($CurrentInterval -eq "Donate") { $NextInterval = $DonateInterval }
-    elseif ($NeedBenchmark) { $NextInterval = $BenchmarkIntervalTime }
+    if ($Interval.Current -eq "Donate") { $Interval.Duration = $DonateInterval }
+    elseif ($Interval.Benchmark) { $Interval.Duration = $BenchmarkIntervalTime }
     else {
-        $NextInterval = $ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object -ExpandProperty IdF | ForEach-Object {
+        $Interval.Duration = $ActiveMiners.SubMiners | Where-Object Status -eq 'Running' | Select-Object -ExpandProperty IdF | ForEach-Object {
             $PoolInterval = $Config.("INTERVAL_" + $ActiveMiners[$_].PoolRewardType)
             Log-Message "Interval for pool $($ActiveMiners[$_].PoolName) is $PoolInterval" -Severity Debug
             $PoolInterval  # Return value
         } | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum
     }
-    if (-not $NextInterval) {$NextInterval = 60} # when no best miners available retry every minute
-    Log-Message "Next interval: $NextInterval"
+    if (-not $Interval.Duration) {$Interval.Duration = 60} # when no best miners available retry every minute
+    Log-Message "Next interval: $($Interval.Duration)"
 
     $FirstLoopExecution = $true
     $LoopStartTime = Get-Date
@@ -1288,7 +1297,7 @@ while ($Quit -eq $false) {
             }
 
             if ($Devices) {
-            #WATCHDOG
+                #WATCHDOG
                 $GroupDevices = @()
                 $GroupDevices += $Devices | Where-Object Group -eq $ActiveMiners[$_.IdF].DeviceGroup.GroupName
 
@@ -1342,13 +1351,13 @@ while ($Quit -eq $false) {
 
         #############################################################
 
-        if ($NeedBenchmark -and ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty SubMiners | Where-Object {$_.NeedBenchmark -and $_.Best}).Count -eq 0) {
+        if ($Interval.Benchmark -and ($ActiveMiners | Where-Object IsValid | Select-Object -ExpandProperty SubMiners | Where-Object {$_.NeedBenchmark -and $_.Best}).Count -eq 0) {
             Log-Message "Benchmark completed early"
             $ExitLoop = $true
         }
 
         #display interval
-        $TimeToNextInterval = New-TimeSpan (Get-Date) ($LoopStartTime.AddSeconds($NextInterval))
+        $TimeToNextInterval = New-TimeSpan (Get-Date) ($LoopStartTime.AddSeconds($Interval.Duration))
         $TimeToNextIntervalSeconds = [int]$TimeToNextInterval.TotalSeconds
         if ($TimeToNextIntervalSeconds -lt 0) {$TimeToNextIntervalSeconds = 0}
 
@@ -1770,7 +1779,7 @@ while ($Quit -eq $false) {
 
         if ($KeyPressed) {Clear-Host; $RepaintScreen = $true}
 
-        if (((Get-Date) -ge ($LoopStartTime.AddSeconds($NextInterval))) ) {
+        if (((Get-Date) -ge ($LoopStartTime.AddSeconds($Interval.Duration))) ) {
             #If time of interval has over, Exit of main loop
             #If last interval was benchmark and no speed detected mark as failed
             $ActiveMiners.SubMiners | Where-Object Best | ForEach-Object {
@@ -1781,7 +1790,7 @@ while ($Quit -eq $false) {
                 }
             }
             $ExitLoop = $true
-            Log-Message "Interval ends by time: $NextInterval" -Severity Debug
+            Log-Message "Interval ends by time: $($Interval.Duration)" -Severity Debug
         }
 
         if ($ExitLoop) {break} #forced Exit
@@ -1793,7 +1802,6 @@ while ($Quit -eq $false) {
     Remove-Variable pools
     Get-Job -State Completed | Remove-Job
     [GC]::Collect() #force garbage collector for free memory
-    $FirstTotalExecution = $false
 }
 
 #-----------------------------------------------------------------------------------------------------------------------
