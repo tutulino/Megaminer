@@ -1,7 +1,7 @@
 {
-    "Path": "CryptoDredge_0.8.3\\CryptoDredge.exe",
-    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.8.3/CryptoDredge_0.8.3_cuda_9.2_windows.zip",
-    "SHA256": "FBED2475934C294A1A53D102001357ACA600039D97B607F1BA53D01EF47E3A70",
+    "Path": "CryptoDredge_0.9.0\\CryptoDredge.exe",
+    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.9.0/CryptoDredge_0.9.0_cuda_9.1_windows.zip",
+    "SHA256": "FBDBC4B3F43E9E02D627CCC86F8A08DD45C22379DAC2DF96FA40D565B7715B47",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -16,10 +16,16 @@
     ],
     "API": "Ccminer",
     "APIPort": 4068,
-    "CUDA": 9.2,
+    "CUDA": 9.1,
     "Algorithms": {
         "Allium": "-a allium",
         "Blake2s": "-a blake2s",
+        "CnFast": "-a cryptonightfast",
+        "CnHeavy": "-a cryptonightheavy",
+        "CnLiteV7": "-a cryptolightv7",
+        "CnV7": "-a cryptonightv7",
+        "CnXTL": "-a stellite",
+        "Lbk3": "-a lbk3",
         "Lyra2v2": "-a lyra2v2",
         "Lyra2v2|old": "-a lyra2v2-old",
         "Lyra2z": "-a lyra2z",
