@@ -91,6 +91,8 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Pools += [PSCustomObject]@{coin = "Race"; algo = "Lyra2v2"; symbol = "RACE"; server = "race.suprnova.cc"; port = 5650; location = "US"};
     $Pools += [PSCustomObject]@{coin = "Raven"; algo = "X16r"; symbol = "RVN"; server = "rvn.suprnova.cc"; port = 6666; location = "US"};
     $Pools += [PSCustomObject]@{coin = "ROIcoin"; algo = "HOdl"; symbol = "ROI"; server = "roi.suprnova.cc"; port = 4699; location = "US"};
+    $Pools += [PSCustomObject]@{coin = "SafeCash"; algo = "EquihashSCash"; symbol = "SCASH"; server = "scash.suprnova.cc"; port = 8983; location = "US"};
+    $Pools += [PSCustomObject]@{coin = "SafeCoin"; algo = "EquihashSafe"; symbol = "SAFE"; server = "safe.suprnova.cc"; port = 3131; location = "US"};
     $Pools += [PSCustomObject]@{coin = "Straks"; algo = "Lyra2v2"; symbol = "STAK"; server = "stak.suprnova.cc"; port = 7706; location = "US"; portSSL = 7710; SSL = $true};
     $Pools += [PSCustomObject]@{coin = "UBIQ"; algo = "Ethash"; symbol = "UBQ"; server = "ubiq.suprnova.cc"; port = 3030; location = "US"; walletSymbol = "UBIQ"};
     $Pools += [pscustomobject]@{coin = "Verge"; algo = "Lyra2v2"; symbol = "XVG"; server = "xvg-lyra.suprnova.cc"; port = 2595; location = "US"; walletSymbol = "XVG-LYRA"};
