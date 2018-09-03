@@ -26,6 +26,7 @@
         "EquihashHEPTA": "HEPTA",
         "EquihashLTZ": "LTZ",
         "EquihashSAFE": "SAFE",
+        "EquihashSCash|4gb": "SCASH -disable_memcheck=1",
         "EquihashXSG": "XSG",
         "Mars|m": "MNX -workbatch=MEDIUM",
         "Mars|h": "MNX -workbatch=HIGH",
