@@ -2,9 +2,11 @@
 
 cd /d %~dp0
 
-set "command=& .\core.ps1 -MiningMode Manual -PoolsName suprnova -Coinsname Bitcore"
+set Mode=Manual
+set Pools=SuprNova
+set Coins=Bitcore
 
-powershell -version 5.0 -noexit -executionpolicy bypass -command "%command%"
-::pwsh -noexit -executionpolicy bypass -command "%command%"
+powershell -version 5.0 -noexit -executionpolicy bypass -command "& .\Core.ps1 -MiningMode %Mode% -PoolsName %Pools% -Coinsname %Coins%"
+::pwsh -noexit -executionpolicy bypass -command "& .\Core.ps1 -MiningMode %Mode% -PoolsName %Pools% -Coinsname %Coins%"
 
 pause

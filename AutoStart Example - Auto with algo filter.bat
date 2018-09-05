@@ -2,9 +2,11 @@
 
 cd /d %~dp0
 
-set "command=& .\core.ps1 -MiningMode Automatic -PoolsName Zpool -Algorithm Lyra2z"
+set Mode=Automatic
+set Pools=Zpool
+set Algos=Lyra2z
 
-powershell -version 5.0 -noexit -executionpolicy bypass -command "%command%"
-::pwsh -noexit -executionpolicy bypass -command "%command%"
+powershell -version 5.0 -noexit -executionpolicy bypass -command "& .\Core.ps1 -MiningMode %Mode% -PoolsName %Pools% -Algorithm %Algos%"
+::pwsh -noexit -executionpolicy bypass -command "& .\Core.ps1 -MiningMode %Mode% -PoolsName %Pools% -Algorithm %Algos%"
 
 pause
