@@ -107,7 +107,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
             $Server = $MiningPoolHub_Hosts | Sort-Object {$_ -like "$Location*"} -Descending | Select-Object -First 1
 
-            $enableSSL = ($MiningPoolHub_Algorithm -in @('CnV7', 'Equihash'))
+            $enableSSL = (('CnV7', 'Equihash') -contains $MiningPoolHub_Algorithm)
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $MiningPoolHub_Algorithm

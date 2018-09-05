@@ -75,7 +75,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
     $Currency = if ([string]::IsNullOrEmpty($(Get-ConfigVariable "CURRENCY_$Name"))) { Get-ConfigVariable "CURRENCY" } else { Get-ConfigVariable "CURRENCY_$Name" }
 
     if (
-        $Currency -notin @('BTC', 'LTC', 'DASH') -and
+        @('BTC', 'LTC', 'DASH') -notcontains $Currency -and
         -not ( $RequestCurrencies -and ($RequestCurrencies | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name | Where-Object { $_ -eq $Currency }))
     ) {
         Write-Warning "$Name $Currency may not be supported for payment"

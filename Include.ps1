@@ -27,7 +27,6 @@ function Set-NvidiaPowerLimit ([int]$PowerLimitPercent, [string]$Devices) {
 }
 
 function Get-ComputerStats {
-    [cmdletbinding()]
     $avg = Get-CimInstance win32_processor | Measure-Object -property LoadPercentage -Average | ForEach-Object {$_.Average}
     $mem = Get-CimInstance win32_operatingsystem | ForEach-Object {"{0:N2}" -f ((($_.TotalVisibleMemorySize - $_.FreePhysicalMemory) * 100) / $_.TotalVisibleMemorySize)}
     $memV = Get-CimInstance win32_operatingsystem | ForEach-Object {"{0:N2}" -f ((($_.TotalVirtualMemorySize - $_.FreeVirtualMemory) * 100) / $_.TotalVirtualMemorySize)}
@@ -144,8 +143,6 @@ function Exit-Process {
 }
 
 function Get-DevicesInformation ($Types) {
-    [cmdletbinding()]
-
     $Devices = @()
     if ($abMonitor) {$abMonitor.ReloadAll()}
     if ($abControl) {$abControl.ReloadAll()}
@@ -490,8 +487,8 @@ Function Get-MiningTypes () {
 
             if (
                 $_.PowerLimits.Count -eq 0 -or
-                $_.Type -in @('Intel') -or
-                ($_.Type -in @('AMD') -and !$abControl)
+                @('Intel') -contains $_.Type -or
+                (@('AMD') -contains $_.Type -and !$abControl)
             ) {$_.PowerLimits = @(0)}
 
             $_ | Add-Member Algorithms ((Get-ConfigVariable ("Algorithms_" + $_.Type)) -split ',')
@@ -502,7 +499,6 @@ Function Get-MiningTypes () {
 }
 
 Function Log-Message {
-    [CmdletBinding()]
     param(
         [Parameter()]
         [string]$Message,
@@ -975,7 +971,6 @@ function ConvertTo-Hash {
 }
 
 function Start-SubProcess {
-    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [String]$FilePath,
@@ -1137,7 +1132,7 @@ function Expand-WebRequest {
         if (Test-Path -LiteralPath $FilePath) {
             if ($SHA256 -and (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash -ne $SHA256) {
                 Log-Message "File hash doesn't match. Removing file." -Severity Warn
-            } elseif ((Get-Item $FilePath).Extension -in @('.msi', '.exe')) {
+            } elseif (@('.msi', '.exe') -contains (Get-Item $FilePath).Extension) {
                 Start-Process $FilePath "-qb" -Wait
             } else {
                 $Command = 'x "' + $FilePath + '" -o"' + $DestinationFolder + '" -y -spe'
@@ -1212,10 +1207,10 @@ function Get-Pools {
             if (
                 (
                     $Config.("IncludeAlgos_" + $Pool.PoolName) -and
-                    $Pool.Algorithm -notin @($Config.("IncludeAlgos_" + $Pool.PoolName) -split ',')
+                    @($Config.("IncludeAlgos_" + $Pool.PoolName) -split ',') -notcontains $Pool.Algorithm
                 ) -or (
                     $Config.("IncludeCoins_" + $Pool.PoolName) -and
-                    $Pool.Info -notin @($Config.("IncludeCoins_" + $Pool.PoolName) -split ',')
+                    @($Config.("IncludeCoins_" + $Pool.PoolName) -split ',') -notcontains $Pool.Info
                 )
             ) {
                 Log-Message "Excluding $($Pool.Algorithm)/$($Pool.Info) on $($Pool.PoolName) due to Include filter" -Severity Debug
@@ -1224,8 +1219,8 @@ function Get-Pools {
 
             # Exclude pool algos and coins
             if (
-                $Pool.Algorithm -in @($Config.("ExcludeAlgos_" + $Pool.PoolName) -split ',') -or
-                $Pool.Info -in @($Config.("ExcludeCoins_" + $Pool.PoolName) -split ',')
+                @($Config.("ExcludeAlgos_" + $Pool.PoolName) -split ',') -contains $Pool.Algorithm -or
+                @($Config.("ExcludeCoins_" + $Pool.PoolName) -split ',') -contains $Pool.Info
             ) {
                 Log-Message "Excluding $($Pool.Algorithm)/$($Pool.Info) on $($Pool.PoolName) due to Exclude filter" -Severity Debug
                 continue

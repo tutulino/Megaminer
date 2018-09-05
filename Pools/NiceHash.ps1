@@ -36,10 +36,10 @@ if ($Querymode -eq "speed") {
     if ($Request.Result.Workers) {
         $Request.Result.Workers | ForEach-Object {
             $Multiplier = switch ($_[6]) {
-                {$PSItem -in @(16, 17, 18, 21, 23, 25, 28)} {1000000000} #GH
-                {$PSItem -in @(5, 7, 8, 9, 10, 14, 20, 26, 29)} {1000000} #MH
-                {$PSItem -in @(19, 22, 30)} {1000} #KH
-                {$PSItem -in @(24)} {1}
+                {@(16, 17, 18, 21, 23, 25, 28) -contains $PSItem} {1000000000} #GH
+                {@(5, 7, 8, 9, 10, 14, 20, 26, 29) -contains $PSItem} {1000000} #MH
+                {@(19, 22, 30) -contains $PSItem} {1000} #KH
+                {@(24) -contains $PSItem} {1}
             }
             $Result += [PSCustomObject]@{
                 PoolName   = $name
@@ -96,7 +96,7 @@ if (($Querymode -eq "core" ) -or ($Querymode -eq "Menu")) {
 
         foreach ($location in $Locations.Keys) {
 
-            $enableSSL = ($Algo -in @('CnV7', 'Equihash'))
+            $enableSSL = (@('CnV7', 'Equihash') -contains $Algo)
 
             $Result += [PSCustomObject]@{
                 Algorithm             = $Algo

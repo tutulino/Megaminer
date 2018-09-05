@@ -48,10 +48,10 @@ param(
 
 $error.clear()
 $currentDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-Import-Module NetSecurity -ErrorAction Ignore
-Import-Module Defender -ErrorAction Ignore
-Import-Module "$env:Windir\System32\WindowsPowerShell\v1.0\Modules\NetSecurity\NetSecurity.psd1" -ErrorAction Ignore
-Import-Module "$env:Windir\System32\WindowsPowerShell\v1.0\Modules\Defender\Defender.psd1" -ErrorAction Ignore
+Import-Module NetSecurity -ErrorAction SilentlyContinue
+Import-Module Defender -ErrorAction SilentlyContinue
+Import-Module "$env:Windir\System32\WindowsPowerShell\v1.0\Modules\NetSecurity\NetSecurity.psd1" -ErrorAction SilentlyContinue
+Import-Module "$env:Windir\System32\WindowsPowerShell\v1.0\Modules\Defender\Defender.psd1" -ErrorAction SilentlyContinue
 
 #Start log file
 
@@ -120,7 +120,7 @@ $Screen = $Config.StartScreen
 
 #---Parameters checking
 
-if ($MiningMode -NotIn @('Manual', 'Automatic', 'Automatic24h')) {
+if (@('Manual', 'Automatic', 'Automatic24h') -notcontains $MiningMode) {
     Log-Message "Parameter MiningMode not valid, valid options: Manual, Automatic, Automatic24h" -Severity Warn
     Exit
 }
@@ -205,7 +205,7 @@ if ((Get-ConfigVariable "Afterburner") -eq "Enabled") {
 
 #enable EthlargementPill
 
-if (($config.EthlargementPill) -in @('RevA', 'RevB')) {
+if (@('RevA', 'RevB') -contains $config.EthlargementPill) {
     Log-Message "Starting EthlargementPill"
     $arg = "-" + $config.EthlargementPill
     $EthPill = Start-Process -FilePath ".\Includes\OhGodAnETHlargementPill-r2.exe" -passthru -Verb RunAs -ArgumentList $arg
@@ -352,11 +352,11 @@ while ($Quit -eq $false) {
     ($Config.ElectricityCost | ConvertFrom-Json) | ForEach-Object {
         if ((
                 $_.HourStart -lt $_.HourEnd -and
-                (Get-Date).Hour -in @(($_.HourStart)..($_.HourEnd))
+                @(($_.HourStart)..($_.HourEnd)) -contains (Get-Date).Hour
             ) -or (
                 $_.HourStart -gt $_.HourEnd -and (
-                    (Get-Date).Hour -in @(($_.HourStart)..23) -or
-                    (Get-Date).Hour -in @(0..($_.HourEnd))
+                    @(($_.HourStart)..23) -contains (Get-Date).Hour -or
+                    @(0..($_.HourEnd)) -contains (Get-Date).Hour
                 )
             )
         ) {$ElectricityCostValue = [double]$_.CostKwh}
@@ -402,7 +402,7 @@ while ($Quit -eq $false) {
         foreach ($DeviceGroup in $DeviceGroups) {
             ## Is pool algorithm defined in config?
             $AlgoList = $DeviceGroup.Algorithms | ForEach-Object {$_ -split '_'} | Select-Object -Unique
-            if (!$AlgoList -or $_.Name -in $AlgoList) {$NeedPool = $true}
+            if (!$AlgoList -or $AlgoList -contains $_.Name) {$NeedPool = $true}
         }
         if ($NeedPool) {
             ## Order by price (profitability)
@@ -492,7 +492,7 @@ while ($Quit -eq $false) {
                     }
                 }
 
-                if ($DeviceGroup.Algorithms -and $Algorithms -notin $DeviceGroup.Algorithms) {Continue} #check config has this algo as minable
+                if ($DeviceGroup.Algorithms -and $DeviceGroup.Algorithms -notcontains $Algorithms) {Continue} #check config has this algo as minable
 
                 foreach ($Pool in ($Pools | Where-Object Algorithm -eq $AlgoName)) {
                     #Search pools for that algo
@@ -924,7 +924,7 @@ while ($Quit -eq $false) {
 
         #look for last round best
         $Candidates = $ActiveMiners | Where-Object {$_.DeviceGroup.Id -eq $DeviceGroup.Id}
-        $BestLast = $Candidates.SubMiners | Where-Object {$_.Status -in @("Running", "PendingCancellation")}
+        $BestLast = $Candidates.SubMiners | Where-Object {@("Running", "PendingCancellation") -contains $_.Status}
         if ($BestLast) {
             $ProfitLast = $BestLast.Profits
             $BestLastLogMsg = $(
@@ -1018,7 +1018,7 @@ while ($Quit -eq $false) {
         if (
             $BestLast.IdF -ne $BestNow.IdF -or
             $BestLast.Id -ne $BestNow.Id -or
-            $BestLast.Status -in @('PendingCancellation', 'Failed') -or
+            @('PendingCancellation', 'Failed') -contains $BestLast.Status -or
             $Interval.Current -ne $Interval.Last -or
             -not $BestNow
         ) {
@@ -1029,8 +1029,8 @@ while ($Quit -eq $false) {
                 -not $BestNow -or
                 -not $ActiveMiners[$BestLast.IdF].IsValid -or
                 $BestNow.NeedBenchmark -or
-                $BestLast.Status -in @('PendingCancellation', 'Failed') -or
-                ($BestLast.Status -in @('Running') -and $ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))))
+                @('PendingCancellation', 'Failed') -contains $BestLast.Status -or
+                (@('Running') -contains $BestLast.Status -and $ProfitNow -gt ($ProfitLast * (1 + ($PercentToSwitch2 / 100))))
             ) {
                 #Must launch other miner and/or stop actual
 
@@ -1045,7 +1045,7 @@ while ($Quit -eq $false) {
                         if (
                             $DelayCloseMiners -eq 0 -or
                             $BestNow.NeedBenchmark -or
-                            $BestLast.Status -in @('PendingCancellation', 'Failed')
+                            @('PendingCancellation', 'Failed') -contains $BestLast.Status
                         ) {
                             #immediate kill
                             Exit-Process $ActiveMiners[$BestLast.IdF].Process
@@ -1318,7 +1318,7 @@ while ($Quit -eq $false) {
             $WatchdogHashRateFail = $false
             if (
                 $Config.WatchdogHashRate -gt 0 -and
-                $ActiveMiners[$_.IdF].Algorithm -notin ($Config.WatchdogExcludeAlgos -split ',') -and
+                ($Config.WatchdogExcludeAlgos -split ',') -notcontains $ActiveMiners[$_.IdF].Algorithm -and
                 $_.HashRate -gt 0 -and
                 $_.SpeedReads.count -gt 20
             ) {

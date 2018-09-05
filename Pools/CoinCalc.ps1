@@ -48,7 +48,7 @@ if (($Querymode -eq "Wallet") -or ($Querymode -eq "APIKey")) {
     }
 }
 
-if ($Querymode -in @("Core", "Menu")) {
+if (@("Core", "Menu") -contains $Querymode) {
 
     #Look for pools
     $ConfigOrder = (Get-ConfigVariable "CoinCalcPoolOrder") -split ','

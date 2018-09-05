@@ -73,7 +73,7 @@ function Get-AfterburnerDevices ($Type) {
         Exit
     }
 
-    if ($Type -in @('AMD', 'NVIDIA', 'Intel')) {
+    if (@('AMD', 'NVIDIA', 'Intel') -contains $Type) {
         $Pattern = @{
             AMD    = "*Radeon*"
             NVIDIA = "*GeForce*"
