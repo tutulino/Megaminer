@@ -1,0 +1,28 @@
+﻿{
+    "Path": "wildrig.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/wildrig-multi-0.10.8.1-beta.7z",
+    "SHA256": "3DC025C2C52EB48E2CABCDDE52854F398D6710D300F9F9D830C6611C4388F72E",
+    "Type": "AMD",
+    "Arguments": [
+        "-o #Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-r 4",
+        "-R 10",
+        "--opencl-platform #GpuPlatform#",
+        "--opencl-devices #Devices#",
+        "--opencl-launch 256x0",
+        "--send-stale",
+        "--donate-level 1",
+        "--api-port #ApiPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "XMRig",
+    "APIPort": 4028,
+    "Fee": 0.01,
+    "Algorithms": {
+        "HMQ1725": "--algo hmq1725",
+        "Renesis": "--algo renesis",
+        "SonoA": "--algo sonoa"
+    }
+}
