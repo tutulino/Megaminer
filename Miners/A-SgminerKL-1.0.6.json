@@ -1,7 +1,7 @@
 {
-    "Path": "sgminer-kl-1.0.5_fix-windows\\sgminer.exe",
-    "Uri": "https://github.com/KL0nLutiy/sgminer-kl/releases/download/kl-1.0.5fix/sgminer-kl-1.0.5_fix-windows.zip",
-    "SHA256": "cdb80d007fa43e3548ab94112ccb111f2bd3ea8458b9377d36c4a822fb5fb8a6",
+    "Path": "sgminer.exe",
+    "Uri": "https://github.com/KL0nLutiy/sgminer-kl/releases/download/kl-1.0.6/sgminer-kl-1.0.6-windows.zip",
+    "SHA256": "733715013DFD6DA9EA02DDB1B8DA32AD4177C718A4B2EE90851152B032DCB42A",
     "Type": "AMD",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -19,11 +19,13 @@
     "Fee": 0.01,
     "Algorithms": {
         "Aergo": "-k aergo -g 2 -w 64 -X 256",
+        "Geek": "-k geek -g 2 -w 64 -X 256",
         "Phi": "-k phi -g 2 -w 256 -X 256",
+        "Polytimos": "-k polytimos -g 2 -w 64 -X 256",
+        "Tribus": "-k tribus -g 2 -w 64 -X 256",
         "X16r": "-k x16r -g 2 -w 64 -X 256",
         "X16s": "-k x16s -g 2 -w 64 -X 256",
         "X17": "-k x17 -g 2 -w 64 -X 256",
-        "Tribus": "-k tribus -g 2 -w 64 -X 256",
         "Xevan": "-k xevan -g 2 -w 64 -X 256"
     }
 }
