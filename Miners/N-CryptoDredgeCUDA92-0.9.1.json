@@ -11,6 +11,7 @@
         "--retries 4",
         "--retry-pause 10",
         "--timeout 5",
+        "--no-watchdog",
         "-b 127.0.0.1:#APIPort#",
         "#AlgorithmParameters#"
     ],
