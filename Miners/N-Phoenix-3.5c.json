@@ -1,7 +1,7 @@
 {
-    "Path": "PhoenixMiner_3.0c\\PhoenixMiner.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.6/PhoenixMiner_3.0c.zip",
-    "SHA256": "bd591a4e9d52df144ab789e797d0000717163032bf488708be3dff05817ae84b",
+    "Path": "PhoenixMiner.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/PhoenixMiner_3.5c_Windows.7z",
+    "SHA256": "CE18F79AD7FA0CD344E03BAEC0C80896693845B1FA93B895CFC662E2D403AE16",
     "Type": "NVIDIA",
     "Arguments": [
         "-pool #Protocol#://#Server#:#Port#",

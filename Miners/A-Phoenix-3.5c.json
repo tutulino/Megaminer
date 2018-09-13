@@ -1,7 +1,7 @@
 {
     "Path": "PhoenixMiner.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/PhoenixMiner_3.5b_Windows.7z",
-    "SHA256": "0806FB3CDC4E9F9DA27914A57E66C282D708AB64677599B1C80AA824A161BDB9",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/PhoenixMiner_3.5c_Windows.7z",
+    "SHA256": "CE18F79AD7FA0CD344E03BAEC0C80896693845B1FA93B895CFC662E2D403AE16",
     "Type": "AMD",
     "Arguments": [
         "-pool #Protocol#://#Server#:#Port#",
