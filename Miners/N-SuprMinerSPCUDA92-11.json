@@ -1,7 +1,7 @@
 {
-    "Path": "spmodgit10\\ccminer.exe",
-    "Uri": "https://github.com/sp-hash/suprminer/releases/download/spmod-git10/spmodgit10.7z",
-    "SHA256": "85522329898D883971864F56E861A3F98FB39D613CE373C2D891CCE5DFF4A8F2",
+    "Path": "spmodgit11\\ccminer.exe",
+    "Uri": "https://github.com/sp-hash/suprminer/releases/download/spmod-git11/spmodgit11.7z",
+    "SHA256": "B8A209726E35947FF948301102047658ACC61BEB13F835E6446F823D87141461",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -17,6 +17,7 @@
     "Algorithms": {
         "C11": "-a c11",
         "X16r": "-a x16r",
-        "X16s": "-a x16s"
+        "X16s": "-a x16s",
+        "X17": "-a x17"
     }
 }
