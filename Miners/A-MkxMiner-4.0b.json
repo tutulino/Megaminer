@@ -1,0 +1,21 @@
+{
+    "Path": "mkxminer.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/mkxminer400b.zip",
+    "SHA256": "1C31B37EF7ED547295B902171BFC5EF1B123170098DC4BE35D38A73E6D31DC46",
+    "Type": "AMD",
+    "Arguments": [
+        "--url #Protocol#://#Server#:#Port#",
+        "--user #Login#",
+        "--pass #Password#",
+        "--platform #GPUPlatform#",
+        "--device #Devices#",
+        "--exitsick",
+        "#AlgorithmParameters#"
+    ],
+    "API": "wrapper",
+    "APIPort": 4028,
+    "SSL": true,
+    "Algorithms": {
+        "Lyra2z": "-a lyra2z -I 18"
+    }
+}
