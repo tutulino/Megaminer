@@ -1,7 +1,7 @@
 ﻿{
     "Path": "wildrig.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.8/wildrig-0.10.3-beta.7z",
-    "SHA256": "FE19FAADDA3827546C1DA8EF5E2B7C2C6F5E5E8DE6D6AF5A81F018A6FD81301C",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/wildrig-0.10.5-beta.7z",
+    "SHA256": "E76F3428D57F133395FA636D83B379453BA684978B7D486F937F03FEF90B19B9",
     "Type": "AMD",
     "Arguments": [
         "-o #Server#:#Port#",
@@ -13,14 +13,14 @@
         "--opencl-devices #Devices#",
         "--opencl-launch 256x0",
         "--send-stale",
-        "--donate-level 0",
+        "--donate-level 1",
         "--api-port #ApiPort#",
         "--scratchpad-file scratchpad-#Algorithm#.bin",
         "#AlgorithmParameters#"
     ],
     "API": "XMRig",
     "APIPort": 4028,
-    "Fee": 0.02,
+    "Fee": 0.01,
     "Algorithms": {
         "WildKeccakPurk": "--scratchpad-url http://purk.fairpool.xyz/static/scratchpad.bin",
         "WildKeccakBbr": "--scratchpad-url http://bbr.poolto.be/dl/scratchpad.bin"
