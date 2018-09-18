@@ -1,8 +1,8 @@
 {
     "Path": "PhoenixMiner.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/PhoenixMiner_3.5c_Windows.7z",
-    "SHA256": "CE18F79AD7FA0CD344E03BAEC0C80896693845B1FA93B895CFC662E2D403AE16",
-    "Type": "AMD",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/PhoenixMiner_3.5d_Windows.7z",
+    "SHA256": "6BB350BD4B2EC1F3D0E3CD6A53FCD118B7ADE33D22FDEFF8358751D093248DB7",
+    "Type": "NVIDIA",
     "Arguments": [
         "-pool #Protocol#://#Server#:#Port#",
         "-wal #Login#",
@@ -13,19 +13,17 @@
         "-r -1",
         "-logfile #GroupName#_log.txt",
         "-logsmaxsize 10",
-        "-amd",
+        "-nvidia",
         "-di #DevicesClayMode#",
         "-cdmport #APIPort#",
         "-cdm 1",
         "#AlgorithmParameters#"
     ],
     "API": "Claymore",
-    "APIPort": 4028,
+    "APIPort": 4068,
     "Fee": 0.0065,
     "SSL": true,
     "Algorithms": {
-        "Ethash": "",
-        "Ethash|cl2": "-clkernel 2",
-        "Ethash|green": "-clgreen 1"
+        "Ethash": ""
     }
 }
