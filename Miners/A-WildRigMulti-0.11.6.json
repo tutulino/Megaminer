@@ -1,7 +1,7 @@
 ﻿{
     "Path": "wildrig.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/wildrig-multi-0.11.5-beta.7z",
-    "SHA256": "3A669E03441315C002FF0892C28F2EE53A8CAC2A1836602CB7B886D75B5CA26E",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/wildrig-multi-0.11.6-beta.7z",
+    "SHA256": "489BA5300CB72D4E762EC8A05C282D0C7CC9E49E3B4B0706EB434BEF72A3C81F",
     "Type": "AMD",
     "Arguments": [
         "-o #Server#:#Port#",
