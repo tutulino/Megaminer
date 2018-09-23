@@ -874,6 +874,14 @@ function Get-LiveHashRate {
                 }
             }
 
+            "WildRig" {
+                $Request = Invoke-HTTPRequest $Server $Port "/api.json" 5
+                if ($Request) {
+                    $Data = $Request | ConvertFrom-Json
+                    $HashRate = [double]$Data.HashRate.total[0] * 1000
+                }
+            }
+
             "BMiner" {
                 $Request = Invoke-HTTPRequest $Server $Port "/api/status" 5
                 if ($Request) {
