@@ -1,0 +1,41 @@
+{
+    "Path": "lolMiner.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/lolMiner_v05_Win64.zip",
+    "SHA256": "00B2A4558D1EDBBE4EB43890282C98EDAC78266D4D8AE00C50B5E9D511E581D7",
+    "Type": "NVIDIA",
+    "Arguments": [
+        "--pool #Server#",
+        "--port #Port#",
+        "--user #Login#",
+        "--pass #Password#",
+        "--devices NVIDIA",
+        "--apiport #ApiPort#",
+        "--digits 2",
+        "--longstats 60",
+        "--shortstats 5",
+        "--connectattempts 3",
+        "#AlgorithmParameters#"
+    ],
+    "API": "LOL",
+    "APIPort": 4068,
+    "Algorithms": {
+        "Equihash144|3gb": "--coin AUTO144_5",
+        "Equihash192|4gb": "--coin AUTO192_7",
+        "EquihashAION": "--coin AION",
+        "EquihashANON": "--coin ANON",
+        "EquihashASF": "--coin ASF",
+        "EquihashBTCZ": "--coin BTCZ",
+        "EquihashBTG": "--coin BTG",
+        "EquihashBTH": "--coin ZEL",
+        "EquihashGENX": "--coin ZEL",
+        "EquihashHEPTA": "--coin HEPTA",
+        "EquihashLTZ": "--coin LTZ",
+        "EquihashSAFE": "--coin SAFE",
+        "EquihashSCash|4gb": "--coin SCASH",
+        "EquihashXSG": "--coin XSG",
+        "Mars|h": "--coin MNX --workbatch HIGH",
+        "Mars|m": "--coin MNX --workbatch MEDIUM",
+        "Mars|vh": "--coin MNX --workbatch VERYHIGH",
+        "Zero|4gb": "--coin ZER"
+    }
+}
