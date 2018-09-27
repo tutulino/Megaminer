@@ -1,7 +1,7 @@
 {
     "Path": "lolMiner.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/lolMiner_v05_Win64.zip",
-    "SHA256": "00B2A4558D1EDBBE4EB43890282C98EDAC78266D4D8AE00C50B5E9D511E581D7",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/lolMiner_v05_Win64_passwordfix.zip",
+    "SHA256": "338CE90D22A5E239BE3ECF7F151AB47DEEF73B5DC6E188681835861BB7409E9D",
     "Type": "NVIDIA",
     "Arguments": [
         "--pool #Server#",
