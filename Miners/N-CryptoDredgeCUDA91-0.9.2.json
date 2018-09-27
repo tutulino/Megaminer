@@ -1,7 +1,7 @@
 {
-    "Path": "CryptoDredge_0.9.1\\CryptoDredge.exe",
-    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.9.1/CryptoDredge_0.9.1_cuda_9.1_windows.zip",
-    "SHA256": "B4A4DC54C640F9A115B1B23B75B3296F0CFE90161A84987FDA229139AA8D8731",
+    "Path": "CryptoDredge_0.9.2\\CryptoDredge.exe",
+    "Uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.9.2/CryptoDredge_0.9.2_cuda_9.1_windows.zip",
+    "SHA256": "E1CD709C120953D03E04C6787060AF8A409BA1CD2338543C0CB8100CD5DE0AEE",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -22,9 +22,10 @@
         "Allium": "-a allium",
         "Blake2s": "-a blake2s",
         "CnFast": "-a cryptonightfast",
-        "CnHeavy": "-a cryptonightheavy",
         "CnHaven": "-a cryptonighthaven",
+        "CnHeavy": "-a cryptonightheavy",
         "CnLiteV7": "-a cryptolightv7",
+        "CnSaber": "-a cryptonightsaber",
         "CnV7": "-a cryptonightv7",
         "CnXTL": "-a stellite",
         "Lbk3": "-a lbk3",
