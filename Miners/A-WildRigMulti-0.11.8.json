@@ -1,7 +1,7 @@
 ﻿{
     "Path": "wildrig.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/wildrig-multi-0.11.7-beta.7z",
-    "SHA256": "C68C94839F7DEB726A225980C491546C0AC56363B315EBFD67D22129B0B55E0B",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/wildrig-multi-0.11.8-beta.7z",
+    "SHA256": "F7253C03537AEC05510471B1DC03A9217BBC8425759F6A4B46FC1007B7948F82",
     "Type": "AMD",
     "Arguments": [
         "-o #Server#:#Port#",
@@ -16,7 +16,7 @@
         "--api-port #ApiPort#",
         "#AlgorithmParameters#"
     ],
-    "API": "WildRig",
+    "API": "XMRig",
     "APIPort": 4028,
     "Fee": 0.01,
     "Algorithms": {
@@ -27,7 +27,10 @@
         "Phi": "--algo phi --opencl-threads 3 --opencl-launch 256x128",
         "Renesis": "--algo renesis --opencl-threads 3 --opencl-launch 2048x128",
         "SonoA": "--algo sonoa --opencl-threads 3 --opencl-launch 512x0",
+        "Timetravel": "--algo timetravel --opencl-threads 3 --opencl-launch 512x128",
         "Tribus": "--algo tribus --opencl-threads 3 --opencl-launch 2048x0",
+        "X16r": "--algo x16r --opencl-threads 3 --opencl-launch 512x128",
+        "X16s": "--algo x16s --opencl-threads 3 --opencl-launch 512x128",
         "X17": "--algo x17 --opencl-threads 3 --opencl-launch 1024x0"
     }
 }

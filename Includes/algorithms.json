@@ -8,6 +8,7 @@
     "argon2ddyn": "Argon2d500",
     "argon2duis": "Argon2d4096",
     "balloon": "Balloon",
+    "bcd": "BCD",
     "bitblock": "X15",
     "bitcore": "Bitcore",
     "blake14r": "Decred",
