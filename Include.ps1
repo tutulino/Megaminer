@@ -950,8 +950,8 @@ function Get-LiveHashRate {
                 $Request = Get-TCPResponse -Server $Server -Port $Port -Timeout 5
                 if ($Request) {
                     $Data = $Request | ConvertFrom-Json
-                    $HashRate = [double]$Data.'TotalSpeed(60s)'.Trim()
-                    if (-not $HashRate) {$HashRate = [double]$Data.'TotalSpeed(5s)'.Trim()}
+                    $HashRate = [double]$Data.'TotalSpeed(60s)'
+                    if (-not $HashRate) {$HashRate = [double]$Data.'TotalSpeed(5s)'}
                 }
             }
 
