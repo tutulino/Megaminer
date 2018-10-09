@@ -1,0 +1,37 @@
+﻿{
+    "Path": "wildrig.exe",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.10/wildrig-multi-0.12.0-beta.7z",
+    "SHA256": "C6723AE013D57339D834EB4FFB5C6B2A7D8C0E104FAF74D70BB96C3647E702C4",
+    "Type": "AMD",
+    "Arguments": [
+        "-o #Server#:#Port#",
+        "-u #Login#",
+        "-p #Password#",
+        "-r 4",
+        "-R 10",
+        "--opencl-platform #GpuPlatform#",
+        "--opencl-devices #Devices#",
+        "--send-stale",
+        "--donate-level 1",
+        "--api-port #ApiPort#",
+        "#AlgorithmParameters#"
+    ],
+    "API": "XMRig",
+    "APIPort": 4028,
+    "Fee": 0.01,
+    "Algorithms": {
+        "BCD": "--algo bcd --opencl-threads 3 --opencl-launch 19x128",
+        "C11": "--algo c11 --opencl-threads 3 --opencl-launch 17x128",
+        "Geek": "--algo geek --opencl-threads 2 --opencl-launch 20x128",
+        "Hex": "--algo hex --opencl-threads 3 --opencl-launch 20x128",
+        "HMQ1725": "--algo hmq1725 --opencl-threads 3 --opencl-launch 20x128",
+        "Phi": "--algo phi --opencl-threads 3 --opencl-launch 18x128",
+        "Renesis": "--algo renesis --opencl-threads 3 --opencl-launch 21x128",
+        "SonoA": "--algo sonoa --opencl-threads 3 --opencl-launch 19x0",
+        "Timetravel": "--algo timetravel --opencl-threads 3 --opencl-launch 19x128",
+        "Tribus": "--algo tribus --opencl-threads 3 --opencl-launch 21x0",
+        "X16r": "--algo x16r --opencl-threads 3 --opencl-launch 19x128",
+        "X16s": "--algo x16s --opencl-threads 3 --opencl-launch 19x128",
+        "X17": "--algo x17 --opencl-threads 3 --opencl-launch 20x0"
+    }
+}
