@@ -1,7 +1,7 @@
 {
     "Path": "z-enemy.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/z-enemy.1-21a-cuda9.2_x32.zip",
-    "SHA256": "3BBB63A7D8C3FD5A6A6FE725C93E8AAFFC619AEC7BA7B6FB879A07E290A41C63",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.10/z-enemy.1-22-cuda9.2_x32.zip",
+    "SHA256": "27d2118e8a9d12f48877164fd0b20046c3d8adae09215e5ad31f708090e5e3f7",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",

@@ -1,7 +1,7 @@
 {
     "Path": "z-enemy.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/z-enemy.1-21a-cuda9.2_x64.zip",
-    "SHA256": "A0253D0EF51E793B9040BEEBE366DAA848A5AF55A28830984B7C2AFCEB3A2268",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.10/z-enemy.1-22-cuda9.1_x32.zip",
+    "SHA256": "ec76470820b4eefcc62af1e86a69a91fa12d2e063988b1a254661ba350399554",
     "Type": "NVIDIA",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
@@ -16,7 +16,7 @@
     "API": "Ccminer",
     "APIPort": 4068,
     "Fee": 0.01,
-    "CUDA": 9.2,
+    "CUDA": 9.1,
     "Algorithms": {
         "Aergo": "-a aeriumx -i 20",
         "BCD": "-a bcd -i 20",
