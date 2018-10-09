@@ -1,7 +1,7 @@
 {
     "Path": "SRBMiner-CN.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.8/SRBMiner-CN-V1-6-7.7z",
-    "SHA256": "4BD50089EFAE10003054A0AA278CFA6CED39594A000D51FD26DACF1544634D3A",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.10/SRBMiner-CN-V1-6-8.7z",
+    "SHA256": "67947B4C031593C351D9A7041DE7F36B12DE97EBF8744338105AF271BF3494D4",
     "Type": "AMD",
     "GenerateConfigFile": "config-#GroupName#-#Algorithm#.txt",
     "PatternConfigFile": ".\\Patterns\\SRBMinerConfig-Pattern.txt",
@@ -29,6 +29,7 @@
         "CnMkt": "marketcash",
         "CnMox": "mox",
         "CnSaber": "bittubev2",
-        "CnV7": "normalv7"
+        "CnV7": "normalv7",
+        "CnV8": "normalv8"
     }
 }
