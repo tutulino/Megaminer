@@ -1,7 +1,7 @@
 {
     "Path": "lolMiner.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.9/lolMiner_v05_Win64_passwordfix.zip",
-    "SHA256": "338CE90D22A5E239BE3ECF7F151AB47DEEF73B5DC6E188681835861BB7409E9D",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.10/lolMiner_v05_Win64_Bugfix.zip",
+    "SHA256": "0D4D954D122E8528DFAF7A099796CB9A0DB74D15EE0F82EDCAE49F325BF2311C",
     "Type": "AMD",
     "Arguments": [
         "--pool #Server#",
