@@ -12,6 +12,8 @@
         "--cpassword #Password#",
         "--disablegpuwatchdog",
         "--sendallstales",
+        "--apienable",
+        "--apiport #ApiPort#",
         "$(if ($enableSSL){'--ctls true'})",
         "$(if ($Nicehash){'--cnicehash true'})"
     ],
