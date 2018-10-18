@@ -1,7 +1,7 @@
 {
     "Path": "cast_xmr-vega.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.8/cast_xmr-vega-win64_140.zip",
-    "SHA256": "18A381369FDCB434932969F44B2B1BC25FEBF9DDA75F7C5698D2E958B920E2CE",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.10/cast_xmr-vega-win64_150.zip",
+    "SHA256": "7E1A3495B2794056FE487736970AB10FD2D3010412A8A3C0C92780A693A2FCFA",
     "Type": "AMD",
     "Arguments": [
         "--pool #Server#:#Port#",
@@ -26,6 +26,7 @@
         "CnLiteV7": "--algo=4",
         "CnSaber": "--algo=5",
         "CnV7": "--algo=1",
+        "CnV8": "--algo=-1",
         "CnXTL": "--algo=6"
     }
 }
