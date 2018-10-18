@@ -1,7 +1,7 @@
 {
     "Path": "jce_cn_gpu_miner64.exe",
-    "Uri": "https://github.com/jceminer/cn_gpu_miner/raw/master/jce_cn_gpu_miner.032q.zip",
-    "SHA256": "DBA96863504865FDC61B1D6F9785ACD54F76836E68CB0B621CF10457A4733274",
+    "Uri": "https://github.com/jceminer/cn_gpu_miner/raw/master/jce_cn_gpu_miner.033b.zip",
+    "SHA256": "044D950B2D69EBA5430611E074382A8A13A7003C0E909D0EAA8CBD20D034BF70",
     "Type": "AMD",
     "Arguments": [
         "-o #Server#:#Port#",
@@ -30,8 +30,10 @@
         "CnHeavy": "--variation 5",
         "CnLiteV7": "--variation 4",
         "CnMkt": "--variation 9",
+        "CnRed": "--variation 14",
         "CnSaber": "--variation 13",
         "CnV7": "--variation 3",
+        "CnV8": "--variation 15",
         "CnXTL": "--variation 7"
     }
 }
