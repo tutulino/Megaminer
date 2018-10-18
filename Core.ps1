@@ -299,16 +299,12 @@ while ($Quit -eq $false) {
         $Config.WorkerName = "Donate"
         $CoinsWallets = @{
             BTC = "3NoVvkGSNjPX8xBMWbP2HioWYK395wSzGL"
-            LTC = "MM8RmXUgxDwHJxrC54muF7KHciSCFS3gx3"
         }
-        $Config.Currency_Zpool = "LTC"
-        $Config.Currency_ZergPool = "LTC"
-        $Config.Currency_BlockMasters = "LTC"
 
         $DonateInterval = ($ConfigDonateTime - $ElapsedDonatedTime) * 60
 
         $Algorithm = $null
-        $PoolsName = ("MiningPoolHub", "NiceHash", "Zpool", "ZergPool", "BlockMasters")
+        $PoolsName = ("MiningPoolHub", "NiceHash")
         $CoinsName = $null
         $MiningMode = "Automatic"
 
