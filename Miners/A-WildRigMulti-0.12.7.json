@@ -1,7 +1,7 @@
 ﻿{
     "Path": "wildrig.exe",
-    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.10/wildrig-multi-0.12.0-beta.7z",
-    "SHA256": "C6723AE013D57339D834EB4FFB5C6B2A7D8C0E104FAF74D70BB96C3647E702C4",
+    "Uri": "https://github.com/yuzi-co/miners/releases/download/2018.11/wildrig-multi-0.12.7-beta.7z",
+    "SHA256": "3C61D2CCBFE0988AEB5748436BA30C49731AB2A4F88F4F51B14FCDE08BDB1E79",
     "Type": "AMD",
     "Arguments": [
         "-o #Server#:#Port#",
@@ -28,11 +28,13 @@
         "HMQ1725": "--algo hmq1725 --opencl-threads 3 --opencl-launch 20x128",
         "Phi": "--algo phi --opencl-threads 3 --opencl-launch 18x128",
         "Renesis": "--algo renesis --opencl-threads 3 --opencl-launch 21x128",
+        "Skunk": "--algo skunkhash --opencl-threads 2 --opencl-launch 20x0",
         "SonoA": "--algo sonoa --opencl-threads 3 --opencl-launch 19x0",
-        "Timetravel": "--algo timetravel --opencl-threads 3 --opencl-launch 19x128",
+        "Timetravel": "--algo timetravel --opencl-threads 3 --opencl-launch 20x128",
         "Tribus": "--algo tribus --opencl-threads 3 --opencl-launch 21x0",
         "X16r": "--algo x16r --opencl-threads 3 --opencl-launch 20x128",
         "X16s": "--algo x16s --opencl-threads 3 --opencl-launch 20x128",
-        "X17": "--algo x17 --opencl-threads 3 --opencl-launch 20x0"
+        "X17": "--algo x17 --opencl-threads 3 --opencl-launch 20x0",
+        "X22i": "--algo x22i --opencl-threads 2 --opencl-launch 21x128"
     }
 }
