@@ -1,13 +1,14 @@
 {
-    "Path": "teamredminer-v0.3.3-win\\teamredminer.exe",
-    "Uri": "https://github.com/todxx/teamredminer/releases/download/v0.3.3/teamredminer-v0.3.3-win.zip",
-    "SHA256": "591E21616CD11E7138526A2363D4B7D06D1067D1A4EE2E11B2C39698034EC00E",
+    "Path": "teamredminer-v0.3.6-win\\teamredminer.exe",
+    "Uri": "https://github.com/todxx/teamredminer/releases/download/v0.3.6/teamredminer-v0.3.6-win.zip",
+    "SHA256": "7E1847022F9900542496F6F5BDE8E475502B7CFDD349808A7BFDFA0DF7B2CE27",
     "Type": "AMD",
     "Arguments": [
         "-o #Protocol#://#Server#:#Port#",
         "-u #Login#",
         "-p #Password#",
         "-d #Devices#",
+        "--platform=#GPUPlatform#",
         "--api_listen=#ApiPort#",
         "#AlgorithmParameters#"
     ],
@@ -15,6 +16,7 @@
     "APIPort": 4028,
     "Fee": 0.03,
     "Algorithms": {
+        "CnV8": "-a cnv8",
         "Lyra2z": "-a lyra2z",
         "Phi2": "-a phi2"
     }
